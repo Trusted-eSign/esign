@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "sourceMap": false,
+        "jsx": "react",
+        "rootDir": "src",
+        "outDir": "tmp"
+    },
+    "files": [
+        "typings/tsd.d.ts",
+        "src/Trusted_eSign/main.tsx",
+        "src/Trusted_Plus/main.tsx"
+    ]
+}

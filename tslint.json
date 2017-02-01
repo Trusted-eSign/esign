@@ -1,0 +1,8 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+        "no-reference": false,
+        "member-access": false,
+        "max-line-lengt": 160
+  }
+}

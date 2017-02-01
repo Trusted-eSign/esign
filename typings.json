@@ -1,0 +1,18 @@
+{
+  "globalDependencies": {
+    "classnames": "registry:dt/classnames#0.0.0+20160316155526",
+    "gulp": "registry:dt/gulp#3.8.0+20160907112908",
+    "history": "registry:dt/history#1.8.0+20160316155526",
+    "jquery": "registry:dt/jquery#1.10.0+20160908203239",
+    "material-ui": "registry:dt/material-ui#0.15.1+20160919210656",
+    "materialize-css": "registry:dt/materialize-css#0.97.5+20160628040906",
+    "node": "registry:dt/node#6.0.0+20160919063032",
+    "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
+    "q": "registry:dt/q#0.0.0+20160613154756",
+    "react": "registry:dt/react#0.14.0+20160829191040",
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
+    "react-router": "registry:dt/react-router#2.0.0+20160919181133",
+    "react-router/history": "registry:dt/react-router/history#2.0.0+20160830150755",
+    "react-tap-event-plugin": "registry:dt/react-tap-event-plugin#0.0.0+20160602142434"
+  }
+}

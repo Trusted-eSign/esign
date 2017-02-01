@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>TrustedeSign</title>
+          <!--Import Google Icon Font-->
+        <link rel="stylesheet" href="css/font-awesome-animation.min.css">
+        <!--Import materialize.css-->
+        <link rel="stylesheet" href="css/materialize.min.css"/>
+        <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" href="css/ReactHtml5Video.css"/>
+        <link href="fonts/material-design-icons/material-icons.css" rel="stylesheet">
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script src="js/jquery-3.1.1.min.js"></script>
+        <script>
+            if(process.versions.nw === undefined) {
+                window.$ = window.jQuery = require('./js/jquery-3.1.1.min.js');
+                window.Hammer = require("./js/hammer.min.js");
+                window.electron = require('electron');
+                window.shell = electron.shell;
+                window.dialog = electron.remote.dialog;
+                window.mainWindow = electron.remote.getCurrentWindow();
+                window.RESOURCES_PATH = __dirname;
+                window.framework_NW = false;
+            } else {
+                window.gui = require("nw.gui");
+                window.mainWindow = gui.Window.get();
+                gui.Window.open("Trusted_eSign/preloader_index.html", {
+                    position: 'center',
+                    width: 496,
+                    height: 149,
+                    frame: false,
+                    resizable: false,
+                    show: false
+                }, function(win) {
+                    win.on('loaded', function() {
+                        win.show();
+                    });
+                    setTimeout(function() {
+                        win.hide();
+                        win.close();
+                        mainWindow.show() }, 1000);
+                });
+                window.mainWindow.isMaximized = false;
+                window.shell = gui.Shell;
+                window.RESOURCES_PATH = process.cwd();
+                window.framework_NW = true;
+            }
+	        window.async = require("async");
+            window.path = require('path');
+            window.fs = require('fs');
+            window.os = require('os');
+            window.archiver = require('archiver');
+            window.DEFAULT_PATH = path.dirname(process.execPath);
+            window.HOME_DIR = os.homedir();
+            window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
+            window.PLATFORM = process.platform;
+            window.LICENSE_PATH = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
+            window.sudo = require('sudo-prompt');
+
+            if ( !fs.existsSync( path.join(HOME_DIR, '.Trusted') ) ) {
+                fs.mkdirSync( path.join(HOME_DIR, '.Trusted'), { mode: 0o700 } );
+            }
+            if ( !fs.existsSync( path.join(HOME_DIR, '.Trusted', 'Trusted eSign') ) ) {
+                fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'), { mode: 0o700 });
+            }
+
+	        document.ondragover = function(evt) {
+                evt.preventDefault();
+            };
+            document.ondrop = function(evt) {
+                evt.preventDefault();
+            }
+        </script>
+	<script src="./js/materialize.min.js"></script>
+	<script src="./js/trusted_operation.js"></script>
+    <script src="./bundle_Trusted_eSign.js"></script>
+    </body>
+</html>

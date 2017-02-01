@@ -1,0 +1,129 @@
+body {
+  -webkit-user-select: none;
+}
+::-webkit-scrollbar {
+    width: 8px;
+    height: 0;
+}
+::-webkit-scrollbar-track {
+    background: #cccccc; 
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: gray;
+}
+.agreement{
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+h4 {
+  font-size: 1.3rem;
+}
+
+h5{
+   font-size: 1.1rem;
+}
+
+h6{
+   font-size: 1.2rem;
+}
+
+p{
+   font-size: 1.0rem;
+   margin-bottom: 0px;
+   margin-top: 0px;
+}
+
+.row{
+  margin-bottom: 4px;
+  margin-top: 4px; 
+}
+
+
+.sign_roundbutton_icon{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/sign_roundbutton_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.sign_roundbutton_icon:hover{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/sign_roundbutton_over_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.encrypt_roundbutton_icon{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/encrypt_roundbutton_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.encrypt_roundbutton_icon:hover{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/encrypt_roundbutton_over_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.cert_roundbutton_icon{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/cert_roundbutton_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.cert_roundbutton_icon:hover{
+  display: block;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url(../../image/cert_roundbutton_over_icon.svg);
+  background-size: 32px 32px; 
+}
+
+.card .card-title {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.card .card-content {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 0 0 2px 2px;
+}
+
+i.material-icons.right {
+  margin-top: 11px;
+}
+
+.menu_button{
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(../image/menu_button.png);
+  background-size: 24px 24px; 
+}
+
+.collection a.collection-item {
+  display: block;
+  transition: .25s;
+  color: #b64729;
+}
