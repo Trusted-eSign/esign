@@ -7,10 +7,6 @@
 
 ```
 
-## Build
-
-> typings install
-
 ## Release for default target (electron by default)
 > gulp
 
