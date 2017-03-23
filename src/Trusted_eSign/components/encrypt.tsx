@@ -10,6 +10,8 @@ import * as encrypts from "../trusted/encrypt";
 import { utills } from "../utills";
 declare let $: any;
 
+const dialog = window.electron.remote.dialog;
+
 export class EncryptWindow extends React.Component<any, any> {
 
     constructor(props: any) {
@@ -29,7 +31,7 @@ export class EncryptWindow extends React.Component<any, any> {
         if (checkFiles("encrypt")) {
             let certs = encrypt.get_certificates_for_encrypt;
             let pathes = encrypt.get_files_for_encrypt;
-            let format = native.trusted.DataFormat.PEM;
+            let format = trusted.DataFormat.PEM;
             let folderOut = encrypt.get_settings_directory;
             let policies = { deleteFiles: false, archiveFiles: false };
             let res = true;
@@ -45,7 +47,7 @@ export class EncryptWindow extends React.Component<any, any> {
             policies.archiveFiles = encrypt.get_settings_archive_files;
 
             if (encrypt.get_settings_encoding !== lang.get_resource.Settings.BASE) {
-                format = native.trusted.DataFormat.DER;
+                format = trusted.DataFormat.DER;
             }
 
             let enc_files: any = [];
@@ -212,7 +214,7 @@ class EncodeSettingsComponents extends React.Component<any, any> {
     }
     addDirect() {
 
-        if (!framework_NW) {
+        if (!window.framework_NW) {
             let directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
             if (directory)
                 encrypt.set_settings_directory = directory[0];

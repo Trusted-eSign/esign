@@ -11,17 +11,15 @@
 
 <body>
     <div class="agreement">
-        <h4 align="center"><b>СПРАВОЧНАЯ ПОМОЩЬ ПО ПРОГРАММЕ TRUSTED ESIGN</b></h4>
+        <h4 align="center"><b>TRUSTED ESIGN HELP</b></h4>
 
         <div class="collection">
-            <a href="#interface" draggable="false" class="collection-item">Начало работы с приложением. Интерфейс</a>
-            <a href="#sign" draggable="false" class="collection-item">Создание электронной подписи</a>
-            <a href="#verify" draggable="false" class="collection-item">Проверка электронной подписи</a>
-            <a href="#encrypt" draggable="false" class="collection-item">Шифрование файлов</a>
-            <a href="#decrypt" draggable="false" class="collection-item">Расшифрование файлов</a>
-            <a href="#certificates" draggable="false" class="collection-item">Управление сертификатами</a>
-            <a href="#license" draggable="false" class="collection-item">Лицензия</a>
-            <a href="#faq" draggable="false" class="collection-item">Часто задаваемые вопросы (FAQ)</a>
+            <a href="#interface" draggable="false" class="collection-item">Getting started with the app. Interface</a>
+            <a href="#sign" draggable="false" class="collection-item">Creating the electronic signature</a>
+            <a href="#verify" draggable="false" class="collection-item">Verification of the electronic signature</a>
+            <a href="#encrypt" draggable="false" class="collection-item">File encryption</a>
+            <a href="#decrypt" draggable="false" class="collection-item">Decryption of the files</a>
+            <a href="#certificates" draggable="false" class="collection-item">Certificate management</a>
         </div>
 
         <br><br>
@@ -29,21 +27,19 @@
         <p>
             <a name="interface"></a>
         </p>
-        <h5 align="center" name="interface"><b>НАЧАЛО РАБОТЫ С ПРИЛОЖЕНИЕМ. ИНТЕРФЕЙС</b></h5>
-
+        <h5 align="center" name="interface"><b>GETTING STARTED WITH THE APP. INTERFACE</b></h5>
         <div class="row">
             <div class="col s6">
-                <p align="justify">Работа с приложением Trusted eSign начинается со стартовой страницы (рис.1.1), на которой расположены кнопки
-                    перехода к мастерам приложения. Окно приложения имеет фиксированные размеры.
+                <p align="justify">Using Trusted eSign starts with the starting page (Fig.1.1). 
+                    There are navigation buttons to the wizards of the app. The application window has a fixed size.
                 </p>
-                <p align="justify">В верхней левой части окна расположена кнопка вызова главного меню приложения</p>
+                <p align="justify">In the upper left of the app window there is a button to call the main application menu</p>
                 <span class="menu_button"></span>
-                <p>, через которое можно выполнить переход ко всем представлениям.
+                <p> through which you can navigate to all views.
                 </p>
-                <p align="justify">При первом запуске приложения в домашней папке пользователя создается подкаталог с наименованием <b>.Trusted</b>.
-                    Данный подкаталог содержит файловые объекты, необходимые для корректного функционирования приложения.
-                    В частности, в подкаталоге размещаются импортированные в приложение цифровые сертификаты пользователей,
-                    ключи и списки отзыва. В файле settings.json сохраняются пользовательские настройки.
+                <p align="justify">When you first start the application in its installation directory, a subdirectory is created, named CertStore. 
+                    This subdirectory contains the file objects required for the correct functioning of the application. In particular, 
+                    the digital user certificates are imported in the subdirectory.
                 </p>
             </div>
             <div class="col s6">
@@ -52,24 +48,21 @@
                         <img class="activator" src="image/main_window.png">
                     </div>
                     <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">Рис.1.1. Главное окно приложения<i class="material-icons right">more_vert</i></span>
+                        <span class="card-title activator grey-text text-darken-4">Fig.1.1. Main window<i class="material-icons right">more_vert</i></span>
                     </div>
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">Главное окно приложения<i class="material-icons right">close</i></span>
-                        <p><b>Мастер подписи/проверки</b> - представление приложения для создания электронной подписи группы
-                            файлов и ее проверки.</p>
-                        <p><b>Мастер шифрования/расшифрования</b> - представление для шифрования группы файлов в адрес получателей
-                            и расшифрования принятых шифрованных файлов. Список получателей формируется на основе выбора
-                            цифровых сертификатов.</p>
-                        <p><b>Мастер управления сертификатами</b> - представление приложения управления сертификатами (и закрытыми
-                            ключами), которые используются для выполнения операций подписи и шифрования.</p>
+                        <span class="card-title grey-text text-darken-4">Main window<i class="material-icons right">close</i></span>
+                        <p><b>Signature/verification wizard</b> - a visual representation for creation of the digital signature of  the groups of files and their verification.</p>
+                        <p><b>Encryption/decryption wizard</b> - a visual representation for encryption of the groups of files in the address of the recipient and decryption of the received encrypted files. 
+                        The list of recipients based on the selection of digital certificates.</p>
+                        <p><b>Certificate management wizard</b> - a visual representation for management of certificates (and of private keys too) that are used to perform operations for signature and encryption.</p>
                     </div>
                 </div>
             </div>
         </div>
         <br>
-        <p align="justify">Запуск приложения на рабочем месте сразу дает возможность проверить его функциональность - в хранилище сертификатов
-            будет присутствовать тестовый сертификат с помощью которого можно выполнить операции подписи и шифрования файлов.
+        <p align="justify">Running application immediately allows you to test it's functionality. 
+            In the certificate store there is a test certificate which you can use to sign and encrypt files.
         </p>
 
         <br><br>
@@ -77,7 +70,7 @@
         <p>
             <a name="sign"></a>
         </p>
-        <h5 align="center" name="sign"><b>СОЗДАНИЕ ЭЛЕКТРОННОЙ ПОДПИСИ</b></h5>
+        <h5 align="center" name="sign"><b>CREATING THE DIGITAL SIGNATURE</b></h5>
 
         <div class="row">
             <div class="col s6">
@@ -89,30 +82,28 @@
 
             </div>
             <div class="col s6">
-                <p align="justify">Представление мастера подписания/проверки подписи имеет три функциональных элемента: слева располагаются
-                    области выбора сертификата подписчика и настройки подписи, справа - область формирования списка файлов
-                    для выполнения операций.
+                <p align="justify">The wizard screen for signing/signature verification has three functional elements: 
+                    on the left side there is an area to choose the certificate of the subscriber and signature settings, 
+                    on the right side there is an area  to form the list of files to perform operations.
                 </p>
             </div>
         </div>
-        <p align="justify">Выставленные настройки сохраняются при переходе по вкладкам, а также при закрытии приложения. В виде настроек подписи
-            передаются следующие параметры:
+        <p align="justify">Selected settings may be applied only to the current choice and are not saved if changed. 
+            Settings of the signature include the following parameters:
         </p>
-        <p> - <b>Кодировка</b> - сохранение подписи в одной из двух кодировок BASE64 или DER.</p>
-        <p> - <b>Сохранить подпись отдельно</b> - при установленном флажке подпись сохраняется отдельно от исходного файла.</p>
-        <p> - <b>Добавить время подписи</b> - при установленном флажке в подпись сохраняется время (системное) подписи.</p>
-        <p> - <b>Директория для сохранения файла</b> - при выбранной директории подпись сохраняется в данной директории. В противном
-            случае подпись размещается рядом с исходным файлом.</p>
+        <p> - <b>Encoding type</b> - save the signature in one of two encodings, BASE64 or DER.</p>
+        <p> - <b>Save signature as detached</b> - when this checkbox is selected, the signature is being saved separately from the original file.</p>
+        <p> - <b>Add time of signature</b> - when the checkbox is selected, the signature is being saved with the information about (system) time.</p>
+        <p> - <b>Save the file to</b> - when the directory is selected, the signed document is saved in this directory. 
+        Otherwise, the signature is being saved next to the original file.</p>
 
         <br>
         <div class="row">
             <div class="col s6">
-                <p align="justify"><b>Выбор сертификата подписчика.</b> Для того, чтобы выполнить попись необходимо выбрать цифровой сертификат,
-                    к которому привязан закрытый ключ. Эта операция производится нажатием кнопки <b>Выбрать сертификат подписи</b></p>
-                <p align="justify">В появившемся диалоговом окне отображаются сертификаты, которые могут использоваться для подписи. У отображаемых
-                    в списке сертификатов присутствует закрытый ключ.</p>
-                <p align="justify">Выбор сертификата подписчика осуществляется его выделением и нажатием на кнопку <b>Выбрать</b>.</p>
-                <p align="justify">Допускается смена выбранного сертификата с помощью кнопки в верхней части элемента.</p>
+                <p align="justify"><b>The choice of the user’s certificate.</b> In order to sign the file, you must select the digital certificate that is attached to the private key. This operation is performed by clicking the button to <b>Select the signature certificate</b></p>
+                <p align="justify">In the appeared dialog box the certificates are displayed which may be used for signing files. The certificates displayed have the private key attached.</p>
+                <p align="justify">The subscriber’s certificate should be selected and the <b>Select</b> button is to be pressed.</p>
+                <p align="justify">It is allowed to change the selected certificate using the button at the top of the element.</p>
             </div>
             <div class="col s6">
                 <div class="card">
@@ -125,12 +116,10 @@
         </div>
 
 
-        <p align="justify"><b>Выбор подписываемых файлов.</b> В приложении доступно создание подписи для одного или группы выбранных файлов.
-            Выбранные файлы заносятся в правую область и представляют собой одноуровневый список. Для данного списка доступно
-            контекстное меню в заголовке функционального элемента, состоящее из пунктов:</p>
-        <p align="justify"><b>Выделить все</b> - выделяются все добавленные в список файлы.</p>
-        <p align="justify"><b>Сбросить выделение</b> - отменяется выделение всех выбранных в списке файлов.</p>
-        <p align="justify"><b>Удалить все из списка</b> - список очищается. При очистке списке файлы из файловой системы не удаляются.</p>
+        <p align="justify"><b>The choice of files to be signed.</b> The application is available for generating a signature for a single file or a selected group of files. The selected files are entered in the right pane and represent a single-level list. This list has a context menu in the header of the functional element, consisting of items:</p>
+        <p align="justify"><b>Select all</b> - all listed files are selected.</p>
+        <p align="justify"><b>Delete selection</b> - cancels selection of all selected files added to the list.</p>
+        <p align="justify"><b>Remove all listed files</b> - the files from the list are removed. After removing the files from the list, they are not deleted from the file system.</p>
 
         <div class="row">
             <div class="col s6">
@@ -141,22 +130,17 @@
                 </div>
             </div>
             <div class="col s6">
-                <p align="justify">В списке отображается наименование файла с расширением и дата его создания. Для каждого элемента списка доступно
-                    контекстное меню, состоящее из пунктов:</p>
-                <p align="justify"><b>Открыть файл</b> - выполняется открытие файла через приложение, которое ассоциировано с его расширением.</p>
-                <p align="justify"><b>Перейти к файлу</b> - выполняется открытие каталога в котором располагается файл.</p>
-                <p align="justify"><b>Удалить из списка</b> - файл удаляется из текущего списка выбранных файлов для подписания. При выполнении
-                    это операции файл остается в файлововй системе в неизменном виде.</p>
+                <p align="justify">The list contains the names of the files with their extensions and the dates of the signature. For each element in the list a context menu is available. It consists of the following points:</p>
+                <p align="justify"><b>Open the file</b> - the file is opened using the application that is associated with its extension.</p>
+                <p align="justify"><b>Go to the file</b> - the directory containing file is opened.</p>
+                <p align="justify"><b>Delete the file from the list</b> - deletes the file from the current list of files, selected for signing. When performing this operation, the file remains unchanged in the file system.</p>
             </div>
         </div>
         <div class="row">
             <div class="col s6">
-                <p align="justify"><b>Подписание файлов.</b> При условии выбора сертификата подписчика и подписываемых файлов в мастере становится
-                    доступной кнопка <b>Подписать</b>. Нажатие на эту кнопку запускает процесс подписи. Выбранные файлы подписываются
-                    по очереди. Для подписанный файлов меняется иконка, наименование, дата создания.
+                <p align="justify"><b>Files signing.</b> When selecting the user’s certificate and files to be signed, the button <b>Sign</b> becomes available. Clicking on this button launches the signing process. The selected files are signed one by one. Signed files have different icon, name, and the date of signing.
                 </p>
-                <p align="justify">Если в настройках подписи не задан каталог для сохранения подписанных файлов, они сохраняются в тех же каталогах,
-                    где размещаются исходные подписываемые файлы.
+                <p align="justify">If the directory in signature settings is not specified, the signed files are saved in the same directory where the original files are placed.
                 </p>
             </div>
             <div class="col s6">
@@ -173,7 +157,7 @@
         <p>
             <a name="verify"></a>
         </p>
-        <h5 align="center"><b>ПРОВЕРКА ЭЛЕКТРОННОЙ ПОДПИСИ</b></h5>
+        <h5 align="center"><b>VERIFICATION OF THE ELECTRONIC SIGNATURE</b></h5>
 
         <div class="row">
             <div class="col s6">
@@ -184,12 +168,9 @@
                 </div>
             </div>
             <div class="col s6">
-                <p align="justify">Для проверки подписи достаточно выбрать проверяемые файлы - файлы с расширением .sig, которые содержат электронную
-                    подпись и нажать на кнопку <b>Проверить</b>. Никаких дополнительных манипуляций при проверке подписи
-                    производить не нужно.</p>
-                <p align="justify"><b>Важно!</b> Если при проверке отделенной от подписываемого файла подписи исходный файл не будет найден
-                    автоматически, будет предложен его выбор.</p>
-                <p>Результат проверка подписей отображается в виде сообщения.</p>
+                <p align="justify">To verify the signature you have to select verified files. These files have the file extension .sig, the contain an electronic signature. Click on the <b>Verify</b> button. No further additional manipulation to verify the signature are not needed.</p>
+                <p align="justify"><b>Attention!</b> When verifying the detached signature, the file has to be in the same directory.</p>
+                <p>The result of the signature verification is displayed in the message.</p>
             </div>
         </div>
         <br>
@@ -200,10 +181,9 @@
         <p>
             <a name="encrypt"></a>
         </p>
-        <h5 align="center"><b>ШИФРОВАНИЕ ФАЙЛОВ</b></h5>
+        <h5 align="center"><b>FILE ENCRYPTION</b></h5>
 
-        <p align="justify">Представление мастера шифрования/расшифрования имеет три функциональных элемента: слева располагаются области выбора
-            сертификатов получателей и настройки шифрования, справа - область формирования списка файлов для выполнения операций.
+        <p align="justify">Representation of a encryption/decryption wizard has three functional elements: there are the recipients’ certificates and encryption settings on the left side, on the right side the user can create a list of files to perform operations.
         </p>
 
         <div class="row">
@@ -215,29 +195,21 @@
                 </div>
             </div>
             <div class="col s6">
-                <p align="justify">Настройки шифрования применяются только к текущему представлению и не сохраняются при его смене. В виде настроек
-                    шифрования передаются следующие параметры:
+                <p align="justify">Encryption settings are applied only to the current view and are not saved if changed. In the form of encryption include the following parameters:
                 </p>
-                <p align="justify"> - <b>Кодировка</b> - сохранение шифрованного файла в одной из двух кодировок BASE64 или DER.</p>
-                <p align="justify"> - <b>Удалить файлы после шифрования</b> - исходные файлы, над которыми выполняется операция шифрования удаляются
-                    из файловой системы в случае успешного завершения операции.</p>
-                <p align="justify"> - <b>Архивировать перед шифрованием</b> - файлы архивируются (ZIP) перед выполнением операции шифрования.
-                    Шифруется созданный ZIP-архив.</p>
-                <p align="justify"> - <b>Директория для сохранения файла</b> - при выбранной директории зашифрованный файл сохраняется в данной
-                    директории. В противном случае зашифрованный файл размещается рядом с исходным файлом.</p>
+                <p align="justify"> - <b>Encoding type</b> - save the encrypted file in one of two encodings BASE64 or DER.</p>
+                <p align="justify"> - <b>Delete files after encryption</b> - original files are deleted from the file system in case of successful completion of encryption.</p>
+                <p align="justify"> - <b>Archive before encryption</b> - files are archived (ZIP) before performing the cryptographic operation of encryption. The process allows to create encrypted ZIP files.</p>
+                <p align="justify"> - <b>Save the file to</b> - the signed file is saved in the specified directory. Otherwise, the signature is saved next to the original file.</p>
             </div>
         </div>
-        <p align="justify"><b>Выбор сертификатов получателей.</b> Для того, чтобы выполнить шифрование необходимо выбрать цифровые сертификаты
-            получателей шифрованных файлов. Выбранные на этапе шифрования получатели смогут расшифровать файлы, если у них
-            имеется закрытый ключ. Операция выбора осуществляется нажатием кнопки <b>Выбрать сертификаты получателей</b>.</p>
+        <p align="justify"><b>Selection of the recipients’ certificates.</b> In order to encrypt the file you must choose a digital certificate of the recipient of the encrypted file. Selected recipients can decrypt the files if they have the private key. To select the recipient the user presses the button to Select before encryption.</p>
 
         <div class="row">
             <div class="col s6">
-                <p align="justify">В появившемся диалоговом окне отображаются сертификаты, которые могут использоваться для шифрования. Допускается
-                    выбор нескольких сертификатов, так как число получателей может быть различным. Выделенные сертификаты
-                    перемещаются в правый список и по ним можно посмотреть детальную информацию.</p>
-                <p align="justify">Если список сертификатов получателей составлен, его можно подтвердить нажатием на кнопку <b>Выбрать</b>.</p>
-                <p align="justify">Допускается изменение списка сертификатов получателей с помощью кнопки в верхней части элемента.</p>
+                <p align="justify">In the dialog box the certificates are displayed that are available to be used for encryption. You may select multiple certificates as the number of recipients may be different. Selected certificates are placed on the right side. It is possible to look through the detailed information.</p>
+                <p align="justify">If the list of recipients’ certificates is completed, it can be confirmed by pressing the <b>Select</b> button.</p>
+                <p align="justify">It is possible to change the list of recipients’ certificates by using the button at the top of the element.</p>
             </div>
             <div class="col s6">
                 <div class="card">
@@ -256,24 +228,17 @@
                 </div>
             </div>
             <div class="col s6">
-                <p align="justify"><b>Выбор шифруемых файлов.</b> В приложении доступно шифрование одного или группы выбранных файлов. Выбранные
-                    файлы заносятся в правую область и представляют собой одноуровневый список. Для данного списка доступно
-                    контекстное меню в заголовке функционального элемента, состоящее из пунктов:</p>
-                <p align="justify"><b>Выделить все</b> - выделяются все добавленные в список файлы.</p>
-                <p align="justify"><b>Сбросить выделение</b> - отменяется выделение всех выбранных в списке файлов.</p>
-                <p align="justify"><b>Удалить все из списка</b> - список очищается. При очистке списке файлы из файловой системы не удаляются.</p>
+                <p align="justify"><b>Selection of the files to be encrypted.</b> The application is available for encryption of one file or a selected group of files. The selected files are entered on the right side and represent a single-level list. This list has a context menu in the header of the functional element, consisting of variants:</p>
+                <p align="justify"><b>Select all</b> - selects all files added to the list.</p>
+                <p align="justify"><b>Delete selection</b> - cancels selection of all listed files.</p>
+                <p align="justify"><b>Remove all listed files</b> - removed files from this list are not deleted from the file system.</p>
             </div>
         </div>
         <div class="row">
             <div class="col s6">
-                <p align="justify"><b>Шифрование файлов.</b> При условии выбора сертификатов получателей и шифруемых файлов в мастере становится
-                    доступной кнопка <b>Зашифровать</b>. Нажатие на эту кнопку запускает процесс шифрования. Выбранные файлы
-                    шифруются по очереди, если не выбрана опция предварительной архивацмм. Для шифрованных файлов меняется
-                    иконка, наименование, дата создания.
+                <p align="justify"><b>Encryption of files.</b> After selection of the recipients’ certificates and encryption of files the wizard button <b>’to Encrypt’</b> becomes available. Clicking on this button launches the encryption process. The selected files are encrypted one by one, if you do not select a preliminarily archivation. Encrypted files have different icons, names, the date of creation.
                 </p>
-                <p align="justify">Если в настройках подписи не задан каталог для сохранения шифрованных файлов, они сохраняются в тех же каталогах,
-                    где размещаются исходные файлы.
-                </p>
+                <p align="justify">If the signature settings are not specified, the files are saved in the same directory where the original files are placed.</p>
             </div>
             <div class="col s6">
                 <div class="card">
@@ -290,7 +255,7 @@
         <p>
             <a name="decrypt"></a>
         </p>
-        <h5 align="center"><b>РАСШИФРОВАНИЕ ФАЙЛОВ</b></h5>
+        <h5 align="center"><b>DECRYPTION</b></h5>
 
         <div class="row">
             <div class="col s6">
@@ -301,10 +266,8 @@
                 </div>
             </div>
             <div class="col s6">
-                <p align="justify">Для расшифрования достаточно выбрать файлы - файлы с расширением .enc, и нажать на кнопку <b>Расшифровать</b>.
-                </p>
-                <p align="justify"><b>Важно!</b> Если в хранилище сертификатов не окажется сертификата с закрытым ключом который был выбран
-                    в качестве сертификата получателя при шифровании, расшифрование не будет выполнено.</p>
+                <p align="justify">To decrypt the file it is necessary to select the files with the extension .enc, and click on the <b>Decrypt</b> button.</p>
+                <p align="justify"><b>Attention!</b> If there is not a certificate with the private key in the certificate store which was chosen as the recipient's certificate for encryption, decryption will fail.</p>
             </div>
         </div>
         <br><br>
@@ -314,20 +277,12 @@
         <p>
             <a name="certificates"></a>
         </p>
-        <h5 align="center"><b>УПРАВЛЕНИЕ СЕРТИФИКАТАМИ И КЛЮЧАМИ</b></h5>
+        <h5 align="center"><b>CERTIFICATES AND KEYS MANAGEMENT</b></h5>
 
         <div class="row">
             <div class="col s6">
-                <p align="justify">Для управления сертификатами и ключами в приложении добавлено отдельное представление, которое связано с
-                    локальным системным хранилищем. При первом запуске приложения в хранилище уже присутствует тестовый сертификат
-                    и привязанный к нему ключ. Для того, чтобы выполнить импорт нового сертификата в хранилище можно воспользоваться
-                    контекстным меню - выбрать операцию Импортировать сертификат. В появившемся диалоговом окне нужно выбрать
-                    сертификат (поддерживааются кодировки BASE64 и DER) и сертификат помещается в хранилище. У импортированного
-                    в хранилище сертификата отсутствует привязка к закрытому ключу. Для того, чтобы выполнить импорт закрытого
-                    ключа и привязать его к выбранному сертификату нужно вызвать контекстное меню и выбрать пункт Импортировать
-                    ключ. В появившемся диалогом окне выбрать файл закрытого ключа и он будет привязан к сертификату.
-                    <b>Важно!</b> В текущей версии программы поддерживается импорт закрытого ключа из контейнера формата
-                    PKCS#8 без пароля.
+                <p align="justify">To manage certificates and keys in the application there is a part, associated with the local system store. When you first run the application, the test certificate is already present in the repository, and it is attached to the key. In order to import the new certificate in the store you can use the context menu to select the operation “Import the certificate”. In the dialog window, choose the certificate (encodings: BASE64 or DER ) and then the certificate is being placed in storage. An imported certificate is not attached to the private key. In order to import the private key and attach it to the selected certificate, you need to call the context menu and select Import key. In the dialog box select the private key file and it will be attached to the certificate.
+                    <b>Attention!</b> In the current version you can import the private key from the container PKCS#8 without a password.
                 </p>
             </div>
             <div class="col s6">
@@ -341,74 +296,6 @@
         <br><br>
 
         <!--     Раздел по шифрованию     -->
-
-        <p>
-            <a name="license"></a>
-        </p>
-        <h5 align="center"><b>ЛИЦЕНЗИЯ</b></h5>
-
-        <div class="row">
-            <div class="col s6">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" draggable="false" src="image/license_window.png">
-                    </div>
-                </div>
-            </div>
-            <div class="col s6">
-                <p align="justify">Для установки лицензии необходимо нажать на кнопку <b>ВВЕСТИ КЛЮЧ</b>. В открывшемся окне введите сам лицензионный
-                    ключ или просто укажите путь к файлу лицензии.</p>
-            </div>
-        </div>
-        <br><br>
-
-        <h5 align="center"><b>ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ (FAQ)</b></h5>
-        <p>
-            <a name="faq"></a>
-        </p>
-        <div>
-            <ul class="collapsible" data-collapsible="accordion">
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">label</i>Какие файлы и документы я могу подписать или шифровать в приложении
-                        Trusted eSign?</div>
-                    <div class="collapsible-body">
-                        <p>Вы можете подписывать и шифровать любые файлы и документы независимо от их размера или расширений.
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">label</i>Чем отличается приложение Trusted eSign от привычного КриптоАРМ Стандарт?
-                    </div>
-                    <div class="collapsible-body">
-                        <p>Trusted eSign в первую очередь это веб приложение, созданное на современном движке Electron. Оно
-                            значительно быстрее и обладает современным интерфейсом.</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">label</i>Ожидается ли появление приложения Trusted eSign для других операционных
-                        систем?
-                    </div>
-                    <div class="collapsible-body">
-                        <p>Да, мы планируем расширить список поддерживаемых систем.</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">label</i>Где я могу купить лицензию на использование Trusted eSign?</div>
-                    <div class="collapsible-body">
-                        <p>Приобрести приложение вы можете в интернет-магазине Cryptoarm.ru</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">label</i>Нужно ли мне будет оплачивать будущие обновления на приложение?</div>
-                    <div class="collapsible-body">
-                        <p>Нет не нужно, все последующие обновления вы будете получать бесплатно. Приложение будет обновляться
-                            автоматически по мере появления новых пакетов обновлений. При желании вы сможете отключить автоматическое
-                            обновление в настройках приложения.</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
     </div>
     <!--  Scripts-->
     <script src="../js/jquery-3.1.1.min.js"></script>

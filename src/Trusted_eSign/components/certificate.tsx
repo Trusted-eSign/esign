@@ -10,6 +10,7 @@ import * as keys from "../trusted/keys";
 import * as pkcs12 from "../trusted/pkcs12";
 declare let $: any;
 
+const dialog = window.electron.remote.dialog;
 
 class AppStore extends events.EventEmitter {
 
@@ -157,7 +158,7 @@ export class CertWindow extends React.Component<any, any> {
         }
     }
     exportDirectory() {
-        if (framework_NW) {
+        if (window.framework_NW) {
             let clickEvent = document.createEvent("MouseEvents");
             clickEvent.initEvent("click", true, true);
             document.querySelector("#choose-folder-export").dispatchEvent(clickEvent);
@@ -400,11 +401,14 @@ export class CertComponents extends React.Component<any, any> {
         let not_active = sign.get_sign_certificate ? "not-active" : "";
         let active = sign.get_sign_certificate ? "active" : "not-active";
         let active_elem = sign.get_certificate_for_info ? "active" : "";
+        let settings = {
+            draggable: false,
+        };
         return (
             <div id="cert-content" className="content-wrapper z-depth-1">
                 <CertContentToolBarForSign btn_active={active} />
                 <div className={"cert-contents " + not_active}>
-                    <a className="waves-effect waves-light btn-large add-cert-btn" draggable="false" href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Sign}</a>
+                    <a className="waves-effect waves-light btn-large add-cert-btn" {...settings} href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Sign}</a>
                 </div>
                 <CertificateView />
                 <div id="add-cert" className="modal cert-window">
@@ -868,11 +872,14 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
         }
         let name = cert_search.length < 1 ? "active" : "not-active";
         let view = cert_search.length < 1 ? "not-active" : "";
+        let settings = {
+            draggable: false,
+        };
         return (
             <div id="cert-content" className="content-wrapper z-depth-1">
                 <CertContentToolBarForEncrypt />
                 <div className={"cert-contents " + not_active}>
-                    <a className="waves-effect waves-light btn-large add-cert-btn" draggable="false" href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Encrypt}</a>
+                    <a className="waves-effect waves-light btn-large add-cert-btn" {...settings}  href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Encrypt}</a>
                 </div>
                 <ChooseCertsView />
                 <div id="add-cert" className="modal cert-window">

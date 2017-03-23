@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from 'react-dom';
+import * as ReactDOM from "react-dom";
 import { lang, video_app, VideoApp, get_Certificates } from "../module/global_app";
 import Video from "react-html5video";
 import { Link } from "react-router";
@@ -16,15 +16,15 @@ export class Slider extends React.Component<ISliderProps, any> {
         this.state = ({ slider: true });
     }
     componentDidMount() {
-        $('.slider').slider({ interval: 100000000 });
-        $('.slider').slider('pause');
+        $(".slider").slider({ interval: 100000000 });
+        $(".slider").slider("pause");
     }
     prevSlide() {
-        $('.slider').slider('prev');
+        $(".slider").slider("prev");
         this.setState({ slider: !this.state.slider });
     }
     nextSlide() {
-        $('.slider').slider('next');
+        $(".slider").slider("next");
         this.setState({ slider: !this.state.slider });
     }
     render() {
@@ -360,7 +360,7 @@ class VideoSlide extends React.Component<any, IVideoSlideState> {
         this.setState({ active: "active" }, this.load.bind(this));
     }
     load() {
-        ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName('video')[0].load();
+        ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName("video")[0].load();
     }
     closeVideo() {
         video_app.set_video_caption = "";
@@ -369,10 +369,10 @@ class VideoSlide extends React.Component<any, IVideoSlideState> {
         this.setState({ active: "" });
     }
     getCurrentTime() {
-        video_app.set_video_time = ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName('video')[0].currentTime;
+        video_app.set_video_time = ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName("video")[0].currentTime;
     }
     setCurrentTime() {
-        ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName('video')[0].currentTime = video_app.get_video_time;
+        ReactDOM.findDOMNode(this.refs["video-player"]).getElementsByTagName("video")[0].currentTime = video_app.get_video_time;
     }
     render() {
         let self = this;
@@ -398,29 +398,29 @@ class VideoSlide extends React.Component<any, IVideoSlideState> {
                 </div>
                 <div className="video-column">
                     <VideoContent source={lang.get_resource.Help.video[0].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[0].src, lang.get_resource.Help.video[0].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[0].src, lang.get_resource.Help.video[0].title); } }
                         text={lang.get_resource.Help.video[0].title}
                         id="video1" />
                     <VideoContent source={lang.get_resource.Help.video[1].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[1].src, lang.get_resource.Help.video[1].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[1].src, lang.get_resource.Help.video[1].title); } }
                         text={lang.get_resource.Help.video[1].title}
                         id="video2" />
                     <VideoContent source={lang.get_resource.Help.video[2].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[2].src, lang.get_resource.Help.video[2].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[2].src, lang.get_resource.Help.video[2].title); } }
                         text={lang.get_resource.Help.video[2].title}
                         id="video3" />
                 </div>
                 <div className="video-column">
                     <VideoContent source={lang.get_resource.Help.video[3].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[3].src, lang.get_resource.Help.video[3].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[3].src, lang.get_resource.Help.video[3].title); } }
                         text={lang.get_resource.Help.video[3].title}
                         id="video4" />
                     <VideoContent source={lang.get_resource.Help.video[4].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[4].src, lang.get_resource.Help.video[4].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[4].src, lang.get_resource.Help.video[4].title); } }
                         text={lang.get_resource.Help.video[4].title}
                         id="video5" />
                     <VideoContent source={lang.get_resource.Help.video[5].src}
-                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[5].src, lang.get_resource.Help.video[5].title) } }
+                        viewVideo={function () { self.playVideo(lang.get_resource.Help.video[5].src, lang.get_resource.Help.video[5].title); } }
                         text={lang.get_resource.Help.video[5].title}
                         id="video6" />
                 </div>
@@ -443,7 +443,7 @@ class VideoContent extends React.Component<IVideoContentProps, IVideoContentStat
         this.state = ({ duraction: 0 });
     }
     loadedData() {
-        this.setState({ duraction: parseInt(ReactDOM.findDOMNode(this.refs[this.props.id]).getElementsByTagName('video')[0].duration.toString()) });
+        this.setState({ duraction: parseInt(ReactDOM.findDOMNode(this.refs[this.props.id]).getElementsByTagName("video")[0].duration.toString()) });
     }
     render() {
         return (

@@ -228,6 +228,12 @@ gulp.task("electron-linux32", ["electron set platform linux-ia32",
     "remove app folder"
 ]);
 
+gulp.task("electron-darwinx64", ["electron set platform darwin-x64",
+    "build electron",
+    "cert copy",
+    "remove app folder"
+]);
+
 gulp.task("default", [
     "electron-win64"
 ]);

@@ -40,10 +40,10 @@ class Store {
         if (osType === "Windows_NT") {
             this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
             this._store.addProvider(this._providerMicrosoft.handle);
-        } else {
-            this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
-            this._store.addProvider(this._providerCryptopro.handle);
-        }
+        } //else {
+          //  this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
+          //  this._store.addProvider(this._providerCryptopro.handle);
+       // }
     }
 
     get items(): Array<Object> {
@@ -126,7 +126,7 @@ class Store {
     }
 
     importCert(certPath: string): number {
-        let format: any = getFileCoding(certPath);
+        let format: trusted.DataFormat = getFileCoding(certPath);
         let certificate: any = certs.loadCert(certPath, format);
 
         if (!certificate) {
@@ -174,8 +174,9 @@ class Store {
         let key: any;
 
         uri = this._store.addCert(provider.handle, category, cert, flag);
+        newItem = provider.objectToPkiItem(uri);
 
-        if (osType === "Windows_NT") {
+        if (osType === "Windows_NT" && newItem.provider === "MICROSOFT") {
             try {
                 key = this._providerMicrosoft.getKey(cert);
             } catch (e) {
@@ -189,9 +190,6 @@ class Store {
             }
         }
 
-
-
-        newItem = provider.objectToPkiItem(uri);
         items = this._store.cash.export();
 
         for (let i: number = 0; i < items.length; i++) {
@@ -218,9 +216,9 @@ class Store {
         let self = this;
         let pathOut: string = native.path.join(native.DEFAULT_PATH, "temp.crl");
         let crl: any;
-        let rv: any = new native.trusted.pki.Revocation();
+        let rv: any = new trusted.pki.Revocation();
 
-        let distPoints: Array<string> = rv.getCrlDistPoints(cert);
+        let distPoints: string[] = rv.getCrlDistPoints(cert);
         if (distPoints.length === 0) {
             return;
         }
@@ -292,12 +290,12 @@ class Store {
                 try {
                     keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
                 } catch (err) {
-                    let jwtRes: number = jwt.checkLicense();
-                    if (jwtRes) {
-                        $(".toast-jwt_error").remove();
-                        Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-                        return;
-                    }
+                //    let jwtRes: number = jwt.checkLicense();
+                //    if (jwtRes) {
+                //        $(".toast-jwt_error").remove();
+                //        Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
+                //        return;
+                //    }
                 }
 
                 if (!keyItem) {
@@ -311,12 +309,12 @@ class Store {
                 try {
                     keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
                 } catch (err) {
-                    let jwtRes: number = jwt.checkLicense();
-                    if (jwtRes) {
-                        $(".toast-jwt_error").remove();
-                        Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-                        return;
-                    }
+                //    let jwtRes: number = jwt.checkLicense();
+                //    if (jwtRes) {
+                //        $(".toast-jwt_error").remove();
+                //        Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
+                //        return;
+                //    }
                 }
 
                 if (!keyItem) {

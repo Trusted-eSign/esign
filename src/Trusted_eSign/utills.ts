@@ -14,9 +14,9 @@ export let utills = {
         native.fs.readSync(fd, buffer, 0, 2, 0);
 
         if (buffer.toString("utf8", 0, 2) === "--") {
-            res = native.trusted.DataFormat.PEM;
+            res = trusted.DataFormat.PEM;
         } else {
-            res = native.trusted.DataFormat.DER;
+            res = trusted.DataFormat.DER;
         }
 
         native.fs.closeSync(fd);

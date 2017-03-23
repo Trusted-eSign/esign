@@ -17,6 +17,8 @@ export interface IFiles extends File {
     path: string;
 }
 
+const dialog = window.electron.remote.dialog;
+
 export class FileComponents extends React.Component<IFileComponentsProps, any> {
 
     constructor(props: IFileComponentsProps) {
@@ -132,7 +134,7 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
         }
     }
     addFiles() {
-        if (!framework_NW) {
+        if (!window.framework_NW) {
             let files: any = [];
             let self = this;
             dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, function (file: any) {
@@ -458,11 +460,11 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
     }
     openFile(event: any, file: string) {
         event.stopPropagation();
-        shell.openItem(this.props.file_path);
+        window.electron.shell.openItem(this.props.file_path);
     }
     openFileFolder(event: any, path: string) {
         event.stopPropagation();
-        shell.showItemInFolder(this.props.file_path);
+        window.electron.shell.showItemInFolder(this.props.file_path);
     }
     render() {
         let self = this;
@@ -521,23 +523,28 @@ export class MainMenu extends React.Component<any, any> {
     handleClose() {
         this.setState({ open: false });
     }
+
+   
+
     render() {
+        let settings = {
+            draggable: false,
+        };
         return (
             <div>
                 <nav className="menu-logo">
                     <div className="center">
-                        <Link to="/" className="menuheaderlink" href="/" draggable='false'>
-                            <i className="logo-trusted"><img src="trusted-esign.png" draggable="false" /></i><div className="logo-text">{lang.get_resource.About.product_NAME}</div>
+                        <Link to="/" className="menuheaderlink" href="/" {...settings}>
+                            <i className="logo-trusted"><img src="trusted-esign.png" {...settings} /></i><div className="logo-text">{lang.get_resource.About.product_NAME}</div>
                         </Link>
                     </div>
                 </nav>
-                <Link to="/sign" draggable="false" style={MenuStyle}>{lang.get_resource.Sign.Sign}<i className="material-icons left sign">mode_edit</i></Link>
-                <Link to="/encrypt" draggable="false" style={MenuStyle}>{lang.get_resource.Encrypt.Encrypt}<i className="material-icons left encrypt">enhanced_encryption</i></Link>
-                <Link to="/certificate" draggable="false" style={MenuStyle}>{lang.get_resource.Certificate.Certificate}<i className="material-icons left cert">library_books</i></Link>
+                <Link to="/sign" {...settings} style={MenuStyle}>{lang.get_resource.Sign.Sign}<i className="material-icons left sign">mode_edit</i></Link>
+                <Link to="/encrypt" {...settings} style={MenuStyle}>{lang.get_resource.Encrypt.Encrypt}<i className="material-icons left encrypt">enhanced_encryption</i></Link>
+                <Link to="/certificate" {...settings} style={MenuStyle}>{lang.get_resource.Certificate.Certificate}<i className="material-icons left cert">library_books</i></Link>
                 <div className="menu-elements">
-                    <Link className={"bordered--top"} draggable="false" to="/about" style={MenuStyle}>{lang.get_resource.About.About}<i className="material-icons left about">about</i></Link>
-                    <Link to="/license" draggable="false" style={MenuStyle}>{lang.get_resource.License.License}<i className="material-icons left license">license</i></Link>
-                    <Link to="/help" draggable="false" style={MenuStyle}>{lang.get_resource.Help.Help}<i className="material-icons left help">help</i></Link>
+                    <Link className={"bordered--top"} {...settings} to="/about" style={MenuStyle}>{lang.get_resource.About.About}<i className="material-icons left about">about</i></Link>
+                    <Link to="/help" {...settings} style={MenuStyle}>{lang.get_resource.Help.Help}<i className="material-icons left help">help</i></Link>
                 </div>
             </div>
         );
@@ -751,7 +758,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
 
         let command = "";
 
-        if (PLATFORM !== "win32") {
+        if (window.PLATFORM !== "win32") {
             command = "su -c " + "\"";
             command = command + "mkdir -p " + "'" + path + "'" + " && ";
         } else {
@@ -769,13 +776,13 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
             if (data.sub !== "-") {
                 status = getStatus(this.state.license_key);
                 if (status.type === "ok") {
-                    if (PLATFORM === "win32") {
+                    if (window.PLATFORM === "win32") {
                         command = command + "echo " + this.state.license_key.trim() + " > " + '"' + licFilePath + '"';
                     } else {
                         command = command + " printf " + this.state.license_key.trim() + " > " + "'" + licFilePath + "'" + " && ";
                         command = command + " chmod 777 " + "'" + licFilePath + "'" + "\"";
                     }
-                    sudo.exec(command, options, function (error: any) {
+                    native.sudo.exec(command, options, function (error: any) {
                         if (!error) {
                             lic.setInfo = data;
                             lic.setStatus = status;
@@ -802,13 +809,13 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
                     if (info.sub !== "-") {
                         status = getStatus(data);
                         if (status.type === "ok") {
-                            if (PLATFORM === "win32") {
+                            if (window.PLATFORM === "win32") {
                                 command = command + "echo " + data + " > " + '"' + licFilePath + '"';
                             } else {
                                 command = command + " printf " + data + " > " + "'" + licFilePath + "'" + " && ";
                                 command = command + " chmod 777 " + "'" + licFilePath + "'" + "\""
                             }
-                            sudo.exec(command, options, function (error: any) {
+                            window.sudo.exec(command, options, function (error: any) {
                                 if (!error) {
                                     lic.setInfo = info;
                                     lic.setStatus = status;
@@ -839,7 +846,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
         this.props.closeWindow();
     }
     openLicenseFile() {
-        if (!framework_NW) {
+        if (!window.framework_NW) {
             let file = dialog.showOpenDialog({
                 properties: ["openFile"],
                 filters: [

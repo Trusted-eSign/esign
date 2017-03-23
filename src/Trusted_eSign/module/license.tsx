@@ -1,4 +1,5 @@
 /// <reference path="../../../types/index.d.ts" />
+/// <reference path="../../index.d.ts" />
 
 import { EventEmitter } from "events";
 import * as native from "../native";
@@ -6,7 +7,7 @@ import * as jwt from "../trusted/jwt";
 import { lang } from "../module/global_app";
 
 export let getLicensePath = function () {
-    let licFilePath = native.path.join(LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
+    let licFilePath = native.path.join(window.LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
     return licFilePath;
 }
 export let getNullInfo = function () {

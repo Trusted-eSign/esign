@@ -6,9 +6,11 @@ import * as chain from "./chain";
 import { utills } from "../utills";
 import * as jwt from "./jwt";
 
+const dialog = window.electron.remote.dialog;
+
 export function loadSign(uri: string): trusted.cms.SignedData {
     try {
-        let format: number;
+        let format: trusted.DataFormat;
         let cms: trusted.cms.SignedData;
         let tempURI: string;
 
@@ -90,11 +92,11 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
         sd.save(outURI, format);
     }
     catch (err) {
-        let jwtRes: number = jwt.checkLicense();
-        if (jwtRes) {
-            $(".toast-jwt_error").remove();
-            Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-        }
+      //  let jwtRes: number = jwt.checkLicense();
+      //  if (jwtRes) {
+      //      $(".toast-jwt_error").remove();
+      //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
+       // }
 
         return "";
     }
@@ -144,11 +146,11 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
         sd.save(outURI, format);
     }
     catch (err) {
-        let jwtRes: number = jwt.checkLicense();
-        if (jwtRes) {
-            $(".toast-jwt_error").remove();
-            Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-        }
+      // let jwtRes: number = jwt.checkLicense();
+      //  if (jwtRes) {
+      //      $(".toast-jwt_error").remove();
+      //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
+      //  }
 
         return "";
     }

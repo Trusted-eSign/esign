@@ -21,8 +21,6 @@
                 window.$ = window.jQuery = require('./js/jquery-3.1.1.min.js');
                 window.Hammer = require("./js/hammer.min.js");
                 window.electron = require('electron');
-                window.shell = electron.shell;
-                window.dialog = electron.remote.dialog;
                 window.mainWindow = electron.remote.getCurrentWindow();
                 window.RESOURCES_PATH = __dirname;
                 window.framework_NW = false;
@@ -55,12 +53,12 @@
             window.fs = require('fs');
             window.os = require('os');
             window.archiver = require('archiver');
+            window.sudo = require('sudo-prompt');
             window.DEFAULT_PATH = path.dirname(process.execPath);
             window.HOME_DIR = os.homedir();
             window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
             window.PLATFORM = process.platform;
             window.LICENSE_PATH = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
-            window.sudo = require('sudo-prompt');
 
             if ( !fs.existsSync( path.join(HOME_DIR, '.Trusted') ) ) {
                 fs.mkdirSync( path.join(HOME_DIR, '.Trusted'), { mode: 0o700 } );

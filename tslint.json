@@ -3,6 +3,7 @@
   "rules": {
         "no-reference": false,
         "member-access": false,
-        "max-line-lengt": 160
+        "max-line-lengt": 170,
+        "max-classes-per-file": [true, 15]
   }
 }

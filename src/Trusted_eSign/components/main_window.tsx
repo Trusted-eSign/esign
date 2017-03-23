@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import * as native from "../native";
 import { lang, LangApp } from "../module/global_app";
 import { Slider } from "./slider";
-import { getLicenseStatus } from "../module/license";
+//import { getLicenseStatus } from "../module/license";
 declare let $: any;
 
 export class AppBar extends React.Component<any, any> {
@@ -18,11 +18,11 @@ export class AppBar extends React.Component<any, any> {
             closeOnClick: true,
         });
         lang.on(LangApp.SETTINGS, this.setComponents);
-        let status = getLicenseStatus();
-        if (status.type === "error") {
-            $(".toast-status.message").remove();
-            Materialize.toast(status.message, 10000, "toast-status.message");
-        }
+        //let status = getLicenseStatus();
+        //if (status.type === "error") {
+        //    $(".toast-status.message").remove();
+        //    Materialize.toast(status.message, 10000, "toast-status.message");
+        //}
     }
     componentWillUnmount() {
         lang.removeListener(LangApp.SETTINGS, this.setComponents);
@@ -42,8 +42,8 @@ export class AppBar extends React.Component<any, any> {
             title = lang.get_resource.Certificate.certs;
         else if (route_path === "/about")
             title = lang.get_resource.About.about;
-        else if (route_path === "/license")
-            title = lang.get_resource.License.license;
+        //else if (route_path === "/license")
+        //    title = lang.get_resource.License.license;
         else if (route_path === "/help")
             title = lang.get_resource.Help.help;
         else
@@ -94,10 +94,10 @@ export class MainWindow extends React.Component<any, any> {
         }
     }
     closeWindow() {
-        mainWindow.close();
+        window.mainWindow.close();
     }
     toLinkSoc(address: string) {
-        shell.openExternal(address);
+        window.electron.shell.openExternal(address);
     }
     render() {
         let self = this;
@@ -119,9 +119,6 @@ export class MainWindow extends React.Component<any, any> {
                                 <div className="col l3 s7">
                                     <div className="r-socials">
                                         <div className="r-socials-list">
-                                            <Socials socialLink={lang.get_resource.About.link_facebook} social="facebook" />
-                                            <Socials socialLink={lang.get_resource.About.link_vk} social="vk" />
-                                            <Socials socialLink={lang.get_resource.About.link_twitter} social="twitter" />
                                         </div>
                                     </div>
                                 </div>
@@ -145,11 +142,14 @@ export class MainWindowOperations extends React.Component<IMainWindowOperationsP
         super(props);
     }
     render() {
+        let settings = {
+            draggable: false,
+        };
         return <div className="col l3 s4">
             <div className="r-iconbox iconpos_left">
                 <div className="r-iconbox-link">
                     <div className="r-iconbox-icon">
-                        <Link to={"/" + this.props.operation} draggable="false" className={this.props.operation + "_roundbutton_icon"} />
+                        <Link to={"/" + this.props.operation} {...settings} className={this.props.operation + "_roundbutton_icon"} />
                     </div>
                     <h5 className="r-iconbox-title">{this.props.title_pre}<br />{this.props.title_post}</h5>
                 </div>
@@ -169,7 +169,7 @@ class Socials extends React.Component<ISocialsProps, any> {
         super(props);
     }
     toLinkSoc(address: string) {
-        shell.openExternal(address);
+        window.electron.shell.openExternal(address);
     }
     render() {
         let self = this;

@@ -1,8 +1,8 @@
-import * as native from "../native";
 import { EventEmitter } from "events";
+import * as native from "../native";
 import * as CERTS from "../trusted/certs";
-import * as CRLS from "../trusted/crls";
 import * as CHAIN from "../trusted/chain";
+import * as CRLS from "../trusted/crls";
 
 export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
@@ -11,7 +11,7 @@ export class VideoApp extends EventEmitter {
     protected video: any = {
         source: "",
         caption: "",
-        currentTime: 0
+        currentTime: 0,
     };
     get get_video_source() {
         return this.video.source;
@@ -55,7 +55,7 @@ export let extFile = function (filename: string) {
         file_type = "file_type_icon";
     }
     return file_type;
-}
+};
 export let get_Certificates = function (operation: string) {
     let certCollection: trusted.pki.CertificateCollection = window.CERTIFICATECOLLECTION;
     let certs: any = [];
@@ -95,7 +95,7 @@ export let get_Certificates = function (operation: string) {
             privateKey: certList[i].provider === "SYSTEM" ? certList[i].key.length > 0 : true,
             keyValue: certList[i].provider === "SYSTEM" ? certList[i].key : "1",
             active: false,
-            key: i
+            key: i,
         });
     }
     if (operation === "sign") {
@@ -115,7 +115,7 @@ export let get_Certificates = function (operation: string) {
         }
     }
     return certs;
-}
+};
 let certCheck = function (notBefore: string, notAfter: string) {
     let before = Date.parse(notBefore);
     let after = Date.parse(notAfter);
@@ -125,7 +125,7 @@ let certCheck = function (notBefore: string, notAfter: string) {
     } else {
         return true;
     }
-}
+};
 let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
     let cert = window.PKISTORE.getPkiObject(certItem);
     let chainForVerify = CHAIN.buildChain(cert, certCollection);
@@ -154,7 +154,7 @@ let certVerify = function (certItem: IX509Certificate, certCollection: trusted.p
     // }
 
     return CHAIN.verifyChain(chainForVerify, null);
-}
+};
 export let get_settings_from_json = function (operation: string, settings_name: string) {
     try {
         let data = native.fs.readFileSync(SETTINGS_JSON, "utf8");
@@ -167,14 +167,14 @@ export let get_settings_from_json = function (operation: string, settings_name: 
                     directory: "",
                     add_time: false,
                     encoding: "BASE-64",
-                    detached: false
-                }
+                    detached: false,
+                };
             } else {
                 return null;
             }
         } else if (operation === "MAIN") {
             if (settings_name === "lang") {
-                return "RU";
+                return "EN";
             }
         } else {
             if (settings_name === "settings_for_encrypt") {
@@ -182,53 +182,53 @@ export let get_settings_from_json = function (operation: string, settings_name: 
                     directory: "",
                     archive_files: false,
                     encoding: "BASE-64",
-                    delete_files: false
-                }
+                    delete_files: false,
+                };
             } else {
                 return [];
             }
         }
     }
-}
+};
 export interface IX509Certificate {
-    format: string,
-    type: string,
-    category: string,
-    provider: string,
-    uri: string,
-    hash: string,
-    serial: string,
-    notAfter: string,
-    notBefore: string,
-    fullSubjectName: string,
-    fullIssuerName: string,
-    name: string,
-    issuerName: string,
-    organization: string,
-    status: boolean,
-    algSign: string,
-    privateKey: boolean,
-    keyValue: string,
-    active: boolean,
-    key: number
+    format: string;
+    type: string;
+    category: string;
+    provider: string;
+    uri: string;
+    hash: string;
+    serial: string;
+    notAfter: string;
+    notBefore: string;
+    fullSubjectName: string;
+    fullIssuerName: string;
+    name: string;
+    issuerName: string;
+    organization: string;
+    status: boolean;
+    algSign: string;
+    privateKey: boolean;
+    keyValue: string;
+    active: boolean;
+    key: number;
 }
 /**функция чтения строковых ресурсов */
 let get_string_resources = function (lang: string) {
     try {
         let RESOURCES_JSON: string;
-        if (framework_NW) {
-            RESOURCES_JSON = RESOURCES_PATH + "/Trusted_eSign/language/" + lang + ".json";
+        if (window.framework_NW) {
+            RESOURCES_JSON = window.RESOURCES_PATH + "/Trusted_eSign/language/" + lang + ".json";
         } else {
-            RESOURCES_JSON = RESOURCES_PATH + "/language/" + lang + ".json";
+            RESOURCES_JSON = window.RESOURCES_PATH + "/language/" + lang + ".json";
         }
-        let data = fs.readFileSync(RESOURCES_JSON, "utf8");
+        let data = native.fs.readFileSync(RESOURCES_JSON, "utf8");
         data = JSON.parse(data);
         return data;
     } catch (e) {
     }
-}
+};
 export class LangApp extends EventEmitter {
-    protected lang = get_settings_from_json("MAIN", "lang");
+    protected lang = "EN"; // get_settings_from_json("MAIN", "lang");
     protected resource = get_string_resources(this.lang);
     static SETTINGS = "lang_change";
     get get_lang() {
@@ -236,7 +236,7 @@ export class LangApp extends EventEmitter {
     }
     set set_lang(lang: string) {
         this.lang = lang;
-        this.resource = get_string_resources(lang)
+        this.resource = get_string_resources(lang);
         this.emit(LangApp.SETTINGS, lang);
     }
     get get_resource() {
@@ -253,7 +253,7 @@ interface DialogOptions {
     message: string;
     open: boolean;
     code: boolean;
-    cb: (code: boolean) => void
+    cb: (code: boolean) => void;
 }
 export class DialogBox extends EventEmitter {
     static SETTINGS = "dialog_change";
@@ -262,7 +262,7 @@ export class DialogBox extends EventEmitter {
         message: "",
         open: false,
         code: false,
-        cb: code => { }
+        cb: (code) => { },
     };
     ShowDialog(title: string, message: string, cb: (code: boolean) => void) {
         let dig: DialogOptions = { title: title, message: message, open: true, code: false, cb: cb };
@@ -291,7 +291,7 @@ export class DialogBox extends EventEmitter {
             message: "",
             open: false,
             code: button_code,
-            cb: code => { }
+            cb: (code) => { },
         };
         this.set_dlg_all = dig;
     }
@@ -323,7 +323,7 @@ export let checkFiles = function (operation: string) {
         return false;
     }
     return true;
-}
-import { sign } from "./sign_app";
-import { encrypt } from "./encrypt_app";
+};
 import { certs_app } from "./certificates_app";
+import { encrypt } from "./encrypt_app";
+import { sign } from "./sign_app";

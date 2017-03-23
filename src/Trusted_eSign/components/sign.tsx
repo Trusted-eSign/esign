@@ -10,6 +10,8 @@ import * as signs from "../trusted/sign";
 import { utills } from "../utills";
 declare let $: any;
 
+const dialog = window.electron.remote.dialog;
+
 export class SignWindow extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
@@ -40,9 +42,9 @@ export class SignWindow extends React.Component<any, any> {
             let files = sign.get_files_for_sign;
             let pathes = files.slice(0);
 
-            let policies = ['noAttributes'];
+            let policies = ["noAttributes"];
 
-            let format = native.trusted.DataFormat.PEM;
+            let format = trusted.DataFormat.PEM;
             let folderOut = sign.get_settings_directory;
 
             if (folderOut.length > 0) {
@@ -54,7 +56,7 @@ export class SignWindow extends React.Component<any, any> {
             }
 
             if (sign.get_settings_detached) {
-                policies.push('detached');
+                policies.push("detached");
             }
 
             if (sign.get_settings_add_time) {
@@ -62,7 +64,7 @@ export class SignWindow extends React.Component<any, any> {
             }
 
             if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
-                format = native.trusted.DataFormat.DER;
+                format = trusted.DataFormat.DER;
             }
             pathes.forEach(function (uri: any, i: any) {
                 let newPath = signs.signFile(uri.path, cert, key, policies, format, folderOut);
@@ -116,9 +118,9 @@ export class SignWindow extends React.Component<any, any> {
             let files = sign.get_files_for_sign;
             let pathes = files.slice(0);
 
-            let policies = ['noAttributes'];
+            let policies = ["noAttributes"];
 
-            let format = native.trusted.DataFormat.PEM;
+            let format = trusted.DataFormat.PEM;
             let folderOut = sign.get_settings_directory;
 
             if (folderOut.length > 0) {
@@ -134,7 +136,7 @@ export class SignWindow extends React.Component<any, any> {
             }
 
             if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
-                format = native.trusted.DataFormat.DER;
+                format = trusted.DataFormat.DER;
             }
             pathes.forEach(function (uri: any, i: any) {
                let newPath = signs.resignFile(uri.path, cert, key, policies, format, folderOut);
@@ -146,7 +148,7 @@ export class SignWindow extends React.Component<any, any> {
                     pathes[i].ext = extFile(pathes[i].name);
                     pathes[i].verify_status = "default_status";
                 } else {
-                    res = false
+                    res = false;
                 }
             });
 
@@ -187,8 +189,8 @@ export class SignWindow extends React.Component<any, any> {
                     pathes[i].date = date;
                     pathes[i].name = native.path.basename(pathes[i].path);
                     pathes[i].ext = extFile(pathes[i].name);
-                    if ($('.tooltipped')[path.key]) {
-                        $('.tooltipped')[path.key].className = "tooltipped";
+                    if ($(".tooltipped")[path.key]) {
+                        $(".tooltipped")[path.key].className = "tooltipped";
                     }
                 } else {
                     res = false;
@@ -385,7 +387,7 @@ class CertChain extends React.Component<any, any> {
                             if (l.active === true) {
                                 active = "active";
                             }
-                            return <div className={"collection-item avatar certs-collection cs-chain " + active} key={i} onClick={function (event: any) { self.viewCert(event, l) } } style={{ paddingLeft: padding + "px" }}>
+                            return <div className={"collection-item avatar certs-collection cs-chain " + active} key={i} onClick={function (event: any) { self.viewCert(event, l); } } style={{ paddingLeft: padding + "px" }}>
                                 <div className="r-iconbox-link">
                                     <div className="r-iconbox-cert-icon cs-icon"><i className={status + " cs-icon-size"}></i></div>
                                     <p className="cs-title">{l.subject}</p>
@@ -455,7 +457,7 @@ class SignSettingsComponents extends React.Component<any, any> {
         this.setState({});
     }
     addDirect() {
-        if (!framework_NW) {
+        if (!window.framework_NW) {
             let directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
             if (directory)
                 sign.set_settings_directory = directory[0];
@@ -471,11 +473,11 @@ class SignSettingsComponents extends React.Component<any, any> {
                 <ItemBar text={lang.get_resource.Sign.sign_setting} />
                 <div className="settings-content">
                     <EncodingType EncodingValue={sign.get_settings_encoding} />
-                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_detached = !sign.get_settings_detached } }
+                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_detached = !sign.get_settings_detached; } }
                         check={sign.get_settings_detached}
                         id_name="detached-sign"
                         text={lang.get_resource.Sign.sign_detached} />
-                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_add_time = !sign.get_settings_add_time } }
+                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_add_time = !sign.get_settings_add_time; } }
                         check={sign.get_settings_add_time}
                         id_name="sign-time"
                         text={lang.get_resource.Sign.sign_time} />
@@ -525,7 +527,7 @@ class SignsInfo extends React.Component<any, any> {
                         <div className="sign-info-content">
                             <div className={"add-cert-collection collection "}>
                                 {signs_list.map(function (l: any, i: number) {
-                                    return <ViewSignsInfo key={i} signed_data={l} />
+                                    return <ViewSignsInfo key={i} signed_data={l} />;
                                 })}
                             </div>
                         </div>
@@ -556,10 +558,10 @@ class ViewSignsInfo extends React.Component<IViewSignsInfoProps, any> {
             icon = "status_cert_ok_icon";
         } else {
             status = lang.get_resource.Sign.sign_error;
-            icon = "status_cert_fail_icon"
+            icon = "status_cert_fail_icon";
         }
         return (
-            <div className="collection-item avatar certs-collection" onClick={function (event: any) { self.viewSignCertInfo(event, self.props.signed_data.certs) } }>
+            <div className="collection-item avatar certs-collection" onClick={function (event: any) { self.viewSignCertInfo(event, self.props.signed_data.certs); } }>
                 <div className="r-iconbox-link">
                     <div className="r-iconbox-cert-icon"><i className={icon}></i></div>
                     <p className="collection-title si-title">{status}</p>

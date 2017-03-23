@@ -70,11 +70,14 @@ class LicenseStatus extends React.Component<any, any> {
                 style_row = { border: "2px solid green", padding: "5px" };
             }
         }
+        let settings = {
+            draggable: false,
+        };
         return (
             <div className="row leftshifter">
                 <LicenseInfoItems title={lang.get_resource.License.lic_status} info={lic.getStatus.message} style={style} style_row={style_row} />
                 <div className="col s6">
-                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" draggable="false">{lang.get_resource.License.Enter_Key}</a>
+                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>{lang.get_resource.License.Enter_Key}</a>
                 </div>
             </div>
         );
@@ -105,20 +108,20 @@ class LicenseInfo extends React.Component<any, any> {
                 month: 'long',
                 day: 'numeric',
                 hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric'
+                minute: "numeric",
+                second: "numeric"
             });
         }
         if (lic.getInfo.iat === "-") {
             notBefore = "-";
         } else {
             notBefore = new Date(lic.getInfo.iat * 1000).toLocaleDateString(lang.get_lang, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric'
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
             });
         }
         let style = { height: 39 + "px" };

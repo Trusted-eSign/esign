@@ -5,8 +5,8 @@ export class EncryptApp extends EventEmitter {
     protected settings = get_settings_from_json("ENCRYPT", "settings_for_encrypt");
     protected files: any = [];
     protected files_for_encrypt: any = [];
-    protected certificates_for_encrypt: IX509Certificate[] = get_settings_from_json("ENCRYPT", "certificates_for_encrypt");
-    protected certificates_is_active: IX509Certificate[] = this.certificates_for_encrypt;
+    protected certificates_for_encrypt: trusted.pkistore.PkiItem[] = get_settings_from_json("ENCRYPT", "certificates_for_encrypt");
+    protected certificates_is_active: trusted.pkistore.PkiItem[] = this.certificates_for_encrypt;
     protected certificates: IX509Certificate[] = [];
     protected certificate_for_info: IX509Certificate = null;
     protected search_value = "";
