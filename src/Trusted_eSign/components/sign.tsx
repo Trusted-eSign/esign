@@ -259,7 +259,7 @@ export class SignWindow extends React.Component<any, any> {
                 }
             });
             if (files.length === 1) {
-                sign.set_sign_info_active = sign_files_info[sign_files_info.length - 1];
+                sign.set_sign_info_active = sign_files_info[files[0].key];
             }
             sign.set_sign_info = sign_files_info;
             sign.set_files_for_sign = pathes;
