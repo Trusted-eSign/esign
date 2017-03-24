@@ -91,23 +91,40 @@ export class AboutWindow extends React.Component<any, any> {
             <div className="main">
                 <div className="about">
                     <div className="row">
-                        <div className="content">
-                            <div className="geo">
-                                <div className="geo-icon"></div>
-                            </div>
-                        </div>
+                        <div className="content"></div>
                     </div>
                     <div className="feedback">
                         <div className="formfeedback">
                             <div className="row">
                                 <div className="col s12 m6">
-                                    <div className="card infoapp">
-                                        <div className="card-content gray-text">
+                                    <div className="card contact">
+                                        <div className="card-content white-text">
+                                        <div className="row">
                                             <span className="card-title">{lang.get_resource.About.product_NAME}</span>
                                             <span className="card-infos">
                                                 <p>{lang.get_resource.About.version}</p>
                                             </span>
                                         </div>
+                                            <div className="row">
+                                                <span className="card-title">{lang.get_resource.About.Info}</span>
+                                            </div>
+                                            <div className="row">
+                                                <div className="contact-icon"></div>
+                                                <h6 className="contact-text">{lang.get_resource.About.about_programm}<br></br><br></br>{lang.get_resource.About.reason_build}
+                                                </h6>
+                                            </div>
+                                            <div className="row">
+                                                <div className="contact-icon"><i className="mail_contact_icon"></i></div>
+                                                <h6 className="contact-title">{lang.get_resource.About.info}</h6>
+                                            </div>
+                                        </div>
+                                        <div className="card-action">
+                                            <a href="#">This is a link</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col s12 m6">
+                                    <div className="card infoapp">
                                         <div className="card-content gray-text">
                                             <span className="card-title">{lang.get_resource.About.FeedBack}</span>
                                             <form onSubmit={this.validDatas.bind(this)} className="col s12">
@@ -148,32 +165,7 @@ export class AboutWindow extends React.Component<any, any> {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col s12 m6">
-                                    <div className="card contact">
-                                        <div className="card-content white-text">
-                                            <div className="row">
-                                                <span className="card-title">{lang.get_resource.About.Contacts}</span>
-                                            </div>
-                                            <div className="row">
-                                                <div className="contact-icon"><i className="geo_contact_icon"></i></div>
-                                                <h6 className="contact-title">{lang.get_resource.About.address}</h6>
-                                            </div>
-                                            <div className="row">
-                                                <div className="contact-icon"><i className="address_contact_icon"></i></div>
-                                                <h6 className="contact-title">{lang.get_resource.About.phone.number_one}<br />{lang.get_resource.About.phone.number_two}<br />
-                                                    {lang.get_resource.About.phone.number_three}
-                                                </h6>
-                                            </div>
-                                            <div className="row">
-                                                <div className="contact-icon"><i className="mail_contact_icon"></i></div>
-                                                <h6 className="contact-title">{lang.get_resource.About.info}</h6>
-                                            </div>
-                                        </div>
-                                        <div className="card-action">
-                                            <a href="#">This is a link</a>
-                                        </div>
-                                    </div>
-                                </div>
+    
                             </div>
                         </div>
                     </div>

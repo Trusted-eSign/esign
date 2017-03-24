@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+<g>
+	<g>
+		<path style="fill:#B7482A;" d="M45,44.797c0,0.765-0.621,1.386-1.386,1.386H4.386C3.621,46.184,3,45.563,3,44.797V3.213
+			c0-0.765,0.621-1.386,1.386-1.386h39.228C44.379,1.827,45,2.448,45,3.213V44.797z"/>
+	</g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="24" y1="23.9946" x2="24" y2="1.8164">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.2531" style="stop-color:#F2F2F3"/>
+		<stop  offset="0.7327" style="stop-color:#D1D2D3"/>
+		<stop  offset="1" style="stop-color:#BCBEC0"/>
+	</linearGradient>
+	<path style="opacity:0.12;fill:url(#SVGID_1_);" d="M43.614,1.816H4.386C3.621,1.816,3,2.437,3,3.203v18.191
+		c5.98,1.644,13.121,2.601,20.792,2.601c7.85,0,15.145-1.001,21.208-2.716V3.203C45,2.437,44.379,1.816,43.614,1.816z"/>
+	<path style="fill:none;stroke:#FFFFFF;stroke-miterlimit:10;" d="M45,44.787c0,0.765-0.621,1.386-1.386,1.386H4.386
+		C3.621,46.173,3,45.552,3,44.787V3.203c0-0.765,0.621-1.386,1.386-1.386h39.228C44.379,1.816,45,2.437,45,3.203V44.787z"/>
+	<polygon style="fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;" points="18.941,10.521 18.941,16.482 18.941,32.006 
+		12.564,32.006 12.564,10.521 6.743,10.521 6.743,36.997 12.564,36.997 18.941,36.997 23.861,36.997 24.531,42.402 28.782,42.402 
+		28.782,36.997 28.782,32.006 24.901,32.006 24.901,16.482 30.099,16.482 30.099,42.402 35.713,42.402 35.713,16.482 41.257,16.482 
+		41.257,10.521 	"/>
+	<text transform="matrix(0.8578 0 0 1 6.7417 8.4342)" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.6221;">цифровые</text>
+	<text transform="matrix(0 -0.8123 1 0 41.2783 42.4132)"><tspan x="0" y="0" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.7921;">т</tspan><tspan x="2.59" y="0" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.7921;">е</tspan><tspan x="5.601" y="0" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.7921;">хноло</tspan><tspan x="21.807" y="0" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.7921;">г</tspan><tspan x="24.188" y="0" style="fill:#FFFFFF; font-family:'MyriadPro-Bold'; font-size:5.7921;">ии</tspan></text>
+</g>
+</svg>

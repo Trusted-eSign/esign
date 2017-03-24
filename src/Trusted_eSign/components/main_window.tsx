@@ -111,9 +111,9 @@ export class MainWindow extends React.Component<any, any> {
                                 <div className="col l3 s1"><i className="ctlogo"></i></div>
                                 <div className="col l3 s4">
                                     <div className="copyright">
-                                        <a className="white-text text-lighten-3" target="_blank" onClick={function (event: any) { self.toLinkSoc(lang.get_resource.About.link_trusred) } }>
+                                        <div className="white-text text-lighten-3">
                                             {lang.get_resource.About.company_name}<br />{lang.get_resource.About.copyright}
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="col l3 s7">
@@ -146,17 +146,17 @@ export class MainWindowOperations extends React.Component<IMainWindowOperationsP
             draggable: false,
         };
         return <div className="col l3 s4">
-            <div className="r-iconbox iconpos_left">
+            <Link to={"/" + this.props.operation} className="r-iconbox-link iconpos_left">
                 <div className="r-iconbox-link">
                     <div className="r-iconbox-icon">
-                        <Link to={"/" + this.props.operation} {...settings} className={this.props.operation + "_roundbutton_icon"} />
+                        <div className={this.props.operation + "_roundbutton_icon" }></div>
                     </div>
                     <h5 className="r-iconbox-title">{this.props.title_pre}<br />{this.props.title_post}</h5>
                 </div>
                 <div className="r-iconbox-text">
                     <p>{this.props.info}</p>
                 </div>
-            </div>
+           </Link>     
         </div>;
     }
 }

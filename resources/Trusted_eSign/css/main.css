@@ -1057,6 +1057,12 @@ nav .cert-seacrh label i {
     width: 70px;
 }
 
+.r-iconbox .iconpos_left{
+    display: block;
+}
+
+
+
 .w-iconbox-title {
     margin-left: 95px;
     padding-top: 0;
@@ -1138,6 +1144,15 @@ h5.r-iconbox-title {
   color: #b64729;
 }
 
+h6.r-iconbox-title {
+display: inline-block;
+    position: absolute;
+    margin-left: 18px;
+    color: #b64729;
+    font-size: 1.3rem;
+    margin-top: 14px;
+}
+
 .r-iconbox-text p {
   font-size: 13px;
   padding-left: 10px;
@@ -1177,8 +1192,7 @@ h5.r-iconbox-title {
 }
 
 .card.contact {
-  height: 262px;
-  margin-top: 276px;
+  height: 314px;
 }
 
 span.card-title {
@@ -1192,7 +1206,7 @@ span.card-title {
 }
 
 .card-action {
-  margin-top: 264px;
+  margin-top: 370px;
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
@@ -1236,6 +1250,11 @@ form.col.s12 {
   float: left;
 }
 
+h6.contact-text {
+  font-size: 1.0rem;
+  line-height: 110%;
+  color: #898989;
+}
 
 
 h6.contact-title {
@@ -1428,10 +1447,10 @@ p.collection-title {
 }
 
 textarea#message {
-  margin-top: 20px;
+  margin-top: 10px;
   padding-bottom: 1px;
   margin-bottom: 1px;
-  max-height: 70px;
+  max-height: 152px;
   padding-top: 0;
 }
 
