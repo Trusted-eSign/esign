@@ -192,6 +192,7 @@ export class SignWindow extends React.Component<any, any> {
                     if ($(".tooltipped")[path.key]) {
                         $(".tooltipped")[path.key].className = "tooltipped";
                     }
+                    pathes[i].verify_status = "default_status";
                 } else {
                     res = false;
                 }
