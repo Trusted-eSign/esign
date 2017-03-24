@@ -13,7 +13,7 @@ STORE.importCert(native.DEFAULT_PATH + "/cert1.crt");
 STORE.importKey(native.DEFAULT_PATH + "/cert1.key", "");
 
 window.PKISTORE = STORE;
-window.CERTIFICATECOLLECTION = STORE.certs;
+window.TRUSTEDCERTIFICATECOLLECTION = STORE.trustedCerts;
 window.PKIITEMS = STORE.items;
 
 ReactDom.render(router, document.getElementById("container"));

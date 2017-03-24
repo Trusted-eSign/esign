@@ -50,15 +50,25 @@ class Store {
         return this._items;
     };
 
-    get certs(): trusted.pki.CertificateCollection {
-        return this._store.certs;
+    get trustedCerts(): trusted.pki.CertificateCollection {
+        let res: trusted.pki.CertificateCollection = new trusted.pki.CertificateCollection();
+        let resItems = this._store.find({
+            category: ["ROOT", "CA"],
+            type: ["CERTIFICATE"]
+        });
+
+        for(let i = 0; i < resItems.length; i++) {
+            res.push(this.getPkiObject(resItems[i]));
+        }
+
+        return res;
     };
 
     /**
      * Set PkiItems
      * @param  {Array<Object>} pkiItems
      */
-    set items(pkiItems: Array<Object>) {
+    set items(pkiItems: Object[]) {
         this._items = pkiItems;
     };
 

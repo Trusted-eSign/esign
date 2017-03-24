@@ -57,7 +57,7 @@ export let extFile = function (filename: string) {
     return file_type;
 };
 export let get_Certificates = function (operation: string) {
-    let certCollection: trusted.pki.CertificateCollection = window.CERTIFICATECOLLECTION;
+    let certCollection: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
     let certs: any = [];
     let certList: any = [];
     if (operation === "sign") {
@@ -68,8 +68,7 @@ export let get_Certificates = function (operation: string) {
         certList = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
             return item.type === "CERTIFICATE" && (item.category === "MY" || item.category === "AddressBook");
         });
-    }
-    else {
+    } else {
         certList = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
             return item.type === "CERTIFICATE";
         });
@@ -127,9 +126,14 @@ let certCheck = function (notBefore: string, notAfter: string) {
     }
 };
 let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
+    if (certItem.status !== undefined) {
+         return certItem.status;
+    }
+
     let cert = window.PKISTORE.getPkiObject(certItem);
     let chainForVerify = CHAIN.buildChain(cert, certCollection);
     if (!chainForVerify || !chainForVerify.length || chainForVerify.length === 0) {
+        certItem.status = false;
         return false;
     }
 
@@ -153,7 +157,8 @@ let certVerify = function (certItem: IX509Certificate, certCollection: trusted.p
     //     });
     // }
 
-    return CHAIN.verifyChain(chainForVerify, null);
+    certItem.status = CHAIN.verifyChain(chainForVerify, null);
+    return certItem.status;
 };
 export let get_settings_from_json = function (operation: string, settings_name: string) {
     try {

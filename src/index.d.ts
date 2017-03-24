@@ -4,7 +4,7 @@ interface Window {
     mainWindow: any;
     electron: any;
     framework_NW: boolean;
-    CERTIFICATECOLLECTION: trusted.pki.CertificateCollection;
+    TRUSTEDCERTIFICATECOLLECTION: trusted.pki.CertificateCollection;
     PKIITEMS: Array<trusted.pkistore.PkiItem>;
     PKISTORE: any;
     RESOURCES_PATH: string;
@@ -25,5 +25,3 @@ declare var window: Window;
 
 declare function isEncryptedKey(path: string): boolean;
 declare function getFileCoding(path: string): trusted.DataFormat;
-// declare function getLicensePath(): string;
-// declare function licenseParse(info: string): any;
