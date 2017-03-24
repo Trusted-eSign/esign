@@ -2,8 +2,8 @@
 
 import { lang } from "../module/global_app";
 import * as native from "../native";
-import * as chain from "./chain";
 import { utills } from "../utills";
+import * as chain from "./chain";
 import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
@@ -48,8 +48,8 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
             }
 
             cms.content = {
-                "type": trusted.cms.SignedDataContentType.url,
-                "data": tempURI,
+                type: trusted.cms.SignedDataContentType.url,
+                data: tempURI,
             };
         }
 
@@ -85,8 +85,8 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
         sd.policies = policies;
         sd.createSigner(cert, key);
         sd.content = {
-            "type": trusted.cms.SignedDataContentType.url,
-            "data": uri,
+            type: trusted.cms.SignedDataContentType.url,
+            data: uri,
         };
         sd.sign();
         sd.save(outURI, format);
@@ -118,7 +118,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
 
         let certs: trusted.pki.CertificateCollection = sd.certificates();
         let tempCert: trusted.pki.Certificate;
-        for (var i = 0; i < certs.length; i++) {
+        for (let i = 0; i < certs.length; i++) {
             tempCert = certs.items(i);
             if (tempCert.equals(cert)) {
                 policies.push("noCertificates");
@@ -127,7 +127,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
         }
 
         if (sd.isDetached()) {
-            policies.push('detached');
+            policies.push("detached");
 
             if (!(sd = setDetachedContent(sd, uri))) {
                 return;
@@ -184,7 +184,7 @@ export function unSign(uri: string, folderOut: string): any {
         if (!cms.isDetached()) {
             content = cms.content;
             try {
-                native.fs.writeFileSync(outURI, content.data)
+                native.fs.writeFileSync(outURI, content.data);
             } catch (err) {
                 return "";
             }
@@ -211,7 +211,7 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
         let signerCert: trusted.pki.Certificate = undefined;
         let signer: trusted.cms.Signer;
         let signerId: trusted.cms.SignerId;
-        let signerCertItems: Array<trusted.pkistore.PkiItem>;
+        let signerCertItems: trusted.pkistore.PkiItem[];
         let certs: trusted.pki.CertificateCollection = new trusted.pki.CertificateCollection();
 
         signers = cms.signers();
@@ -222,7 +222,7 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
             signerId = signer.signerId;
             signerCertItems = window.PKISTORE.find({
                 issuerName: signerId.issuerName,
-                serial: signerId.serialNumber
+                serial: signerId.serialNumber,
             });
             for (let j = 0; j < signerCertItems.length; j++) {
                 signerCert = window.PKISTORE.getPkiObject(signerCertItems[j]);
@@ -243,7 +243,7 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
 }
 
 export function verifySignerCert(cert: trusted.pki.Certificate): boolean {
-    let certs = window.CERTIFICATECOLLECTION;
+    let certs = window.TRUSTEDCERTIFICATECOLLECTION;
     let chainForVerify = chain.buildChain(cert, certs);
     if (!chainForVerify || !chainForVerify.length || chainForVerify.length === 0) {
         return false;
@@ -258,10 +258,10 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
         let signerCert: trusted.pki.Certificate;
         let signer: trusted.cms.Signer;
         let signerId: trusted.cms.SignerId;
-        let signerCertItems: Array<trusted.pkistore.PkiItem>;
+        let signerCertItems: trusted.pkistore.PkiItem[];
         let certificates: trusted.pki.CertificateCollection;
         let ch: trusted.pki.CertificateCollection;
-        let certsTmp: trusted.pki.CertificateCollection = window.CERTIFICATECOLLECTION;
+        let certsTmp: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
         let cert: trusted.pki.Certificate;
         let certificatesSignStatus: boolean;
         let certSignStatus: boolean;
@@ -287,7 +287,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             if (!signer.certificate) {
                 signerCertItems = window.PKISTORE.find({
                     issuerName: signerId.issuerName,
-                    serial: signerId.serialNumber
+                    serial: signerId.serialNumber,
                 });
                 for (let j = 0; j < signerCertItems.length; j++) {
                     signerCert = window.PKISTORE.getPkiObject(signerCertItems[j]);
@@ -304,11 +304,19 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             }
         }
 
+        let curRes: any;
         for (let i: number = 0; i < signers.length; i++) {
-            certificatesSignStatus = true;
+            certificatesSignStatus = false;
             signer = signers.items(i);
             cert = signer.certificate;
             ch = chain.buildChain(cert, certsTmp);
+            curRes = {
+                alg: undefined,
+                certs: undefined,
+                digestAlgorithm: undefined,
+                status_verify: undefined,
+                subject: undefined,
+            }
 
             if (!ch || !ch.length || ch.length === 0) {
                 $(".toast-build_chain_failed").remove();
@@ -320,25 +328,13 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
                     notBefore: cert.notBefore.toString(),
                     organ: cert.organizationName.toString(),
                     status: false,
-                    subject: cert.subjectFriendlyName.toString()
+                    subject: cert.subjectFriendlyName.toString(),
                 });
-
-                result.push({
-                    alg: cert.signatureAlgorithm,
-                    certs: certSign,
-                    digestAlgorithm: cert.signatureDigest,
-                    status_verify: false,
-                    subject: cert.subjectFriendlyName
-                });
-                certSign = [];
-
-                return result;
-            }
-
+            } else {
             for (let j: number = ch.length - 1; j >= 0; j--) {
                 let it: trusted.pki.Certificate = ch.items(j);
-                if(!(certSignStatus = verifySignerCert(it))) {
-                    certificatesSignStatus = false;
+                    if ((certSignStatus = verifySignerCert(it))) {
+                        certificatesSignStatus = true;
                 }
                 certSign.push({
                     active: false,
@@ -346,9 +342,19 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
                     notBefore: it.notBefore.toString(),
                     organ: it.organizationName.toString(),
                     status: certSignStatus,
-                    subject: it.subjectFriendlyName.toString()
+                        subject: it.subjectFriendlyName.toString(),
                 });
             }
+            }
+
+            curRes = {
+                    alg: cert.signatureAlgorithm,
+                    certs: certSign,
+                    digestAlgorithm: cert.signatureDigest,
+                    status_verify: false,
+                    subject: cert.subjectFriendlyName,
+                };
+            certSign = [];
 
             try {
                 signerStatus = signer.signedAttributes().length > 0 ? signer.verify() && signer.verifyContent(cms.content) : signer.verifyContent(cms.content);
@@ -357,14 +363,9 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
                 Materialize.toast(lang.get_resource.Sign.verify_signercontent_founds_errors, 2000, "toast-verify_signercontent_founds_errors");
             }
 
-            result.push({
-                alg: cert.signatureAlgorithm,
-                certs: certSign,
-                digestAlgorithm: cert.signatureDigest,
-                status_verify: certificatesSignStatus && signerStatus,
-                subject: cert.subjectFriendlyName
-            });
-            certSign = [];
+            curRes.status_verify = certificatesSignStatus && signerStatus,
+
+            result.push(curRes);
         }
 
         return result;
