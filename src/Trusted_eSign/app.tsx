@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Router, Route, hashHistory, IndexRoute } from "react-router";
-import { SignWindow } from "./components/sign";
-import { EncryptWindow } from "./components/encrypt";
-import { CertWindow } from "./components/certificate";
-import { SettWindow } from "./components/settings";
+import { hashHistory, IndexRoute, Route, Router } from "react-router";
 import { AboutWindow } from "./components/about";
+import { CertWindow } from "./components/certificate";
+import { EncryptWindow } from "./components/encrypt";
 import { HelpWindow } from "./components/help";
-import { MainWindow, AppBar } from "./components/main_window";
-import { RegSlide, MainSlideUnReg, RegLogin, RegSocial, RegCert } from "./components/slider";
+import { AppBar, MainWindow } from "./components/main_window";
+import { SettWindow } from "./components/settings";
+import { SignWindow } from "./components/sign";
+import { MainSlideUnReg, RegCert, RegLogin, RegSlide, RegSocial } from "./components/slider";
 
 
 export let router: JSX.Element = (

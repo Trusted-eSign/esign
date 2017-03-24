@@ -70,8 +70,7 @@ export class BtnsForOperation extends React.Component<IBtnsForOperationProps, an
 
                 disabled_second = "disabled";
             }
-        }
-        else {
+        } else {
             disabled_first = "disabled";
             disabled_second = "disabled";
         }

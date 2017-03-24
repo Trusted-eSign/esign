@@ -1,6 +1,6 @@
 import * as React from "react";
-import { MainToolBar } from "./components";
 import { lang } from "../module/global_app";
+import { MainToolBar } from "./components";
 declare let $: any;
 
 export class HelpWindow extends React.Component<any, any> {

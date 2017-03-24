@@ -1,8 +1,8 @@
 import * as React from "react";
-import { MainToolBar, LicenseKey } from "./components";
 import { Link } from "react-router";
-import * as native from "../native";
 import { lang, LangApp } from "../module/global_app";
+import * as native from "../native";
+import { LicenseKey, MainToolBar } from "./components";
 import { Slider } from "./slider";
 //import { getLicenseStatus } from "../module/license";
 declare let $: any;

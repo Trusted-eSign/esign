@@ -1,13 +1,13 @@
 import * as React from "react";
-import * as native from "../native";
 import { Link } from "react-router";
-import { application } from "./certificate";
-import { sign, SignApp } from "../module/sign_app";
+import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { certs_app, CertificatesApp } from "../module/certificates_app";
-import { extFile, lang, SETTINGS_JSON, dlg, DialogBox } from "../module/global_app";
+import { DialogBox, dlg, extFile, lang, SETTINGS_JSON } from "../module/global_app";
+import { getLicensePath, getStatus, lic, licenseParse } from "../module/license";
+import { sign, SignApp } from "../module/sign_app";
+import * as native from "../native";
+import { application } from "./certificate";
 import { ItemBar, ItemBarWithBtn } from "./elements";
-import { getLicensePath, lic, licenseParse, getStatus } from "../module/license";
 declare let $: any;
 declare let mainWindow: any;
 interface IFileComponentsProps {
@@ -35,8 +35,8 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
             constrain_width: false,
             gutter: 0,
             belowOrigin: false,
-            alignment: "left"
-        }
+            alignment: "left",
+        },
         );
         sign.on(SignApp.FILES_CHANGE, this.filesChange);
         encrypt.on(EncryptApp.FILES_CHANGE, this.filesChange);
@@ -118,12 +118,10 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
                     newArray.push({ name: file_name, path: file.path, size: file.size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
                     size++;
                     countDifference = 0;
-                }
-                else {
+                } else {
                     countDifference = 0;
                 }
-            }
-            else {
+            } else {
                 newArray.push({ name: file_name, path: file.path, size: file.size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
                 size++;
             }
@@ -184,12 +182,10 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
                     newArray.push({ name: files[i].name, path: files[i].path, size: files[i].size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
                     size++;
                     countDifference = 0;
-                }
-                else {
+                } else {
                     countDifference = 0;
                 }
-            }
-            else {
+            } else {
                 newArray.push({ name: files[i].name, path: files[i].path, size: files[i].size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
                 size++;
             }
@@ -224,15 +220,21 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
                                 entries[j].file(function (filesys: any) {
                                     counter--;
                                     files.push(filesys);
-                                    if (!counter) cb(fItems, files, folder);
+                                    if (!counter) {
+                                        cb(fItems, files, folder);
+                                    }
                                 });
                             } else {
                                 counter--;
                                 folder = true;
-                                if (!counter) cb(fItems, files, folder);
+                                if (!counter) {
+                                    cb(fItems, files, folder);
+                                }
                             }
                         }
-                        if (!counter) cb(fItems, files, folder);
+                        if (!counter) {
+                             cb(fItems, files, folder);
+                        }
                     });
                 }
             }
@@ -248,7 +250,9 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
                 item.file(function (Dropfile: any) {
                     counter--;
                     files.push(Dropfile);
-                    if (!counter) cb(null, files);
+                    if (!counter) {
+                        cb(null, files);
+                    }
                 });
             } else if (item.isDirectory) {
                 let dirReader = item.createReader();
@@ -260,18 +264,25 @@ export class FileComponents extends React.Component<IFileComponentsProps, any> {
                             entries[j].file(function (filesys: any) {
                                 counter--;
                                 files.push(filesys);
-                                if (!counter) cb(null, files);
+                                if (!counter) {
+                                    cb(null, files);
+                                }
                             });
                         } else {
                             self.dropFolderAndFiles(entries[j], (err, file) => {
                                 counter--;
-                                for (let s = 0; s < file.length; s++)
-                                    files.push(file[s]);
-                                if (!counter) cb(null, files);
+                                for (let s = 0; s < file.length; s++) {
+                                     files.push(file[s]);
+                                }
+                                if (!counter) {
+                                    cb(null, files);
+                                }
                             });
                         }
                     }
-                    if (!counter) cb(null, files);
+                    if (!counter) {
+                        cb(null, files);
+                    }
                 });
             }
         }
@@ -447,8 +458,8 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
             constrain_width: false,
             gutter: 0,
             belowOrigin: false,
-            alignment: "left"
-        }
+            alignment: "left",
+        },
         );
     }
     componentDidUpdate() {
@@ -488,15 +499,15 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
                 <div className="r-iconbox-icon"><i className={this.props.file_type} id="file-avatar"></i></div>
                 <p className="collection-title">{this.props.file_name}</p>
                 <p className="collection-info">{this.props.file_date.toLocaleDateString(lang.get_lang, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric'
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
                 })}</p>
             </div>
-            <i className={classStatus} data-position="left" data-delay="50" data-tooltip={toolTipText} onClick={function () { $('.tooltipped').tooltip('remove'); } }></i>
+            <i className={classStatus} data-position="left" data-delay="50" data-tooltip={toolTipText} onClick={function () { $(".tooltipped").tooltip("remove"); } }></i>
             <i className="file-setting-item waves-effect material-icons secondary-content"
                 data-activates={"dropdown-btn-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
             <ul id={"dropdown-btn-set-file-" + this.props.index} className="dropdown-content">
@@ -523,8 +534,6 @@ export class MainMenu extends React.Component<any, any> {
     handleClose() {
         this.setState({ open: false });
     }
-
-   
 
     render() {
         let settings = {
@@ -660,8 +669,8 @@ export class MainToolBar extends React.Component<IMainToolBarProps, any> {
             constrain_width: false,
             gutter: 30,
             belowOrigin: false,
-            alignment: "right"
-        }
+            alignment: "right",
+        },
         );
     }
     minimizeWindow() {
@@ -676,7 +685,7 @@ export class MainToolBar extends React.Component<IMainToolBarProps, any> {
         native.fs.writeFile(SETTINGS_JSON, system, (err: any) => {
             if (err) {
                 console.log(lang.get_resource.Settings.write_file_failed);
-            };
+            }
             console.log(lang.get_resource.Settings.write_file_ok);
             mainWindow.close();
         });
@@ -745,7 +754,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
         this.state = ({ license_file: "", license_key: "" });
     }
     componentDidMount() {
-        $('input#input_file, textarea#input_key').characterCounter();
+        $("input#input_file, textarea#input_key").characterCounter();
     }
     paste() {
         $("#input_key").focus();
@@ -768,8 +777,8 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
         }
 
         let status: any;
-        var options = {
-            name: 'Trusted eSign'
+        let options = {
+            name: "Trusted eSign",
         };
         if (this.state.license_key) {
             let data = licenseParse(this.state.license_key);
@@ -848,10 +857,10 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
     openLicenseFile() {
         if (!window.framework_NW) {
             let file = dialog.showOpenDialog({
-                properties: ["openFile"],
                 filters: [
-                    { name: lang.get_resource.License.license, extensions: ["lic"] }
-                ]
+                    { name: lang.get_resource.License.license, extensions: ["lic"] },
+                ],
+                properties: ["openFile"],
             });
             if (file) {
                 $("#input_file").focus();
@@ -917,7 +926,7 @@ export class Password extends React.Component<any, any> {
 
     verifyValid(): void {
         this.setState({
-            active: "not-active"
+            active: "not-active",
         });
         application.emit("pass_value", this.state.pass_value);
         $("#get-password").closeModal();
@@ -925,7 +934,7 @@ export class Password extends React.Component<any, any> {
     }
     closeModal() {
         this.setState({
-            active: "not-active"
+            active: "not-active",
         });
         application.emit("pass_value", "");
         $("#get-password").closeModal();
@@ -934,7 +943,7 @@ export class Password extends React.Component<any, any> {
 
     changePassValue(event: any): void {
         this.setState({
-            pass_value: event
+            pass_value: event,
         });
     }
     keyDownPassword() {

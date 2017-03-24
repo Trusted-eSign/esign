@@ -1,9 +1,9 @@
 import * as React from "react";
-import { MainToolBar, LicenseKey } from "./components";
-import { application } from "./certificate";
-import * as native from "../native";
 import { lang, LangApp } from "../module/global_app";
 import { lic, License } from "../module/license";
+import * as native from "../native";
+import { application } from "./certificate";
+import { LicenseKey, MainToolBar } from "./components";
 declare let $: any;
 
 export class LicenseWindow extends React.Component<any, any> {
@@ -104,12 +104,12 @@ class LicenseInfo extends React.Component<any, any> {
             notAfter = "-";
         } else {
             notAfter = new Date(lic.getInfo.exp * 1000).toLocaleDateString(lang.get_lang, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "numeric",
                 minute: "numeric",
-                second: "numeric"
+                second: "numeric",
             });
         }
         if (lic.getInfo.iat === "-") {

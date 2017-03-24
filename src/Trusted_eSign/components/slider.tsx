@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { lang, video_app, VideoApp, get_Certificates } from "../module/global_app";
 import Video from "react-html5video";
 import { Link } from "react-router";
-import { MainWindowOperations, MainWindow } from "./main_window";
+import { get_Certificates, lang, video_app, VideoApp } from "../module/global_app";
 import { BlockNotElements, CertInfo } from "./certificate";
+import { MainWindow, MainWindowOperations } from "./main_window";
 declare let $: any;
 
 interface ISliderProps {
@@ -168,8 +168,7 @@ export class RegCert extends React.Component<any, any> {
                                     let status: string;
                                     if (l.status) {
                                         status = "cert-ok";
-                                    }
-                                    else {
+                                    } else {
                                         status = "cert-error";
                                     }
                                     return <RegCertCollectionList
@@ -218,7 +217,7 @@ class RegCertCollectionList extends React.Component<IRegCertCollectionListProps,
     render() {
         let self = this;
         let cert_key_menu: any = null;
-        let active = ""
+        let active = "";
         if (this.props.active_cert) {
             active = "active";
         }

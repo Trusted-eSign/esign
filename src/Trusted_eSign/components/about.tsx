@@ -1,18 +1,18 @@
 "use strict";
 
 import * as React from "react";
-import { MainToolBar } from "./components";
 import { lang, LangApp } from "../module/global_app";
+import { MainToolBar } from "./components";
 declare let $: any;
 
 export class AboutWindow extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = ({
-            username: { text: "", error: "" },
             email: { text: "", error: "" },
-            message: { text: "", error: "" }
-        })
+            message: { text: "", error: "" },
+            username: { text: "", error: "" },
+        });
         this.change = this.change.bind(this);
     }
     componentDidMount() {
@@ -26,18 +26,18 @@ export class AboutWindow extends React.Component<any, any> {
     }
     send(): void {
         $.ajax({
-            url: "https://net.trusted.ru/trustedapp/app/feedback",
-            "method": "POST",
-            "data": {
-                "username": this.state.username.text,
-                "email": this.state.email.text,
-                "message": this.state.message.text,
+            data: {
+                email: this.state.email.text,
+                message: this.state.message.text,
+                username: this.state.username.text,
             },
-            "success": function (): void {
+            method: "POST",
+            url: "https://net.trusted.ru/trustedapp/app/feedback",
+            success: function (): void {
                 $(".toast-message_send").remove();
                 Materialize.toast(lang.get_resource.About.message_send, 2000, "toast-message_send");
             },
-            "error": function (): void {
+            error: function (): void {
                 $(".toast-error_message_send").remove();
                 Materialize.toast(lang.get_resource.About.error_message_send, 2000, "toast-error_message_send");
             }

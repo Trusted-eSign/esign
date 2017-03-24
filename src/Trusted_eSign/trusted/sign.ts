@@ -90,8 +90,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
         };
         sd.sign();
         sd.save(outURI, format);
-    }
-    catch (err) {
+    } catch (err) {
       //  let jwtRes: number = jwt.checkLicense();
       //  if (jwtRes) {
       //      $(".toast-jwt_error").remove();
@@ -133,7 +132,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
                 return;
             }
 
-             sd.policies = ["noSignerCertificateVerify"];
+            sd.policies = ["noSignerCertificateVerify"];
 
             if (!(verifySign(sd))) {
                 return;
@@ -331,20 +330,20 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
                     subject: cert.subjectFriendlyName.toString(),
                 });
             } else {
-            for (let j: number = ch.length - 1; j >= 0; j--) {
-                let it: trusted.pki.Certificate = ch.items(j);
+                for (let j: number = ch.length - 1; j >= 0; j--) {
+                    let it: trusted.pki.Certificate = ch.items(j);
                     if ((certSignStatus = verifySignerCert(it))) {
                         certificatesSignStatus = true;
-                }
-                certSign.push({
-                    active: false,
-                    issuer: it.issuerFriendlyName.toString(),
-                    notBefore: it.notBefore.toString(),
-                    organ: it.organizationName.toString(),
-                    status: certSignStatus,
+                    }
+                    certSign.push({
+                        active: false,
+                        issuer: it.issuerFriendlyName.toString(),
+                        notBefore: it.notBefore.toString(),
+                        organ: it.organizationName.toString(),
+                        status: certSignStatus,
                         subject: it.subjectFriendlyName.toString(),
-                });
-            }
+                    });
+                }
             }
 
             curRes = {

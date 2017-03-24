@@ -1,13 +1,13 @@
 import * as React from "react";
-import { FileComponents, MainToolBar, Dialog } from "./components";
-import { CertComponents, application, BlockNotElements } from "./certificate";
-import { EncodingType, CheckBoxWithLabel, SelectFolder } from "./settings_components";
+import { checkFiles, DialogBox, dlg, extFile, lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
-import { extFile, lang, LangApp, dlg, DialogBox, checkFiles } from "../module/global_app";
-import { BtnsForOperation, ItemBarWithBtn, ItemBar, CollectionItem } from "./elements";
 import * as native from "../native";
 import * as signs from "../trusted/sign";
 import { utills } from "../utills";
+import { application, BlockNotElements, CertComponents } from "./certificate";
+import { Dialog, FileComponents, MainToolBar } from "./components";
+import { BtnsForOperation, CollectionItem, ItemBar, ItemBarWithBtn } from "./elements";
+import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
 declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -140,7 +140,7 @@ export class SignWindow extends React.Component<any, any> {
             }
             pathes.forEach(function (uri: any, i: any) {
                let newPath = signs.resignFile(uri.path, cert, key, policies, format, folderOut);
-                if (newPath) {
+               if (newPath) {
                     let birthtime = native.fs.statSync(newPath).birthtime;
                     pathes[i].path = newPath;
                     pathes[i].date = birthtime;
@@ -459,8 +459,9 @@ class SignSettingsComponents extends React.Component<any, any> {
     addDirect() {
         if (!window.framework_NW) {
             let directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
-            if (directory)
+            if (directory) {
                 sign.set_settings_directory = directory[0];
+            }
         } else {
             let clickEvent = document.createEvent("MouseEvents");
             clickEvent.initEvent("click", true, true);

@@ -1,13 +1,13 @@
 import * as React from "react";
-import { MainToolBar, FileComponents, Preloader, Dialog } from "./components";
-import { CertComponentsForEncrypt, application } from "./certificate";
-import { EncodingType, SelectFolder, CheckBoxWithLabel } from "./settings_components";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { extFile, lang, LangApp, dlg, DialogBox, checkFiles } from "../module/global_app";
-import { BtnsForOperation, ItemBar } from "./elements";
+import { checkFiles, DialogBox, dlg, extFile, lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import * as encrypts from "../trusted/encrypt";
 import { utills } from "../utills";
+import { application, CertComponentsForEncrypt } from "./certificate";
+import { Dialog, FileComponents, MainToolBar, Preloader } from "./components";
+import { BtnsForOperation, ItemBar } from "./elements";
+import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
 declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -216,8 +216,9 @@ class EncodeSettingsComponents extends React.Component<any, any> {
 
         if (!window.framework_NW) {
             let directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
-            if (directory)
+            if (directory) {
                 encrypt.set_settings_directory = directory[0];
+            }
         } else {
             let clickEvent = document.createEvent("MouseEvents");
             clickEvent.initEvent("click", true, true);

@@ -1,8 +1,8 @@
 /// <reference path="../../../types/index.d.ts" />
 
+import { lang } from "../module/global_app";
 import * as native from "../native";
 import { utills } from "../utills";
-import { lang } from "../module/global_app";
 
 export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>, policies: any, format: trusted.DataFormat, folderOut: string): string {
     let cipher: trusted.pki.Cipher;

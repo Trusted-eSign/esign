@@ -2,9 +2,9 @@
 /// <reference path="../../index.d.ts" />
 
 import { EventEmitter } from "events";
+import { lang } from "../module/global_app";
 import * as native from "../native";
 import * as jwt from "../trusted/jwt";
-import { lang } from "../module/global_app";
 
 export let getLicensePath = function () {
     let licFilePath = native.path.join(window.LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
@@ -67,11 +67,11 @@ export let getStatus = function (key?: string) {
 
         if (fullDays < 14) {
             if (fullDays === 1) {
-                ruDay = " день"
+                ruDay = " день";
             }
 
             if (fullDays >= 2 && fullDays < 5) {
-                ruDay = " дня"
+                ruDay = " дня";
             }
 
             $(".toast-lic_key_correct_days").remove();

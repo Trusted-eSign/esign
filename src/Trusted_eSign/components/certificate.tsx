@@ -1,13 +1,13 @@
-import * as React from "react";
-import { MainToolBar, SearchElement, Password } from "./components";
-import { ItemBar, ItemBarWithBtn } from "./elements";
-import { sign, SignApp } from "../module/sign_app";
-import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { certs_app, CertificatesApp } from "../module/certificates_app";
-import { get_Certificates, lang, LangApp } from "../module/global_app";
 import * as events from "events";
+import * as React from "react";
+import { CertificatesApp, certs_app } from "../module/certificates_app";
+import { encrypt, EncryptApp } from "../module/encrypt_app";
+import { get_Certificates, lang, LangApp } from "../module/global_app";
+import { sign, SignApp } from "../module/sign_app";
 import * as keys from "../trusted/keys";
 import * as pkcs12 from "../trusted/pkcs12";
+import { MainToolBar, Password, SearchElement } from "./components";
+import { ItemBar, ItemBarWithBtn } from "./elements";
 declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -63,8 +63,7 @@ export class CertWindow extends React.Component<any, any> {
             if (cert_count === certs_app.get_certificates.length) {
                 $(".toast-cert_imported").remove();
                 Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, "toast-cert_imported");
-            }
-            else {
+            } else {
                 $(".toast-cert_import_ok").remove();
                 Materialize.toast(lang.get_resource.Certificate.cert_import_ok, 2000, ".toast-cert_import_ok");
             }
@@ -428,8 +427,7 @@ export class CertComponents extends React.Component<any, any> {
                                                         let status: string;
                                                         if (l.status) {
                                                             status = "status_cert_ok_icon";
-                                                        }
-                                                        else {
+                                                        } else {
                                                             status = "status_cert_fail_icon";
                                                         }
                                                         return <CertCollectionList name={l.name}
