@@ -25,9 +25,9 @@ export function checkLicense(key?: string): number {
         return 0;
     } catch (err) {
         if (~err.message.indexOf("Error check license")) {
-            pozition = err.message.indexOf("jwtdlVerifyLicenseFile() failed(error code");
+            pozition = err.message.indexOf("verify jwt license failed(error code");
             if (pozition) {
-                return code = parseInt(err.message.substr(pozition + "jwtdlVerifyLicenseFile() failed(error code ".length, 3));
+                return code = parseInt(err.message.substr(pozition + "verify jwt license failed(error code ".length, 3));
             }
         }
 
