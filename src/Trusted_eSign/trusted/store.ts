@@ -1,13 +1,13 @@
 /// <reference path="../../../types/index.d.ts" />
 
+import { lang } from "../module/global_app";
 import * as native from "../native";
 import { utills } from "../utills";
-import * as keys from "./keys";
 import * as certs from "./certs";
 import * as crls from "./crls";
-import * as pkcs12 from "./pkcs12";
 import * as jwt from "./jwt";
-import { lang } from "../module/global_app";
+import * as keys from "./keys";
+import * as pkcs12 from "./pkcs12";
 
 let osType = native.os.type();
 
@@ -46,7 +46,7 @@ class Store {
        // }
     }
 
-    get items(): Array<Object> {
+    get items(): trusted.pkistore.PkiItem[] {
         return this._items;
     };
 
@@ -68,7 +68,7 @@ class Store {
      * Set PkiItems
      * @param  {Array<Object>} pkiItems
      */
-    set items(pkiItems: Object[]) {
+    set items(pkiItems: trusted.pkistore.PkiItem[]) {
         this._items = pkiItems;
     };
 
@@ -143,7 +143,6 @@ class Store {
             return 0;
         } else {
             this.addCertToStore(this._providerSystem, "MY", certificate, 0);
-            this.init();
             return 1;
         }
     }
@@ -219,7 +218,7 @@ class Store {
 
         if (key) {
             this.addKeyToStore(this._providerSystem, key, "");
-        };
+        }
     }
 
     downloadCRL(cert: any, done: Function): any {

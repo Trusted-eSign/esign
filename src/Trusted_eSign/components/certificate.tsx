@@ -108,6 +108,7 @@ export class CertWindow extends React.Component<any, any> {
         document.querySelector("#choose-cert").dispatchEvent(clickEvent);
     }
     certUpdate() {
+        window.PKIITEMS = window.PKISTORE.items;
         certs_app.set_certificates = get_Certificates("certificates");
         certs_app.set_certificate_for_info = null;
     }
@@ -165,7 +166,7 @@ export class CertWindow extends React.Component<any, any> {
             let file = dialog.showSaveDialog({
                 title: lang.get_resource.Certificate.export_cert,
                 defaultPath: lang.get_resource.Certificate.certificate + ".pfx",
-                filters: [{ name: lang.get_resource.Certificate.certs, extensions: ['pfx'] }]
+                filters: [{ name: lang.get_resource.Certificate.certs, extensions: ["pfx"] }]
             });
             this.exportCert(file);
         };
