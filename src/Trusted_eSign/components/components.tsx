@@ -812,8 +812,9 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
             }
         } else {
             if (native.fs.existsSync(this.state.license_file)) {
-                let data = native.fs.readFileSync(this.state.license_file, "utf8");
+                let data: string = native.fs.readFileSync(this.state.license_file, "utf8");
                 if (data) {
+                    data = data.trim();
                     let info = licenseParse(data);
                     if (info.sub !== "-") {
                         status = getStatus(data);
