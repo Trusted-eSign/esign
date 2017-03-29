@@ -768,7 +768,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
         let command = "";
 
         if (window.PLATFORM !== "win32") {
-            command = "su -c " + "\"";
+            command = "sh -c " + "\"";
             command = command + "mkdir -p " + "'" + path + "'" + " && ";
         } else {
             if (!native.fs.existsSync(path)) {
