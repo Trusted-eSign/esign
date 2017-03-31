@@ -264,6 +264,7 @@ export class CertWindow extends React.Component<any, any> {
                                                     chooseCert={function (event: any) { self.activeCert(event, certificates[l.key]); } }
                                                     operation="certificate"
                                                     cert_key={l.privateKey}
+                                                    provider={l.provider}
                                                     active_cert={l.active}
                                                     key={l.key} />;
                                             })}
@@ -438,6 +439,7 @@ export class CertComponents extends React.Component<any, any> {
                                                             chooseCert={function (event: any) { self.activeCert(event, certificates[l.key]); } }
                                                             operation="sign"
                                                             cert_key={l.privateKey}
+                                                            provider={l.provider}
                                                             active_cert={l.active}
                                                             key={i}
                                                             selectedCert={function () { self.selectedCert(certificates[l.key]) } } />;
@@ -481,6 +483,7 @@ interface ICertCollectionListProps {
     selectedCert?: () => void;
     operation: string;
     cert_key: boolean;
+    provider: string;
     active_cert: boolean;
 }
 class CertCollectionList extends React.Component<ICertCollectionListProps, any> {
@@ -513,7 +516,7 @@ class CertCollectionList extends React.Component<ICertCollectionListProps, any> 
         if (this.props.active_cert) {
             active = "active";
         }
-        if (this.props.operation === "certificate" && !this.props.cert_key) {
+        if (this.props.operation === "certificate" && !this.props.cert_key && this.props.provider === "SYSTEM") {
             cert_key_menu = <div>
                 <i className="cert-setting-item waves-effect material-icons secondary-content"
                     data-activates={"cert-key-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
@@ -909,6 +912,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                                                             chooseCert={function (event: any) { self.activeCert(event, certificates[l.key]); } }
                                                             operation="encrypt"
                                                             cert_key={l.privateKey}
+                                                            provider={l.provider}
                                                             active_cert={l.active}
                                                             key={i} />;
                                                     })}
@@ -948,6 +952,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                                                             chooseCert={function (event: any) { self.viewCertInfo(event, certificates[l.key]); } }
                                                             operation="encrypt"
                                                             cert_key={l.privateKey}
+                                                            provider={l.provider}
                                                             active_cert={false}
                                                             key={i} />;
                                                     })}

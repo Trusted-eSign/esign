@@ -793,6 +793,17 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
                     }
                     native.sudo.exec(command, options, function (error: any) {
                         if (!error) {
+                            trusted.common.OpenSSL.stop();
+                            trusted.common.OpenSSL.run();
+
+                            let certificates = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
+                                return item.type === "CERTIFICATE";
+                            });
+
+                            for (let item of certificates) {
+                                item.status = undefined;
+                            }
+
                             lic.setInfo = data;
                             lic.setStatus = status;
                             $(".toast-lic_key_setup").remove();
@@ -827,6 +838,17 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
                             }
                             window.sudo.exec(command, options, function (error: any) {
                                 if (!error) {
+                                    trusted.common.OpenSSL.stop();
+                                    trusted.common.OpenSSL.run();
+
+                                    let certificates = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
+                                        return item.type === "CERTIFICATE";
+                                    });
+
+                                    for (let item of certificates) {
+                                        item.status = undefined;
+                                    }
+
                                     lic.setInfo = info;
                                     lic.setStatus = status;
                                     $(".toast-lic_key_setup").remove();

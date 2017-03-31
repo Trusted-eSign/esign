@@ -305,7 +305,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
 
         let curRes: any;
         for (let i: number = 0; i < signers.length; i++) {
-            certificatesSignStatus = false;
+            certificatesSignStatus = true;
             signer = signers.items(i);
             cert = signer.certificate;
             ch = chain.buildChain(cert, certsTmp);
@@ -332,8 +332,8 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             } else {
                 for (let j: number = ch.length - 1; j >= 0; j--) {
                     let it: trusted.pki.Certificate = ch.items(j);
-                    if ((certSignStatus = verifySignerCert(it))) {
-                        certificatesSignStatus = true;
+                if (!(certSignStatus = verifySignerCert(it))) {
+                        certificatesSignStatus = false;
                     }
                     certSign.push({
                         active: false,
