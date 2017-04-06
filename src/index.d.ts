@@ -19,6 +19,7 @@ interface Window {
     async: any;
     path: any;
     sudo: any;
+    logger: trusted.utils.Logger;
 }
 
 declare var window: Window;

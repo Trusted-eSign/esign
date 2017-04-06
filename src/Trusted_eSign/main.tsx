@@ -7,8 +7,14 @@
 import * as ReactDom from "react-dom";
 import { router } from "./app";
 import * as native from "./native";
-import { STORE } from "./trusted/store";
+import { Store } from "./trusted/store";
 
+let remote = window.electron.remote;
+if (remote.getGlobal("sharedObject").logcrypto) {
+    window.logger = trusted.utils.Logger.start(native.path.join(native.os.homedir(), ".Trusted", "trusted-crypto.log"));
+}
+
+let STORE = new Store();
 STORE.importCert(native.DEFAULT_PATH + "/cert1.crt");
 STORE.importKey(native.DEFAULT_PATH + "/cert1.key", "");
 

@@ -1,7 +1,6 @@
 'use strict';
 
 var fs = require('fs');
-var trusted = require('trusted-crypto');
 
 function getFileCoding(filePath) {
   var res;

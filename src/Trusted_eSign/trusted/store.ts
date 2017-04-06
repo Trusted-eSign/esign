@@ -11,7 +11,7 @@ import * as pkcs12 from "./pkcs12";
 
 let osType = native.os.type();
 
-class Store {
+export class Store {
     private _items: any[];
     private _providerSystem: trusted.pkistore.Provider_System;
     private _providerCryptopro: trusted.pkistore.ProviderCryptopro;
@@ -376,5 +376,3 @@ class Store {
         return this._store.getItem(item);
     }
 }
-
-export let STORE: any = new Store();

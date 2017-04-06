@@ -33,6 +33,23 @@ declare namespace trusted {
         RSA_F4 = 1,
     }
 }
+declare namespace trusted {
+    /**
+     *
+     * @export
+     * @enum {number}
+     */
+    enum LoggerLevel {
+        NULL = 0,
+        ERROR = 1,
+        WARNING = 2,
+        INFO = 4,
+        DEBUG = 8,
+        TRACE = 16,
+        OPENSSL = 32,
+        ALL = 63,
+    }
+}
 declare namespace native {
     namespace PKI {
         class Key {
@@ -91,6 +108,7 @@ declare namespace native {
             getSignatureAlgorithm(): string;
             getSignatureDigest(): string;
             getOrganizationName(): string;
+            isSelfSigned(): boolean;
             load(filename: string, dataFormat: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
@@ -346,6 +364,7 @@ declare namespace native {
         class ProviderCryptopro extends Provider {
             constructor();
             getKey(cert: PKI.Certificate): PKI.Key;
+            hasPrivateKey(cert: PKI.Certificate): boolean;
         }
         class ProviderTSL extends Provider {
             constructor(url: string);
@@ -427,6 +446,18 @@ declare namespace native {
             sign(modulePath: string, cert: PKI.Certificate, key: PKI.Key): void;
             verify(modulePath: string, cacerts?: PKI.CertificateCollection): Object;
         }
+        class Logger {
+            start(filename: string, level: trusted.LoggerLevel): void;
+            stop(): void;
+            clear(): void;
+        }
+    }
+    namespace COMMON {
+        class OpenSSL {
+            run(): void;
+            stop(): void;
+            printErrors(): string;
+        }
     }
 }
 declare namespace trusted {
@@ -483,6 +514,51 @@ declare namespace trusted.core {
         removeAt(index: number): void;
     }
 }
+declare namespace trusted.common {
+    /**
+     * OpenSSL helper class
+     *
+     * @export
+     * @class OpenSSL
+     * @extends {BaseObject<native.COMMON.OpenSSL>}
+     */
+    class OpenSSL extends BaseObject<native.COMMON.OpenSSL> {
+        /**
+         * Load engines and add algorithms
+         *
+         * @static
+         * @returns {void}
+         *
+         * @memberOf OpenSSL
+         */
+        static run(): void;
+        /**
+         * Cleanup openssl objects and free errors
+         *
+         * @static
+         * @returns {void}
+         *
+         * @memberOf OpenSSL
+         */
+        static stop(): void;
+        /**
+         * Print OpenSSL error stack
+         *
+         * @static
+         * @returns {string}
+         *
+         * @memberOf OpenSSL
+         */
+        static printErrors(): string;
+        /**
+         * Creates an instance of OpenSSL.
+         *
+         *
+         * @memberOf OpenSSL
+         */
+        constructor();
+    }
+}
 declare namespace trusted.utils {
     /**
      * JSON Web Token (JWT)
@@ -517,6 +593,60 @@ declare namespace trusted.utils {
          * @memberOf Jwt
          */
         checkLicense(data?: string): boolean;
+    }
+}
+declare namespace trusted.utils {
+    /**
+     * Wrap logger class
+     *
+     * @export
+     * @class Logger
+     * @extends {BaseObject<native.UTILS.Logger>}
+     */
+    class Logger extends BaseObject<native.UTILS.Logger> {
+        /**
+         * Start write log to a file
+         *
+         * @static
+         * @param {string} filename
+         * @param {LoggerLevel} [level=DEFAULT_LOGGER_LEVEL]
+         * @returns {Logger}
+         *
+         * @memberOf Logger
+         */
+        static start(filename: string, level?: LoggerLevel): Logger;
+        /**
+         * Creates an instance of Logger.
+         *
+         * @memberOf Logger
+         */
+        constructor();
+        /**
+         * Start write log to a file
+         *
+         * @param {string} filename
+         * @param {LoggerLevel} [level=DEFAULT_LOGGER_LEVEL]
+         * @returns {void}
+         *
+         * @memberOf Logger
+         */
+        start(filename: string, level?: LoggerLevel): void;
+        /**
+         * Stop write log file
+         *
+         * @returns {void}
+         *
+         * @memberOf Logger
+         */
+        stop(): void;
+        /**
+         * Clean exsisting log file
+         *
+         * @returns {void}
+         *
+         * @memberOf Logger
+         */
+        clear(): void;
     }
 }
 declare const path: any;
@@ -1170,6 +1300,14 @@ declare namespace trusted.pki {
          * @memberOf Certificate
          */
         readonly organizationName: string;
+        /**
+         * Return true is a certificate is self signed
+         *
+         * @readonly
+         * @type {boolean}
+         * @memberOf Certificate
+         */
+        readonly isSelfSigned: boolean;
         /**
          * Compare certificates
          *
@@ -2743,6 +2881,15 @@ declare namespace trusted.pkistore {
          * @memberOf ProviderCryptopro
          */
         getKey(cert: pki.Certificate): pki.Key;
+        /**
+         * Ensure that the certificate's private key is available
+         *
+         * @param {Certificate} cert
+         * @returns {boolean}
+         *
+         * @memberOf ProviderCryptopro
+         */
+        hasPrivateKey(cert: pki.Certificate): boolean;
     }
 }
 declare namespace trusted.pkistore {
