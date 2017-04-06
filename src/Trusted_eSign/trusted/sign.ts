@@ -318,6 +318,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             }
 
             if (!ch || !ch.length || ch.length === 0) {
+				certificatesSignStatus = false;
                 $(".toast-build_chain_failed").remove();
                 Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
 
