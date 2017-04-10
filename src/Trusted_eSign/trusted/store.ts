@@ -3,11 +3,7 @@
 import { lang } from "../module/global_app";
 import * as native from "../native";
 import { utills } from "../utills";
-import * as certs from "./certs";
-import * as crls from "./crls";
 import * as jwt from "./jwt";
-import * as keys from "./keys";
-import * as pkcs12 from "./pkcs12";
 
 let osType = native.os.type();
 
@@ -79,7 +75,17 @@ export class Store {
     importKey(keyPath: string, pass: string): boolean {
         try {
             let format: trusted.DataFormat = getFileCoding(keyPath);
-            let key: trusted.pki.Key = keys.loadKey(keyPath, format, pass);
+            let key: trusted.pki.Key;
+
+            try {
+                key = trusted.pki.Key.readPrivateKey(keyPath, format, pass);
+            } catch (e) {
+                $(".toast-key_load_failed").remove();
+                Materialize.toast(lang.get_resource.Key.key_load_failed, 2000, "toast-key_load_failed");
+
+                return undefined;
+            }
+
             return this.addKeyToStore(this._providerSystem, key, "");
         } catch (e) {
             return false;
@@ -135,43 +141,57 @@ export class Store {
         return res;
     }
 
-    importCert(certPath: string): number {
+    importCert(certPath: string): boolean {
         let format: trusted.DataFormat = getFileCoding(certPath);
-        let certificate: any = certs.loadCert(certPath, format);
+        let certificate: trusted.pki.Certificate;
 
-        if (!certificate) {
-            return 0;
-        } else {
-            this.addCertToStore(this._providerSystem, "MY", certificate, 0);
-            return 1;
+        try {
+            certificate = trusted.pki.Certificate.load(certPath, format);
+        } catch (e) {
+            $(".toast-cert_load_failed").remove();
+            Materialize.toast(lang.get_resource.Certificate.cert_load_failed, 2000, "toast-cert_load_failed");
+
+            return undefined;
         }
+
+        this.addCertToStore(this._providerSystem, "MY", certificate, 0);
+        return true;
     }
 
-    importPkcs12(p12Path: string, pass: string): number {
-        let p12: any = pkcs12.loadPkcs12(p12Path);
+    importPkcs12(p12Path: string, pass: string): boolean {
+        let p12: trusted.pki.Pkcs12;
+        let cert: trusted.pki.Certificate;
+        let key: trusted.pki.Key;
+        let ca: trusted.pki.CertificateCollection;
 
-        if (!p12) {
-            return 0;
-        } else {
-            let cert: any = pkcs12.getCertFromPkcs12(p12, pass);
-            let key: any = pkcs12.getKeyFromPkcs12(p12, pass);
-            let ca: any = pkcs12.getCAFromPkcs12(p12, pass);
-
-            if (!cert || !key) {
-                return 0;
-            }
-
-            this.addCertToStore(this._providerSystem, "MY", pkcs12.getCertFromPkcs12(p12, pass), 0);
-            this.addKeyToStore(this._providerSystem, pkcs12.getKeyFromPkcs12(p12, pass), "");
-
-            if (ca) {
-                for (let i: number = 0; i < ca.length; i++) {
-                    this.addCertToStore(this._providerSystem, "MY", ca.items(i), 0);
-                }
-            }
-
-            return 1;
+        try {
+            p12 = trusted.pki.Pkcs12.load(p12Path);
+            cert = p12.certificate(pass);
+            key = p12.key(pass);
+        } catch (e) {
+            return undefined;
         }
+
+        if (!cert || !key) {
+            return undefined;
+        }
+
+        this.addCertToStore(this._providerSystem, "MY", cert, 0);
+        this.addKeyToStore(this._providerSystem, key, "");
+
+        try {
+            ca = p12.ca(pass);
+        } catch (e) {
+            ca = undefined;
+        }
+
+        if (ca) {
+            for (let i: number = 0; i < ca.length; i++) {
+                this.addCertToStore(this._providerSystem, "MY", ca.items(i), 0);
+            }
+        }
+
+        return true;
     }
 
     addCertToStore(provider: any, category: any, cert: any, flag: any): void {
@@ -245,7 +265,7 @@ export class Store {
     }
 
     importCRL(crlPath: string): number {
-        let crl: any = crls.loadCRL(crlPath);
+        let crl: trusted.pki.Crl = trusted.pki.Crl.load(crlPath);
 
         if (!crl) {
             return 0;

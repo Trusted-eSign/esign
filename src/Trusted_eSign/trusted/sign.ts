@@ -3,7 +3,6 @@
 import { lang } from "../module/global_app";
 import * as native from "../native";
 import { utills } from "../utills";
-import * as chain from "./chain";
 import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
@@ -242,13 +241,20 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
 }
 
 export function verifySignerCert(cert: trusted.pki.Certificate): boolean {
-    let certs = window.TRUSTEDCERTIFICATECOLLECTION;
-    let chainForVerify = chain.buildChain(cert, certs);
-    if (!chainForVerify || !chainForVerify.length || chainForVerify.length === 0) {
-        return false;
-    }
+    let chain: trusted.pki.Chain;
+    let certs: trusted.pki.CertificateCollection;
+    let chainForVerify: trusted.pki.CertificateCollection;
 
-    return chain.verifyChain(chainForVerify, null);
+    chain = new trusted.pki.Chain();
+
+    certs = window.TRUSTEDCERTIFICATECOLLECTION;
+
+    try {
+        chainForVerify = chain.buildChain(cert, certs);
+        return chain.verifyChain(chainForVerify, null);
+    } catch (e) {
+        return undefined;
+    }
 }
 
 export function getSignPropertys(cms: trusted.cms.SignedData) {
@@ -260,6 +266,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
         let signerCertItems: trusted.pkistore.PkiItem[];
         let certificates: trusted.pki.CertificateCollection;
         let ch: trusted.pki.CertificateCollection;
+        let chain: trusted.pki.Chain;
         let certsTmp: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
         let cert: trusted.pki.Certificate;
         let certificatesSignStatus: boolean;
@@ -267,6 +274,8 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
         let signerStatus: boolean = false;
         let result: any = [];
         let certSign: any = [];
+
+        chain = new trusted.pki.Chain();
 
         signers = cms.signers();
         certificates = cms.certificates();
@@ -308,7 +317,13 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             certificatesSignStatus = true;
             signer = signers.items(i);
             cert = signer.certificate;
-            ch = chain.buildChain(cert, certsTmp);
+
+            try {
+                ch = chain.buildChain(cert, certsTmp);
+            } catch (e) {
+                ch = undefined;
+            }
+
             curRes = {
                 alg: undefined,
                 certs: undefined,
@@ -318,7 +333,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             }
 
             if (!ch || !ch.length || ch.length === 0) {
-				certificatesSignStatus = false;
+                certificatesSignStatus = false;
                 $(".toast-build_chain_failed").remove();
                 Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
 
@@ -333,7 +348,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             } else {
                 for (let j: number = ch.length - 1; j >= 0; j--) {
                     let it: trusted.pki.Certificate = ch.items(j);
-                if (!(certSignStatus = verifySignerCert(it))) {
+                    if (!(certSignStatus = verifySignerCert(it))) {
                         certificatesSignStatus = false;
                     }
                     certSign.push({

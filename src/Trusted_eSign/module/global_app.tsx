@@ -1,8 +1,5 @@
 import { EventEmitter } from "events";
 import * as native from "../native";
-import * as CERTS from "../trusted/certs";
-import * as CHAIN from "../trusted/chain";
-import * as CRLS from "../trusted/crls";
 
 export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
@@ -115,26 +112,23 @@ export let get_Certificates = function (operation: string) {
     }
     return certs;
 };
-let certCheck = function (notBefore: string, notAfter: string) {
-    let before = Date.parse(notBefore);
-    let after = Date.parse(notAfter);
-    let curent = new Date();
-    if (curent.valueOf() < before || curent.valueOf() > after) {
-        return false;
-    } else {
-        return true;
-    }
-};
+
 let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
+    let chain: trusted.pki.Chain;
+    let chainForVerify: trusted.pki.CertificateCollection;
+
     if (certItem.status !== undefined) {
          return certItem.status;
     }
 
     let cert = window.PKISTORE.getPkiObject(certItem);
-    let chainForVerify = CHAIN.buildChain(cert, certCollection);
-    if (!chainForVerify || !chainForVerify.length || chainForVerify.length === 0) {
+
+    try {
+        chain = new trusted.pki.Chain();
+        chainForVerify = chain.buildChain(cert, certCollection);
+        certItem.status = chain.verifyChain(chainForVerify, null);
+    } catch (e) {
         certItem.status = false;
-        return false;
     }
 
     // let crl = STORE.getCrlLocal(cert);
@@ -157,7 +151,6 @@ let certVerify = function (certItem: IX509Certificate, certCollection: trusted.p
     //     });
     // }
 
-    certItem.status = CHAIN.verifyChain(chainForVerify, null);
     return certItem.status;
 };
 export let get_settings_from_json = function (operation: string, settings_name: string) {

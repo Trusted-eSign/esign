@@ -4,8 +4,6 @@ import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
-import * as keys from "../trusted/keys";
-import * as pkcs12 from "../trusted/pkcs12";
 import { MainToolBar, Password, SearchElement } from "./components";
 import { ItemBar, ItemBarWithBtn } from "./elements";
 declare let $: any;
@@ -72,7 +70,13 @@ export class CertWindow extends React.Component<any, any> {
     p12Import(event: any) {
         let p12Path = event[0].path;
         let self = this;
-        let p12: any = pkcs12.loadPkcs12(p12Path);
+        let p12: trusted.pki.Pkcs12;
+
+        try {
+            p12 = trusted.pki.Pkcs12.load(p12Path);
+        } catch (e) {
+            p12 = undefined;
+        }
 
         if (!p12) {
             $(".toast-cert_load_failed").remove();
@@ -173,6 +177,8 @@ export class CertWindow extends React.Component<any, any> {
     }
     exportCert(file: string) {
         let self = this;
+        let p12: trusted.pki.Pkcs12;
+
         if (file) {
             $("#get-password").openModal({
                 complete: function () {
@@ -184,8 +190,9 @@ export class CertWindow extends React.Component<any, any> {
                         $(".toast-cert_export_failed").remove();
                         Materialize.toast(lang.get_resource.Certificate.cert_export_failed, 2000, "toast-cert_export_failed");
                     } else {
-                        let p12 = pkcs12.createPkcs12(cert, key, null, self.state.pass_value, certItem.name);
-                        pkcs12.save(p12, file);
+                        p12 = new trusted.pki.Pkcs12();
+                        p12.create(cert, key, null, self.state.pass_value, certItem.name);
+                        p12.save(file);
                         $(".toast-cert_export_ok").remove();
                         Materialize.toast(lang.get_resource.Certificate.cert_export_ok, 2000, "toast-cert_export_ok");
                     }

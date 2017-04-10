@@ -534,7 +534,6 @@ export class MainMenu extends React.Component<any, any> {
     handleClose() {
         this.setState({ open: false });
     }
-
     render() {
         let settings = {
             draggable: false,
@@ -791,7 +790,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
                         command = command + " printf " + this.state.license_key.trim() + " > " + "'" + licFilePath + "'" + " && ";
                         command = command + " chmod 777 " + "'" + licFilePath + "'" + "\"";
                     }
-                    native.sudo.exec(command, options, function (error: any) {
+                    window.sudo.exec(command, options, function (error: any) {
                         if (!error) {
                             trusted.common.OpenSSL.stop();
                             trusted.common.OpenSSL.run();

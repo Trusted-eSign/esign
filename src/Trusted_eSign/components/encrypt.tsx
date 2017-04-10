@@ -61,7 +61,7 @@ export class EncryptWindow extends React.Component<any, any> {
                 }
 
                 let output = native.fs.createWriteStream(outURI);
-                let archive = native.archiver("zip");
+                let archive = window.archiver("zip");
 
                 output.on("close", function () {
                     $(".toast-files_archived").remove();
