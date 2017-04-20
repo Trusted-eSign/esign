@@ -1,6 +1,6 @@
 {
     "name": "react-example",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dependencies": {
     "@types/electron": "^1.4.34",
         "async": "^2.0.0",
