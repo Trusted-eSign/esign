@@ -1,9 +1,8 @@
-"use strict";
-
 import * as React from "react";
 import { lang, LangApp } from "../module/global_app";
 import { MainToolBar } from "./components";
-declare let $: any;
+
+declare const $: any;
 
 export class AboutWindow extends React.Component<any, any> {
     constructor(props: any) {
@@ -15,15 +14,19 @@ export class AboutWindow extends React.Component<any, any> {
         });
         this.change = this.change.bind(this);
     }
+
     componentDidMount() {
         lang.on(LangApp.SETTINGS, this.change);
     }
+
     componentWillUnmount() {
         lang.removeListener(LangApp.SETTINGS, this.change);
     }
+
     change() {
         this.setState({});
     }
+
     send(): void {
         $.ajax({
             data: {
@@ -33,27 +36,32 @@ export class AboutWindow extends React.Component<any, any> {
             },
             method: "POST",
             url: "https://net.trusted.ru/trustedapp/app/feedback",
-            success: function (): void {
+            success(): void {
                 $(".toast-message_send").remove();
                 Materialize.toast(lang.get_resource.About.message_send, 2000, "toast-message_send");
             },
-            error: function (): void {
+            error(): void {
                 $(".toast-error_message_send").remove();
                 Materialize.toast(lang.get_resource.About.error_message_send, 2000, "toast-error_message_send");
-            }
+            },
         });
     }
+
     setUserName(user: string) {
         this.setState({ username: { text: user, error: "" } });
     }
+
     setEmail(email: string) {
         this.setState({ email: { text: email, error: "" } });
     }
+
     setMessage(mes: string) {
         this.setState({ message: { text: mes, error: "" } });
     }
+
     validDatas() {
-        let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+        const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
         if (this.state.username.text.length === 0) {
             this.state.username.error = lang.get_resource.Settings.field_empty;
             this.setState({ username: { text: this.state.username.text, error: lang.get_resource.Settings.field_empty } });
@@ -61,7 +69,7 @@ export class AboutWindow extends React.Component<any, any> {
         if (this.state.email.text.length === 0) {
             this.state.email.error = lang.get_resource.Settings.field_empty;
             this.setState({ email: { text: this.state.email.text, error: lang.get_resource.Settings.field_empty } });
-        } else if (reg.test(this.state.email.text) === false) {
+        } else if (REQULAR_EXPRESSION.test(this.state.email.text) === false) {
             this.state.email.error = lang.get_resource.Settings.email_error;
             this.setState({ email: { text: this.state.email.text, error: lang.get_resource.Settings.email_error } });
         }
@@ -73,20 +81,23 @@ export class AboutWindow extends React.Component<any, any> {
             this.send();
         }
     }
+
     render(): any {
-        let self = this;
-        let error_user = "";
-        let error_email = "";
-        let error_message = "";
+        const SELF = this;
+        let errUser = "";
+        let errEmail = "";
+        let errMessage = "";
+
         if (this.state.username.error.length === 0) {
-            error_user = "not-active";
+            errUser = "not-active";
         }
         if (this.state.email.error.length === 0) {
-            error_email = "not-active";
+            errEmail = "not-active";
         }
         if (this.state.message.error.length === 0) {
-            error_message = "not-active";
+            errMessage = "not-active";
         }
+
         return (
             <div className="main">
                 <div className="about">
