@@ -10,7 +10,7 @@ extends:
 
 rules:
     array-callback-return: "error"
-    indent: ["error", 4, {SwitchCase: 1}]
+    indent: ["error", 2, {SwitchCase: 1}]
     block-spacing: "error"
     brace-style: ["error", "1tbs"]
     camelcase: ["error", { properties: "never" }]
