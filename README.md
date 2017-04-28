@@ -2,15 +2,9 @@
 
 ```
 > npm install -g typescript
-> npm install -g typings
 > npm install
 
 ```
 
-## Release for default target (electron by default)
+## Build app
 > gulp
-
-## Debug
-
-> gulp debug
-
