@@ -4,4 +4,5 @@
 /node_modules/
 /tmp/
 /tmp_app_build/
+/resources/Trusted_eSign/bundle_Trusted_eSign.js
 /trusted-crypto/
