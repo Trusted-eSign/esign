@@ -22,7 +22,7 @@ const shrinkwrap = require("./shrinkwrap.json");
  * Trusted_eSign | Trusted_Api
 */
 const TARGET = "Trusted_eSign";
-const ELECTRON_VERSION = "1.2.4";
+const ELECTRON_VERSION = "1.3.15";
 let architecture;
 
 const dependencies = Object.keys(shrinkwrap.dependencies);
