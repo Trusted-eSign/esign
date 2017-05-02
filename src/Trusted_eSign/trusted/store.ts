@@ -37,9 +37,6 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
       this._store.addProvider(this._providerMicrosoft.handle);
-    } else {
-      this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
-      this._store.addProvider(this._providerCryptopro.handle);
     }
   }
 
