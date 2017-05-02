@@ -104,7 +104,7 @@ gulp.task("build electron", ["trusted-crypto copy", "module copy"], () => {
   const arch = architecture;
   const opts = _.extend({}, config, { platform, arch, ffmpegChromium: true, keepDefaultApp: true });
 
-  return gulp.src("./tmp_app_build/electron-win32-x64/**")
+  return gulp.src(`./tmp_app_build/electron-${process.platform}-${architecture}/**`)
     .pipe(electron(opts))
     .pipe(vfs.dest(`build/${ELECTRON_VERSION}/${process.platform}-${architecture}`));
 });
