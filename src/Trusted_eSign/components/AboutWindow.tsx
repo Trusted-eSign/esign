@@ -1,18 +1,16 @@
 import * as React from "react";
 import { lang, LangApp } from "../module/global_app";
-import { MainToolBar } from "./components";
 
 declare const $: any;
 
 export class AboutWindow extends React.Component<any, any> {
   constructor(props: any) {
-    super(props);
+    super();
     this.state = ({
       email: { text: "", error: "" },
       message: { text: "", error: "" },
       username: { text: "", error: "" },
     });
-    this.change = this.change.bind(this);
   }
 
   componentDidMount() {
@@ -23,11 +21,9 @@ export class AboutWindow extends React.Component<any, any> {
     lang.removeListener(LangApp.SETTINGS, this.change);
   }
 
-  change() {
-    this.setState({});
-  }
+  change = () => this.setState({});
 
-  send(): void {
+  send = () => {
     $.ajax({
       data: {
         email: this.state.email.text,
@@ -47,19 +43,19 @@ export class AboutWindow extends React.Component<any, any> {
     });
   }
 
-  setUserName(user: string) {
+  setUserName = (user: string) => {
     this.setState({ username: { text: user, error: "" } });
   }
 
-  setEmail(email: string) {
+  setEmail = (email: string) => {
     this.setState({ email: { text: email, error: "" } });
   }
 
-  setMessage(mes: string) {
+  setMessage = (mes: string) => {
     this.setState({ message: { text: mes, error: "" } });
   }
 
-  validDatas() {
+  validDatas = () => {
     const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
     if (this.state.username.text.length === 0) {
@@ -83,7 +79,6 @@ export class AboutWindow extends React.Component<any, any> {
   }
 
   render(): any {
-    const SELF = this;
     let errUser = "";
     let errEmail = "";
     let errMessage = "";
@@ -138,10 +133,10 @@ export class AboutWindow extends React.Component<any, any> {
                   <div className="card infoapp">
                     <div className="card-content gray-text">
                       <span className="card-title">{lang.get_resource.About.FeedBack}</span>
-                      <form onSubmit={this.validDatas.bind(this)} className="col s12">
+                      <form onSubmit={this.validDatas} className="col s12">
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="username" id="username" type="text" onChange={function(evt: any) { SELF.setUserName(evt.target.value); }}></input>
+                            <input ref="username" id="username" type="text" onChange={ (evt) => this.setUserName(evt.target.value) }></input>
                             <label htmlFor="username">{lang.get_resource.About.username}</label>
                           </div>
                           <div className={"about-error-info " + errUser}>
@@ -151,7 +146,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="email" id="email" type="email" onChange={function(evt: any) { SELF.setEmail(evt.target.value); }}></input>
+                            <input ref="email" id="email" type="email" onChange={ (evt) => this.setEmail(evt.target.value) }></input>
                             <label htmlFor="email" >{lang.get_resource.About.email}</label>
                           </div>
                           <div className={"about-error-info " + errEmail}>
@@ -161,7 +156,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form message">
                           <div className="input-field col s12 mes-textarea">
-                            <textarea ref="message" id="message" className="materialize-textarea" onChange={function(evt: any) { SELF.setMessage(evt.target.value); }}></textarea>
+                            <textarea ref="message" id="message" className="materialize-textarea" onChange={(evt: any) => this.setMessage(evt.target.value) }></textarea>
                             <label htmlFor="message">{lang.get_resource.About.message}</label>
                           </div>
                           <div className={"about-error-info " + errMessage}>
@@ -172,7 +167,7 @@ export class AboutWindow extends React.Component<any, any> {
                       </form>
                     </div>
                     <div className="card-action">
-                      <a onClick={this.validDatas.bind(this)}>{lang.get_resource.About.send}</a>
+                      <a onClick={this.validDatas}>{lang.get_resource.About.send}</a>
                     </div>
                   </div>
                 </div>
