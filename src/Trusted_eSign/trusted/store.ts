@@ -23,7 +23,7 @@ export class Store {
     this._items = this._store.cash.export();
     this._rv = new trusted.pki.Revocation();
 
-    this.items = this.items.concat(this._store.find({
+    this._items = this._items.concat(this._store.find({
       provider: ["CRYPTOPRO", "MICROSOFT"],
       type: ["CERTIFICATE"],
     }));

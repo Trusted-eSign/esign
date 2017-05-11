@@ -3012,6 +3012,7 @@ declare namespace trusted.pkistore {
         keyEnc: boolean;
         organizationName: string;
         signatureAlgorithm: string;
+        status?: boolean;
     }
     class PkiStore extends BaseObject<native.PKISTORE.PkiStore> {
         private cashJson;

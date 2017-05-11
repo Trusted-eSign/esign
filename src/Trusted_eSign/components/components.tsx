@@ -680,8 +680,8 @@ export class MainToolBar extends React.Component<IMainToolBarProps, any> {
         let encrypt_to_json = ({ settings_for_encrypt: encrypt.get_settings, certificates_for_encrypt: encrypt.get_certificates_for_encrypt });
         let main_json = ({ lang: lang.get_lang });
         let system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
-        system = JSON.stringify(system, "", 4);
-        native.fs.writeFile(SETTINGS_JSON, system, (err: any) => {
+        const ssystem = JSON.stringify(system, null, 4);
+        native.fs.writeFile(SETTINGS_JSON, ssystem, (err: any) => {
             if (err) {
                 console.log(lang.get_resource.Settings.write_file_failed);
             }

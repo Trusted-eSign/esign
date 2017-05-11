@@ -156,7 +156,7 @@ export class MainWindowOperations extends React.Component<IMainWindowOperationsP
                 <div className="r-iconbox-text">
                     <p>{this.props.info}</p>
                 </div>
-           </Link>     
+           </Link>
         </div>;
     }
 }
