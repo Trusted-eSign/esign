@@ -5,7 +5,7 @@ declare const $: any;
 
 export class AboutWindow extends React.Component<any, any> {
   constructor(props: any) {
-    super();
+    super(props);
     this.state = ({
       email: { text: "", error: "" },
       message: { text: "", error: "" },

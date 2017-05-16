@@ -89,7 +89,6 @@ export let get_Certificates = function (operation: string) {
             status: certVerify(certList[i], certCollection),
             algSign: certList[i].signatureAlgorithm,
             privateKey: certList[i].key.length > 0,
-            keyValue: certList[i].provider === "SYSTEM" ? certList[i].key : "1",
             active: false,
             key: i,
         });

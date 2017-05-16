@@ -1,7 +1,7 @@
 import * as React from "react";
 import { hashHistory, IndexRoute, Route, Router } from "react-router";
 import { AboutWindow } from "./components/AboutWindow";
-import { CertWindow } from "./components/certificate";
+import { CertWindow } from "./components/CertWindow";
 import { EncryptWindow } from "./components/encrypt";
 import { HelpWindow } from "./components/help";
 import { AppBar, MainWindow } from "./components/main_window";

@@ -4,8 +4,10 @@ import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
+import CertificateList from "./CertificateList";
 import { MainToolBar, Password, SearchElement } from "./components";
 import { ItemBar, ItemBarWithBtn } from "./elements";
+import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 declare const $: any;
 
@@ -16,337 +18,6 @@ class AppStore extends events.EventEmitter {
 }
 
 export let application = new AppStore();
-
-export class CertWindow extends React.Component<any, any> {
-  constructor(props: any) {
-    super(props);
-    certs_app.set_certificates = get_Certificates("certificates");
-    this.certAdd = this.certAdd.bind(this);
-    this.certChange = this.certChange.bind(this);
-    this.state = ({ pass_value: "" });
-  }
-
-  componentDidMount() {
-    $(".nav-small-btn, .cert-setting-btn, .cert-btn, .cert-set-btn").dropdown({
-      alignment: "left",
-      belowOrigin: false,
-      constrainWidth: false,
-      gutter: 0,
-      inDuration: 300,
-      outDuration: 225,
-    });
-
-    application.on("import_cert", this.certAdd);
-    application.on("pass_value", this.setPass.bind(this));
-    certs_app.on(CertificatesApp.SETTINGS, this.certChange);
-    lang.on(LangApp.SETTINGS, this.certChange);
-  }
-
-  componentWillUnmount() {
-    application.removeListener("import_cert", this.certAdd);
-    application.removeListener("pass_value", this.setPass.bind(this));
-    certs_app.removeListener(CertificatesApp.SETTINGS, this.certChange);
-    lang.removeListener(LangApp.SETTINGS, this.certChange);
-  }
-
-  setPass(password: string) {
-    this.setState({ pass_value: password });
-  }
-
-  certChange() {
-    this.setState({});
-  }
-
-  certImport(event: any) {
-    const CERT_PATH = event[0].path;
-    let certCount;
-
-    if (!window.PKISTORE.importCert(CERT_PATH)) {
-      this.p12Import(event);
-    } else {
-      certCount = certs_app.get_certificates.length;
-      this.certUpdate();
-      if (certCount === certs_app.get_certificates.length) {
-        $(".toast-cert_imported").remove();
-        Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, "toast-cert_imported");
-      } else {
-        $(".toast-cert_import_ok").remove();
-        Materialize.toast(lang.get_resource.Certificate.cert_import_ok, 2000, ".toast-cert_import_ok");
-      }
-    }
-  }
-
-  p12Import(event: any) {
-    const P12_PATH = event[0].path;
-    const SELF = this;
-    let p12: trusted.pki.Pkcs12;
-    let certCount;
-
-    try {
-      p12 = trusted.pki.Pkcs12.load(P12_PATH);
-    } catch (e) {
-      p12 = undefined;
-    }
-
-    if (!p12) {
-      $(".toast-cert_load_failed").remove();
-      Materialize.toast(lang.get_resource.Certificate.cert_load_failed, 2000, "toast-cert_load_failed");
-      return;
-    }
-
-    $("#get-password").openModal({
-      complete() {
-        if (!window.PKISTORE.importPkcs12(P12_PATH, SELF.state.pass_value)) {
-          $(".toast-cert_import_failed").remove();
-          Materialize.toast(lang.get_resource.Certificate.cert_import_failed, 2000, "toast-cert_import_failed");
-        } else {
-          certCount = certs_app.get_certificates.length;
-          SELF.certUpdate();
-          if (certCount === certs_app.get_certificates.length) {
-            $(".toast-cert_imported").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, ".toast-cert_imported");
-          } else {
-            $(".toast-cert_import_ok").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_import_ok, 2000, "toast-cert_import_ok");
-          }
-
-        }
-      },
-      dismissible: false,
-    });
-  }
-
-  certAdd() {
-    const CLICK_EVENT = document.createEvent("MouseEvents");
-
-    CLICK_EVENT.initEvent("click", true, true);
-    document.querySelector("#choose-cert").dispatchEvent(CLICK_EVENT);
-  }
-
-  certUpdate() {
-    window.PKIITEMS = window.PKISTORE.items;
-    certs_app.set_certificates = get_Certificates("certificates");
-    certs_app.set_certificate_for_info = null;
-  }
-
-  activeCert(event: any, cert: any) {
-    const CERTIFICATES = certs_app.get_certificates;
-
-    for (const certificate of CERTIFICATES) {
-      certificate.active = false;
-    }
-
-    CERTIFICATES[cert.key].active = true;
-    certs_app.set_certificates = CERTIFICATES;
-    certs_app.set_certificate_for_info = cert;
-  }
-
-  importCertKey(event: any) {
-    const SELF = this;
-
-    if (isEncryptedKey(event[0].path)) {
-      $("#get-password").openModal({
-        complete() {
-          SELF.importCertKeyHelper(event[0].path, SELF.state.pass_value);
-        },
-        dismissible: false,
-      });
-    } else {
-      SELF.importCertKeyHelper(event[0].path, "");
-    }
-  }
-
-  importCertKeyHelper(path: string, pass: string) {
-    $("#cert-key-import").val("");
-    const KEY_PATH = path;
-    const CERTIFICATES = certs_app.get_certificates;
-    const RES = window.PKISTORE.importKey(KEY_PATH, pass);
-    let key = 0;
-
-    if (RES) {
-      for (let i: number = 0; i < CERTIFICATES.length; i++) {
-        if (CERTIFICATES[i].active) {
-          CERTIFICATES[i].privateKey = true;
-          key = i;
-        }
-      }
-      certs_app.set_certificates = CERTIFICATES;
-
-      $(".toast-key_import_ok").remove();
-      Materialize.toast(lang.get_resource.Certificate.key_import_ok, 2000, "toast-key_import_ok");
-    } else {
-      $(".toast-key_import_failed").remove();
-      Materialize.toast(lang.get_resource.Certificate.key_import_failed, 2000, "toast-key_import_failed");
-    }
-  }
-
-  exportDirectory() {
-    if (window.framework_NW) {
-      const CLICK_EVENT = document.createEvent("MouseEvents");
-
-      CLICK_EVENT.initEvent("click", true, true);
-      document.querySelector("#choose-folder-export").dispatchEvent(CLICK_EVENT);
-    } else {
-      const FILE = DIALOG.showSaveDialog({
-        defaultPath: lang.get_resource.Certificate.certificate + ".pfx",
-        filters: [{ name: lang.get_resource.Certificate.certs, extensions: ["pfx"] }],
-        title: lang.get_resource.Certificate.export_cert,
-      });
-      this.exportCert(FILE);
-    }
-  }
-
-  exportCert(file: string) {
-    const SELF = this;
-    let p12: trusted.pki.Pkcs12;
-
-    if (file) {
-      $("#get-password").openModal({
-        complete() {
-          const CERT_ITEM = certs_app.get_certificate_for_info;
-          const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
-          const KEY = window.PKISTORE.findKey(CERT_ITEM);
-
-          if (!CERT || !KEY) {
-            $(".toast-cert_export_failed").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_export_failed, 2000, "toast-cert_export_failed");
-          } else {
-            p12 = new trusted.pki.Pkcs12();
-            p12.create(CERT, KEY, null, SELF.state.pass_value, CERT_ITEM.name);
-            p12.save(file);
-            $(".toast-cert_export_ok").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_export_ok, 2000, "toast-cert_export_ok");
-          }
-        },
-        dismissible: false,
-      });
-    } else {
-      $(".toast-cert_export_cancel").remove();
-      Materialize.toast(lang.get_resource.Certificate.cert_export_cancel, 2000, "toast-cert_export_cancel");
-    }
-  }
-
-  render() {
-    const SELF = this;
-    const CERTIFICATE_FOR_INFO = certs_app.get_certificate_for_info;
-    const CURRENT = CERTIFICATE_FOR_INFO ? "not-active" : "active";
-    let cert: any = null;
-    let title: any = null;
-
-    if (CERTIFICATE_FOR_INFO) {
-      cert = <CertInfo name={CERTIFICATE_FOR_INFO.name}
-        issuerName={CERTIFICATE_FOR_INFO.issuerName}
-        organization={CERTIFICATE_FOR_INFO.organization}
-        validityDate={new Date(CERTIFICATE_FOR_INFO.notAfter)}
-        algSign={CERTIFICATE_FOR_INFO.algSign}
-        privateKey={CERTIFICATE_FOR_INFO.privateKey} />;
-      title = <div className="cert-title-main">
-        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.name}</div>
-        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerName}</div>
-      </div>;
-    } else {
-      cert = "";
-      title = <span>{lang.get_resource.Certificate.cert_info}</span>;
-    }
-
-    const CERTIFICATES = certs_app.get_certificates;
-    let certSearch = CERTIFICATES;
-    let searchValue = certs_app.get_search_value;
-
-    searchValue = searchValue.trim().toLowerCase();
-    if (searchValue.length > 0) {
-      certSearch = certSearch.filter(function(e: any) {
-        return e.name.toLowerCase().match(searchValue);
-      });
-    }
-
-    const NAME = certSearch.length < 1 ? "active" : "not-active";
-    const VIEW = certSearch.length < 1 ? "not-active" : "";
-    const DISABLED = CERTIFICATE_FOR_INFO ? "" : "disabled";
-
-    return (
-      <div className="main">
-        <div className="content">
-          <div className="col s6 m6 l6 content-item-height" style={{ paddingRight: 0 }}>
-            <div className="cert-content-item">
-              <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" import={
-                  function(event: any) {
-                    SELF.certImport(event.target.files);
-                  }
-                } />
-                <div className="add-certs">
-                  <div className="add-certs-item">
-                    <div className={"add-cert-collection collection " + VIEW}>
-                      <input type="file" className="input-file" id="cert-key-import" onChange={
-                        function(event: any) {
-                          SELF.importCertKey(event.target.files);
-                        }
-                      } />
-                      {certSearch.map(function(l: any) {
-                        let status: string;
-                        if (l.status) {
-                          status = "status_cert_ok_icon";
-                        } else {
-                          status = "status_cert_fail_icon";
-                        }
-                        return <CertCollectionList name={l.name}
-                          issuerName={l.issuerName}
-                          status={status}
-                          index={l.key}
-                          chooseCert={function(event: any) { SELF.activeCert(event, CERTIFICATES[l.key]); }}
-                          operation="certificate"
-                          cert_key={l.privateKey}
-                          provider={l.provider}
-                          active_cert={l.active}
-                          key={l.key} />;
-                      })}
-                    </div>
-                    <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col s6 m6 l6 content-item-height">
-            <div className="cert-content-item-height">
-              <div className="content-wrapper z-depth-1">
-                <nav className="app-bar-cert">
-                  <ul className="app-bar-items">
-                    <li className="cert-bar-text">
-                      {title}
-                      <input type="file" ref={direct => direct &&
-                        direct.setAttribute("nwsaveas", lang.get_resource.Certificate.certificate + ".pfx")}
-                        accept=".pfx" value="" id="choose-folder-export"
-                        onChange={function(event: any) {
-                          SELF.exportCert(event.target.value);
-                        }} />
-                    </li>
-                    <li className="right">
-                      <a className={"nav-small-btn waves-effect waves-light " + DISABLED} data-activates="dropdown-btn-for-cert">
-                        <i className="nav-small-icon material-icons cert-settings">more_vert</i>
-                      </a>
-                      <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.exportDirectory.bind(this)}>{lang.get_resource.Certificate.cert_export}</a></li>
-                      </ul>
-                    </li>
-                  </ul>
-                </nav>
-                <div className="add-certs">
-                  <div className="add-certs-item">
-                    {cert}
-                    <BlockNotElements name={CURRENT} title={lang.get_resource.Certificate.cert_not_select} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Password />
-      </div>
-    );
-  }
-}
 
 export class CertComponents extends React.Component<any, any> {
   constructor(props: any) {
@@ -391,7 +62,7 @@ export class CertComponents extends React.Component<any, any> {
     sign.set_sign_certificate = cert;
   }
 
-  activeCert(event: any, cert: any) {
+  activeCert = (event: any, cert: any) => {
     const CERTIFICATES = sign.get_certificates;
 
     for (const certificate of CERTIFICATES) {
@@ -403,7 +74,7 @@ export class CertComponents extends React.Component<any, any> {
     sign.set_certificate_for_info = cert;
   }
 
-  selectedCert(cert: any) {
+  selectedCert = (cert: any) => {
     const CERTIFICATES = sign.get_certificates;
 
     for (const certificate of CERTIFICATES) {
@@ -473,29 +144,15 @@ export class CertComponents extends React.Component<any, any> {
               <div className="col s6 m6 l6 content-item-height" style={{ paddingRight: 0 }}>
                 <div className="cert-content-item">
                   <div className="content-wrapper z-depth-1">
-                    <ToolBarWithSearch disable="disabled" import={function(event: any) { }} operation="sign" />
+                    <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="sign" />
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection collection " + VIEW}>
-                          {certSearch.map(function(l: any, i: number) {
-                            let status: string;
-                            if (l.status) {
-                              status = "status_cert_ok_icon";
-                            } else {
-                              status = "status_cert_fail_icon";
-                            }
-                            return <CertCollectionList name={l.name}
-                              issuerName={l.issuerName}
-                              status={status}
-                              index={l.key}
-                              chooseCert={function(event: any) { SELF.activeCert(event, CERTIFICATES[l.key]); }}
-                              operation="sign"
-                              cert_key={l.privateKey}
-                              provider={l.provider}
-                              active_cert={l.active}
-                              key={i}
-                              selectedCert={function() { SELF.selectedCert(CERTIFICATES[l.key]); }} />;
-                          })}
+                          <CertificateList
+                            certs={certSearch}
+                            activeCert = {this.activeCert}
+                            selectedCert = {this.selectedCert}
+                            operation="sign"/>
                         </div>
                         <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
                       </div>
@@ -515,7 +172,7 @@ export class CertComponents extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className={"choose-cert " + ACTIVE_ELEM}>
-                    <a className="waves-effect waves-light btn-large choose-btn modal-close" onClick={this.chooseCert.bind(this)}>{lang.get_resource.Settings.choose}</a>
+                    <a className="waves-effect waves-light btn-large choose-btn modal-close" onClick={this.chooseCert}>{lang.get_resource.Settings.choose}</a>
                   </div>
                 </div>
               </div>
@@ -524,86 +181,6 @@ export class CertComponents extends React.Component<any, any> {
         </div>
       </div>
     );
-  }
-}
-
-interface ICertCollectionListProps {
-  name: string;
-  issuerName: string;
-  status: string;
-  index: number;
-  chooseCert: (event: any) => void;
-  selectedCert?: () => void;
-  operation: string;
-  cert_key: boolean;
-  provider: string;
-  active_cert: boolean;
-}
-
-class CertCollectionList extends React.Component<ICertCollectionListProps, any> {
-  constructor(props: ICertCollectionListProps) {
-    super(props);
-  }
-
-  componentDidMount() {
-    $(".cert-setting-item").dropdown({
-      alignment: "right",
-      belowOrigin: false,
-      constrainWidth: false,
-      gutter: 0,
-      inDuration: 300,
-      outDuration: 225,
-    });
-  }
-
-  stopEvent(event: any) {
-    event.stopPropagation();
-  }
-
-  addCertKey() {
-    const CLICK_EVENT = document.createEvent("MouseEvents");
-
-    CLICK_EVENT.initEvent("click", true, true);
-    document.querySelector("#cert-key-import").dispatchEvent(CLICK_EVENT);
-  }
-
-  render() {
-    const SELF = this;
-    const STYLE = {};
-    let certKeyMenu: any = null;
-    let active = "";
-    let doubleClick: () => void;
-
-    if (this.props.active_cert) {
-      active = "active";
-    }
-    if (this.props.operation === "certificate" && !this.props.cert_key && this.props.provider === "SYSTEM") {
-      certKeyMenu = <div>
-        <i className="cert-setting-item waves-effect material-icons secondary-content"
-          data-activates={"cert-key-set-file-" + this.props.index} onClick={SELF.stopEvent}>more_vert</i>
-        <ul id={"cert-key-set-file-" + this.props.index} className="dropdown-content">
-          <li><a onClick={this.addCertKey.bind(this)}>{lang.get_resource.Certificate.import_key}</a></li>
-        </ul>
-      </div>;
-    } else {
-      certKeyMenu = "";
-    }
-
-    if (this.props.operation === "sign") {
-      doubleClick = this.props.selectedCert.bind(this);
-    }
-
-    return <div className={"collection-item avatar certs-collection " + active} id={"cert-" + this.props.index}
-      onClick={this.props.chooseCert.bind(this)}
-      onDoubleClick={doubleClick}
-      style={STYLE}>
-      <div className="r-iconbox-link">
-        <div className="r-iconbox-cert-icon"><i className={this.props.status} id="cert-status"></i></div>
-        <p className="collection-title">{this.props.name}</p>
-        <p className="collection-info cert-info">{this.props.issuerName}</p>
-      </div>
-      {certKeyMenu}
-    </div>;
   }
 }
 
@@ -797,50 +374,6 @@ class CertContentToolBarForSign extends React.Component<ICertContentToolBarForSi
   }
 }
 
-interface IToolBarWithSearchProps {
-  disable: string;
-  import: (event: any) => void;
-  operation: string;
-}
-
-class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, any> {
-  constructor(props: IToolBarWithSearchProps) {
-    super(props);
-  }
-
-  certImport() {
-    application.emit("import_cert", "");
-  }
-
-  render() {
-    let btn: any = null;
-    let style = {};
-
-    if (this.props.operation === "certificate") {
-      btn = <li className="right import-col">
-        <input type="file" className="input-file" id="choose-cert" value="" onChange={this.props.import.bind(this)} />
-        <a className={"nav-small-btn waves-effect waves-light " + this.props.disable} data-activates="dropdown-btn-import">
-          <i className="nav-small-icon material-icons cert-settings">more_vert</i>
-        </a>
-        <ul id="dropdown-btn-import" className="dropdown-content">
-          <li><a onClick={this.certImport.bind(this)}>{lang.get_resource.Certificate.cert_import}</a></li>
-        </ul>
-      </li>;
-    } else {
-      style = { width: 100 + "%", paddingRight: 0.75 + "rem" };
-    }
-
-    return <nav className="app-bar-cert">
-      <ul className="app-bar-items">
-        <li className="cert-bar-text" style={style}>
-          <SearchElement operation={this.props.operation} />
-        </li>
-        {btn}
-      </ul>
-    </nav>;
-  }
-}
-
 export class CertComponentsForEncrypt extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
@@ -884,7 +417,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
     encrypt.set_certificates_for_encrypt = encrypt.get_certificates_is_active;
   }
 
-  activeCert(event: any, certs: any) {
+  activeCert = (event: any, certs: any) => {
     const ARRAY = [];
     const CERTIFICATES = encrypt.get_certificates;
 
@@ -898,15 +431,15 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
     encrypt.set_certificates_is_active = ARRAY;
   }
 
-  viewCertInfo(event: any, cert: any) {
+  viewCertInfo = (event: any, cert: any) => {
     encrypt.set_certificate_for_info = cert;
   }
 
-  backViewChooseCerts() {
+  backViewChooseCerts = () => {
     encrypt.set_certificate_for_info = null;
   }
 
-  removeChooseCerts() {
+  removeChooseCerts = () => {
     encrypt.set_certificates_is_active = [];
     const CERTIFICATES = encrypt.get_certificates;
     for (const certificate of CERTIFICATES) {
@@ -941,7 +474,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
         <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerName}</div>
       </div>;
       activeButton = <li className="right">
-        <a className="nav-small-btn waves-effect waves-light" onClick={this.backViewChooseCerts.bind(this)}>
+        <a className="nav-small-btn waves-effect waves-light" onClick={this.backViewChooseCerts}>
           <i className="nav-small-icon material-icons">arrow_back</i>
         </a>
       </li>;
@@ -953,7 +486,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
           <i className="nav-small-icon material-icons">more_vert</i>
         </a>
         <ul id="dropdown-btn-certlist" className="dropdown-content">
-          <li><a onClick={this.removeChooseCerts.bind(this)}>{lang.get_resource.Settings.remove_list}</a></li>
+          <li><a onClick={this.removeChooseCerts}>{lang.get_resource.Settings.remove_list}</a></li>
         </ul>
       </li>;
     }
@@ -990,28 +523,11 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
               <div className="col s6 m6 l6 content-item-height" style={{ paddingRight: 0 }}>
                 <div className="cert-content-item">
                   <div className="content-wrapper z-depth-1">
-                    <ToolBarWithSearch disable="disabled" import={function(event: any) { }} operation="encrypt" />
+                    <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="encrypt" />
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection collection " + VIEW}>
-                          {certSearch.map(function(l: any, i: number) {
-                            let status: string;
-                            if (l.status) {
-                              status = "status_cert_ok_icon";
-                            } else {
-                              status = "status_cert_fail_icon";
-                            }
-                            return <CertCollectionList name={l.name}
-                              issuerName={l.issuerName}
-                              status={status}
-                              index={l.key}
-                              chooseCert={function(event: any) { SELF.activeCert(event, CERTIFICATES[l.key]); }}
-                              operation="encrypt"
-                              cert_key={l.privateKey}
-                              provider={l.provider}
-                              active_cert={l.active}
-                              key={i} />;
-                          })}
+                          <CertificateList certs={certSearch} activeCert = {this.activeCert} operation="encrypt" />
                         </div>
                         <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
                       </div>
@@ -1033,24 +549,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection collection " + CHOOSE}>
-                          {CERTIFICATES_IS_ACTIVE.map(function(l: any, i: number) {
-                            let status: string;
-                            if (l.status) {
-                              status = "status_cert_ok_icon";
-                            } else {
-                              status = "status_cert_fail_icon";
-                            }
-                            return <CertCollectionList name={l.name}
-                              issuerName={l.issuerName}
-                              status={status}
-                              index={l.key}
-                              chooseCert={function(event: any) { SELF.viewCertInfo(event, CERTIFICATES[l.key]); }}
-                              operation="encrypt"
-                              cert_key={l.privateKey}
-                              provider={l.provider}
-                              active_cert={false}
-                              key={i} />;
-                          })}
+                          <CertificateList certs={CERTIFICATES_IS_ACTIVE} activeCert = {this.viewCertInfo} operation="encrypt" />
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={lang.get_resource.Certificate.cert_not_select} />
@@ -1058,7 +557,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className={"choose-cert " + CHOOSE}>
-                    <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={this.chooseCert.bind(this)}>{lang.get_resource.Settings.choose}</a>
+                    <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={this.chooseCert}>{lang.get_resource.Settings.choose}</a>
                   </div>
                 </div>
               </div>
