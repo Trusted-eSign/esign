@@ -3,7 +3,7 @@ import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { checkFiles, DialogBox, dlg, extFile, lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import * as encrypts from "../trusted/encrypt";
-import { utills } from "../utills";
+import { utils } from "../utils";
 import { application, CertComponentsForEncrypt } from "./certificate";
 import { Dialog, FileComponents, MainToolBar, Preloader } from "./components";
 import { BtnsForOperation, ItemBar } from "./elements";
@@ -37,7 +37,7 @@ export class EncryptWindow extends React.Component<any, any> {
             let res = true;
 
             if (folderOut.length > 0) {
-                if (!utills.dirExists(folderOut)) {
+                if (!utils.dirExists(folderOut)) {
                     $(".toast-failed_find_directory").remove();
                     Materialize.toast(lang.get_resource.Settings.failed_find_directory, 2000, "toast-failed_find_directory");
                     return;

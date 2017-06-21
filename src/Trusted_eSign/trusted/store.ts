@@ -3,7 +3,7 @@
 
 import { lang } from "../module/global_app";
 import * as native from "../native";
-import { utills } from "../utills";
+import { utils } from "../utils";
 import * as jwt from "./jwt";
 
 const OS_TYPE = native.os.type();

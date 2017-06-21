@@ -38,13 +38,13 @@ gulp.task("set architecture ia32", () => {
   architecture = "ia32";
 });
 
-gulp.task("clean", () => del(["build", "tmp", "tmp_app_build", "trusted-crypto"]));
+gulp.task("clean", () => del(["build", "tmp", "tmp_app_build"/*, "trusted-crypto"*/]));
 
 gulp.task("compile", ["clean"], () => gulp.src([`src/${TARGET}/**/*.tsx`, `src/${TARGET}/**/*.ts`])
   .pipe(project())
   .pipe(gulp.dest("tmp")));
 
-gulp.task("bundle", ["compile"], () => browserify("tmp/main.js")
+gulp.task("bundle", ["compile"], () => browserify("tmp/app.js")
   .bundle()
   .pipe(source(`bundle_${TARGET}.js`))
   .pipe(gulp.dest("tmp")));
@@ -85,7 +85,7 @@ gulp.task("rebuild trusted-crypto", ["clean"], cb => {
   });
 });
 
-gulp.task("trusted-crypto copy", ["rebuild trusted-crypto"], () => gulp.src(["./trusted-crypto/**/**"])
+gulp.task("trusted-crypto copy", ["clean"]/*["rebuild trusted-crypto"]*/, () => gulp.src(["./trusted-crypto/**/**"])
     .pipe(gulp.dest(`./tmp_app_build/electron-${process.platform}-${architecture}/node_modules/trusted-crypto`)));
 
 const config = {
@@ -125,3 +125,4 @@ gulp.task("ia32", ["set architecture ia32",
 gulp.task("default", [
   "x64"
 ]);
+

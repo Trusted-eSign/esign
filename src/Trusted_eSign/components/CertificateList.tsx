@@ -1,20 +1,35 @@
 import * as React from "react";
 import { PropTypes } from "react";
+import { connect } from "react-redux";
+import { loadAllCertificates } from "../AC";
 import accordion from "../decorators/accordion";
+import {filteredCertificatesSelector} from "../selectors";
 import { CertificateListItem } from "./CertificateListItem";
+import ProgressBars from "./ProgressBars";
 
 class CertificateList extends React.Component<any, any> {
+  componentDidMount() {
+    const { isLoaded, loadAllCertificates, isLoading } = this.props;
+    if (!isLoading && !isLoaded) {
+      loadAllCertificates();
+    }
+  }
+
   render() {
-    const { certs, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened } = this.props;
-    const elements = certs.map((cert: any) =>
-      <CertificateListItem name={cert.name}
+    const { certificates, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened, isLoaded, isLoading, loadAllCertificates } = this.props;
+    if (isLoading) {
+      return  <ProgressBars />;
+    }
+
+    const elements = certificates.map((cert) =>
+      <CertificateListItem
         cert={cert}
-        chooseCert={(event: any) => activeCert(event, cert) }
+        chooseCert={(event: any) => activeCert(event, cert)}
         operation={operation}
         selectedCert={() => selectedCert(cert)}
-        isOpen={isItemOpened(cert.key.toString())}
-        toggleOpen={toggleOpenItem(cert.key.toString())}
-        key = {cert.key.toString()}/>,
+        isOpen={isItemOpened(cert.id.toString())}
+        toggleOpen={toggleOpenItem(cert.id.toString())}
+        key={cert.id.toString()} />,
     );
 
     return (
@@ -25,4 +40,10 @@ class CertificateList extends React.Component<any, any> {
   }
 }
 
-export default accordion(CertificateList);
+export default connect((state) => {
+  return {
+    certificates: filteredCertificatesSelector(state),
+    isLoaded: state.certificates.loaded,
+    isLoading: state.certificates.loading,
+  };
+}, { loadAllCertificates })(accordion(CertificateList));

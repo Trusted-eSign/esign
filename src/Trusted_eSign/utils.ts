@@ -1,8 +1,17 @@
 /// <reference types="node" />
 
+import {Map, OrderedMap} from "immutable";
 import * as native from "./native";
 
-export let utills = {
+export function arrayToMap(arr, RecordModel) {
+    return arr.reduce((acc, el) => acc.set(el.id, RecordModel ? new RecordModel(el) : el), new OrderedMap({}))
+}
+
+export function mapToArr(obj) {
+    return obj.valueSeq().toArray()
+}
+
+export let utils = {
   /**
    * Не работает. Временно вынесено в js
    */

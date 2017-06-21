@@ -6,22 +6,15 @@ import { sign, SignApp } from "../module/sign_app";
 declare const $: any;
 
 interface ICertificateListItemProps {
-  name: string;
-  issuerName: string;
-  status: string;
-  index: number;
   chooseCert: (event: any) => void;
-  selectedCert?: () => void;
+  selectedCert: (event: any) => void;
   operation: string;
-  cert_key: boolean;
-  provider: string;
-  active_cert: boolean;
   isOpen: boolean;
   toggleOpen: () => void;
   cert: any;
 }
 
-export class CertificateListItem extends React.Component<ICertificateListItemProps, any> {
+export class CertificateListItem extends React.Component<ICertificateListItemProps, ICertificateListItemProps> {
   constructor(props: ICertificateListItemProps) {
     super(props);
   }
@@ -37,7 +30,7 @@ export class CertificateListItem extends React.Component<ICertificateListItemPro
     });
   }
 
-  shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: any) {
+  shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
        return nextProps.isOpen !== this.props.isOpen;
   }
 
@@ -95,14 +88,14 @@ export class CertificateListItem extends React.Component<ICertificateListItemPro
       doubleClick = selectedCert;
     }
 
-    return <div key = {cert.key.toString()} className={"collection-item avatar certs-collection " + active} id={"cert-" + cert.key}
+    return <div key = {cert.id.toString()} className={"collection-item avatar certs-collection " + active} id={cert.id}
       onClick={toggleOpen}
       onDoubleClick={doubleClick}
       style={STYLE}>
       <div className="r-iconbox-link">
         <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
-        <p className="collection-title">{this.props.name}</p>
-        <p className="collection-info cert-info">{cert.issuerName}</p>
+        <p className="collection-title">{cert.subjectFriendlyName}</p>
+        <p className="collection-info cert-info">{cert.issuerFriendlyName}</p>
       </div>
       {certKeyMenu}
       {this.activeCert()}

@@ -3,36 +3,6 @@ import * as native from "../native";
 
 export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
-export class VideoApp extends EventEmitter {
-    static SETTINGS = "video_change";
-    protected video: any = {
-        source: "",
-        caption: "",
-        currentTime: 0,
-    };
-    get get_video_source() {
-        return this.video.source;
-    }
-    set set_video_source(source: string) {
-        this.video.source = source;
-        this.emit(VideoApp.SETTINGS, source);
-    }
-    get get_video_caption() {
-        return this.video.caption;
-    }
-    set set_video_caption(caption: string) {
-        this.video.caption = caption;
-        this.emit(VideoApp.SETTINGS, caption);
-    }
-    get get_video_time() {
-        return this.video.currentTime;
-    }
-    set set_video_time(time: number) {
-        this.video.currentTime = time;
-        this.emit(VideoApp.SETTINGS, time);
-    }
-}
-export let video_app = new VideoApp();
 export let extFile = function (filename: string) {
     let ext = filename.split(".").pop();
     let file_type: string;

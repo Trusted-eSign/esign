@@ -2,7 +2,7 @@
 
 import { lang } from "../module/global_app";
 import * as native from "../native";
-import { utills } from "../utills";
+import { utils } from "../utils";
 import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
@@ -32,14 +32,14 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
         if (cms.isDetached()) {
             let tempURI: string;
             tempURI = uri.substring(0, uri.lastIndexOf("."));
-            if (!utills.fileExists(tempURI)) {
+            if (!utils.fileExists(tempURI)) {
                 tempURI = dialog.showOpenDialog(null, { title: lang.get_resource.Sign.sign_content_file + native.path.basename(uri), properties: ["openFile"] });
 
                 if (tempURI) {
                     tempURI = tempURI[0];
                 }
 
-                if (!tempURI || !utills.fileExists(tempURI)) {
+                if (!tempURI || !utils.fileExists(tempURI)) {
                     $(".toast-verify_get_content_failed").remove();
                     Materialize.toast(lang.get_resource.Sign.verify_get_content_failed, 2000, "toast-verify_get_content_failed");
                     return undefined;
@@ -72,7 +72,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utills.fileExists(newOutUri)) {
+    while (utils.fileExists(newOutUri)) {
         newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
         indexFile++;
     }
@@ -169,7 +169,7 @@ export function unSign(uri: string, folderOut: string): any {
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utills.fileExists(newOutUri)) {
+    while (utils.fileExists(newOutUri)) {
         newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
         indexFile++;
     }

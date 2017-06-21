@@ -2,7 +2,7 @@
 
 import { lang } from "../module/global_app";
 import * as native from "../native";
-import { utills } from "../utills";
+import { utils } from "../utils";
 
 export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>, policies: any, format: trusted.DataFormat, folderOut: string): string {
     let cipher: trusted.pki.Cipher;
@@ -20,7 +20,7 @@ export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>,
 
     indexFile = 1;
     newOutUri = outURI;
-    while (utills.fileExists(newOutUri)) {
+    while (utils.fileExists(newOutUri)) {
         newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")"
             + native.path.basename(outURI));
         indexFile++;
@@ -64,7 +64,7 @@ export function decryptFile(uri: string, folderOut: string): string {
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utills.fileExists(newOutUri)) {
+    while (utils.fileExists(newOutUri)) {
         newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
         indexFile++;
     }

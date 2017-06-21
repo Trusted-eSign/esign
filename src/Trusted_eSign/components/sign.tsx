@@ -3,7 +3,7 @@ import { checkFiles, DialogBox, dlg, extFile, lang, LangApp } from "../module/gl
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import * as signs from "../trusted/sign";
-import { utills } from "../utills";
+import { utils } from "../utils";
 import { application, BlockNotElements, CertComponents } from "./certificate";
 import { Dialog, FileComponents, MainToolBar } from "./components";
 import { BtnsForOperation, CollectionItem, ItemBar, ItemBarWithBtn } from "./elements";
@@ -48,7 +48,7 @@ export class SignWindow extends React.Component<any, any> {
             let folderOut = sign.get_settings_directory;
 
             if (folderOut.length > 0) {
-                if (!utills.dirExists(folderOut)) {
+                if (!utils.dirExists(folderOut)) {
                     $(".toast-failed_find_directory").remove();
                     Materialize.toast(lang.get_resource.Settings.failed_find_directory, 2000, "toast-failed_find_directory");
                     return;
@@ -124,7 +124,7 @@ export class SignWindow extends React.Component<any, any> {
             let folderOut = sign.get_settings_directory;
 
             if (folderOut.length > 0) {
-                if (!utills.dirExists(folderOut)) {
+                if (!utils.dirExists(folderOut)) {
                     $(".toast-failed_find_directory").remove();
                     Materialize.toast(lang.get_resource.Settings.failed_find_directory, 2000, "toast-failed_find_directory");
                     return;
