@@ -32,7 +32,7 @@ export class AppBar extends React.Component<any, any> {
     }
     render() {
         let self = this;
-        let route_path = this.props.children.props.route.path;
+        let route_path = this.props.location.pathname;
         let title: string;
         if (route_path === "/sign")
             title = lang.get_resource.Sign.sign_and_verify;

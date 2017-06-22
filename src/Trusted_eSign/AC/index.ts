@@ -9,15 +9,15 @@ export function loadAllCertificates() {
     });
 
     setTimeout(() => {
-      const STORE = new Store();
-      STORE.importCert(native.DEFAULT_PATH + "/cert1.crt");
-      STORE.importKey(native.DEFAULT_PATH + "/cert1.key", "");
+      const certificateStore = new Store();
+      certificateStore.importCert(native.DEFAULT_PATH + "/cert1.crt");
+      certificateStore.importKey(native.DEFAULT_PATH + "/cert1.key", "");
 
-      window.PKISTORE = STORE;
-      window.TRUSTEDCERTIFICATECOLLECTION = STORE.trustedCerts;
-      window.PKIITEMS = STORE.items;
+      window.PKISTORE = certificateStore;
+      window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
+      window.PKIITEMS = certificateStore.items;
 
-      const certs = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
+      const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
         if (!item.id) {
           item.id = Date.now() + Math.random();
         }

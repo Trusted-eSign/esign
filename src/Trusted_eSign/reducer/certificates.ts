@@ -5,6 +5,7 @@ import { arrayToMap } from "../utils";
 const CertificateModel = Record({
   id: null,
   category: null,
+  version: null,
   hash: null,
   format: null,
   type: null,
@@ -38,7 +39,7 @@ export default (certificates = new DefaultReducerState(), action) => {
 
     case LOAD_ALL_CERTIFICATES + SUCCESS:
       return certificates
-        .set("entities", arrayToMap(certs, CertificateModel))
+        .update("entities", (entities) => arrayToMap(certs, CertificateModel).merge(entities))
         .set("loading", false)
         .set("loaded", true);
   }

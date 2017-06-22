@@ -40,7 +40,7 @@ export let get_Certificates = function (operation: string) {
             return item.type === "CERTIFICATE";
         });
     }
-    for (let i = 0; i < certList.length; i++) {
+    for (let i = 0; i < 4; i++) {
         certs.push({
             format: certList[i].format,
             type: certList[i].type,
@@ -163,21 +163,21 @@ export interface IX509Certificate {
     category: string;
     provider: string;
     uri: string;
+    version: string;
     hash: string;
     serial: string;
-    notAfter: string;
+    notAfter: Date;
     notBefore: string;
-    fullSubjectName: string;
-    fullIssuerName: string;
-    name: string;
+    subjectName: string;
     issuerName: string;
-    organization: string;
+    subjectFriendlyName: string;
+    issuerFriendlyName: string;
+    organizationName: string;
     status: boolean;
-    algSign: string;
+    signatureAlgorithm: string;
     privateKey: boolean;
-    keyValue: string;
     active: boolean;
-    key: number;
+    key: string;
 }
 /**функция чтения строковых ресурсов */
 let get_string_resources = function (lang: string) {

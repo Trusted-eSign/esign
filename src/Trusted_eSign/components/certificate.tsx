@@ -4,6 +4,7 @@ import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
+import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import { MainToolBar, Password, SearchElement } from "./components";
 import { ItemBar, ItemBarWithBtn } from "./elements";
@@ -109,13 +110,8 @@ export class CertComponents extends React.Component<any, any> {
     let itemBar: any = null;
 
     if (CERTIFICATE_FOR_INFO) {
-      cert = <CertInfo name={CERTIFICATE_FOR_INFO.name}
-        issuerName={CERTIFICATE_FOR_INFO.issuerName}
-        organization={CERTIFICATE_FOR_INFO.organization}
-        validityDate={new Date(CERTIFICATE_FOR_INFO.notAfter)}
-        algSign={CERTIFICATE_FOR_INFO.algSign}
-        privateKey={CERTIFICATE_FOR_INFO.privateKey} />;
-      itemBar = <ItemBar text={CERTIFICATE_FOR_INFO.name} second_text={CERTIFICATE_FOR_INFO.issuerName} />;
+      cert = <CertificateInfo certificate={CERTIFICATE_FOR_INFO} />;
+      itemBar = <ItemBar text={CERTIFICATE_FOR_INFO.subjectFriendlyName} second_text={CERTIFICATE_FOR_INFO.issuerFriendlyName} />;
     } else {
       cert = "";
       itemBar = <ItemBar text={lang.get_resource.Certificate.cert_info} />;
@@ -184,67 +180,6 @@ export class CertComponents extends React.Component<any, any> {
   }
 }
 
-interface ICertInfoProps {
-  name: string;
-  issuerName: string;
-  organization: string;
-  validityDate: Date;
-  algSign: string;
-  privateKey: boolean;
-  classForReg?: string[];
-}
-
-export class CertInfo extends React.Component<ICertInfoProps, any> {
-  constructor(props: ICertInfoProps) {
-    super(props);
-  }
-
-  render() {
-    const PRIV_KEY = this.props.privateKey ? lang.get_resource.Certificate.present : lang.get_resource.Certificate.absent;
-    const TEXT_WHITE = this.props.classForReg ? this.props.classForReg[0] : "";
-    const TEXT_GRAY = this.props.classForReg ? this.props.classForReg[1] : "";
-    let organization = "-";
-
-    if (this.props.organization) {
-      organization = this.props.organization;
-    }
-
-    return <div className="add-cert-collection collection cert-info-list">
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{this.props.name}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Certificate.subject}</div>
-      </div>
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{organization}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Certificate.organization}</div>
-      </div>
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{this.props.issuerName}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Certificate.issuer_name}</div>
-      </div>
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{this.props.validityDate.toLocaleDateString(lang.get_lang, {
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          month: "long",
-          second: "numeric",
-          year: "numeric",
-        })}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Certificate.cert_valid}</div>
-      </div>
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{this.props.algSign}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Sign.alg}</div>
-      </div>
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + TEXT_WHITE}>{PRIV_KEY}</div>
-        <div className={"collection-info cert-info " + TEXT_GRAY}>{lang.get_resource.Certificate.priv_key}</div>
-      </div>
-    </div>;
-  }
-}
-
 interface ICertItemProps {
   first_text: string;
   second_text: string;
@@ -303,20 +238,20 @@ class CertificateView extends React.Component<any, any> {
     const SIGN_CERTIFICATE = sign.get_sign_certificate;
 
     if (SIGN_CERTIFICATE) {
-      const privKey = SIGN_CERTIFICATE.privateKey ? lang.get_resource.Certificate.present : lang.get_resource.Certificate.absent;
+      const privKey = SIGN_CERTIFICATE.key.length > 0 ? lang.get_resource.Certificate.present : lang.get_resource.Certificate.absent;
       return <div className="cert-view-main">
         <div className="cert-main-item">
           <div className="add-cert-collection collection cert-info-list">
             <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.name}</div>
+              <div className="collection-title">{SIGN_CERTIFICATE.subjectFriendlyName}</div>
               <div className="collection-info cert-info">{lang.get_resource.Certificate.subject}</div>
             </div>
             <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.organization}</div>
+              <div className="collection-title">{SIGN_CERTIFICATE.organizationName}</div>
               <div className="collection-info cert-info">{lang.get_resource.Certificate.organization}</div>
             </div>
             <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.algSign}</div>
+              <div className="collection-title">{SIGN_CERTIFICATE.signatureAlgorithm}</div>
               <div className="collection-info cert-info">{lang.get_resource.Sign.alg}</div>
             </div>
           </div>
@@ -463,15 +398,10 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
     let title: any = null;
 
     if (CERTIFICATE_FOR_INFO) {
-      cert = <CertInfo name={CERTIFICATE_FOR_INFO.name}
-        issuerName={CERTIFICATE_FOR_INFO.issuerName}
-        organization={CERTIFICATE_FOR_INFO.organization}
-        validityDate={new Date(CERTIFICATE_FOR_INFO.notAfter)}
-        algSign={CERTIFICATE_FOR_INFO.algSign}
-        privateKey={CERTIFICATE_FOR_INFO.privateKey} />;
+      cert = <CertificateInfo certificate={CERTIFICATE_FOR_INFO} />;
       title = <div className="cert-title-main">
-        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.name}</div>
-        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerName}</div>
+        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.subjectFriendlyName}</div>
+        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerFriendlyName}</div>
       </div>;
       activeButton = <li className="right">
         <a className="nav-small-btn waves-effect waves-light" onClick={this.backViewChooseCerts}>
@@ -527,7 +457,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection collection " + VIEW}>
-                          <CertificateList certs={certSearch} activeCert = {this.activeCert} operation="encrypt" />
+                          <CertificateList activeCert = {this.activeCert} operation="encrypt" />
                         </div>
                         <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
                       </div>
@@ -549,7 +479,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection collection " + CHOOSE}>
-                          <CertificateList certs={CERTIFICATES_IS_ACTIVE} activeCert = {this.viewCertInfo} operation="encrypt" />
+                          <CertificateList activeCert = {this.viewCertInfo} operation="encrypt" />
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={lang.get_resource.Certificate.cert_not_select} />

@@ -1,33 +1,29 @@
 import * as events from "events";
 import * as React from "react";
+import { connect } from "react-redux";
+import { loadAllCertificates } from "../AC";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
-import { application, BlockNotElements, CertInfo } from "./certificate";
+import {filteredCertificatesSelector} from "../selectors";
+import { application, BlockNotElements } from "./certificate";
+import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import { Password } from "./components";
+import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 declare const $: any;
 
 const DIALOG = window.electron.remote.dialog;
 
-export class CertWindow extends React.Component<any, any> {
+class CertWindow extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    certs_app.set_certificates = get_Certificates("certificates");
+    certs_app.set_certificates = ["1"];
     this.state = ({ pass_value: "" });
   }
 
   componentDidMount() {
-    $(".nav-small-btn, .cert-setting-btn, .cert-btn, .cert-set-btn").dropdown({
-      alignment: "left",
-      belowOrigin: false,
-      constrainWidth: false,
-      gutter: 0,
-      inDuration: 300,
-      outDuration: 225,
-    });
-
     application.on("import_cert", this.certAdd);
     application.on("pass_value", this.setPass);
     certs_app.on(CertificatesApp.SETTINGS, this.certChange);
@@ -115,20 +111,21 @@ export class CertWindow extends React.Component<any, any> {
   }
 
   certUpdate() {
+    const { certificates } = this.props;
     window.PKIITEMS = window.PKISTORE.items;
     certs_app.set_certificates = get_Certificates("certificates");
     certs_app.set_certificate_for_info = null;
   }
 
   activeCert = (event: any, cert: any) => {
-    const CERTIFICATES = certs_app.get_certificates;
+    /*const CERTIFICATES = certs_app.get_certificates;
 
     for (const certificate of CERTIFICATES) {
       certificate.active = false;
     }
 
     CERTIFICATES[cert.key].active = true;
-    certs_app.set_certificates = CERTIFICATES;
+    certs_app.set_certificates = CERTIFICATES;*/
     certs_app.set_certificate_for_info = cert;
   }
 
@@ -200,7 +197,7 @@ export class CertWindow extends React.Component<any, any> {
             Materialize.toast(lang.get_resource.Certificate.cert_export_failed, 2000, "toast-cert_export_failed");
           } else {
             p12 = new trusted.pki.Pkcs12();
-            p12.create(CERT, KEY, null, this.state.pass_value, CERT_ITEM.name);
+            p12.create(CERT, KEY, null, this.state.pass_value, CERT_ITEM.subjectFriendlyName);
             p12.save(file);
             $(".toast-cert_export_ok").remove();
             Materialize.toast(lang.get_resource.Certificate.cert_export_ok, 2000, "toast-cert_export_ok");
@@ -215,21 +212,21 @@ export class CertWindow extends React.Component<any, any> {
   }
 
   render() {
+    const { certificates,  isLoading } = this.props;
+    if (isLoading) {
+      return  <ProgressBars />;
+    }
+
     const CERTIFICATE_FOR_INFO = certs_app.get_certificate_for_info;
     const CURRENT = CERTIFICATE_FOR_INFO ? "not-active" : "active";
     let cert: any = null;
     let title: any = null;
 
     if (CERTIFICATE_FOR_INFO) {
-      cert = <CertInfo name={CERTIFICATE_FOR_INFO.name}
-        issuerName={CERTIFICATE_FOR_INFO.issuerName}
-        organization={CERTIFICATE_FOR_INFO.organization}
-        validityDate={new Date(CERTIFICATE_FOR_INFO.notAfter)}
-        algSign={CERTIFICATE_FOR_INFO.algSign}
-        privateKey={CERTIFICATE_FOR_INFO.privateKey} />;
+      cert = <CertificateInfo certificate={CERTIFICATE_FOR_INFO} />;
       title = <div className="cert-title-main">
-        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.name}</div>
-        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerName}</div>
+        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.subjectFriendlyName}</div>
+        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerFriendlyName}</div>
       </div>;
     } else {
       cert = "";
@@ -245,8 +242,8 @@ export class CertWindow extends React.Component<any, any> {
       certSearch = certSearch.filter((e: any) => e.name.toLowerCase().match(searchValue));
     }
 
-    const NAME = certSearch.length < 1 ? "active" : "not-active";
-    const VIEW = certSearch.length < 1 ? "not-active" : "";
+    const NAME = certificates.length < 1 ? "active" : "not-active";
+    const VIEW = certificates.length < 1 ? "not-active" : "";
     const DISABLED = CERTIFICATE_FOR_INFO ? "" : "disabled";
 
     return (
@@ -268,7 +265,7 @@ export class CertWindow extends React.Component<any, any> {
                           this.importCertKey(event.target.files);
                         }
                       } />
-                      <CertificateList certs={certSearch} activeCert = {this.activeCert} operation = "certificate"/>
+                      <CertificateList activeCert = {this.activeCert} operation = "certificate"/>
                     </div>
                     <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
                   </div>
@@ -315,3 +312,11 @@ export class CertWindow extends React.Component<any, any> {
     );
   }
 }
+
+export default connect((state) => {
+  return {
+    certificates: filteredCertificatesSelector(state),
+    isLoaded: state.certificates.loaded,
+    isLoading: state.certificates.loading,
+  };
+}, { loadAllCertificates })(CertWindow);
