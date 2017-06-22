@@ -16,6 +16,9 @@
         "cert_not_select": "Сертификат не выбран",
         "Select_Cert_Sign": "ВЫБРАТЬ СЕРТИФИКАТ ПОДПИСИ",
         "cert_chain": "Цепочка сертификации",
+        "serialNumber": "Серийный номер",
+        "thumbprint": "Отпечаток",
+        "version": "Версия",
         "subject": "Владелец сертификата",
         "organization": "Организация",
         "issuer": "Кем выдан",
@@ -233,7 +236,7 @@
         "jwtErrorStarted": "Срок действия лицензии не наступил",
         "jwtErrorOperation": "Неизвестная операция",
         "jwtErrorNoLicenseInStore": "Не найдена лицензия для данной операции",
-        "jwtErrorStoreIsLocked": "Чтение лицензии заблокировано",      
+        "jwtErrorStoreIsLocked": "Чтение лицензии заблокировано",
         "jwtErrorCode": "Неизвестный код ошибки"
     },
     "Кegistration": {
