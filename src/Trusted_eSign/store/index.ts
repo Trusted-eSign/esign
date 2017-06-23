@@ -8,7 +8,7 @@ const enhancer = applyMiddleware(thunk, logger);
 
 const store = createStore(reducer, {}, enhancer);
 
-//dev only
+// dev only
 window.store = store;
 
 export default store;

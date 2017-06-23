@@ -34,7 +34,6 @@ export class CertificateListItem extends React.Component<ICertificateListItemPro
     document.querySelector("#cert-key-import").dispatchEvent(CLICK_EVENT);
   }
 
-//todo FIX FIX FIX
   activeCert() {
     const { cert, isOpen } = this.props;
     if (isOpen) {
@@ -49,7 +48,7 @@ export class CertificateListItem extends React.Component<ICertificateListItemPro
     const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
     let certKeyMenu: any = null;
     let active = "";
-    let doubleClick: () => void;
+    let doubleClick: (event: any) => void;
 
     let status: string;
     if (cert.status) {

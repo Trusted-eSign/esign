@@ -5,7 +5,8 @@ import { loadAllCertificates } from "../AC";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
-import { application, BlockNotElements } from "./certificate";
+import BlockNotElements from "./BlockNotElements";
+import { application } from "./certificate";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import { Password } from "./components";
@@ -19,11 +20,12 @@ const DIALOG = window.electron.remote.dialog;
 class CertWindow extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    certs_app.set_certificates = ["1"];
     this.state = ({ pass_value: "" });
   }
 
   componentDidMount() {
+    const {certificates} = this.props;
+    certs_app.set_certificates = certificates;
     application.on("import_cert", this.certAdd);
     application.on("pass_value", this.setPass);
     certs_app.on(CertificatesApp.SETTINGS, this.certChange);
@@ -233,14 +235,7 @@ class CertWindow extends React.Component<any, any> {
       title = <span>{lang.get_resource.Certificate.cert_info}</span>;
     }
 
-    const CERTIFICATES = certs_app.get_certificates;
-    let certSearch = CERTIFICATES;
-    let searchValue = certs_app.get_search_value;
-
-    searchValue = searchValue.trim().toLowerCase();
-    if (searchValue.length > 0) {
-      certSearch = certSearch.filter((e: any) => e.name.toLowerCase().match(searchValue));
-    }
+    const CERTIFICATES = certificates;
 
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";

@@ -1,12 +1,14 @@
 import * as events from "events";
 import * as React from "react";
+import SearchElement from "../Filters/SearchElement";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
+import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import { MainToolBar, Password, SearchElement } from "./components";
+import { MainToolBar, Password } from "./components";
 import { ItemBar, ItemBarWithBtn } from "./elements";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -145,7 +147,6 @@ export class CertComponents extends React.Component<any, any> {
                       <div className="add-certs-item">
                         <div className={"add-cert-collection collection " + VIEW}>
                           <CertificateList
-                            certs={certSearch}
                             activeCert = {this.activeCert}
                             selectedCert = {this.selectedCert}
                             operation="sign"/>
@@ -195,24 +196,6 @@ class CertItem extends React.Component<ICertItemProps, any> {
         <div className={"collection-info cert-info " + this.props.second_color}>{this.props.second_text}</div>
       </div>
     );
-  }
-}
-
-interface IBlockNotElementsProps {
-  name: string;
-  title: string;
-}
-
-export class BlockNotElements extends React.Component<IBlockNotElementsProps, any> {
-  constructor(props: IBlockNotElementsProps) {
-    super(props);
-  }
-
-  render() {
-    return <div className={"cert-item " + this.props.name}>
-      <div className="add-file-item-text">{this.props.title}</div>
-      <i className="material-icons large fullscreen">block</i>
-    </div>;
   }
 }
 

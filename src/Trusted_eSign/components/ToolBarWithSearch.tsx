@@ -1,7 +1,7 @@
 import * as React from "react";
+import SearchElement from "../Filters/SearchElement";
 import { lang } from "../module/global_app";
 import { application } from "./certificate";
-import { SearchElement } from "./components";
 
 declare const $: any;
 

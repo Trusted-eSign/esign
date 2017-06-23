@@ -1,4 +1,4 @@
-import { LOAD_ALL_CERTIFICATES, START, SUCCESS } from "../constants";
+import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, START, SUCCESS } from "../constants";
 import * as native from "../native";
 import { Store } from "../trusted/store";
 
@@ -29,5 +29,12 @@ export function loadAllCertificates() {
         type: LOAD_ALL_CERTIFICATES + SUCCESS,
       });
     }, 0);
+  };
+}
+
+export function changeSearchValue(searchValue) {
+  return {
+    payload: { searchValue },
+    type: CHANGE_SEARCH_VALUE,
   };
 }
