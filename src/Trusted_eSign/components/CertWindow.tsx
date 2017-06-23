@@ -120,14 +120,6 @@ class CertWindow extends React.Component<any, any> {
   }
 
   activeCert = (event: any, cert: any) => {
-    /*const CERTIFICATES = certs_app.get_certificates;
-
-    for (const certificate of CERTIFICATES) {
-      certificate.active = false;
-    }
-
-    CERTIFICATES[cert.key].active = true;
-    certs_app.set_certificates = CERTIFICATES;*/
     certs_app.set_certificate_for_info = cert;
   }
 
@@ -214,7 +206,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   render() {
-    const { certificates,  isLoading } = this.props;
+    const { certificates, isLoading } = this.props;
     if (isLoading) {
       return  <ProgressBars />;
     }

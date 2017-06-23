@@ -181,24 +181,6 @@ export class CertComponents extends React.Component<any, any> {
   }
 }
 
-interface ICertItemProps {
-  first_text: string;
-  second_text: string;
-  first_color: string;
-  second_color: string;
-}
-
-class CertItem extends React.Component<ICertItemProps, any> {
-  render() {
-    return (
-      <div className="collection-item certs-collection certificate-info">
-        <div className={"collection-title " + this.props.first_color}>{this.props.first_text}</div>
-        <div className={"collection-info cert-info " + this.props.second_color}>{this.props.second_text}</div>
-      </div>
-    );
-  }
-}
-
 class CertificateView extends React.Component<any, any> {
   constructor() {
     super();
