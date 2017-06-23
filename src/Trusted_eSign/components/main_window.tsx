@@ -116,12 +116,6 @@ export class MainWindow extends React.Component<any, any> {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col l3 s7">
-                                    <div className="r-socials">
-                                        <div className="r-socials-list">
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -157,26 +151,6 @@ export class MainWindowOperations extends React.Component<IMainWindowOperationsP
                     <p>{this.props.info}</p>
                 </div>
            </Link>
-        </div>;
-    }
-}
-interface ISocialsProps {
-    socialLink: string;
-    social: string;
-}
-class Socials extends React.Component<ISocialsProps, any> {
-    constructor(props: ISocialsProps) {
-        super(props);
-    }
-    toLinkSoc(address: string) {
-        window.electron.shell.openExternal(address);
-    }
-    render() {
-        let self = this;
-        return <div className="r-socials-item">
-            <a className="w-socials-item-link" target="_blank" onClick={function (event: any) { self.toLinkSoc(self.props.socialLink) } }>
-                <i className={self.props.social} />
-            </a>
         </div>;
     }
 }

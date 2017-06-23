@@ -32,11 +32,6 @@ class SearchElement extends React.Component<any, any> {
     changeSearchValue(ev.target.value);
   }
 
-  ComponentWillUnmount() {
-    const { changeSearchValue } = this.props;
-    changeSearchValue("");
-  }
-
   render() {
     const { searchValue } = this.props;
 
