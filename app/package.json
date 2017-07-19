@@ -1,0 +1,16 @@
+{
+  "name": "trusted-esign",
+  "productName": "trusted-esign",
+  "version": "1.1.0",
+  "main": "./main.js",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "1.3.0",
+    "async": "2.3.0",
+    "history": "^4.6.3",
+    "immutable": "^3.8.1",
+    "request": "2.73.0",
+    "reselect": "^3.0.1",
+    "sudo-prompt": "7.0.0"
+  }
+}
