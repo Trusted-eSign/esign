@@ -7,6 +7,7 @@ import { getLicensePath, getStatus, lic, licenseParse } from "../module/license"
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
+import SideMenu from "./SideMenu";
 import { ItemBar, ItemBarWithBtn } from "./elements";
 //declare let $: any;
 //declare let mainWindow: any;
@@ -519,46 +520,6 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
     }
 }
 
-const MenuStyle = {
-    textDecoration: "none",
-};
-export class MainMenu extends React.Component<any, any> {
-
-    constructor(props: any) {
-        super(props);
-        this.state = { open: false };
-    }
-    handleToggle() {
-        this.setState({ open: !this.state.open });
-    }
-    handleClose() {
-        this.setState({ open: false });
-    }
-    render() {
-        let settings = {
-            draggable: false,
-        };
-        return (
-            <div>
-                <nav className="menu-logo">
-                    <div className="center">
-                        <Link to="/" className="menuheaderlink" href="/" {...settings}>
-                            <i className="logo-trusted"><img src="trusted-esign.png" {...settings} /></i><div className="logo-text">{lang.get_resource.About.product_NAME}</div>
-                        </Link>
-                    </div>
-                </nav>
-                <Link to="/sign" {...settings} style={MenuStyle}>{lang.get_resource.Sign.Sign}<i className="material-icons left sign">mode_edit</i></Link>
-                <Link to="/encrypt" {...settings} style={MenuStyle}>{lang.get_resource.Encrypt.Encrypt}<i className="material-icons left encrypt">enhanced_encryption</i></Link>
-                <Link to="/certificate" {...settings} style={MenuStyle}>{lang.get_resource.Certificate.Certificate}<i className="material-icons left cert">library_books</i></Link>
-                <div className="menu-elements">
-                    <Link className={"bordered--top"} {...settings} to="/about" style={MenuStyle}>{lang.get_resource.About.About}<i className="material-icons left about">about</i></Link>
-                    <Link to="/help" {...settings} style={MenuStyle}>{lang.get_resource.Help.Help}<i className="material-icons left help">help</i></Link>
-                </div>
-            </div>
-        );
-    }
-}
-
 interface IMainToolBarProps {
     title: string;
 }
@@ -638,7 +599,7 @@ export class MainToolBar extends React.Component<IMainToolBarProps, any> {
                 </ul>
             </div>
             <ul id="slide-out" className="side-nav">
-                 <MainMenu />
+                 <SideMenu />
             </ul>
         </nav>;
     }
