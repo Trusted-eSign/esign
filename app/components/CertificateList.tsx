@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { loadAllCertificates } from "../AC";
 import accordion from "../decorators/accordion";
 import {filteredCertificatesSelector} from "../selectors";
-import { CertificateListItem } from "./CertificateListItem";
+import CertificateListItem from "./CertificateListItem";
 import ProgressBars from "./ProgressBars";
 
 class CertificateList extends React.Component<any, any> {

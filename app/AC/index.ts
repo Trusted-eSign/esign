@@ -1,4 +1,5 @@
-import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, START, SUCCESS } from "../constants";
+import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
+import { certVerify } from "../module/global_app";
 import * as native from "../native";
 import { Store } from "../trusted/store";
 
@@ -36,5 +37,17 @@ export function changeSearchValue(searchValue) {
   return {
     payload: { searchValue },
     type: CHANGE_SEARCH_VALUE,
+  };
+}
+
+export function verifyCertificate(certificateId) {
+  return (dispatch, getState) => {
+    const { certificates } = getState();
+    const certificateStatus = certVerify(certificates.getIn(["entities", certificateId]), window.TRUSTEDCERTIFICATECOLLECTION);
+
+    dispatch({
+      payload: { certificateId, certificateStatus },
+      type: VERIFY_CERTIFICATE,
+    });
   };
 }

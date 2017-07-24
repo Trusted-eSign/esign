@@ -82,22 +82,23 @@ export let get_Certificates = function (operation: string) {
     return certs;
 };
 
-let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
+export let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
     let chain: trusted.pki.Chain;
     let chainForVerify: trusted.pki.CertificateCollection;
 
-    if (certItem.status !== undefined) {
-         return certItem.status;
-    }
+    // if (certItem.status !== undefined) {
+    //      return certItem.status;
+    // }
 
     let cert = window.PKISTORE.getPkiObject(certItem);
 
     try {
         chain = new trusted.pki.Chain();
         chainForVerify = chain.buildChain(cert, certCollection);
-        certItem.status = chain.verifyChain(chainForVerify, null);
+       // certItem.status = chain.verifyChain(chainForVerify, null);
+        return  chain.verifyChain(chainForVerify, null);
     } catch (e) {
-        certItem.status = false;
+        return false;
     }
 
     // let crl = STORE.getCrlLocal(cert);
@@ -120,7 +121,7 @@ let certVerify = function (certItem: IX509Certificate, certCollection: trusted.p
     //     });
     // }
 
-    return certItem.status;
+    //return certItem.status;
 };
 export function get_settings_from_json(operation: string, settings_name: string) {
     try {
