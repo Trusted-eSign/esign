@@ -5,7 +5,7 @@ import * as native from "../native";
 import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import { application, CertComponentsForEncrypt } from "./certificate";
-import { Dialog, FileComponents, MainToolBar } from "./components";
+import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, ItemBar } from "./elements";
 import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
 //declare let $: any;

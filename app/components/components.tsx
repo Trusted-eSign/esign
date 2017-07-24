@@ -7,7 +7,6 @@ import { getLicensePath, getStatus, lic, licenseParse } from "../module/license"
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
-import SideMenu from "./SideMenu";
 import { ItemBar, ItemBarWithBtn } from "./elements";
 //declare let $: any;
 //declare let mainWindow: any;
@@ -520,90 +519,6 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
     }
 }
 
-interface IMainToolBarProps {
-    title: string;
-}
-export class MainToolBar extends React.Component<IMainToolBarProps, any> {
-    constructor(props: IMainToolBarProps) {
-        super(props);
-    }
-    componentDidMount() {
-        $(".lang").dropdown({
-            inDuration: 300,
-            outDuration: 225,
-            constrain_width: false,
-            gutter: 30,
-            belowOrigin: false,
-            alignment: "right",
-        },
-        );
-    }
-    minimizeWindow() {
-        mainWindow.minimize();
-    }
-    closeWindow() {
-        let sign_to_json = ({ settings_for_sign: sign.get_settings, certificate_for_sign: sign.get_sign_certificate });
-        let encrypt_to_json = ({ settings_for_encrypt: encrypt.get_settings, certificates_for_encrypt: encrypt.get_certificates_for_encrypt });
-        let main_json = ({ lang: lang.get_lang });
-        let system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
-        const ssystem = JSON.stringify(system, null, 4);
-        native.fs.writeFile(SETTINGS_JSON, ssystem, (err: any) => {
-            if (err) {
-                console.log(lang.get_resource.Settings.write_file_failed);
-            }
-            console.log(lang.get_resource.Settings.write_file_ok);
-            mainWindow.close();
-        });
-    }
-    maximazeWindow() {
-        // if (mainWindow.isMaximized)
-        //     mainWindow.unmaximize();
-        // else
-        //     mainWindow.maximize();
-    }
-    settingWindow() {
-        //mainWindow.showDevTools();
-    }
-    langChange() {
-        lang.get_lang === "RU" ? lang.set_lang = "EN" : lang.set_lang = "RU";
-    }
-    render() {
-        return <nav className="app-bar">
-            <div className="col s6 m6 l6 app-bar-wrapper">
-                <ul className="app-bar-items">
-                    <li>
-                        <a data-activates="slide-out" className="menu-btn waves-effect waves-light">
-                            <i className="material-icons">menu</i>
-                        </a>
-                    </li>
-                    <li className="app-bar-text">{this.props.title}</li>
-                    <li>
-                        <ul>
-                            <li>
-                                <div className="lang" style={{ visibility: "hidden" }}>
-                                    <a className={lang.get_lang} onClick={this.langChange.bind(this)} />
-                                </div>
-                            </li>
-                            <li>
-                                <a className="minimize-window-btn waves-effect waves-light" onClick={this.minimizeWindow.bind(this)}>
-                                    <i className="material-icons">remove</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a className="close-window-btn waves-effect waves-light" onClick={this.closeWindow.bind(this)}>
-                                    <i className="material-icons">close</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <ul id="slide-out" className="side-nav">
-                 <SideMenu />
-            </ul>
-        </nav>;
-    }
-}
 interface ILicenseKeyProps {
     text_info: string;
     closeWindow: () => void;

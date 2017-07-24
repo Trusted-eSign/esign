@@ -2,7 +2,8 @@ import * as React from "react";
 import { Link } from "react-router";
 import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
-import { LicenseKey, MainToolBar } from "./components";
+import { LicenseKey } from "./components";
+import MenuBar from "./MenuBar";
 import { Slider } from "./slider";
 //import { getLicenseStatus } from "../module/license";
 //declare let $: any;
@@ -50,7 +51,7 @@ export class AppBar extends React.Component<any, any> {
             title = lang.get_resource.About.product_NAME;
         return (
             <div className="main">
-                <MainToolBar title={title} />
+                <MenuBar title={title} />
                 {this.props.children}
             </div>
         );

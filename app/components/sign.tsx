@@ -6,7 +6,7 @@ import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
-import { Dialog, FileComponents, MainToolBar } from "./components";
+import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, CollectionItem, ItemBar, ItemBarWithBtn } from "./elements";
 import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
 //declare let $: any;
