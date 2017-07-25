@@ -5,7 +5,7 @@ import { get_Certificates, lang, video_app, VideoApp } from "../module/global_ap
 import { BlockNotElements, CertInfo } from "./certificate";
 import { MainWindow } from "./main_window";
 import MainWindowOperation from "./MainWindowOperation";
-import MainWindowsWorkSpace from "./MainWindowsWorkSpace";
+import MainWindowWorkSpace from "./MainWindowWorkSpace";
 //declare let $: any;
 
 interface ISliderProps {
@@ -42,7 +42,7 @@ export class Slider extends React.Component<ISliderProps, any> {
                     // <div className={slider + " slider fullscreen"}>
                     //     <ul className="slides">
                     //         <li>
-                    //             <MainWindowsWorkSpace/>
+                    //             <MainWindowWorkSpace/>
                     //         </li>
                     //         <li>
                     //             <VideoSlide/>
@@ -56,7 +56,7 @@ export class Slider extends React.Component<ISliderProps, any> {
                     //     </a>
                     //     <div className="enabled-indicators"/>
                     // </div>
-                    <MainWindowsWorkSpace />
+                    <MainWindowWorkSpace />
                 }
             </div>
         );

@@ -3,7 +3,7 @@ import { lang } from "../module/global_app";
 import { MainWindow } from "./main_window";
 import MainWindowOperation from "./MainWindowOperation";
 
-class MainWindowsWorkSpace extends React.Component<any, any> {
+class MainWindowWorkSpace extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
   }
@@ -52,4 +52,4 @@ class MainWindowsWorkSpace extends React.Component<any, any> {
   }
 }
 
-export default MainWindowsWorkSpace;
+export default MainWindowWorkSpace;
