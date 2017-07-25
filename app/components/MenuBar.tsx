@@ -13,20 +13,11 @@ class MenuBar extends React.Component<IMainToolBarProps, any> {
   constructor(props: IMainToolBarProps) {
     super(props);
   }
-  componentDidMount() {
-    $(".lang").dropdown({
-      inDuration: 300,
-      outDuration: 225,
-      constrain_width: false,
-      gutter: 30,
-      belowOrigin: false,
-      alignment: "right",
-    },
-    );
-  }
+
   minimizeWindow() {
     mainWindow.minimize();
   }
+
   closeWindow() {
     const sign_to_json = ({ settings_for_sign: sign.get_settings, certificate_for_sign: sign.get_sign_certificate });
     const encrypt_to_json = ({ settings_for_encrypt: encrypt.get_settings, certificates_for_encrypt: encrypt.get_certificates_for_encrypt });
@@ -40,12 +31,6 @@ class MenuBar extends React.Component<IMainToolBarProps, any> {
       console.log(lang.get_resource.Settings.write_file_ok);
       mainWindow.close();
     });
-  }
-  maximazeWindow() {
-    // if (mainWindow.isMaximized)
-    //     mainWindow.unmaximize();
-    // else
-    //     mainWindow.maximize();
   }
 
   langChange() {
