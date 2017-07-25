@@ -7,7 +7,6 @@ import { EncryptWindow } from "./encrypt";
 import { HelpWindow } from "./help";
 import { AppBar, MainWindow } from "./main_window";
 import { SignWindow } from "./sign";
-import { MainSlideUnReg, RegCert, RegLogin, RegSlide, RegSocial } from "./slider";
 
 class App extends React.Component<any, any> {
   constructor(props: any) {
