@@ -7,7 +7,6 @@ import { getLicensePath, getStatus, lic, licenseParse } from "../module/license"
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
-import { ItemBarWithBtn } from "./elements";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 //declare let $: any;
@@ -678,7 +677,7 @@ export class LicenseKey extends React.Component<ILicenseKeyProps, ILicenseKeySta
         let disable = this.state.license_file || this.state.license_key ? "" : "disabled";
         return <div id="add-licence-key" className="modal licence-modal">
             <div className="licence-modal-main">
-                <ItemBarWithBtn text={lang.get_resource.License.enter_key} new_class="modal-bar" icon="close" on_btn_click={this.props.closeWindow.bind(this)} />
+                <HeaderWorkspaceBlock text={lang.get_resource.License.enter_key} new_class="modal-bar" icon="close" onСlickBtn={this.props.closeWindow.bind(this)} />
                 <div className="licence-modal-content">
                     <div className="license-key">
                         <div className="input-field col s6 input-field-licence">
@@ -764,7 +763,7 @@ export class Password extends React.Component<any, any> {
         }
         return <div id="get-password" className="modal password-modal">
             <div className="password-modal-main">
-                <ItemBarWithBtn text={lang.get_resource.Settings.pass_enter} new_class="modal-bar" icon="close" on_btn_click={this.closeModal.bind(this)} />
+                <HeaderWorkspaceBlock text={lang.get_resource.Settings.pass_enter} new_class="modal-bar" icon="close" onСlickBtn={this.closeModal.bind(this)} />
                 <div className="password-modal-content">
                     <div className="input-password">
                         <div className="input-field col s6 input-field-password">

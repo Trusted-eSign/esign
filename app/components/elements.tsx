@@ -93,42 +93,6 @@ export class BtnsForOperation extends React.Component<IBtnsForOperationProps, an
     }
 }
 
-interface ItemBarWithBtnProps {
-    text: string;
-    second_text?: string;
-    on_btn_click: () => void;
-    icon: string;
-    new_class?: string;
-}
-export class ItemBarWithBtn extends React.Component<ItemBarWithBtnProps, any> {
-    render() {
-        let text: any;
-        let class_name = this.props.new_class ? this.props.new_class : "";
-        if (this.props.second_text) {
-            text = <div className="cert-title-main">
-                <div className="collection-title cert-title">{this.props.text}</div>
-                <div className="collection-info cert-info cert-title">{this.props.second_text}</div>
-            </div>;
-        } else {
-            text = <span>{this.props.text}</span>;
-        }
-        return (
-            <nav className={"app-bar-content " + class_name}>
-                <ul className="app-bar-items">
-                    <li className="app-bar-item">
-                        {text}
-                    </li>
-                    <li className="right">
-                        <a className="nav-small-btn waves-effect waves-light" onClick={this.props.on_btn_click.bind(this)}>
-                            <i className="nav-small-icon material-icons">{this.props.icon}</i>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        );
-    }
-}
-
 interface ICollectionItemProps {
     first_text: string;
     second_text: string;

@@ -9,7 +9,6 @@ import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import { Password } from "./components";
-import { ItemBarWithBtn } from "./elements";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -136,7 +135,7 @@ export class CertComponents extends React.Component<any, any> {
         <CertificateView />
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <ItemBarWithBtn text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" on_btn_click={function() {
+            <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={function() {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
@@ -412,7 +411,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
         <ChooseCertsView />
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <ItemBarWithBtn text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" on_btn_click={function() {
+            <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={function() {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">

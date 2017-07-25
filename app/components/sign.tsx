@@ -7,7 +7,7 @@ import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
 import { Dialog, FileComponents } from "./components";
-import { BtnsForOperation, CollectionItem, ItemBarWithBtn } from "./elements";
+import { BtnsForOperation, CollectionItem } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
@@ -371,7 +371,7 @@ class CertChain extends React.Component<any, any> {
         let padding = -5;
         return (
             <div className="content-wrapper z-depth-1">
-                <ItemBarWithBtn icon="arrow_back" on_btn_click={this.removeSignInfo.bind(this)} text={lang.get_resource.Certificate.cert_chain} />
+                <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Certificate.cert_chain} />
                 <div className="sign-info-content">
                     <div className="add-cs-collection collection ">
                         {certs.map(function (l: any, i: number) {
@@ -528,7 +528,7 @@ class SignsInfo extends React.Component<any, any> {
             <div className={"col s6 m6 l6 sign-info content-item-height " + hidden_sign_info}>
                 <div className="file-content-height">
                     <div className="content-wrapper z-depth-1">
-                        <ItemBarWithBtn icon="arrow_back" on_btn_click={this.removeSignInfo.bind(this)} text={lang.get_resource.Sign.sign_info} second_text={file_name} />
+                        <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Sign.sign_info} second_text={file_name} />
                         <div className="sign-info-content">
                             <div className={"add-cert-collection collection "}>
                                 {signs_list.map(function (l: any, i: number) {

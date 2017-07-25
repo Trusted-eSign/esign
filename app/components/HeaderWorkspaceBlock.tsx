@@ -3,10 +3,26 @@ import * as React from "react";
 interface IHeaderWorkspaceBlockProps {
   text: string;
   second_text: string;
+  onСlickBtn: () => void;
+  icon: string;
   new_class: string;
 }
 
 class HeaderWorkspaceBlock extends React.Component<ItemBarProps, any> {
+  getButtons() {
+    const { icon, onСlickBtn } = this.props;
+
+    if (icon && onСlickBtn) {
+      return (<li className="right">
+        <a className="nav-small-btn waves-effect waves-light" onClick={onСlickBtn.bind(this)}>
+          <i className="nav-small-icon material-icons">{icon}</i>
+        </a>
+      </li>);
+    } else {
+      return null;
+    }
+  }
+
   render() {
     const { text, second_text, new_class } = this.props;
     const name = new_class ? new_class : "";
@@ -20,12 +36,14 @@ class HeaderWorkspaceBlock extends React.Component<ItemBarProps, any> {
     } else {
       element = <span>{text}</span>;
     }
+
     return (
       <nav className={"app-bar-content " + name}>
         <ul className="app-bar-items">
           <li className="app-bar-item" style={{ width: 100 + "%" }}>
             {element}
           </li>
+          {this.getButtons()}
         </ul>
       </nav>
     );
