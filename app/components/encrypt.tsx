@@ -6,8 +6,9 @@ import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import { application, CertComponentsForEncrypt } from "./certificate";
 import { Dialog, FileComponents } from "./components";
-import { BtnsForOperation, ItemBar } from "./elements";
+import { BtnsForOperation } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
+import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
 //declare let $: any;
 
@@ -229,7 +230,7 @@ class EncodeSettingsComponents extends React.Component<any, any> {
     render() {
         return (
             <div id="encode-settings-content" className="content-wrapper z-depth-1">
-                <ItemBar text={lang.get_resource.Encrypt.encrypt_setting} />
+                <HeaderWorkspaceBlock text={lang.get_resource.Encrypt.encrypt_setting} />
                 <div className="settings-content">
                     <EncodingTypeSelector EncodingValue={encrypt.get_settings_encoding} />
                     <CheckBoxWithLabel checkbox_checked={() => { encrypt.set_settings_delete_files = !encrypt.get_settings_delete_files } }

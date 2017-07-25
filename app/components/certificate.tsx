@@ -9,7 +9,8 @@ import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import { Password } from "./components";
-import { ItemBar, ItemBarWithBtn } from "./elements";
+import { ItemBarWithBtn } from "./elements";
+import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 //declare const $: any;
@@ -113,10 +114,10 @@ export class CertComponents extends React.Component<any, any> {
 
     if (CERTIFICATE_FOR_INFO) {
       cert = <CertificateInfo certificate={CERTIFICATE_FOR_INFO} />;
-      itemBar = <ItemBar text={CERTIFICATE_FOR_INFO.subjectFriendlyName} second_text={CERTIFICATE_FOR_INFO.issuerFriendlyName} />;
+      itemBar = <HeaderWorkspaceBlock text={CERTIFICATE_FOR_INFO.subjectFriendlyName} second_text={CERTIFICATE_FOR_INFO.issuerFriendlyName} />;
     } else {
       cert = "";
-      itemBar = <ItemBar text={lang.get_resource.Certificate.cert_info} />;
+      itemBar = <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />;
     }
 
     const NOT_ACTIVE = sign.get_sign_certificate ? "not-active" : "";

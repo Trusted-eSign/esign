@@ -92,34 +92,6 @@ export class BtnsForOperation extends React.Component<IBtnsForOperationProps, an
         }
     }
 }
-interface ItemBarProps {
-    text: string;
-    second_text?: string;
-    new_class?: string;
-}
-export class ItemBar extends React.Component<ItemBarProps, any> {
-    render() {
-        let class_name = this.props.new_class ? this.props.new_class : "";
-        let text: any;
-        if (this.props.second_text) {
-            text = <div className="cert-title-main">
-                <div className="collection-title cert-title">{this.props.text}</div>
-                <div className="collection-info cert-info cert-title">{this.props.second_text}</div>
-            </div>;
-        } else {
-            text = <span>{this.props.text}</span>;
-        }
-        return (
-            <nav className={"app-bar-content " + class_name}>
-                <ul className="app-bar-items">
-                    <li className="app-bar-item" style={{ width: 100 + "%" }}>
-                        {text}
-                    </li>
-                </ul>
-            </nav>
-        );
-    }
-}
 
 interface ItemBarWithBtnProps {
     text: string;

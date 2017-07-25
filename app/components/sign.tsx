@@ -7,8 +7,9 @@ import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
 import { Dialog, FileComponents } from "./components";
-import { BtnsForOperation, CollectionItem, ItemBar, ItemBarWithBtn } from "./elements";
+import { BtnsForOperation, CollectionItem, ItemBarWithBtn } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
+import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
 //declare let $: any;
 
@@ -433,7 +434,7 @@ class SignCertInfo extends React.Component<any, any> {
         }
         return (
             <div className="content-wrapper z-depth-1">
-                <ItemBar text={lang.get_resource.Certificate.cert_info} />
+                <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />
                 {cert_info}
             </div>
         );
@@ -474,7 +475,7 @@ class SignSettingsComponents extends React.Component<any, any> {
     render() {
         return (
             <div id="sign-settings-content" className="content-wrapper z-depth-1">
-                <ItemBar text={lang.get_resource.Sign.sign_setting} />
+                <HeaderWorkspaceBlock text={lang.get_resource.Sign.sign_setting} />
                 <div className="settings-content">
                     <EncodingTypeSelector EncodingValue={sign.get_settings_encoding} />
                     <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_detached = !sign.get_settings_detached; } }

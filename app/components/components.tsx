@@ -7,7 +7,9 @@ import { getLicensePath, getStatus, lic, licenseParse } from "../module/license"
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
-import { ItemBar, ItemBarWithBtn } from "./elements";
+import { ItemBarWithBtn } from "./elements";
+import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
+
 //declare let $: any;
 //declare let mainWindow: any;
 interface IFileComponentsProps {
@@ -819,7 +821,7 @@ export class Dialog extends React.Component<any, any> {
         return (
             <div className={"dialog " + active}>
                 <div className="dialog-content">
-                    <ItemBar text={dlg.get_dlg_title} new_class="dialog-bar" />
+                    <HeaderWorkspaceBlock text={dlg.get_dlg_title} new_class="dialog-bar" />
                     <div className="dialog-text">
                         <div className="dialog-message">{dlg.get_dlg_message}</div>
                     </div>
