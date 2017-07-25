@@ -125,33 +125,3 @@ export class MainWindow extends React.Component<any, any> {
         );
     }
 }
-
-interface IMainWindowOperationsProps {
-    info: string;
-    title_pre: string;
-    title_post: string;
-    operation: string;
-}
-export class MainWindowOperations extends React.Component<IMainWindowOperationsProps, any> {
-    constructor(props: IMainWindowOperationsProps) {
-        super(props);
-    }
-    render() {
-        let settings = {
-            draggable: false,
-        };
-        return <div className="col l3 s4">
-            <Link to={"/" + this.props.operation} className="r-iconbox-link iconpos_left">
-                <div className="r-iconbox-link">
-                    <div className="r-iconbox-icon">
-                        <div className={this.props.operation + "_roundbutton_icon" }></div>
-                    </div>
-                    <h5 className="r-iconbox-title">{this.props.title_pre}<br />{this.props.title_post}</h5>
-                </div>
-                <div className="r-iconbox-text">
-                    <p>{this.props.info}</p>
-                </div>
-           </Link>
-        </div>;
-    }
-}

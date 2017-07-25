@@ -3,7 +3,8 @@ import * as ReactDOM from "react-dom";
 import { Link } from "react-router";
 import { get_Certificates, lang, video_app, VideoApp } from "../module/global_app";
 import { BlockNotElements, CertInfo } from "./certificate";
-import { MainWindow, MainWindowOperations } from "./main_window";
+import { MainWindow } from "./main_window";
+import MainWindowOperation from "./MainWindowOperation";
 //declare let $: any;
 
 interface ISliderProps {
@@ -319,9 +320,9 @@ export class MainSlide extends React.Component<any, any> {
                 <div className="maincontent">
                     <div className="appfunction">
                         <div className="row">
-                            <MainWindowOperations info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
                         </div>
                     </div>
                 </div>
@@ -387,18 +388,18 @@ class FunctSlideReg extends React.Component<any, any> {
                     <div className="appfunction">
                         <div className="row func-items">
                             <div className="func-text">НЕСКОЛЬКО ПОЛЕЗНЫХ ФУНКЦИИ ПРИЛОЖЕНИЯ</div>
-                            <MainWindowOperations info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
                         </div>
                     </div>
                 </div>
                 <div className="maincontent">
                     <div className="appfunction">
                         <div className="row func-items">
-                            <MainWindowOperations info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
                         </div>
                     </div>
                 </div>
@@ -417,9 +418,9 @@ class FunctSlideUnReg extends React.Component<any, any> {
                     <div className="appfunction">
                         <div className="row func-items">
                             <div className="func-text">{lang.get_resource.Кegistration.App_Functions}</div>
-                            <MainWindowOperations info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_certificate} title_pre={lang.get_resource.Settings.Control} title_post={lang.get_resource.Certificate.FCertificates} operation="certificate" />
                         </div>
                     </div>
                 </div>
@@ -427,8 +428,8 @@ class FunctSlideUnReg extends React.Component<any, any> {
                     <div className="appfunction">
                         <div className="row func-items">
                             <div className="func-text">{lang.get_resource.Кegistration.Empowerment}</div>
-                            <MainWindowOperations info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
-                            <MainWindowOperations info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_sign} title_pre={lang.get_resource.Settings.Digital} title_post={lang.get_resource.Sign.Signature} operation="sign" />
+                            <MainWindowOperation info={lang.get_resource.About.info_about_encrypt} title_pre={lang.get_resource.Encrypt.Encryption} title_post={lang.get_resource.Settings.Datas} operation="encrypt" />
                             <div className="enter-service"><a className="add-file-but waves-effect waves-light btn-large">{lang.get_resource.Кegistration.enter_service}</a></div>
                         </div>
                     </div>
