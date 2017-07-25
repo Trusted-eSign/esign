@@ -6,7 +6,6 @@ import CertWindow from "./CertWindow";
 import { EncryptWindow } from "./encrypt";
 import { HelpWindow } from "./help";
 import { AppBar, MainWindow } from "./main_window";
-import { SettWindow } from "./settings";
 import { SignWindow } from "./sign";
 import { MainSlideUnReg, RegCert, RegLogin, RegSlide, RegSocial } from "./slider";
 
@@ -25,7 +24,6 @@ class App extends React.Component<any, any> {
           <Route path="/certificate" component={CertWindow} />
           <Route path="/about" component={AboutWindow} />
           <Route path="/help" component={HelpWindow} />
-          <Route path="/settings" component={SettWindow} />
         </Route>
       </Router>
     );

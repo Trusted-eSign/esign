@@ -8,7 +8,7 @@ import { sign, SignApp } from "../module/sign_app";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import { MainToolBar, Password } from "./components";
+import { Password } from "./components";
 import { ItemBar, ItemBarWithBtn } from "./elements";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -444,7 +444,7 @@ export class CertComponentsForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection collection " + CHOOSE}>
-                          <CertificateList activeCert = {this.viewCertInfo} operation="encrypt" />
+                           <CertificateList activeCert = {this.viewCertInfo} operation="encrypt" />
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={lang.get_resource.Certificate.cert_not_select} />
