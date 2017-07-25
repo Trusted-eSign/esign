@@ -1,6 +1,6 @@
 import * as React from "react";
 import { lang } from "../module/global_app";
-import { MainWindow } from "./main_window";
+import MainWindow from "./MainWindow";
 import MainWindowOperation from "./MainWindowOperation";
 
 class MainWindowWorkSpace extends React.Component<any, any> {

@@ -3,7 +3,7 @@ import * as ReactDOM from "react-dom";
 import { Link } from "react-router";
 import { get_Certificates, lang, video_app, VideoApp } from "../module/global_app";
 import { BlockNotElements, CertInfo } from "./certificate";
-import { MainWindow } from "./main_window";
+import MainWindow from "./MainWindow";
 import MainWindowOperation from "./MainWindowOperation";
 import MainWindowWorkSpace from "./MainWindowWorkSpace";
 //declare let $: any;

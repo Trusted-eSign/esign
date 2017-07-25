@@ -5,7 +5,8 @@ import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
 import { EncryptWindow } from "./encrypt";
 import { HelpWindow } from "./help";
-import { AppBar, MainWindow } from "./main_window";
+import { AppBar } from "./main_window";
+import MainWindow from "./MainWindow";
 import { SignWindow } from "./sign";
 
 class App extends React.Component<any, any> {
