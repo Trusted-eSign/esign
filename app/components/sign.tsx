@@ -8,7 +8,8 @@ import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
 import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, CollectionItem, ItemBar, ItemBarWithBtn } from "./elements";
-import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
+import EncodingTypeSelector from "./EncodingTypeSelector";
+import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -475,7 +476,7 @@ class SignSettingsComponents extends React.Component<any, any> {
             <div id="sign-settings-content" className="content-wrapper z-depth-1">
                 <ItemBar text={lang.get_resource.Sign.sign_setting} />
                 <div className="settings-content">
-                    <EncodingType EncodingValue={sign.get_settings_encoding} />
+                    <EncodingTypeSelector EncodingValue={sign.get_settings_encoding} />
                     <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_detached = !sign.get_settings_detached; } }
                         check={sign.get_settings_detached}
                         id_name="detached-sign"

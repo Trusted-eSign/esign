@@ -7,7 +7,8 @@ import { utils } from "../utils";
 import { application, CertComponentsForEncrypt } from "./certificate";
 import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, ItemBar } from "./elements";
-import { CheckBoxWithLabel, EncodingType, SelectFolder } from "./settings_components";
+import EncodingTypeSelector from "./EncodingTypeSelector";
+import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -230,7 +231,7 @@ class EncodeSettingsComponents extends React.Component<any, any> {
             <div id="encode-settings-content" className="content-wrapper z-depth-1">
                 <ItemBar text={lang.get_resource.Encrypt.encrypt_setting} />
                 <div className="settings-content">
-                    <EncodingType EncodingValue={encrypt.get_settings_encoding} />
+                    <EncodingTypeSelector EncodingValue={encrypt.get_settings_encoding} />
                     <CheckBoxWithLabel checkbox_checked={() => { encrypt.set_settings_delete_files = !encrypt.get_settings_delete_files } }
                         check={encrypt.get_settings_delete_files}
                         id_name="delete_files"
