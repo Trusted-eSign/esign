@@ -5,12 +5,8 @@ import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import SideMenu from "./SideMenu";
 
-interface IMainToolBarProps {
-  title: string;
-}
-
-class MenuBar extends React.Component<IMainToolBarProps, any> {
-  constructor(props: IMainToolBarProps) {
+class MenuBar extends React.Component<any, any> {
+  constructor(props: any) {
     super(props);
   }
 
@@ -37,41 +33,73 @@ class MenuBar extends React.Component<IMainToolBarProps, any> {
     lang.get_lang === "RU" ? lang.set_lang = "EN" : lang.set_lang = "RU";
   }
 
+  getTitle() {
+    const pathname = this.props.location.pathname;
+    let title: string;
+    if (pathname === "/sign")
+      title = lang.get_resource.Sign.sign_and_verify;
+    else if (pathname === "/encrypt")
+      title = lang.get_resource.Encrypt.encrypt_and_decrypt;
+    else if (pathname === "/certificate")
+      title = lang.get_resource.Certificate.certs;
+    else if (pathname === "/about")
+      title = lang.get_resource.About.about;
+    else if (pathname === "/license")
+      title = lang.get_resource.License.license;
+    else if (pathname === "/help")
+      title = lang.get_resource.Help.help;
+    else
+      title = lang.get_resource.About.product_NAME;
+
+    return title;
+  }
+
+  componentDidMount() {
+    $(".menu-btn").sideNav({
+      closeOnClick: true,
+    });
+  }
+
   render() {
-    return <nav className="app-bar">
-      <div className="col s6 m6 l6 app-bar-wrapper">
-        <ul className="app-bar-items">
-          <li>
-            <a data-activates="slide-out" className="menu-btn waves-effect waves-light">
-              <i className="material-icons">menu</i>
-            </a>
-          </li>
-          <li className="app-bar-text">{this.props.title}</li>
-          <li>
-            <ul>
+    return (
+      <div className="main">
+        <nav className="app-bar">
+          <div className="col s6 m6 l6 app-bar-wrapper">
+            <ul className="app-bar-items">
               <li>
-                <div className="lang" style={{ visibility: "hidden" }}>
-                  <a className={lang.get_lang} onClick={this.langChange.bind(this)} />
-                </div>
-              </li>
-              <li>
-                <a className="minimize-window-btn waves-effect waves-light" onClick={this.minimizeWindow.bind(this)}>
-                  <i className="material-icons">remove</i>
+                <a data-activates="slide-out" className="menu-btn waves-effect waves-light">
+                  <i className="material-icons">menu</i>
                 </a>
               </li>
+              <li className="app-bar-text">{this.getTitle()}</li>
               <li>
-                <a className="close-window-btn waves-effect waves-light" onClick={this.closeWindow.bind(this)}>
-                  <i className="material-icons">close</i>
-                </a>
+                <ul>
+                  <li>
+                    <div className="lang" style={{ visibility: "hidden" }}>
+                      <a className={lang.get_lang} onClick={this.langChange.bind(this)} />
+                    </div>
+                  </li>
+                  <li>
+                    <a className="minimize-window-btn waves-effect waves-light" onClick={this.minimizeWindow.bind(this)}>
+                      <i className="material-icons">remove</i>
+                    </a>
+                  </li>
+                  <li>
+                    <a className="close-window-btn waves-effect waves-light" onClick={this.closeWindow.bind(this)}>
+                      <i className="material-icons">close</i>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
-          </li>
-        </ul>
+          </div>
+          <ul id="slide-out" className="side-nav">
+            <SideMenu />
+          </ul>
+        </nav>
+        {this.props.children}
       </div>
-      <ul id="slide-out" className="side-nav">
-        <SideMenu />
-      </ul>
-    </nav>;
+    );
   }
 }
 

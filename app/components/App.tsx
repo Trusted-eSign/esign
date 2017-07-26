@@ -5,8 +5,8 @@ import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
 import { EncryptWindow } from "./encrypt";
 import HelpWindow from "./HelpWindow";
-import { AppBar } from "./main_window";
 import MainWindow from "./MainWindow";
+import MenuBar from "./MenuBar";
 import { SignWindow } from "./sign";
 
 class App extends React.Component<any, any> {
@@ -17,7 +17,7 @@ class App extends React.Component<any, any> {
   render() {
     return (
       <Router history={hashHistory}>
-        <Route path="/" component={AppBar}>
+        <Route path="/" component={MenuBar}>
           <IndexRoute component={MainWindow} />
           <Route path="/sign" component={SignWindow} />
           <Route path="/encrypt" component={EncryptWindow} />

@@ -7,7 +7,7 @@ class MainWindow extends React.Component<any, any> {
     super(props);
   }
 
-  render() {
+    render() {
     const { children } = this.props;
 
     return (
