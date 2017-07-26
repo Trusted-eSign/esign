@@ -145,7 +145,9 @@ export class CertComponents extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <CertContentToolBarForSign btn_active={ACTIVE} />
+        <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certificate} icon="add" onСlickBtn={function () {
+          $("#add-cert").openModal();
+        }} />
         <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Sign}</a>
         </div>
@@ -195,29 +197,6 @@ export class CertComponents extends React.Component<any, any> {
         </div>
       </div>
     );
-  }
-}
-
-interface ICertContentToolBarForSignProps {
-  btn_active: string;
-}
-
-class CertContentToolBarForSign extends React.Component<ICertContentToolBarForSignProps, any> {
-  constructor(props: ICertContentToolBarForSignProps) {
-    super(props);
-  }
-
-  render() {
-    return <nav className="app-bar-content">
-      <ul className="app-bar-items">
-        <li className="app-bar-item" style={{ width: "calc(100% - 45px)" }}><span>{lang.get_resource.Certificate.certificate}</span></li>
-        <li className="right">
-          <a className={"nav-small-btn waves-effect waves-light " + this.props.btn_active} onClick={function() { $("#add-cert").openModal(); }}>
-            <i className="material-icons nav-small-icon">add</i>
-          </a>
-        </li>
-      </ul>
-    </nav>;
   }
 }
 
