@@ -91,6 +91,22 @@ export class CertComponents extends React.Component<any, any> {
     $("#add-cert").closeModal();
   }
 
+  getCertificateInfo() {
+    const SIGN_CERTIFICATE = sign.get_sign_certificate;
+
+    if (SIGN_CERTIFICATE) {
+      return (
+        <div className="add-certs">
+          <div className="add-certs-item">
+            <CertificateInfo certificate={sign.get_sign_certificate} />
+          </div>
+        </div>
+      );
+    } else {
+      return (<div></div>);
+    }
+  }
+
   render() {
     const CERTIFICATES = sign.get_certificates;
     let certSearch = sign.get_certificates;
@@ -122,6 +138,7 @@ export class CertComponents extends React.Component<any, any> {
     const NOT_ACTIVE = sign.get_sign_certificate ? "not-active" : "";
     const ACTIVE = sign.get_sign_certificate ? "active" : "not-active";
     const ACTIVE_ELEM = sign.get_certificate_for_info ? "active" : "";
+
     const SETTINGS = {
       draggable: false,
     };
@@ -132,7 +149,7 @@ export class CertComponents extends React.Component<any, any> {
         <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Sign}</a>
         </div>
-        <CertificateView />
+        {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
             <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={function() {
@@ -178,76 +195,6 @@ export class CertComponents extends React.Component<any, any> {
         </div>
       </div>
     );
-  }
-}
-
-class CertificateView extends React.Component<any, any> {
-  constructor() {
-    super();
-    this.changeCertificate = this.changeCertificate.bind(this);
-  }
-
-  componentDidMount() {
-    sign.on(SignApp.SETTINGS, this.changeCertificate);
-  }
-
-  componentWillUnmount() {
-    sign.removeListener(SignApp.SETTINGS, this.changeCertificate);
-  }
-
-  changeCertificate() {
-    this.setState({});
-  }
-
-  render() {
-    const SIGN_CERTIFICATE = sign.get_sign_certificate;
-
-    if (SIGN_CERTIFICATE) {
-      const privKey = SIGN_CERTIFICATE.key.length > 0 ? lang.get_resource.Certificate.present : lang.get_resource.Certificate.absent;
-      return <div className="cert-view-main">
-        <div className="cert-main-item">
-          <div className="add-cert-collection collection cert-info-list">
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.subjectFriendlyName}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Certificate.subject}</div>
-            </div>
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.organizationName}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Certificate.organization}</div>
-            </div>
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.signatureAlgorithm}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Sign.alg}</div>
-            </div>
-          </div>
-        </div>
-        <div className="cert-main-item">
-          <div className="add-cert-collection collection cert-info-list">
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{SIGN_CERTIFICATE.issuerName}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Certificate.issuer}</div>
-            </div>
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{new Date(SIGN_CERTIFICATE.notAfter).toLocaleDateString(lang.get_lang, {
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                month: "long",
-                second: "numeric",
-                year: "numeric",
-              })}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Certificate.cert_valid}</div>
-            </div>
-            <div className="collection-item certs-collection certificate-info">
-              <div className="collection-title">{privKey}</div>
-              <div className="collection-info cert-info">{lang.get_resource.Certificate.priv_key}</div>
-            </div>
-          </div>
-        </div>
-      </div>;
-    } else {
-      return <div></div>;
-    }
   }
 }
 
@@ -548,7 +495,7 @@ class CertContentToolBarForEncrypt extends React.Component<any, any> {
     return <nav className="app-bar-content">
       <ul className="app-bar-items">
         <li className="app-bar-item" style={{ width: "calc(100% - 85px)" }}><span>{lang.get_resource.Certificate.certs_encrypt}</span></li>
-        <li className="right">
+        <li className="right">;
           <a className={"nav-small-btn waves-effect waves-light " + ACTIVE} onClick={function() { $("#add-cert").openModal(); }}>
             <i className="material-icons nav-small-icon">add</i>
           </a>
