@@ -4,7 +4,7 @@ import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import { LicenseKey } from "./components";
 import MenuBar from "./MenuBar";
-import { Slider } from "./slider";
+
 //import { getLicenseStatus } from "../module/license";
 //declare let $: any;
 

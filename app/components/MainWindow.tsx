@@ -1,6 +1,6 @@
 import * as React from "react";
 import { lang } from "../module/global_app";
-import { Slider } from "./slider";
+import MainWindowWorkSpace from "./MainWindowWorkSpace";
 
 class MainWindow extends React.Component<any, any> {
   constructor(props: any) {
@@ -13,7 +13,9 @@ class MainWindow extends React.Component<any, any> {
     return (
       <div className="main">
         <div className="main-window">
-          <Slider router={children} />
+          <div className="main-window-workspace">
+              <MainWindowWorkSpace />
+          </div>
           <div className="page-footer mainfooter">
             <div className="footer-copyright">
               <div className="row">

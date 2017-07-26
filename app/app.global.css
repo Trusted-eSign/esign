@@ -1775,7 +1775,7 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 
 /*---------Слайдер главной страницы----------*/
-.slider-content {
+.main-window-workspace {
     height: calc(100% - 116px);
 }
 .main-window .slider .slides {
