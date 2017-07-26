@@ -4,7 +4,7 @@ import history from "../history";
 import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
 import { EncryptWindow } from "./encrypt";
-import { HelpWindow } from "./help";
+import HelpWindow from "./HelpWindow";
 import { AppBar } from "./main_window";
 import MainWindow from "./MainWindow";
 import { SignWindow } from "./sign";
