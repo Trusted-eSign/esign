@@ -1,26 +1,6 @@
 import * as React from "react";
 import { lang } from "../module/global_app";
 
-interface ICheckBoxWithLabelProps {
-    checkbox_checked: (event: any) => void;
-    check: boolean;
-    id_name: string;
-    text: string;
-}
-export class CheckBoxWithLabel extends React.Component<ICheckBoxWithLabelProps, any> {
-    constructor(props: ICheckBoxWithLabelProps) {
-        super(props);
-    }
-    render() {
-        return <div className="row settings-item">
-            <div className="col settins-check-title">{this.props.text}</div>
-            <div className="col settings-check">
-                <input type="checkbox" id={this.props.id_name} className="filled-in" onClick={this.props.checkbox_checked.bind(this)} defaultChecked={this.props.check} />
-                <label htmlFor={this.props.id_name}></label>
-            </div>
-        </div>;
-    }
-}
 interface ISelectFolderProps {
     directory: string;
     viewDirect: (event: any) => void;

@@ -5,11 +5,12 @@ import * as native from "../native";
 import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import { application, CertComponentsForEncrypt } from "./certificate";
+import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
+import { SelectFolder } from "./settings_components";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -233,14 +234,14 @@ class EncodeSettingsComponents extends React.Component<any, any> {
                 <HeaderWorkspaceBlock text={lang.get_resource.Encrypt.encrypt_setting} />
                 <div className="settings-content">
                     <EncodingTypeSelector EncodingValue={encrypt.get_settings_encoding} />
-                    <CheckBoxWithLabel checkbox_checked={() => { encrypt.set_settings_delete_files = !encrypt.get_settings_delete_files } }
-                        check={encrypt.get_settings_delete_files}
-                        id_name="delete_files"
-                        text={lang.get_resource.Encrypt.delete_files_after} />
-                    <CheckBoxWithLabel checkbox_checked={() => { encrypt.set_settings_archive_files = !encrypt.get_settings_archive_files } }
-                        check={encrypt.get_settings_archive_files}
-                        id_name="archive_files"
-                        text={lang.get_resource.Encrypt.archive_files_before} />
+                    <CheckBoxWithLabel onClickCheckBox={() => { encrypt.set_settings_delete_files = !encrypt.get_settings_delete_files } }
+                        isChecked={encrypt.get_settings_delete_files}
+                        elementId="delete_files"
+                        title={lang.get_resource.Encrypt.delete_files_after} />
+                    <CheckBoxWithLabel onClickCheckBox={() => { encrypt.set_settings_archive_files = !encrypt.get_settings_archive_files } }
+                        isChecked={encrypt.get_settings_archive_files}
+                        elementId="archive_files"
+                        title={lang.get_resource.Encrypt.archive_files_before} />
                     <SelectFolder directory={encrypt.get_settings_directory} viewDirect={
                         function (event: any) {
                             encrypt.set_settings_directory = event.target.value;

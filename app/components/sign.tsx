@@ -6,11 +6,12 @@ import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
+import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, CollectionItem } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import { CheckBoxWithLabel, SelectFolder } from "./settings_components";
+import { SelectFolder } from "./settings_components";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -478,14 +479,14 @@ class SignSettingsComponents extends React.Component<any, any> {
                 <HeaderWorkspaceBlock text={lang.get_resource.Sign.sign_setting} />
                 <div className="settings-content">
                     <EncodingTypeSelector EncodingValue={sign.get_settings_encoding} />
-                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_detached = !sign.get_settings_detached; } }
-                        check={sign.get_settings_detached}
-                        id_name="detached-sign"
-                        text={lang.get_resource.Sign.sign_detached} />
-                    <CheckBoxWithLabel checkbox_checked={() => { sign.set_settings_add_time = !sign.get_settings_add_time; } }
-                        check={sign.get_settings_add_time}
-                        id_name="sign-time"
-                        text={lang.get_resource.Sign.sign_time} />
+                    <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_detached = !sign.get_settings_detached; } }
+                        isChecked={sign.get_settings_detached}
+                        elementId="detached-sign"
+                        title={lang.get_resource.Sign.sign_detached} />
+                    <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_add_time = !sign.get_settings_add_time; } }
+                        isChecked={sign.get_settings_add_time}
+                        elementId="sign-time"
+                        title={lang.get_resource.Sign.sign_time} />
                     <SelectFolder directory={sign.get_settings_directory} viewDirect={
                         function (event: any) {
                             sign.set_settings_directory = event.target.value;
