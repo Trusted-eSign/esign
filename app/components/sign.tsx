@@ -14,7 +14,7 @@ import { BtnsForOperation, CollectionItem } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { SelectFolder } from "./settings_components";
-import SignatureStatus from "./SignatureStatus";
+import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignerCertificateInfo from "./SignerCertificateInfo";
 //declare let $: any;
 
@@ -287,7 +287,7 @@ export class SignWindow extends React.Component<any, any> {
                 <Dialog />
                 <div className="content">
                     <SignCertAndSettings />
-                    <SignsInfo />
+                    <SignatureInfoBlock />
                     <SignerCertificateInfo />
                     <div className="col s6 m6 l6 content-item-height">
                         <BtnsForOperation
@@ -376,52 +376,6 @@ class SignSettingsComponents extends React.Component<any, any> {
                             sign.set_settings_directory = event.target.value;
                         } }
                         openDirect={this.addDirect.bind(this)} />
-                </div>
-            </div>
-        );
-    }
-}
-
-class SignsInfo extends React.Component<any, any> {
-
-    constructor(props: any) {
-        super(props);
-        this.changeSettings = this.changeSettings.bind(this);
-    }
-    componentDidMount() {
-        sign.on(SignApp.SIGN_INFO_CHANGE, this.changeSettings);
-    }
-    componentWillUnmount() {
-        sign.removeListener(SignApp.SIGN_INFO_CHANGE, this.changeSettings);
-    }
-    changeSettings() {
-        this.setState({});
-    }
-    removeSignInfo() {
-        sign.set_sign_info_active = null;
-    }
-    render() {
-        let self = this;
-        let sign_info = sign.get_sign_info_active;
-        let file_name = sign_info && sign_info.name ? sign_info.name : "";
-        let status_verify = this.props.signed_data && this.props.signed_data.status_verify ? "status_ok" : "";
-        let signs_list = sign_info && sign_info.info ? sign_info.info : [];
-        let hidden_sign_info = sign_info && !sign.get_sign_certs_info ? "" : "hidden";
-        let hidden_sign_cert_info = sign.get_sign_certs_info ? "" : "hidden";
-
-        return (
-            <div className={"col s6 m6 l6 sign-info content-item-height " + hidden_sign_info}>
-                <div className="file-content-height">
-                    <div className="content-wrapper z-depth-1">
-                        <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Sign.sign_info} second_text={file_name} />
-                        <div className="sign-info-content">
-                            <div className={"add-cert-collection collection "}>
-                                {signs_list.map(function (l: any, i: number) {
-                                    return <SignatureStatus key={i} signed_data={l} />;
-                                })}
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         );
