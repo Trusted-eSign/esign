@@ -15,6 +15,7 @@ import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { SelectFolder } from "./settings_components";
 import SignatureInfoBlock from "./SignatureInfoBlock";
+import SignatureSettings from "./SignatureSettings";
 import SignerCertificateInfo from "./SignerCertificateInfo";
 //declare let $: any;
 
@@ -318,64 +319,7 @@ class SignCertAndSettings extends React.Component<any, any> {
                     <CertComponents />
                 </div>
                 <div className="col s6 m6 l6 content-item">
-                    <SignSettingsComponents />
-                </div>
-            </div>
-        );
-    }
-}
-
-class SignSettingsComponents extends React.Component<any, any> {
-
-    constructor(props: any) {
-        super(props);
-        this.changeSettings = this.changeSettings.bind(this);
-    }
-    componentDidMount() {
-        let self = this;
-        $("select").on("change", function (event: any) {
-            sign.set_settings_encoding = event.target.value;
-        });
-        $("select").material_select();
-        sign.on(SignApp.SETTINGS_CHANGE, this.changeSettings);
-    }
-    componentWillUnmount() {
-        sign.removeListener(SignApp.SETTINGS_CHANGE, this.changeSettings);
-    }
-    changeSettings() {
-        this.setState({});
-    }
-    addDirect() {
-        if (!window.framework_NW) {
-            let directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
-            if (directory) {
-                sign.set_settings_directory = directory[0];
-            }
-        } else {
-            let clickEvent = document.createEvent("MouseEvents");
-            clickEvent.initEvent("click", true, true);
-            document.querySelector("#choose-folder").dispatchEvent(clickEvent);
-        }
-    }
-    render() {
-        return (
-            <div id="sign-settings-content" className="content-wrapper z-depth-1">
-                <HeaderWorkspaceBlock text={lang.get_resource.Sign.sign_setting} />
-                <div className="settings-content">
-                    <EncodingTypeSelector EncodingValue={sign.get_settings_encoding} />
-                    <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_detached = !sign.get_settings_detached; } }
-                        isChecked={sign.get_settings_detached}
-                        elementId="detached-sign"
-                        title={lang.get_resource.Sign.sign_detached} />
-                    <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_add_time = !sign.get_settings_add_time; } }
-                        isChecked={sign.get_settings_add_time}
-                        elementId="sign-time"
-                        title={lang.get_resource.Sign.sign_time} />
-                    <SelectFolder directory={sign.get_settings_directory} viewDirect={
-                        function (event: any) {
-                            sign.set_settings_directory = event.target.value;
-                        } }
-                        openDirect={this.addDirect.bind(this)} />
+                    <SignatureSettings />
                 </div>
             </div>
         );
