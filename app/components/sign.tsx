@@ -6,6 +6,7 @@ import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
+import CertificateChain from "./CertificateChain";
 import CertificateInfo from "./CertificateInfo";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import { Dialog, FileComponents } from "./components";
@@ -359,72 +360,13 @@ class SignaturesInfo extends React.Component<any, any> {
       return (
         <div className={"content-tem sign-info " + hidden_sign_cert_info}>
           <div className="col s6 m6 l6 content-item">
-            <CertChain />
+            <CertificateChain />
           </div>
           <div className="col s6 m6 l6 content-item">
             {this.getCertificateInfo()}
           </div>
         </div>
       );
-    }
-}
-class CertChain extends React.Component<any, any> {
-
-    constructor(props: any) {
-        super(props);
-    }
-    removeSignInfo() {
-        sign.set_sign_certs_info = null;
-        sign.set_sign_cert_info = null;
-    }
-    viewCert(event: any, cert: any) {
-        event.stopPropagation();
-        let certs = sign.get_sign_certs_info;
-        for (let i = 0; i < certs.length; i++) {
-            certs[i].active = false;
-        }
-        certs[certs.indexOf(cert)].active = true;
-        sign.set_sign_cert_info = cert;
-    }
-    render() {
-        let self = this;
-        let certs = sign.get_sign_certs_info ? sign.get_sign_certs_info : [];
-        let padding = -5;
-        return (
-            <div className="content-wrapper z-depth-1">
-                <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Certificate.cert_chain} />
-                <div className="sign-info-content">
-                    <div className="add-cs-collection collection ">
-                        {certs.map(function (l: any, i: number) {
-                            let status: string;
-                            if (l.status) {
-                                status = "status_cert_ok_icon";
-                            }
-                            else {
-                                status = "status_cert_fail_icon";
-                            }
-                            padding = padding + 15;
-                            let tree: any = null;
-                            if (i !== certs.length - 1) {
-                                tree = <img className="tree-elem" src="./image/tree_element.svg" style={{ left: (padding + 10) + "px" }}></img>;
-                            }
-                            let active = "";
-                            if (l.active === true) {
-                                active = "active";
-                            }
-                            return <div className={"collection-item avatar certs-collection cs-chain " + active} key={i} onClick={function (event: any) { self.viewCert(event, l); } } style={{ paddingLeft: padding + "px" }}>
-                                <div className="r-iconbox-link">
-                                    <div className="r-iconbox-cert-icon cs-icon"><i className={status + " cs-icon-size"}></i></div>
-                                    <p className="cs-title">{l.subjectFriendlyName}</p>
-                                    <p className="cs-info cert-info">{l.issuerFriendlyName}</p>
-                                </div>
-                                {tree}
-                            </div>;
-                        })}
-                    </div>
-                </div>
-            </div>
-        );
     }
 }
 
