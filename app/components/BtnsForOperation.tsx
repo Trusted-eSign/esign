@@ -13,7 +13,8 @@ interface IBtnsForOperationProps {
   btn_unsign?: string;
   operation_unsign?: () => void;
 }
-export class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
+
+class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   constructor(props: IBtnsForOperationProps) {
     super(props);
     this.change = this.change.bind(this);
@@ -96,3 +97,5 @@ export class BtnsForOperation extends React.Component<IBtnsForOperationProps, an
     }
   }
 }
+
+export default BtnsForOperation;
