@@ -1,19 +1,13 @@
 import * as React from "react";
-import { checkFiles, DialogBox, dlg, extFile, lang, LangApp } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
+import { checkFiles, extFile, lang, LangApp } from "../module/global_app";
+import { sign } from "../module/sign_app";
 import * as native from "../native";
 import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
-import { application, CertComponents } from "./certificate";
-import CertificateChain from "./CertificateChain";
-import CertificateInfo from "./CertificateInfo";
-import CheckBoxWithLabel from "./CheckBoxWithLabel";
+import { CertComponents } from "./certificate";
 import { Dialog, FileComponents } from "./components";
-import { BtnsForOperation, CollectionItem } from "./elements";
-import EncodingTypeSelector from "./EncodingTypeSelector";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import { SelectFolder } from "./settings_components";
+import { BtnsForOperation } from "./elements";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 import SignerCertificateInfo from "./SignerCertificateInfo";
@@ -21,20 +15,24 @@ import SignerCertificateInfo from "./SignerCertificateInfo";
 
 const dialog = window.electron.remote.dialog;
 
-export class SignWindow extends React.Component<any, any> {
+class SignatureWindow extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.change = this.change.bind(this);
   }
+
   componentDidMount() {
     lang.on(LangApp.SETTINGS, this.change);
   }
+
   componentWillUnmount() {
     lang.removeListener(LangApp.SETTINGS, this.change);
   }
+
   change() {
     this.setState({});
   }
+
   signed() {
     if (checkFiles("sign")) {
       let certItem = sign.get_sign_certificate;
@@ -110,6 +108,7 @@ export class SignWindow extends React.Component<any, any> {
       }
     }
   }
+
   resign() {
     if (checkFiles("sign")) {
       let certItem = sign.get_sign_certificate;
@@ -183,6 +182,7 @@ export class SignWindow extends React.Component<any, any> {
       }
     }
   }
+
   unSign() {
     if (checkFiles("sign")) {
       let files = sign.get_files_for_sign;
@@ -218,6 +218,7 @@ export class SignWindow extends React.Component<any, any> {
       }
     }
   }
+
   verifySign() {
     if (checkFiles("verify")) {
       let files = sign.get_files_for_sign;
@@ -282,6 +283,7 @@ export class SignWindow extends React.Component<any, any> {
       }
     }
   }
+
   render() {
     return (
       <div className="main">
@@ -315,3 +317,5 @@ export class SignWindow extends React.Component<any, any> {
     );
   }
 }
+
+export default SignatureWindow;

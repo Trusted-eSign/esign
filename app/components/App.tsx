@@ -7,7 +7,7 @@ import { EncryptWindow } from "./encrypt";
 import HelpWindow from "./HelpWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
-import { SignWindow } from "./sign";
+import SignatureWindow from "./SignatureWindow";
 
 class App extends React.Component<any, any> {
   constructor(props: any) {
@@ -19,7 +19,7 @@ class App extends React.Component<any, any> {
       <Router history={hashHistory}>
         <Route path="/" component={MenuBar}>
           <IndexRoute component={MainWindow} />
-          <Route path="/sign" component={SignWindow} />
+          <Route path="/sign" component={SignatureWindow} />
           <Route path="/encrypt" component={EncryptWindow} />
           <Route path="/certificate" component={CertWindow} />
           <Route path="/about" component={AboutWindow} />
