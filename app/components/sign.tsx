@@ -14,6 +14,7 @@ import { BtnsForOperation, CollectionItem } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { SelectFolder } from "./settings_components";
+import SignatureStatus from "./SignatureStatus";
 import SignerCertificateInfo from "./SignerCertificateInfo";
 //declare let $: any;
 
@@ -416,51 +417,11 @@ class SignsInfo extends React.Component<any, any> {
                         <div className="sign-info-content">
                             <div className={"add-cert-collection collection "}>
                                 {signs_list.map(function (l: any, i: number) {
-                                    return <ViewSignsInfo key={i} signed_data={l} />;
+                                    return <SignatureStatus key={i} signed_data={l} />;
                                 })}
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        );
-    }
-}
-interface IViewSignsInfoProps {
-    signed_data: any;
-}
-class ViewSignsInfo extends React.Component<IViewSignsInfoProps, any> {
-
-    constructor(props: IViewSignsInfoProps) {
-        super(props);
-    }
-    viewSignCertInfo(event: any, certs: any) {
-        event.stopPropagation();
-        sign.set_sign_certs_info = certs;
-        sign.set_sign_cert_info = certs[0];
-    }
-    render() {
-        let self = this;
-        let status = "", icon = "";
-        if (this.props.signed_data.status_verify === true) {
-            status = lang.get_resource.Sign.sign_ok;
-            icon = "status_cert_ok_icon";
-        } else {
-            status = lang.get_resource.Sign.sign_error;
-            icon = "status_cert_fail_icon";
-        }
-        return (
-            <div className="collection-item avatar certs-collection" onClick={function (event: any) { self.viewSignCertInfo(event, self.props.signed_data.certs); } }>
-                <div className="r-iconbox-link">
-                    <div className="r-iconbox-cert-icon"><i className={icon}></i></div>
-                    <p className="collection-title si-title">{status}</p>
-                    <p className="collection-info cert-info si-info">{lang.get_resource.Sign.status}</p>
-                    <p className="collection-title si-title">{this.props.signed_data.subject}</p>
-                    <p className="collection-info cert-info si-info">{lang.get_resource.Certificate.subject}</p>
-                    <p className="collection-title si-title">{this.props.signed_data.alg}</p>
-                    <p className="collection-info cert-info si-info">{lang.get_resource.Sign.alg}</p>
-                    <p className="collection-title si-title">{this.props.signed_data.digestAlgorithm}</p>
-                    <p className="collection-info cert-info si-info">{lang.get_resource.Sign.digest_alg}</p>
                 </div>
             </div>
         );
