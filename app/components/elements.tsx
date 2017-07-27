@@ -92,18 +92,3 @@ export class BtnsForOperation extends React.Component<IBtnsForOperationProps, an
         }
     }
 }
-
-interface ICollectionItemProps {
-    first_text: string;
-    second_text: string;
-}
-export class CollectionItem extends React.Component<ICollectionItemProps, any> {
-    render() {
-        return (
-            <div className="collection-item certs-collection certificate-info">
-                <div className="collection-title">{this.props.first_text}</div>
-                <div className="collection-info cert-info">{this.props.second_text}</div>
-            </div>
-        );
-    }
-}
