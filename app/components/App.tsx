@@ -3,7 +3,7 @@ import { hashHistory, IndexRoute, Route, Router} from "react-router";
 import history from "../history";
 import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
-import { EncryptWindow } from "./encrypt";
+import EncryptWindow from "./EncryptWindow";
 import HelpWindow from "./HelpWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
