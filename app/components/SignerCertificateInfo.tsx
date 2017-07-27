@@ -5,7 +5,7 @@ import CertificateChain from "./CertificateChain";
 import CertificateInfo from "./CertificateInfo";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
-class SignaturesInfo extends React.Component<any, any> {
+class SignerCertificateInfo extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.change = this.change.bind(this);
@@ -59,4 +59,4 @@ class SignaturesInfo extends React.Component<any, any> {
   }
 }
 
-export default SignaturesInfo;
+export default SignerCertificateInfo;

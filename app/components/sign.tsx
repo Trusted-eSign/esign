@@ -14,7 +14,7 @@ import { BtnsForOperation, CollectionItem } from "./elements";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { SelectFolder } from "./settings_components";
-import SignaturesInfo from "./SignaturesInfo";
+import SignerCertificateInfo from "./SignerCertificateInfo";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -287,7 +287,7 @@ export class SignWindow extends React.Component<any, any> {
                 <div className="content">
                     <SignCertAndSettings />
                     <SignsInfo />
-                    <SignaturesInfo />
+                    <SignerCertificateInfo />
                     <div className="col s6 m6 l6 content-item-height">
                         <BtnsForOperation
                             btn_name_first={lang.get_resource.Sign.sign}
