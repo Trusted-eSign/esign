@@ -6,6 +6,7 @@ import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import { application, CertComponents } from "./certificate";
+import CertificateInfo from "./CertificateInfo";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import { Dialog, FileComponents } from "./components";
 import { BtnsForOperation, CollectionItem } from "./elements";
@@ -334,18 +335,37 @@ class SignaturesInfo extends React.Component<any, any> {
     change() {
         this.setState({});
     }
+
+    getCertificateInfo() {
+      const certificate = sign.get_sign_cert_info;
+      let certificateInfo: any = null;
+      if (certificate) {
+        certificateInfo = <div className="add-certs">
+          <div className="add-certs-item">
+            <CertificateInfo certificate={certificate} />
+          </div>
+        </div>;
+      }
+      return (
+        <div className="content-wrapper z-depth-1">
+          <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />
+          {certificateInfo}
+        </div>
+      );
+    }
+
     render() {
-        let hidden_sign_cert_info = sign.get_sign_certs_info ? "" : "hidden";
-        return (
-            <div className={"content-tem sign-info " + hidden_sign_cert_info}>
-                <div className="col s6 m6 l6 content-item">
-                    <CertChain />
-                </div>
-                <div className="col s6 m6 l6 content-item">
-                    <SignCertInfo />
-                </div>
-            </div>
-        );
+      let hidden_sign_cert_info = sign.get_sign_certs_info ? "" : "hidden";
+      return (
+        <div className={"content-tem sign-info " + hidden_sign_cert_info}>
+          <div className="col s6 m6 l6 content-item">
+            <CertChain />
+          </div>
+          <div className="col s6 m6 l6 content-item">
+            {this.getCertificateInfo()}
+          </div>
+        </div>
+      );
     }
 }
 class CertChain extends React.Component<any, any> {
@@ -395,8 +415,8 @@ class CertChain extends React.Component<any, any> {
                             return <div className={"collection-item avatar certs-collection cs-chain " + active} key={i} onClick={function (event: any) { self.viewCert(event, l); } } style={{ paddingLeft: padding + "px" }}>
                                 <div className="r-iconbox-link">
                                     <div className="r-iconbox-cert-icon cs-icon"><i className={status + " cs-icon-size"}></i></div>
-                                    <p className="cs-title">{l.subject}</p>
-                                    <p className="cs-info cert-info">{l.issuer}</p>
+                                    <p className="cs-title">{l.subjectFriendlyName}</p>
+                                    <p className="cs-info cert-info">{l.issuerFriendlyName}</p>
                                 </div>
                                 {tree}
                             </div>;
@@ -407,40 +427,7 @@ class CertChain extends React.Component<any, any> {
         );
     }
 }
-class SignCertInfo extends React.Component<any, any> {
 
-    constructor(props: any) {
-        super(props);
-    }
-    render() {
-        let cert = sign.get_sign_cert_info;
-        let cert_info: any = null;
-        if (cert) {
-            cert_info = <div className="sign-info-content">
-                <div className="cert-view-info">
-                    <div className="cert-main-item">
-                        <div className="add-cert-collection collection cert-info-list">
-                            <CollectionItem first_text={cert.subject} second_text={lang.get_resource.Certificate.subject} />
-                            <CollectionItem first_text={cert.organ} second_text={lang.get_resource.Certificate.organization} />
-                        </div>
-                    </div>
-                    <div className="cert-main-item">
-                        <div className="add-cert-collection collection cert-info-list">
-                            <CollectionItem first_text={cert.issuer} second_text={lang.get_resource.Certificate.issuer} />
-                            <CollectionItem first_text={cert.notBefore} second_text={lang.get_resource.Certificate.cert_valid} />
-                        </div>
-                    </div>
-                </div>
-            </div>;
-        }
-        return (
-            <div className="content-wrapper z-depth-1">
-                <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />
-                {cert_info}
-            </div>
-        );
-    }
-}
 class SignSettingsComponents extends React.Component<any, any> {
 
     constructor(props: any) {

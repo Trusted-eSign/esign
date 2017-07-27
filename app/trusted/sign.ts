@@ -333,33 +333,40 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             }
 
             if (!ch || !ch.length || ch.length === 0) {
-                certificatesSignStatus = false;
-                $(".toast-build_chain_failed").remove();
-                Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
+              certificatesSignStatus = false;
+              $(".toast-build_chain_failed").remove();
+              Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
 
-                certSign.push({
-                    active: false,
-                    issuer: cert.issuerFriendlyName.toString(),
-                    notBefore: cert.notBefore.toString(),
-                    organ: cert.organizationName.toString(),
-                    status: false,
-                    subject: cert.subjectFriendlyName.toString(),
-                });
+              certSign.push({
+                active: false,
+                serial: cert.serialNumber,
+                subjectFriendlyName: cert.subjectFriendlyName,
+                organizationName: cert.organizationName,
+                issuerFriendlyName: cert.issuerFriendlyName,
+                notAfter: cert.notAfter,
+                signatureAlgorithm: cert.signatureAlgorithm,
+                hash: cert.thumbprint,
+                key: false,
+              });
             } else {
-                for (let j: number = ch.length - 1; j >= 0; j--) {
-                    let it: trusted.pki.Certificate = ch.items(j);
-                    if (!(certSignStatus = verifySignerCert(it))) {
-                        certificatesSignStatus = false;
-                    }
-                    certSign.push({
-                        active: false,
-                        issuer: it.issuerFriendlyName.toString(),
-                        notBefore: it.notBefore.toString(),
-                        organ: it.organizationName.toString(),
-                        status: certSignStatus,
-                        subject: it.subjectFriendlyName.toString(),
-                    });
+              for (let j: number = ch.length - 1; j >= 0; j--) {
+                let it: trusted.pki.Certificate = ch.items(j);
+                if (!(certSignStatus = verifySignerCert(it))) {
+                  certificatesSignStatus = false;
                 }
+                certSign.push({
+                  active: false,
+                  serial: it.serialNumber,
+                  subjectFriendlyName: it.subjectFriendlyName,
+                  organizationName: it.organizationName,
+                  issuerFriendlyName: it.issuerFriendlyName,
+                  notAfter: it.notAfter,
+                  signatureAlgorithm: it.signatureAlgorithm,
+                  hash: it.thumbprint,
+                  key: false,
+                  status: certSignStatus,
+                });
+              }
             }
 
             curRes = {
