@@ -4,7 +4,7 @@ import { sign, SignApp } from "../module/sign_app";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import { SelectFolder } from "./settings_components";
+import SelectFolder from "./SelectFolder";
 
 const dialog = window.electron.remote.dialog;
 
