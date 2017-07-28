@@ -8,7 +8,6 @@ import { sign, SignApp } from "../module/sign_app";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import { Password } from "./components";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 

@@ -9,7 +9,7 @@ import BlockNotElements from "./BlockNotElements";
 import { application } from "./certificate";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import { Password } from "./components";
+import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -294,7 +294,7 @@ class CertWindow extends React.Component<any, any> {
             </div>
           </div>
         </div>
-        <Password />
+        <PasswordDialog />
       </div>
     );
   }
