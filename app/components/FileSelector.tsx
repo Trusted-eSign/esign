@@ -4,6 +4,7 @@ import { dlg, extFile, lang } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
+import DropMenuForFile from "./DropMenuForFile";
 
 const dialog = window.electron.remote.dialog;
 
