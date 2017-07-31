@@ -94,7 +94,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     return <div key={cert.id.toString()} className={"collection-item avatar certs-collection " + active}
-      onClick={toggleOpen}
+      onClick={chooseCert}
       onDoubleClick={doubleClick}>
       <div className="r-iconbox-link">
         <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>

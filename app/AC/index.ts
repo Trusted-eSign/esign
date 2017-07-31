@@ -1,4 +1,5 @@
-import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
+import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, SELECT_SIGNER_CERTIFICATE,
+   START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
 import { certVerify } from "../module/global_app";
 import * as native from "../native";
 import { Store } from "../trusted/store";
@@ -49,5 +50,12 @@ export function verifyCertificate(certificateId) {
       payload: { certificateId, certificateStatus },
       type: VERIFY_CERTIFICATE,
     });
+  };
+}
+
+export function selectSignerCertificate(selected) {
+  return {
+    payload: { selected },
+    type: SELECT_SIGNER_CERTIFICATE,
   };
 }

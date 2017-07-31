@@ -6,7 +6,7 @@ import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
-import { CertComponents } from "./certificate";
+import CertificateBlockForSignature from "./CertificateBlockForSignature";
 import { Dialog, FileComponents } from "./components";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
@@ -291,7 +291,7 @@ class SignatureWindow extends React.Component<any, any> {
         <div className="content">
           <div className="content-tem">
             <div className="col s6 m6 l6 content-item">
-              <CertComponents />
+              <CertificateBlockForSignature />
             </div>
             <div className="col s6 m6 l6 content-item">
               <SignatureSettings />

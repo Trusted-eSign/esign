@@ -1,7 +1,6 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates } from "../AC";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
@@ -303,7 +302,6 @@ class CertWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     certificates: filteredCertificatesSelector(state),
-    isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates })(CertWindow);
+})(CertWindow);
