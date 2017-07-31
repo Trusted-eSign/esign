@@ -6,8 +6,9 @@ import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import { application, CertComponentsForEncrypt } from "./certificate";
-import { Dialog, FileComponents } from "./components";
+import { Dialog } from "./components";
 import EncryptSettings from "./EncryptSettings";
+import FileSelector from "./FileSelector";
 //declare let $: any;
 
 const dialog = window.electron.remote.dialog;
@@ -189,7 +190,7 @@ class EncryptWindow extends React.Component<any, any> {
               operation_first={this.encrypt.bind(this)}
               operation_second={this.decrypt.bind(this)}
               operation="encrypt" />
-            <FileComponents operation="encrypt" />
+            <FileSelector operation="encrypt" />
           </div>
         </div>
       </div>

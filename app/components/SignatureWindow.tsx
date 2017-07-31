@@ -1,4 +1,5 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { checkFiles, extFile, lang, LangApp } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
@@ -7,7 +8,8 @@ import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
-import { Dialog, FileComponents } from "./components";
+import { Dialog } from "./components";
+import FileSelector from "./FileSelector";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 import SignerCertificateInfo from "./SignerCertificateInfo";
@@ -34,9 +36,10 @@ class SignatureWindow extends React.Component<any, any> {
   }
 
   signed() {
+    const { signer } = this.props;
+
     if (checkFiles("sign")) {
-      let certItem = sign.get_sign_certificate;
-      let key = window.PKISTORE.findKey(certItem);
+      let key = window.PKISTORE.findKey(signer);
       let res = true;
 
       if (!key) {
@@ -45,7 +48,7 @@ class SignatureWindow extends React.Component<any, any> {
         return;
       }
 
-      let cert = window.PKISTORE.getPkiObject(certItem);
+      let cert = window.PKISTORE.getPkiObject(signer);
       let files = sign.get_files_for_sign;
       let pathes = files.slice(0);
 
@@ -110,9 +113,10 @@ class SignatureWindow extends React.Component<any, any> {
   }
 
   resign() {
+    const { signer } = this.props;
+
     if (checkFiles("sign")) {
-      let certItem = sign.get_sign_certificate;
-      let key = window.PKISTORE.findKey(certItem);
+      let key = window.PKISTORE.findKey(signer);
       let res = true;
       let cms: trusted.cms.SignedData;
 
@@ -122,7 +126,7 @@ class SignatureWindow extends React.Component<any, any> {
         return;
       }
 
-      let cert = window.PKISTORE.getPkiObject(certItem);
+      let cert = window.PKISTORE.getPkiObject(signer);
       let files = sign.get_files_for_sign;
       let pathes = files.slice(0);
 
@@ -310,7 +314,7 @@ class SignatureWindow extends React.Component<any, any> {
               operation_unsign={this.unSign.bind(this)}
               operation_resign={this.resign.bind(this)}
               operation="sign" />
-            <FileComponents operation="sign" />
+            <FileSelector operation="sign" />
           </div>
         </div>
       </div>
@@ -318,4 +322,8 @@ class SignatureWindow extends React.Component<any, any> {
   }
 }
 
-export default SignatureWindow;
+export default connect((state) => {
+  return {
+    signer: state.certificates.getIn(["entities", state.signers.signer]),
+  };
+})(SignatureWindow);
