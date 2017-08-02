@@ -3,26 +3,6 @@ import * as native from "../native";
 
 export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
-export let extFile = function (filename: string) {
-    let ext = filename.split(".").pop();
-    let file_type: string;
-    if (ext === "sig") {
-        file_type = "sign_type_icon";
-    } else if (ext === "enc") {
-        file_type = "encrypt_type_icon";
-    } else if (ext === "zip") {
-        file_type = "zip_type_icon";
-    } else if (ext === "docx" || ext === "doc") {
-        file_type = "word_type_icon";
-    } else if (ext === "xlsx" || ext === "xls") {
-        file_type = "excel_type_icon";
-    } else if (ext === "pdf") {
-        file_type = "pdf_type_icon";
-    } else {
-        file_type = "file_type_icon";
-    }
-    return file_type;
-};
 export let get_Certificates = function (operation: string) {
     let certCollection: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
     let certs: any = [];

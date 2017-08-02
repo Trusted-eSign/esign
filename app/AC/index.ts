@@ -1,8 +1,12 @@
-import { CHANGE_SEARCH_VALUE, LOAD_ALL_CERTIFICATES, SELECT_SIGNER_CERTIFICATE,
-   START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
+import {
+  ACTIVE_FILE, CHANGE_SEARCH_VALUE, DELETE_FILE,
+  LOAD_ALL_CERTIFICATES, SELECT_FILE, SELECT_SIGNER_CERTIFICATE,
+  START, SUCCESS, VERIFY_CERTIFICATE,
+} from "../constants";
 import { certVerify } from "../module/global_app";
 import * as native from "../native";
 import { Store } from "../trusted/store";
+import { extFile } from "../utils";
 
 export function loadAllCertificates() {
   return (dispatch) => {
@@ -19,7 +23,7 @@ export function loadAllCertificates() {
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
+      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
         if (!item.id) {
           item.id = Date.now() + Math.random();
         }
@@ -57,5 +61,36 @@ export function selectSignerCertificate(selected) {
   return {
     payload: { selected },
     type: SELECT_SIGNER_CERTIFICATE,
+  };
+}
+
+export function selectFile(fullpath: string) {
+  const stat = native.fs.statSync(fullpath);
+  const file = {
+    extension: extFile(fullpath),
+    filename: native.path.basename(fullpath),
+    fullpath: fullpath,
+    lastModifiedDate: stat.birthtime,
+    size: stat.size,
+  };
+
+  return {
+    generateId: true,
+    payload: { file },
+    type: SELECT_FILE,
+  };
+}
+
+export function activeFile(fileId: string, isActive: boolean = true) {
+  return {
+    payload: { fileId, isActive },
+    type: ACTIVE_FILE,
+  };
+}
+
+export function deleteFile(fileId: string) {
+  return {
+    payload: { fileId },
+    type: DELETE_FILE,
   };
 }

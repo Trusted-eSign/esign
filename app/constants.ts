@@ -3,6 +3,10 @@ export const LOAD_ALL_CERTIFICATES = "LOAD_ALL_CERTIFICATES";
 export const VERIFY_CERTIFICATE = "VERIFY_CERTIFICATE";
 export const SELECT_SIGNER_CERTIFICATE = "SELECT_SIGNER_CERTIFICATE";
 
+export const SELECT_FILE = "SELECT_FILE";
+export const ACTIVE_FILE = "ACTIVE_FILE";
+export const DELETE_FILE = "DELETE_FILE";
+
 export const SUCCESS = "_SUCCESS";
 export const FAIL = "_FAIL";
 export const START = "_START";

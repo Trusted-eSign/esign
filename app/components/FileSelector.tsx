@@ -1,8 +1,11 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { activeFile, deleteFile, selectFile } from "../AC";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { dlg, extFile, lang } from "../module/global_app";
+import { dlg, lang } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
+import { extFile, mapToArr } from "../utils";
 import { application } from "./certificate";
 import DropMenuForFile from "./DropMenuForFile";
 
@@ -15,10 +18,6 @@ interface IFileSelectorProps {
 class FileSelector extends React.Component<IFileSelectorProps, any> {
   constructor(props: IFileSelectorProps) {
     super(props);
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    this.state = { key: files.length };
-    this.filesChange = this.filesChange.bind(this);
-    this.archiveFiles = this.archiveFiles.bind(this);
   }
 
   componentDidMount() {
@@ -31,120 +30,21 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
       alignment: "left",
     },
     );
-    sign.on(SignApp.FILES_CHANGE, this.filesChange);
-    encrypt.on(EncryptApp.FILES_CHANGE, this.filesChange);
-    application.on("encrypt_archive", this.archiveFiles);
-  }
-
-  componentWillUnmount() {
-    application.removeListener("encrypt_archive", this.archiveFiles);
-    sign.removeListener(SignApp.FILES_CHANGE, this.filesChange);
-    encrypt.removeListener(EncryptApp.FILES_CHANGE, this.filesChange);
-  }
-
-  archiveFiles(uri: string, date: any) {
-    let files = encrypt.get_files;
-    let size = files.length;
-    let files_for_encrypt = encrypt.get_files_for_encrypt;
-    let all_files: any = [];
-    let file_date = date;
-    let file_name = native.path.basename(uri);
-    let file_type = extFile(file_name);
-    all_files.push({ name: file_name, path: uri, size: 0, date: file_date, key: 0, active: true, ext: file_type, verify_status: "default_status" });
-    for (let i = 0; i < files_for_encrypt.length; i++) {
-      files.splice(files_for_encrypt[i].key, 1);
-      if (files_for_encrypt[i].key !== size - 1) {
-        for (let j = files_for_encrypt[i].key; j < size - 1; j++) {
-          files[j].key = j;
-        }
-      }
-      size--;
-    }
-    for (let i: number = 0; i < files.length; i++) {
-      files[i].key += 1;
-      all_files.push(files[i]);
-    }
-    encrypt.set_files = all_files;
-    this.chooseFiles();
-  }
-
-  filesChange() {
-    this.setState({});
-  }
-
-  chooseFiles() {
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    let choose_files: any = [];
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].active) {
-        choose_files.push(files[i])
-      }
-    }
-    let info = this.props.operation === "sign" ? sign.set_files_for_sign = choose_files : encrypt.set_files_for_encrypt = choose_files;
-    if (this.props.operation === "sign") {
-      if (info.length === 1 && info[0].verify_status !== "default_status" && info[0].active) {
-        let sing_info = sign.get_sign_info;
-        let i = 0;
-        while (sing_info[i].path !== info[0].path && i < sing_info.length) {
-          i++;
-        }
-        sign.set_sign_info_active = sing_info[i];
-      } else {
-        sign.set_sign_info_active = null;
-        sign.set_sign_certs_info = null;
-      }
-    }
-  }
-
-  viewFiles(event: any) {
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    let newArray = files.slice(0);
-    let size = files.length;
-    let countDifference = 0;
-    for (let i: number = 0, len: number = event.length; i < len; i++) {
-      let file = event[i];
-      let file_date = file.lastModifiedDate;
-      let file_name = native.path.basename(file.name);
-      let file_type = extFile(file_name);
-      if (newArray.length > 0) {
-        for (let j = 0; j < newArray.length; j++) {
-          if (newArray[j].path !== file.path) {
-            countDifference++;
-          }
-        }
-        if (countDifference === newArray.length) {
-          newArray.push({ name: file_name, path: file.path, size: file.size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
-          size++;
-          countDifference = 0;
-        } else {
-          countDifference = 0;
-        }
-      } else {
-        newArray.push({ name: file_name, path: file.path, size: file.size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
-        size++;
-      }
-    }
-    if (event.length !== 0) {
-      this.props.operation === "sign" ? sign.set_files = newArray : encrypt.set_files = newArray;
-      this.chooseFiles();
-    }
   }
 
   addFiles() {
+    const { selectFile } = this.props;
+
     if (!window.framework_NW) {
-      let files: any = [];
-      let self = this;
-      dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, function (file: any) {
-        if (file) {
-          for (let i = 0; i < file.length; i++) {
-            let stat = native.fs.statSync(file[i]);
-            files.push({ name: native.path.basename(file[i]), size: stat.size, path: file[i], lastModifiedDate: stat.birthtime });
+      dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, function (selectedFiles: string[]) {
+        if (selectedFiles) {
+          for (const file of selectedFiles) {
+            selectFile(file);
           }
-          self.dropFiles(files);
         }
       });
     } else {
-      let clickEvent = document.createEvent("MouseEvents");
+      const clickEvent = document.createEvent("MouseEvents");
       clickEvent.initEvent("click", true, true);
       document.querySelector("#choose-file").dispatchEvent(clickEvent);
     }
@@ -165,33 +65,11 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
   }
 
   dropFiles(files: IFiles[]) {
-    let files_for_operation = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    let size = files_for_operation.length;
-    let newArray = files_for_operation.slice(0);
-    let countDifference = 0;
-    for (let i = 0, len = files.length; i < len; i++) {
-      let file_type = extFile(files[i].name);
-      let file_date = files[i].lastModifiedDate;
-      if (newArray.length > 0) {
-        for (let j = 0; j < newArray.length; j++) {
-          if (newArray[j].path !== files[i].path) {
-            countDifference++;
-          }
-        }
-        if (countDifference === newArray.length) {
-          newArray.push({ name: files[i].name, path: files[i].path, size: files[i].size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
-          size++;
-          countDifference = 0;
-        } else {
-          countDifference = 0;
-        }
-      } else {
-        newArray.push({ name: files[i].name, path: files[i].path, size: files[i].size, date: file_date, key: size, active: true, ext: file_type, verify_status: "default_status" });
-        size++;
-      }
+    const { selectFile } = this.props;
+
+    for (const file of files) {
+      selectFile(file.path);
     }
-    this.props.operation === "sign" ? sign.set_files = newArray : encrypt.set_files = newArray;
-    this.chooseFiles();
   }
 
   checkFolder(event: any, cb: (items: any, files: IFiles[], folder: boolean) => void) {
@@ -318,67 +196,45 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
     document.querySelector("#droppableZone").classList.add("droppableZone-active");
   }
 
-  activeFile(event: any, file: any) {
-    let newFiles = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    newFiles[file.key].active = !newFiles[file.key].active;
-    this.props.operation === "sign" ? sign.set_files = newFiles : encrypt.set_files = newFiles;
-    this.chooseFiles();
+  toggleActive(file: any) {
+    const { activeFile } = this.props;
+
+    activeFile(file.id, !file.active);
   }
 
   selectedAll() {
-    let files_for: any = [];
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    for (let i = 0; i < files.length; i++) {
-      files[i].active = true;
+    const { files, activeFile } = this.props;
+
+    for (const file of files) {
+      activeFile(file.id);
     }
-    this.props.operation === "sign" ? sign.set_files = files : encrypt.set_files = files;
-    this.chooseFiles();
   }
 
   removeSelectedAll() {
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    for (let i = 0; i < files.length; i++) {
-      files[i].active = false;
+    const { files, activeFile } = this.props;
+
+    for (const file of files) {
+      activeFile(file.id, false);
     }
-    this.props.operation === "sign" ? sign.set_files = files : encrypt.set_files = files;
-    this.chooseFiles();
+  }
+
+  removeFile = (event: any, id: string) => {
+    const { deleteFile } = this.props;
+
+    deleteFile(id);
   }
 
   removeAllFiles() {
-    this.props.operation === "sign" ? sign.set_files = [] : encrypt.set_files = [];
-    this.props.operation === "sign" ? sign.set_sign_info = [] : "";
-    this.props.operation === "sign" ? sign.set_sign_info_active = null : "";
-    this.chooseFiles();
-    this.setState({ key: 0 });
-  }
+    const { files, deleteFile } = this.props;
 
-  removeFile(event: any, index: number) {
-    event.stopPropagation();
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    let sign_info = this.props.operation === "sign" ? sign.get_sign_info : "";
-    let j = 0;
-    while (j < sign_info.length) {
-      if (sign_info[j].key === index) {
-        sign_info.splice(j, 1);
-      }
-      j++;
+    for (const file of files) {
+      deleteFile(file.id);
     }
-    files.splice(index, 1);
-    for (let i = index; i < files.length; i++) {
-      files[i].key = i;
-      for (let j = 0; j < sign_info.length; j++) {
-        if (sign_info[j].path === files[i].path) {
-          sign_info[j].key = i;
-        }
-      }
-    }
-    this.props.operation === "sign" ? sign.set_files = files : encrypt.set_files = files;
-    this.chooseFiles();
   }
 
   render() {
+    const { files, deleteFile } = this.props;
     const self = this;
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
     let active = files.length > 0 ? "active" : "not-active";
     let collection = files.length > 0 ? "collection" : "";
     let disabled = files.length > 0 ? "" : "disabled";
@@ -411,28 +267,23 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
             </div>
             <div className="add-files" onDragEnter={this.dropZoneActive.bind(this)}>
               <div className={"add-file-item " + active} id="items-hidden">
-                <input type="file" className="input-file" id="choose-file" value="" multiple onChange={
-                  function (event: any) {
-                    self.viewFiles(event.target.files);
-                  }
-                } />
                 <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{lang.get_resource.Settings.choose_files}</a>
                 <div className="add-file-item-text">{lang.get_resource.Settings.drag_drop}</div>
                 <i className="material-icons large fullscreen">fullscreen</i>
               </div>
               <div className={"add-files-collection " + collection}>
-                {files.map(function (l: any, i: number) {
-                  return <DropMenuForFile removeFiles={function (event: any) { self.removeFile(event, i); }}
-                    onClickBtn={function (event: any) { self.activeFile(event, files[i]); }}
-                    file_name={l.name}
-                    file_date={l.date}
-                    file_path={l.path}
-                    file_type={l.ext}
-                    verify_status={l.verify_status}
-                    index={l.key}
+                {files.map((file) => {
+                  return <DropMenuForFile removeFiles={function (event: any) { self.removeFile(event, file.id); }}
+                    onClickBtn={function (event: any) { self.toggleActive(file); }}
+                    file_name={file.filename}
+                    file_date={file.lastModifiedDate}
+                    file_path={file.fullpath}
+                    file_type={file.extension}
+                    verify_status={file.verified}
+                    index={file.key}
                     operation={self.props.operation}
-                    active_file={l.active}
-                    key={i}
+                    active_file={file.active}
+                    key={file.id}
                   />;
                 })}
               </div>
@@ -444,4 +295,8 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
   }
 }
 
-export default FileSelector;
+export default connect((state) => {
+  return {
+    files: mapToArr(state.files.entities),
+  };
+}, { activeFile, deleteFile, selectFile })(FileSelector);
