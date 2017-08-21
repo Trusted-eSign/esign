@@ -7,14 +7,14 @@ class MainWindow extends React.Component<any, any> {
     super(props);
   }
 
-    render() {
+  render() {
     const { children } = this.props;
 
     return (
       <div className="main">
         <div className="main-window">
           <div className="main-window-workspace">
-              <MainWindowWorkSpace />
+            <MainWindowWorkSpace />
           </div>
           <div className="page-footer mainfooter">
             <div className="footer-copyright">

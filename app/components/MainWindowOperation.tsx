@@ -14,7 +14,7 @@ class MainWindowOperation extends React.Component<IMainWindowOperationsProps, an
   }
 
   render() {
-    const {info, title_pre, title_post, operation } = this.props;
+    const { info, title_pre, title_post, operation } = this.props;
 
     return (
       <div className="col l3 s4">

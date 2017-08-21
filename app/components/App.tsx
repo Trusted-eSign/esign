@@ -1,5 +1,5 @@
 import * as React from "react";
-import { hashHistory, IndexRoute, Route, Router} from "react-router";
+import { hashHistory, IndexRoute, Route, Router } from "react-router";
 import history from "../history";
 import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";

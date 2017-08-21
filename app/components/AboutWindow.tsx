@@ -13,16 +13,6 @@ export class AboutWindow extends React.Component<any, any> {
     });
   }
 
-  componentDidMount() {
-    lang.on(LangApp.SETTINGS, this.change);
-  }
-
-  componentWillUnmount() {
-    lang.removeListener(LangApp.SETTINGS, this.change);
-  }
-
-  change = () => this.setState({});
-
   send = () => {
     $.ajax({
       data: {
@@ -136,7 +126,7 @@ export class AboutWindow extends React.Component<any, any> {
                       <form onSubmit={this.validDatas} className="col s12">
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="username" id="username" type="text" onChange={ (evt) => this.setUserName(evt.target.value) }></input>
+                            <input ref="username" id="username" type="text" onChange={(evt) => this.setUserName(evt.target.value)}></input>
                             <label htmlFor="username">{lang.get_resource.About.username}</label>
                           </div>
                           <div className={"about-error-info " + errUser}>
@@ -146,7 +136,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="email" id="email" type="email" onChange={ (evt) => this.setEmail(evt.target.value) }></input>
+                            <input ref="email" id="email" type="email" onChange={(evt) => this.setEmail(evt.target.value)}></input>
                             <label htmlFor="email" >{lang.get_resource.About.email}</label>
                           </div>
                           <div className={"about-error-info " + errEmail}>
@@ -156,7 +146,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form message">
                           <div className="input-field col s12 mes-textarea">
-                            <textarea ref="message" id="message" className="materialize-textarea" onChange={(evt: any) => this.setMessage(evt.target.value) }></textarea>
+                            <textarea ref="message" id="message" className="materialize-textarea" onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
                             <label htmlFor="message">{lang.get_resource.About.message}</label>
                           </div>
                           <div className={"about-error-info " + errMessage}>

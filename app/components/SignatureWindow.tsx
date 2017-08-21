@@ -5,6 +5,7 @@ import { sign } from "../module/sign_app";
 import * as native from "../native";
 import * as signs from "../trusted/sign";
 import { utils } from "../utils";
+import { mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
@@ -224,67 +225,65 @@ class SignatureWindow extends React.Component<any, any> {
   }
 
   verifySign() {
-    if (checkFiles("verify")) {
-      let files = sign.get_files_for_sign;
-      let pathes = files.slice(0);
-      let res = false;
-      let sign_files_info = sign.get_sign_info;
-      let status: string;
-      let cms: trusted.cms.SignedData;
+    const { files } = this.props;
+    let pathes = files.slice(0);
+    let res = false;
+    let sign_files_info = sign.get_sign_info;
+    let status: string;
+    let cms: trusted.cms.SignedData;
 
-      pathes.forEach(function (path: any, i: number) {
-        if (!(cms = signs.loadSign(path.path))) {
+    pathes.forEach(function (path: any, i: number) {
+      if (!(cms = signs.loadSign(path.fullpath))) {
+        return;
+      }
+
+      if (cms.isDetached()) {
+        if (!(cms = signs.setDetachedContent(cms, path.fullpath))) {
           return;
         }
-
-        if (cms.isDetached()) {
-          if (!(cms = signs.setDetachedContent(cms, path.path))) {
-            return;
-          }
-        }
-
-        res = signs.verifySign(cms);
-        status = res ? "status_ok" : "status_error";
-
-        let sign_info = signs.getSignPropertys(cms);
-
-        if (sign_info) {
-          for (let j = 0; j < sign_info.length; j++) {
-            if (!sign_info[j].status_verify) {
-              status = "status_error";
-              res = false;
-            }
-          }
-        } else {
-          res = false;
-        }
-
-        pathes[i].verify_status = status;
-
-        let count = 0;
-        for (let j = 0; j < sign_files_info.length; j++) {
-          if (sign_files_info[j].key === pathes[i].key) {
-            count = 1;
-          }
-        }
-        if (count === 0) {
-          sign_files_info.push({ name: pathes[i].name, path: pathes[i].path, key: pathes[i].key, info: sign_info });
-        } else if (count === 1) {
-          sign_files_info[i].info = sign_info;
-        }
-      });
-      if (files.length === 1) {
-        sign.set_sign_info_active = sign_files_info[files[0].key];
       }
-      sign.set_sign_info = sign_files_info;
-      sign.set_files_for_sign = pathes;
-      if (res) {
-        $(".toast-verify_sign_ok").remove();
-        Materialize.toast(lang.get_resource.Sign.verify_sign_ok, 2000, "toast-verify_sign_ok");
+
+      res = signs.verifySign(cms);
+      status = res ? "status_ok" : "status_error";
+
+      let sign_info = signs.getSignPropertys(cms);
+
+      if (sign_info) {
+        for (let j = 0; j < sign_info.length; j++) {
+          if (!sign_info[j].status_verify) {
+            status = "status_error";
+            res = false;
+          }
+        }
       } else {
-        $(".toast-verify_sign_founds_errors").remove();
-        Materialize.toast(lang.get_resource.Sign.verify_sign_founds_errors, 2000, "toast-verify_sign_founds_errors");
+        res = false;
       }
+
+      pathes[i].verify_status = status;
+
+      let count = 0;
+      for (let j = 0; j < sign_files_info.length; j++) {
+        if (sign_files_info[j].key === pathes[i].id) {
+          count = 1;
+        }
+      }
+      if (count === 0) {
+        sign_files_info.push({ name: pathes[i].name, path: pathes[i].path, key: pathes[i].id, info: sign_info });
+      } else if (count === 1) {
+        sign_files_info[i].info = sign_info;
+      }
+    });
+    if (files.length === 1) {
+      sign.set_sign_info_active = sign_files_info[files[0].id];
+    }
+    sign.set_sign_info = sign_files_info;
+    sign.set_files_for_sign = pathes;
+    if (res) {
+      $(".toast-verify_sign_ok").remove();
+      Materialize.toast(lang.get_resource.Sign.verify_sign_ok, 2000, "toast-verify_sign_ok");
+    } else {
+      $(".toast-verify_sign_founds_errors").remove();
+      Materialize.toast(lang.get_resource.Sign.verify_sign_founds_errors, 2000, "toast-verify_sign_founds_errors");
     }
   }
 
@@ -324,6 +323,7 @@ class SignatureWindow extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
+    files: mapToArr(state.files.entities),
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
 })(SignatureWindow);

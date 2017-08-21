@@ -11,7 +11,7 @@ class BlockNotElements extends React.Component<IBlockNotElementsProps, any> {
   }
 
   render() {
-    const {name, title} = this.props;
+    const { name, title } = this.props;
     return <div className={"cert-item " + name}>
       <div className="add-file-item-text">{title}</div>
       <i className="material-icons large fullscreen">block</i>
