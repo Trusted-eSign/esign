@@ -3,13 +3,13 @@ import { ACTIVE_FILE, DELETE_FILE, SELECT_FILE } from "../constants";
 import { arrayToMap } from "../utils";
 
 const FileModel = Record({
-  id: null,
-  filename: null,
-  lastModifiedDate: null,
-  fullpath: null,
-  extension: null,
-  verified: false,
   active: true,
+  extension: null,
+  filename: null,
+  fullpath: null,
+  id: null,
+  lastModifiedDate: null,
+  verified: false,
 });
 
 const DefaultReducerState = Record({
