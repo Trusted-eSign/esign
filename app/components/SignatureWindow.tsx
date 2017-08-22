@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { activeFile, deleteFile, selectFile, verifySignature } from "../AC";
+import { deleteFile, selectFile, verifySignature } from "../AC";
 import { lang, LangApp } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
@@ -237,4 +237,4 @@ export default connect((state) => {
     signatures: mapToArr(state.signatures.entities),
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { activeFile, deleteFile, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, selectFile, verifySignature })(SignatureWindow);

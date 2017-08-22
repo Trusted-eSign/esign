@@ -9,6 +9,11 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, a
   constructor(props: IEncodingTypeSelectorProps) {
     super(props);
   }
+
+  componentDidMount() {
+    $("select").material_select();
+  }
+
   render() {
     return <div className="row settings-item">
       <div className="col sign-set-encoding">{lang.get_resource.Settings.encoding}</div>

@@ -1,5 +1,7 @@
 import {
-  ACTIVE_FILE, CHANGE_SEARCH_VALUE, DELETE_FILE,
+  ACTIVE_FILE, CHANGE_SEARCH_VALUE, CHANGE_SIGNATURE_DETACHED,
+  CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
+  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
   FAIL, LOAD_ALL_CERTIFICATES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
@@ -132,5 +134,33 @@ export function verifySignature(fileId: string) {
       payload: { fileId, signaruteStatus, signatureInfo },
       type: VERIFY_SIGNATURE + SUCCESS,
     });
+  };
+}
+
+export function changeSignatureEncoding(encoding) {
+  return {
+    payload: { encoding },
+    type: CHANGE_SIGNATURE_ENCODING,
+  };
+}
+
+export function changeSignatureDetached(detached: boolean) {
+  return {
+    payload: { detached },
+    type: CHANGE_SIGNATURE_DETACHED,
+  };
+}
+
+export function changeSignatureTimestamp(timestamp: boolean) {
+  return {
+    payload: { timestamp },
+    type: CHANGE_SIGNATURE_TIMESTAMP,
+  };
+}
+
+export function changeSignatureOutfolder(outfolder: string) {
+  return {
+    payload: { outfolder },
+    type: CHANGE_SIGNATURE_OUTFOLDER,
   };
 }

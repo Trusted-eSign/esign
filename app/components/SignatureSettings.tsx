@@ -1,4 +1,9 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import {
+  changeSignatureDetached, changeSignatureEncoding,
+  changeSignatureOutfolder, changeSignatureTimestamp,
+} from "../AC";
 import { lang } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
@@ -11,30 +16,15 @@ const dialog = window.electron.remote.dialog;
 class SignatureSettings extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.changeSettings = this.changeSettings.bind(this);
-  }
-
-  componentDidMount() {
-    $("select").on("change", function(event: any) {
-      sign.set_settings_encoding = event.target.value;
-    });
-    $("select").material_select();
-    sign.on(SignApp.SETTINGS_CHANGE, this.changeSettings);
-  }
-
-  componentWillUnmount() {
-    sign.removeListener(SignApp.SETTINGS_CHANGE, this.changeSettings);
-  }
-
-  changeSettings() {
-    this.setState({});
   }
 
   addDirect() {
+    const { changeSignatureOutfolder } = this.props;
+
     if (!window.framework_NW) {
       const directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
       if (directory) {
-        sign.set_settings_directory = directory[0];
+        changeSignatureOutfolder(directory[0]);
       }
     } else {
       const clickEvent = document.createEvent("MouseEvents");
@@ -43,24 +33,40 @@ class SignatureSettings extends React.Component<any, any> {
     }
   }
 
+  handleDetachedClick = () => {
+    const { changeSignatureDetached, settings } = this.props;
+    changeSignatureDetached(!settings.detached);
+  }
+
+  handleTimestampClick = () => {
+    const { changeSignatureTimestamp, settings } = this.props;
+    changeSignatureTimestamp(!settings.timestamp);
+  }
+
+  handleOutfolderChange = ev => {
+    console.log("ev.target.value", ev.target.value);
+    ev.preventDefault();
+    const { changeSignatureOutfolder } = this.props;
+    changeSignatureOutfolder(ev.target.value);
+  }
+
   render() {
+    const { settings } = this.props;
+
     return (
       <div id="sign-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={lang.get_resource.Sign.sign_setting} />
         <div className="settings-content">
-          <EncodingTypeSelector EncodingValue={sign.get_settings_encoding} />
-          <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_detached = !sign.get_settings_detached; }}
-            isChecked={sign.get_settings_detached}
+          <EncodingTypeSelector EncodingValue={settings.encoding} />
+          <CheckBoxWithLabel onClickCheckBox={this.handleDetachedClick}
+            isChecked={settings.detached}
             elementId="detached-sign"
             title={lang.get_resource.Sign.sign_detached} />
-          <CheckBoxWithLabel onClickCheckBox={() => { sign.set_settings_add_time = !sign.get_settings_add_time; }}
-            isChecked={sign.get_settings_add_time}
+          <CheckBoxWithLabel onClickCheckBox={this.handleTimestampClick}
+            isChecked={settings.timestamp}
             elementId="sign-time"
             title={lang.get_resource.Sign.sign_time} />
-          <SelectFolder directory={sign.get_settings_directory} viewDirect={
-            function(event: any) {
-              sign.set_settings_directory = event.target.value;
-            }}
+          <SelectFolder directory={settings.outfolder} viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
         </div>
       </div>
@@ -68,4 +74,6 @@ class SignatureSettings extends React.Component<any, any> {
   }
 }
 
-export default SignatureSettings;
+export default connect((state) => ({
+  settings: state.settings.sign,
+}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp })(SignatureSettings)
