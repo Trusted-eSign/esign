@@ -2,9 +2,8 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, selectFile, verifySignature } from "../AC";
 import { lang, LangApp } from "../module/global_app";
-import { sign } from "../module/sign_app";
 import * as native from "../native";
-import {activeFilesSelector} from "../selectors";
+import { activeFilesSelector } from "../selectors";
 import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import { mapToArr } from "../utils";
@@ -37,7 +36,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   signed = () => {
-    const { files, signer, deleteFile, selectFile } = this.props;
+    const { files, settings, signer, deleteFile, selectFile } = this.props;
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -49,7 +48,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
-      const folderOut = sign.get_settings_directory;
+      const folderOut = settings.outfolder;
       let res = true;
       let format = trusted.DataFormat.PEM;
 
@@ -61,15 +60,15 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         }
       }
 
-      if (sign.get_settings_detached) {
+      if (settings.detached) {
         policies.push("detached");
       }
 
-      if (sign.get_settings_add_time) {
+      if (settings.timestamp) {
         policies.splice(0, 1);
       }
 
-      if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
+      if (settings.encoding !== lang.get_resource.Settings.BASE) {
         format = trusted.DataFormat.DER;
       }
 
@@ -94,7 +93,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   resign = () => {
-    const { files, signer, deleteFile, selectFile } = this.props;
+    const { files, settings, signer, deleteFile, selectFile } = this.props;
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -106,7 +105,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
-      const folderOut = sign.get_settings_directory;
+      const folderOut = settings.outfolder;
       let format = trusted.DataFormat.PEM;
       let res = true;
 
@@ -118,11 +117,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         }
       }
 
-      if (sign.get_settings_add_time) {
+      if (settings.timestamp) {
         policies.splice(0, 1);
       }
 
-      if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
+      if (settings.encoding !== lang.get_resource.Settings.BASE) {
         format = trusted.DataFormat.DER;
       }
 
@@ -147,10 +146,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   unSign = () => {
-    const { files, signer, deleteFile, selectFile } = this.props;
+    const { files, settings, deleteFile, selectFile } = this.props;
 
     if (files.length > 0) {
-      const folderOut = sign.get_settings_directory;
+      const folderOut = settings.outfolder;
       let res = true;
 
       files.forEach((file) => {
@@ -233,7 +232,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
 export default connect((state) => {
   return {
-    files: activeFilesSelector(state, {active: true}),
+    files: activeFilesSelector(state, { active: true }),
+    settings: state.settings.sign,
     signatures: mapToArr(state.signatures.entities),
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
