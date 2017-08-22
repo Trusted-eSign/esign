@@ -44,7 +44,6 @@ class SignatureSettings extends React.Component<any, any> {
   }
 
   handleOutfolderChange = ev => {
-    console.log("ev.target.value", ev.target.value);
     ev.preventDefault();
     const { changeSignatureOutfolder } = this.props;
     changeSignatureOutfolder(ev.target.value);
@@ -76,4 +75,4 @@ class SignatureSettings extends React.Component<any, any> {
 
 export default connect((state) => ({
   settings: state.settings.sign,
-}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp })(SignatureSettings)
+}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp })(SignatureSettings);
