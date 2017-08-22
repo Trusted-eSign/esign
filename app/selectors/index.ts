@@ -3,9 +3,13 @@ import { mapToArr } from "../utils";
 
 export const certificatesGetter = (state) => state.certificates.entities;
 export const filtersGetter = (state) => state.filters;
+export const filesGetter = (state) => state.files.entities;
 export const idGetter = (state, props) => props.id;
+export const operationGetter = (state) => state.operation;
 
-export const filteredCertificatesSelector = createSelector(certificatesGetter, filtersGetter, (certificates, filters) => {
+const activeGetter = (state, props) => props.active;
+
+export const filteredCertificatesSelector = createSelector(certificatesGetter, filtersGetter, operationGetter, (certificates, filters, operation) => {
   const { searchValue } = filters;
   const search = searchValue.toLowerCase();
 
@@ -20,5 +24,11 @@ export const filteredCertificatesSelector = createSelector(certificatesGetter, f
       certificate.organizationName.toLowerCase().match(search) ||
       certificate.signatureAlgorithm.toLowerCase().match(search)
     );
+  });
+});
+
+export const activeFilesSelector = createSelector(filesGetter, activeGetter, (files, active) => {
+  return mapToArr(files).filter((file) => {
+    return file.active === active;
   });
 });

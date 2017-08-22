@@ -1,10 +1,12 @@
 import {
   ACTIVE_FILE, CHANGE_SEARCH_VALUE, DELETE_FILE,
-  LOAD_ALL_CERTIFICATES, SELECT_FILE, SELECT_SIGNER_CERTIFICATE,
-  START, SUCCESS, VERIFY_CERTIFICATE,
+  FAIL, LOAD_ALL_CERTIFICATES, SELECT_FILE,
+  SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
+  VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { certVerify } from "../module/global_app";
 import * as native from "../native";
+import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
 import { extFile } from "../utils";
 
@@ -92,5 +94,43 @@ export function deleteFile(fileId: string) {
   return {
     payload: { fileId },
     type: DELETE_FILE,
+  };
+}
+
+export function verifySignature(fileId: string) {
+  return (dispatch, getState) => {
+    const { files } = getState();
+    const file = files.getIn(["entities", fileId]);
+    let signaruteStatus = false;
+    let signatureInfo;
+    let cms: trusted.cms.SignedData;
+
+    try {
+      cms = signs.loadSign(file.fullpath);
+
+      if (cms.isDetached()) {
+        if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
+          throw("err");
+        }
+      }
+
+      signaruteStatus = signs.verifySign(cms);
+      signatureInfo = signs.getSignPropertys(cms);
+      signatureInfo = signatureInfo.map((info) => {
+        return {...info, fileId};
+      });
+
+    } catch (error) {
+      dispatch({
+        payload: {error, fileId},
+        type: VERIFY_SIGNATURE + FAIL,
+    });
+    }
+
+    dispatch({
+      generateId: true,
+      payload: { fileId, signaruteStatus, signatureInfo },
+      type: VERIFY_SIGNATURE + SUCCESS,
+    });
   };
 }

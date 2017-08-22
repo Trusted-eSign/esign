@@ -1,6 +1,10 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { sign, SignApp } from "../module/sign_app";
+import {activeFilesSelector} from "../selectors";
+import { filteredCertificatesSelector } from "../selectors";
+import { mapToArr } from "../utils";
 
 interface IBtnsForOperationProps {
   operation: string;
@@ -12,6 +16,16 @@ interface IBtnsForOperationProps {
   operation_resign?: () => void;
   btn_unsign?: string;
   operation_unsign?: () => void;
+  files: Array<{
+    id: string,
+    filename: string,
+    lastModifiedDate: Date,
+    fullpath: string,
+    extension: string,
+    verified: boolean,
+    active: boolean,
+  }>;
+  signer: string;
 }
 
 class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
@@ -39,63 +53,67 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   }
 
   render() {
-    let files = this.props.operation === "sign" ? sign.get_files : encrypt.get_files;
-    let active = files.length > 0 ? "active" : "";
-    let files_operation = this.props.operation === "sign" ? sign.get_files_for_sign : encrypt.get_files_for_encrypt;
-    let certs_operation: any = this.props.operation === "sign" ? sign.get_sign_certificate : encrypt.get_certificates_for_encrypt;
-    let disabled_first = "";
-    let disabled_second = "";
-    let disabled_unsign = "disabled";
+    const { files, signer } = this.props;
+    const active = files.length > 0 ? "active" : "";
+    const certsOperation: any = this.props.operation === "sign" ? signer : encrypt.get_certificates_for_encrypt;
+    let disabledFirst = "";
+    let disabledSecond = "";
+    let disabledUnsign = "disabled";
     let j = 0;
-    if (files_operation.length > 0) {
-      if (this.props.operation === "encrypt" && certs_operation.length > 0) {
-        disabled_first = "";
-      } else if (this.props.operation === "sign" && certs_operation) {
-        disabled_first = "";
+    if (files.length > 0) {
+      if (this.props.operation === "encrypt" && certsOperation.length > 0) {
+        disabledFirst = "";
+      } else if (this.props.operation === "sign" && certsOperation) {
+        disabledFirst = "";
       } else {
-        disabled_first = "disabled";
+        disabledFirst = "disabled";
       }
-      for (let i = 0; i < files_operation.length; i++) {
-        if (this.props.operation === "sign" && files_operation[i].path.split(".").pop() === "sig") {
+      for (const file of files) {
+        if (this.props.operation === "sign" && file.fullpath.split(".").pop() === "sig") {
           j++;
-        } else if (this.props.operation === "encrypt" && files_operation[i].path.split(".").pop() === "enc") {
+        } else if (this.props.operation === "encrypt" && file.fullpath.split(".").pop() === "enc") {
           j++;
-          disabled_first = "disabled";
+          disabledFirst = "disabled";
         }
       }
-      if (this.props.operation === "encrypt" && j === files_operation.length) {
-        disabled_second = "";
-      } else if (this.props.operation === "sign" && j === files_operation.length) {
-        disabled_second = "";
-        disabled_unsign = "";
+      if (this.props.operation === "encrypt" && j === files.length) {
+        disabledSecond = "";
+      } else if (this.props.operation === "sign" && j === files.length) {
+        disabledSecond = "";
+        disabledUnsign = "";
       } else {
-        if (this.props.operation === "sign" && certs_operation) {
-          j > 0 ? disabled_first = "disabled" : disabled_first = "";
+        if (this.props.operation === "sign" && certsOperation) {
+          j > 0 ? disabledFirst = "disabled" : disabledFirst = "";
         }
 
-        disabled_second = "disabled";
+        disabledSecond = "disabled";
       }
     } else {
-      disabled_first = "disabled";
-      disabled_second = "disabled";
+      disabledFirst = "disabled";
+      disabledSecond = "disabled";
     }
-    if (!disabled_unsign) {
+    if (!disabledUnsign) {
       return (
         <div className={"btns-for-operation " + active}>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabled_first} onClick={this.props.operation_resign.bind(this)}>{this.props.btn_resign}</a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabled_second} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabled_unsign} onClick={this.props.operation_unsign.bind(this)}>{this.props.btn_unsign}</a>
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledFirst} onClick={this.props.operation_resign.bind(this)}>{this.props.btn_resign}</a>
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSecond} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.operation_unsign.bind(this)}>{this.props.btn_unsign}</a>
         </div>
       );
     } else {
       return (
         <div className={"btns-for-operation " + active}>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabled_first} onClick={this.props.operation_first.bind(this)}>{this.props.btn_name_first}</a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabled_second} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledFirst} onClick={this.props.operation_first.bind(this)}>{this.props.btn_name_first}</a>
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSecond} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
         </div>
       );
     }
   }
 }
 
-export default BtnsForOperation;
+export default connect((state) => {
+  return {
+    files: activeFilesSelector(state, {active: true}),
+    signer: state.certificates.getIn(["entities", state.signers.signer]),
+  };
+})(BtnsForOperation);

@@ -1,49 +1,45 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
+import { activeFilesSelector } from "../selectors";
+import { mapToArr } from "../utils";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import SignatureStatus from "./SignatureStatus";
 
 class SignatureInfoBlock extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.changeSettings = this.changeSettings.bind(this);
-  }
-
-  componentDidMount() {
-    sign.on(SignApp.SIGN_INFO_CHANGE, this.changeSettings);
-  }
-
-  componentWillUnmount() {
-    sign.removeListener(SignApp.SIGN_INFO_CHANGE, this.changeSettings);
-  }
-
-  changeSettings() {
-    this.setState({});
-  }
-
-  removeSignInfo() {
-    sign.set_sign_info_active = null;
   }
 
   render() {
-    const self = this;
-    const signInfo = sign.get_sign_info_active;
-    const fileName = signInfo && signInfo.name ? signInfo.name : "";
-    const statusVerify = this.props.signed_data && this.props.signed_data.status_verify ? "status_ok" : "";
-    const signsList = signInfo && signInfo.info ? signInfo.info : [];
-    const hiddenSignInfo = signInfo && !sign.get_sign_certs_info ? "" : "hidden";
-    const hiddenSignCertInfo = sign.get_sign_certs_info ? "" : "hidden";
+    const { files, signatures } = this.props;
+    let elements = null;
+    let file = null;
 
-    const elements = signsList.map(function(cert: any, index: number) {
-      return <SignatureStatus key={index} signed_data={cert} />;
-    });
+    if (files.length === 1 && signatures.length ) {
+      file = files[0];
+
+      const signs = signatures.filter((signature) => {
+        return signature.fileId === file.id;
+      });
+
+      if (!signs.length) {
+        return null;
+      }
+
+      elements = signs.map((signature) => {
+        return <SignatureStatus key={signature.id} signed_data={signature} />;
+      });
+    } else {
+      return null;
+    }
 
     return (
-      <div className={"col s6 m6 l6 sign-info content-item-height " + hiddenSignInfo}>
+      <div className={"col s6 m6 l6 sign-info content-item-height "}>
         <div className="file-content-height">
           <div className="content-wrapper z-depth-1">
-            <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Sign.sign_info} second_text={fileName} />
+            <HeaderWorkspaceBlock icon="arrow_back" text={lang.get_resource.Sign.sign_info} second_text={file.filename} />
             <div className="sign-info-content">
               <div className={"add-cert-collection collection "}>
                 {elements}
@@ -56,4 +52,9 @@ class SignatureInfoBlock extends React.Component<any, any> {
   }
 }
 
-export default SignatureInfoBlock;
+export default connect((state) => {
+  return {
+    files: activeFilesSelector(state, { active: true }),
+    signatures: mapToArr(state.signatures.entities),
+  };
+})(SignatureInfoBlock);

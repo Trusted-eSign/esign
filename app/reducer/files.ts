@@ -1,5 +1,5 @@
 import { Map, OrderedMap, Record } from "immutable";
-import { ACTIVE_FILE, DELETE_FILE, SELECT_FILE } from "../constants";
+import { ACTIVE_FILE, DELETE_FILE, SELECT_FILE, SUCCESS, VERIFY_SIGNATURE } from "../constants";
 import { arrayToMap } from "../utils";
 
 const FileModel = Record({
@@ -9,7 +9,6 @@ const FileModel = Record({
   fullpath: null,
   id: null,
   lastModifiedDate: null,
-  verified: false,
 });
 
 const DefaultReducerState = Record({

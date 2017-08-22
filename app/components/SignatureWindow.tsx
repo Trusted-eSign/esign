@@ -1,8 +1,10 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { checkFiles, extFile, lang, LangApp } from "../module/global_app";
+import { activeFile, deleteFile, selectFile, verifySignature } from "../AC";
+import { lang, LangApp } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
+import {activeFilesSelector} from "../selectors";
 import * as signs from "../trusted/sign";
 import { utils } from "../utils";
 import { mapToArr } from "../utils";
@@ -14,49 +16,42 @@ import FileSelector from "./FileSelector";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 import SignerCertificateInfo from "./SignerCertificateInfo";
-//declare let $: any;
 
 const dialog = window.electron.remote.dialog;
 
-class SignatureWindow extends React.Component<any, any> {
-  constructor(props: any) {
+interface ISignatureWindowProps {
+  files: Array<{
+    id: string,
+    filename: string,
+    lastModifiedDate: Date,
+    fullpath: string,
+    extension: string,
+    verified: boolean,
+    active: boolean,
+  }>;
+}
+
+class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
+  constructor(props: ISignatureWindowProps) {
     super(props);
-    this.change = this.change.bind(this);
   }
 
-  componentDidMount() {
-    lang.on(LangApp.SETTINGS, this.change);
-  }
+  signed = () => {
+    const { files, signer, deleteFile, selectFile } = this.props;
 
-  componentWillUnmount() {
-    lang.removeListener(LangApp.SETTINGS, this.change);
-  }
-
-  change() {
-    this.setState({});
-  }
-
-  signed() {
-    const { signer } = this.props;
-
-    if (checkFiles("sign")) {
-      let key = window.PKISTORE.findKey(signer);
-      let res = true;
-
+    if (files.length > 0) {
+      const key = window.PKISTORE.findKey(signer);
       if (!key) {
         $(".toast-key_not_found").remove();
         Materialize.toast(lang.get_resource.Sign.key_not_found, 2000, "toast-key_not_found");
         return;
       }
 
-      let cert = window.PKISTORE.getPkiObject(signer);
-      let files = sign.get_files_for_sign;
-      let pathes = files.slice(0);
-
-      let policies = ["noAttributes"];
-
+      const cert = window.PKISTORE.getPkiObject(signer);
+      const policies = ["noAttributes"];
+      const folderOut = sign.get_settings_directory;
+      let res = true;
       let format = trusted.DataFormat.PEM;
-      let folderOut = sign.get_settings_directory;
 
       if (folderOut.length > 0) {
         if (!utils.dirExists(folderOut)) {
@@ -77,33 +72,18 @@ class SignatureWindow extends React.Component<any, any> {
       if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
         format = trusted.DataFormat.DER;
       }
-      pathes.forEach(function (uri: any, i: any) {
-        let newPath = signs.signFile(uri.path, cert, key, policies, format, folderOut);
+
+      files.forEach((file) => {
+        const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
-          let birthtime = native.fs.statSync(newPath).birthtime;
-          pathes[i].path = newPath;
-          pathes[i].date = birthtime;
-          pathes[i].name = native.path.basename(pathes[i].path);
-          pathes[i].ext = extFile(pathes[i].name);
-          pathes[i].verify_status = "default_status";
+          deleteFile(file.id);
+          selectFile(newPath);
         } else {
           res = false;
         }
       });
-      if (res) {
-        let sign_info = sign.get_sign_info;
-        let del_obj: any = [];
-        for (let i = 0; i < pathes.length; i++) {
-          for (let j = 0; j < sign_info.length; j++) {
-            if (sign_info[j].key === pathes[i].key) {
-              sign_info.splice(j, 1);
-            }
-          }
-        }
-        sign.set_files_for_sign = pathes;
-        sign.set_sign_info_active = null;
-        sign.set_sign_certs_info = null;
 
+      if (res) {
         $(".toast-files_signed").remove();
         Materialize.toast(lang.get_resource.Sign.files_signed, 2000, "toast-files_signed");
       } else {
@@ -113,28 +93,22 @@ class SignatureWindow extends React.Component<any, any> {
     }
   }
 
-  resign() {
-    const { signer } = this.props;
+  resign = () => {
+    const { files, signer, deleteFile, selectFile } = this.props;
 
-    if (checkFiles("sign")) {
-      let key = window.PKISTORE.findKey(signer);
-      let res = true;
-      let cms: trusted.cms.SignedData;
-
+    if (files.length > 0) {
+      const key = window.PKISTORE.findKey(signer);
       if (!key) {
         $(".toast-key_not_found").remove();
         Materialize.toast(lang.get_resource.Sign.key_not_found, 2000, "toast-key_not_found");
         return;
       }
 
-      let cert = window.PKISTORE.getPkiObject(signer);
-      let files = sign.get_files_for_sign;
-      let pathes = files.slice(0);
-
-      let policies = ["noAttributes"];
-
+      const cert = window.PKISTORE.getPkiObject(signer);
+      const policies = ["noAttributes"];
+      const folderOut = sign.get_settings_directory;
       let format = trusted.DataFormat.PEM;
-      let folderOut = sign.get_settings_directory;
+      let res = true;
 
       if (folderOut.length > 0) {
         if (!utils.dirExists(folderOut)) {
@@ -151,34 +125,18 @@ class SignatureWindow extends React.Component<any, any> {
       if (sign.get_settings_encoding !== lang.get_resource.Settings.BASE) {
         format = trusted.DataFormat.DER;
       }
-      pathes.forEach(function (uri: any, i: any) {
-        let newPath = signs.resignFile(uri.path, cert, key, policies, format, folderOut);
+
+      files.forEach((file) => {
+        const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
-          let birthtime = native.fs.statSync(newPath).birthtime;
-          pathes[i].path = newPath;
-          pathes[i].date = birthtime;
-          pathes[i].name = native.path.basename(pathes[i].path);
-          pathes[i].ext = extFile(pathes[i].name);
-          pathes[i].verify_status = "default_status";
+          deleteFile(file.id);
+          selectFile(newPath);
         } else {
           res = false;
         }
       });
 
       if (res) {
-        let sign_info = sign.get_sign_info;
-        let del_obj: any = [];
-        for (let i = 0; i < pathes.length; i++) {
-          for (let j = 0; j < sign_info.length; j++) {
-            if (sign_info[j].key === pathes[i].key) {
-              sign_info.splice(j, 1);
-            }
-          }
-        }
-        sign.set_files_for_sign = pathes;
-        sign.set_sign_info_active = null;
-        sign.set_sign_certs_info = null;
-
         $(".toast-files_resigned").remove();
         Materialize.toast(lang.get_resource.Sign.files_resigned, 2000, "toast-files_resigned");
       } else {
@@ -188,33 +146,24 @@ class SignatureWindow extends React.Component<any, any> {
     }
   }
 
-  unSign() {
-    if (checkFiles("sign")) {
-      let files = sign.get_files_for_sign;
-      let pathes = files.slice(0);
-      let folderOut = sign.get_settings_directory;
+  unSign = () => {
+    const { files, signer, deleteFile, selectFile } = this.props;
+
+    if (files.length > 0) {
+      const folderOut = sign.get_settings_directory;
       let res = true;
 
-      pathes.forEach(function (path: any, i: any) {
-        let newPath = signs.unSign(path.path, folderOut);
-        let date = new Date();
+      files.forEach((file) => {
+        const newPath = signs.unSign(file.fullpath, folderOut);
         if (newPath) {
-          pathes[i].path = newPath;
-          pathes[i].date = date;
-          pathes[i].name = native.path.basename(pathes[i].path);
-          pathes[i].ext = extFile(pathes[i].name);
-          if ($(".tooltipped")[path.key]) {
-            $(".tooltipped")[path.key].className = "tooltipped";
-          }
-          pathes[i].verify_status = "default_status";
+          deleteFile(file.id);
+          selectFile(newPath);
         } else {
           res = false;
         }
       });
-      sign.set_files_for_sign = pathes;
+
       if (res) {
-        sign.set_sign_info_active = null;
-        sign.set_sign_certs_info = null;
         $(".toast-files_unsigned_ok").remove();
         Materialize.toast(lang.get_resource.Sign.files_unsigned_ok, 2000, "toast-files_unsigned_ok");
       } else {
@@ -224,60 +173,21 @@ class SignatureWindow extends React.Component<any, any> {
     }
   }
 
-  verifySign() {
-    const { files } = this.props;
-    let pathes = files.slice(0);
-    let res = false;
-    let sign_files_info = sign.get_sign_info;
-    let status: string;
-    let cms: trusted.cms.SignedData;
+  verifySign = () => {
+    const { files, verifySignature, signatures } = this.props;
 
-    pathes.forEach(function (path: any, i: number) {
-      if (!(cms = signs.loadSign(path.fullpath))) {
-        return;
-      }
+    let res = true;
 
-      if (cms.isDetached()) {
-        if (!(cms = signs.setDetachedContent(cms, path.fullpath))) {
-          return;
-        }
-      }
+    files.forEach((file) => {
+      verifySignature(file.id);
+    });
 
-      res = signs.verifySign(cms);
-      status = res ? "status_ok" : "status_error";
-
-      let sign_info = signs.getSignPropertys(cms);
-
-      if (sign_info) {
-        for (let j = 0; j < sign_info.length; j++) {
-          if (!sign_info[j].status_verify) {
-            status = "status_error";
-            res = false;
-          }
-        }
-      } else {
+    signatures.forEach((signature) => {
+      if (!signature.status_verify) {
         res = false;
       }
-
-      pathes[i].verify_status = status;
-
-      let count = 0;
-      for (let j = 0; j < sign_files_info.length; j++) {
-        if (sign_files_info[j].key === pathes[i].id) {
-          count = 1;
-        }
-      }
-      if (count === 0) {
-        sign_files_info.push({ name: pathes[i].name, path: pathes[i].path, key: pathes[i].id, info: sign_info });
-      } else if (count === 1) {
-        sign_files_info[i].info = sign_info;
-      }
     });
-    if (files.length === 1) {
-      sign.set_sign_info_active = sign_files_info[files[0].id];
-    }
-    sign.set_sign_info = sign_files_info;
-    sign.set_files_for_sign = pathes;
+
     if (res) {
       $(".toast-verify_sign_ok").remove();
       Materialize.toast(lang.get_resource.Sign.verify_sign_ok, 2000, "toast-verify_sign_ok");
@@ -308,10 +218,10 @@ class SignatureWindow extends React.Component<any, any> {
               btn_name_second={lang.get_resource.Sign.verify}
               btn_resign={lang.get_resource.Sign.resign}
               btn_unsign={lang.get_resource.Sign.unsign}
-              operation_first={this.signed.bind(this)}
-              operation_second={this.verifySign.bind(this)}
-              operation_unsign={this.unSign.bind(this)}
-              operation_resign={this.resign.bind(this)}
+              operation_first={this.signed}
+              operation_second={this.verifySign}
+              operation_unsign={this.unSign}
+              operation_resign={this.resign}
               operation="sign" />
             <FileSelector operation="sign" />
           </div>
@@ -323,7 +233,8 @@ class SignatureWindow extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    files: mapToArr(state.files.entities),
+    files: activeFilesSelector(state, {active: true}),
+    signatures: mapToArr(state.signatures.entities),
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-})(SignatureWindow);
+}, { activeFile, deleteFile, selectFile, verifySignature })(SignatureWindow);

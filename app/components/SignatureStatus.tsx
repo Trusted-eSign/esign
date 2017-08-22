@@ -19,11 +19,12 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
 
   render() {
     const { signed_data } = this.props;
+
     let self = this;
     let status = "";
     let icon = "";
 
-    if (this.props.signed_data.status_verify === true) {
+    if (signed_data.status_verify === true) {
       status = lang.get_resource.Sign.sign_ok;
       icon = "status_cert_ok_icon";
     } else {
