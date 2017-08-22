@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { sign, SignApp } from "../module/sign_app";
 import {activeFilesSelector} from "../selectors";
 import { filteredCertificatesSelector } from "../selectors";
 import { mapToArr } from "../utils";
@@ -31,25 +30,6 @@ interface IBtnsForOperationProps {
 class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   constructor(props: IBtnsForOperationProps) {
     super(props);
-    this.change = this.change.bind(this);
-  }
-
-  componentDidMount() {
-    encrypt.on(EncryptApp.FILES_CHANGE, this.change);
-    encrypt.on(EncryptApp.SETTINGS, this.change);
-    sign.on(SignApp.FILES_CHANGE, this.change);
-    sign.on(SignApp.SETTINGS, this.change);
-  }
-
-  componentWillUnmount() {
-    encrypt.removeListener(EncryptApp.FILES_CHANGE, this.change);
-    encrypt.removeListener(EncryptApp.SETTINGS, this.change);
-    sign.removeListener(SignApp.FILES_CHANGE, this.change);
-    sign.removeListener(SignApp.SETTINGS, this.change);
-  }
-
-  change() {
-    this.setState({});
   }
 
   render() {

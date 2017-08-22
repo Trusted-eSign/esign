@@ -3,7 +3,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, selectSignerCertificate } from "../AC";
 import { lang } from "../module/global_app";
-import { sign } from "../module/sign_app";
 import { filteredCertificatesSelector } from "../selectors";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";

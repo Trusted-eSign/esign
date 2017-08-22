@@ -4,7 +4,6 @@ import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { DialogBox, dlg, extFile, lang, SETTINGS_JSON } from "../module/global_app";
 import { getLicensePath, getStatus, lic, licenseParse } from "../module/license";
-import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { application } from "./certificate";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";

@@ -5,7 +5,6 @@ import {
   changeSignatureOutfolder, changeSignatureTimestamp,
 } from "../AC";
 import { lang } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";

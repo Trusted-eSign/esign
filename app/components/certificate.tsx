@@ -4,7 +4,6 @@ import SearchElement from "../Filters/SearchElement";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";

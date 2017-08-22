@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { lang, LangApp } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
 import { activeFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";

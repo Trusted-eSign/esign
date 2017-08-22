@@ -1,7 +1,7 @@
 import * as React from "react";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { lang, SETTINGS_JSON } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
+import { sign } from "../module/sign_app";
 import * as native from "../native";
 import SideMenu from "./SideMenu";
 
