@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
 import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { lang } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
+import { sign } from "../module/sign_app";
 
 //declare const $: any;
 

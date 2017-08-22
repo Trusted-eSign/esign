@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { activeFile, deleteFile, selectFile } from "../AC";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { dlg, lang } from "../module/global_app";
-import { sign, SignApp } from "../module/sign_app";
 import * as native from "../native";
 import { extFile, mapToArr } from "../utils";
 import { application } from "./certificate";

@@ -44,10 +44,12 @@ class SignerCertificateInfo extends React.Component<any, any> {
   }
 
   render() {
-    const hidden_sign_cert_info = sign.get_sign_certs_info ? "" : "hidden";
+    if (!sign.get_sign_certs_info) {
+      return null;
+    }
 
     return (
-      <div className={"content-tem sign-info " + hidden_sign_cert_info}>
+      <div className={"content-tem sign-info "}>
         <div className="col s6 m6 l6 content-item">
           <CertificateChain />
         </div>
