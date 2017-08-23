@@ -79,7 +79,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
           $("#add-cert").openModal();
         }} />
         <div className={"cert-contents " + NOT_ACTIVE_SIGNER}>
-          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} href="#add-cert">{lang.get_resource.Certificate.Select_Cert_Sign}</a>
+          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{lang.get_resource.Certificate.Select_Cert_Sign}</a>
         </div>
         {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
