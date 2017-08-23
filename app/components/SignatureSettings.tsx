@@ -4,6 +4,7 @@ import {
   changeSignatureDetached, changeSignatureEncoding,
   changeSignatureOutfolder, changeSignatureTimestamp,
 } from "../AC";
+import { BASE64, DER } from "../constants";
 import { lang } from "../module/global_app";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
@@ -48,6 +49,11 @@ class SignatureSettings extends React.Component<any, any> {
     changeSignatureOutfolder(ev.target.value);
   }
 
+  handleEncodingChange = (encoding: string) => {
+    const { changeSignatureEncoding } = this.props;
+    changeSignatureEncoding(encoding);
+  }
+
   render() {
     const { settings } = this.props;
 
@@ -55,7 +61,7 @@ class SignatureSettings extends React.Component<any, any> {
       <div id="sign-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={lang.get_resource.Sign.sign_setting} />
         <div className="settings-content">
-          <EncodingTypeSelector EncodingValue={settings.encoding} />
+          <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange}/>
           <CheckBoxWithLabel onClickCheckBox={this.handleDetachedClick}
             isChecked={settings.detached}
             elementId="detached-sign"

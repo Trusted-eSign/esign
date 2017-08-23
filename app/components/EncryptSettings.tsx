@@ -48,6 +48,11 @@ class EncryptSettings extends React.Component<any, any> {
     changeEncryptOutfolder(ev.target.value);
   }
 
+  handleEncodingChange = (encoding: string) => {
+    const { changeEncryptEncoding } = this.props;
+    changeEncryptEncoding(encoding);
+  }
+
   render() {
     const { settings } = this.props;
 
@@ -55,7 +60,7 @@ class EncryptSettings extends React.Component<any, any> {
       <div id="encode-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={lang.get_resource.Encrypt.encrypt_setting} />
         <div className="settings-content">
-          <EncodingTypeSelector EncodingValue={settings.encoding} />
+          <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange}/>
           <CheckBoxWithLabel onClickCheckBox={this.handleDeleteClick}
             isChecked={settings.delete}
             elementId="delete_files"
