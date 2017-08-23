@@ -1,5 +1,7 @@
 import {
-  ACTIVE_FILE, CHANGE_SEARCH_VALUE, CHANGE_SIGNATURE_DETACHED,
+  ACTIVE_FILE, CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
+  CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
+  CHANGE_ENCRYPT_OUTFOLDER, CHANGE_SEARCH_VALUE, CHANGE_SIGNATURE_DETACHED,
   CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
   FAIL, LOAD_ALL_CERTIFICATES, SELECT_FILE,
@@ -162,5 +164,33 @@ export function changeSignatureOutfolder(outfolder: string) {
   return {
     payload: { outfolder },
     type: CHANGE_SIGNATURE_OUTFOLDER,
+  };
+}
+
+export function changeEncryptEncoding(encoding: string) {
+  return {
+    payload: { encoding },
+    type: CHANGE_ECRYPT_ENCODING,
+  };
+}
+
+export function changeDeleteFilesAfterEncrypt(del: boolean) {
+  return {
+    payload: { del },
+    type: CHANGE_DELETE_FILES_AFTER_ENCRYPT,
+  };
+}
+
+export function changeArchiveFilesBeforeEncrypt(archive: boolean) {
+  return {
+    payload: { archive },
+    type: CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
+  };
+}
+
+export function changeEncryptOutfolder(outfolder: string) {
+  return {
+    payload: { outfolder },
+    type: CHANGE_ENCRYPT_OUTFOLDER,
   };
 }

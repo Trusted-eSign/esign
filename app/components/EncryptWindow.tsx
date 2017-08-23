@@ -1,7 +1,10 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { deleteFile, selectFile } from "../AC";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { checkFiles, extFile, lang, LangApp } from "../module/global_app";
+import { checkFiles, lang, LangApp } from "../module/global_app";
 import * as native from "../native";
+import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
@@ -9,34 +12,21 @@ import { application, CertComponentsForEncrypt } from "./certificate";
 import { Dialog } from "./components";
 import EncryptSettings from "./EncryptSettings";
 import FileSelector from "./FileSelector";
-//declare let $: any;
 
 const dialog = window.electron.remote.dialog;
 
 class EncryptWindow extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.change = this.change.bind(this);
   }
 
-  componentDidMount() {
-    lang.on(LangApp.SETTINGS, this.change);
-  }
+  encrypt = () => {
+    const { files, settings, deleteFile, selectFile } = this.props;
 
-  componentWillUnmount() {
-    lang.removeListener(LangApp.SETTINGS, this.change);
-  }
-
-  change() {
-    this.setState({});
-  }
-
-  encrypt() {
-    if (checkFiles("encrypt")) {
-      let certs = encrypt.get_certificates_for_encrypt;
-      let pathes = encrypt.get_files_for_encrypt;
+    if (files.length > 0) {
       let format = trusted.DataFormat.PEM;
-      let folderOut = encrypt.get_settings_directory;
+      let certs = encrypt.get_certificates_for_encrypt;
+      let folderOut = settings.outfolder;
       let policies = { deleteFiles: false, archiveFiles: false };
       let res = true;
 
@@ -47,14 +37,13 @@ class EncryptWindow extends React.Component<any, any> {
           return;
         }
       }
-      policies.deleteFiles = encrypt.get_settings_delete_files;
-      policies.archiveFiles = encrypt.get_settings_archive_files;
 
-      if (encrypt.get_settings_encoding !== lang.get_resource.Settings.BASE) {
+      policies.deleteFiles = settings.delete;
+      policies.archiveFiles = settings.archive;
+
+      if (settings.encoding !== lang.get_resource.Settings.BASE) {
         format = trusted.DataFormat.DER;
       }
-
-      let enc_files: any = [];
 
       if (policies.archiveFiles) {
         let outURI: string;
@@ -64,31 +53,25 @@ class EncryptWindow extends React.Component<any, any> {
           outURI = native.path.join(native.HOME_DIR, lang.get_resource.Encrypt.archive_name);
         }
 
-        let output = native.fs.createWriteStream(outURI);
-        let archive = window.archiver("zip");
+        const output = native.fs.createWriteStream(outURI);
+        const archive = window.archiver("zip");
 
-        output.on("close", function () {
+        output.on("close", () => {
           $(".toast-files_archived").remove();
           Materialize.toast(lang.get_resource.Encrypt.files_archived, 2000, "toast-files_archived");
 
           if (policies.deleteFiles) {
-            pathes.forEach(function (path: any) {
-              native.fs.unlinkSync(path.path);
+            files.forEach((file) => {
+              native.fs.unlinkSync(file.fullpath);
             });
           }
 
-          let newPath = encrypts.encryptFile(outURI, certs, policies, format, folderOut);
+          const newPath = encrypts.encryptFile(outURI, certs, policies, format, folderOut);
           if (newPath) {
-            let date = new Date();
-            if (pathes.length === 1) {
-              pathes[0].path = newPath;
-              pathes[0].date = date;
-              pathes[0].name = native.path.basename(pathes[0].path);
-              pathes[0].ext = extFile(pathes[0].name);
-              encrypt.set_files_for_encrypt = pathes;
-            } else {
-              application.emit("encrypt_archive", newPath, date);
-            }
+            files.forEach((file) => {
+              deleteFile(file.id);
+            });
+            selectFile(newPath);
           } else {
             res = false;
           }
@@ -102,27 +85,24 @@ class EncryptWindow extends React.Component<any, any> {
           }
         });
 
-        archive.on('error', function () {
+        archive.on("error", () => {
           $(".toast-files_archived_failed").remove();
           Materialize.toast(lang.get_resource.Encrypt.files_archived_failed, 2000, "toast-files_archived_failed");
         });
 
         archive.pipe(output);
 
-        pathes.forEach(function (path: any) {
-          archive.append(native.fs.createReadStream(path.path), { name: native.path.basename(path.path) });
+        files.forEach((file) => {
+          archive.append(native.fs.createReadStream(file.fullpath), { name: file.filename });
         });
 
         archive.finalize();
       } else {
-        pathes.forEach(function (path: any, i: any) {
-          let newPath = encrypts.encryptFile(path.path, certs, policies, format, folderOut);
+        files.forEach((file) => {
+          const newPath = encrypts.encryptFile(file.fullpath, certs, policies, format, folderOut);
           if (newPath) {
-            let birthtime = native.fs.statSync(newPath).birthtime;
-            pathes[i].path = newPath;
-            pathes[i].date = birthtime;
-            pathes[i].name = native.path.basename(pathes[i].path);
-            pathes[i].ext = extFile(pathes[i].name);
+            deleteFile(file.id);
+            selectFile(newPath);
           } else {
             res = false;
           }
@@ -135,31 +115,27 @@ class EncryptWindow extends React.Component<any, any> {
           $(".toast-files_encrypt_failed").remove();
           Materialize.toast(lang.get_resource.Encrypt.files_encrypt_failed, 2000, "toast-files_encrypt_failed");
         }
-
-        encrypt.set_files_for_encrypt = pathes;
       }
     }
   }
 
-  decrypt() {
-    if (checkFiles("decrypt")) {
-      let pathes = encrypt.get_files_for_encrypt;
-      let folderOut = encrypt.get_settings_directory;
+  decrypt = () => {
+    const { files, settings, deleteFile, selectFile } = this.props;
+
+    if (files.length > 0) {
+      const folderOut = settings.outfolder;
       let res = true;
 
-      pathes.forEach(function (path: any, i: any) {
-        let newPath = encrypts.decryptFile(path.path, folderOut);
-        let date = new Date();
+      files.forEach((file) => {
+        const newPath = encrypts.decryptFile(file.fullpath, folderOut);
         if (newPath) {
-          pathes[i].path = newPath;
-          pathes[i].date = date;
-          pathes[i].name = native.path.basename(pathes[i].path);
-          pathes[i].ext = extFile(pathes[i].name);
+          deleteFile(file.id);
+          selectFile(newPath);
         } else {
           res = false;
         }
       });
-      encrypt.set_files_for_encrypt = pathes;
+
       if (res) {
         $(".toast-files_decrypt").remove();
         Materialize.toast(lang.get_resource.Encrypt.files_decrypt, 2000, "toast-files_decrypt");
@@ -187,8 +163,8 @@ class EncryptWindow extends React.Component<any, any> {
             <BtnsForOperation
               btn_name_first={lang.get_resource.Encrypt.encrypt}
               btn_name_second={lang.get_resource.Encrypt.decrypt}
-              operation_first={this.encrypt.bind(this)}
-              operation_second={this.decrypt.bind(this)}
+              operation_first={this.encrypt}
+              operation_second={this.decrypt}
               operation="encrypt" />
             <FileSelector operation="encrypt" />
           </div>
@@ -198,4 +174,9 @@ class EncryptWindow extends React.Component<any, any> {
   }
 }
 
-export default EncryptWindow;
+export default connect((state) => {
+  return {
+    files: activeFilesSelector(state, { active: true }),
+    settings: state.settings.encrypt,
+  };
+}, { deleteFile, selectFile })(EncryptWindow);
