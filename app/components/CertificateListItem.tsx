@@ -38,6 +38,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   }
 
   componentDidMount() {
+    $(".cert-setting-item").dropdown();
     this.checkAndVerify(this.props);
   }
 
