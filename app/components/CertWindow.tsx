@@ -5,45 +5,25 @@ import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
 import BlockNotElements from "./BlockNotElements";
-import { application } from "./certificate";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
-//declare const $: any;
-
 const DIALOG = window.electron.remote.dialog;
 
 class CertWindow extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = ({ pass_value: "" });
+
+    this.state = ({
+       activeCertificate: null,
+    });
   }
 
-  componentDidMount() {
-    const {certificates} = this.props;
-    certs_app.set_certificates = certificates;
-    application.on("import_cert", this.certAdd);
-    application.on("pass_value", this.setPass);
-    certs_app.on(CertificatesApp.SETTINGS, this.certChange);
-    lang.on(LangApp.SETTINGS, this.certChange);
-  }
-
-  componentWillUnmount() {
-    application.removeListener("import_cert", this.certAdd);
-    application.removeListener("pass_value", this.setPass);
-    certs_app.removeListener(CertificatesApp.SETTINGS, this.certChange);
-    lang.removeListener(LangApp.SETTINGS, this.certChange);
-  }
-
-  setPass = (password: string) => {
-    this.setState({ pass_value: password });
-  }
-
-  certChange = () => {
-    this.setState({});
+  handleActiveCert = (certificate: any) => {
+    this.setState({certificate});
   }
 
   certImport = (event: any) => {
@@ -54,7 +34,6 @@ class CertWindow extends React.Component<any, any> {
       this.p12Import(event);
     } else {
       certCount = certs_app.get_certificates.length;
-      this.certUpdate();
       if (certCount === certs_app.get_certificates.length) {
         $(".toast-cert_imported").remove();
         Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, "toast-cert_imported");
@@ -89,7 +68,6 @@ class CertWindow extends React.Component<any, any> {
           Materialize.toast(lang.get_resource.Certificate.cert_import_failed, 2000, "toast-cert_import_failed");
         } else {
           certCount = certs_app.get_certificates.length;
-          this.certUpdate();
           if (certCount === certs_app.get_certificates.length) {
             $(".toast-cert_imported").remove();
             Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, ".toast-cert_imported");
@@ -109,17 +87,6 @@ class CertWindow extends React.Component<any, any> {
 
     CLICK_EVENT.initEvent("click", true, true);
     document.querySelector("#choose-cert").dispatchEvent(CLICK_EVENT);
-  }
-
-  certUpdate() {
-    const { certificates } = this.props;
-    window.PKIITEMS = window.PKISTORE.items;
-    certs_app.set_certificates = get_Certificates("certificates");
-    certs_app.set_certificate_for_info = null;
-  }
-
-  activeCert = (event: any, cert: any) => {
-    certs_app.set_certificate_for_info = cert;
   }
 
   importCertKey = (event: any) => {
@@ -206,31 +173,30 @@ class CertWindow extends React.Component<any, any> {
 
   render() {
     const { certificates, isLoading } = this.props;
+    const { certificate } = this.state;
+
     if (isLoading) {
       return  <ProgressBars />;
     }
 
-    const CERTIFICATE_FOR_INFO = certs_app.get_certificate_for_info;
-    const CURRENT = CERTIFICATE_FOR_INFO ? "not-active" : "active";
+    const CURRENT = certificate ? "not-active" : "active";
     let cert: any = null;
     let title: any = null;
 
-    if (CERTIFICATE_FOR_INFO) {
-      cert = <CertificateInfo certificate={CERTIFICATE_FOR_INFO} />;
+    if (certificate) {
+      cert = <CertificateInfo certificate={certificate} />;
       title = <div className="cert-title-main">
-        <div className="collection-title cert-title">{CERTIFICATE_FOR_INFO.subjectFriendlyName}</div>
-        <div className="collection-info cert-info cert-title">{CERTIFICATE_FOR_INFO.issuerFriendlyName}</div>
+        <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
+        <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
       </div>;
     } else {
       cert = "";
       title = <span>{lang.get_resource.Certificate.cert_info}</span>;
     }
 
-    const CERTIFICATES = certificates;
-
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";
-    const DISABLED = CERTIFICATE_FOR_INFO ? "" : "disabled";
+    const DISABLED = certificate ? "" : "disabled";
 
     return (
       <div className="main">
@@ -251,7 +217,7 @@ class CertWindow extends React.Component<any, any> {
                           this.importCertKey(event.target.files);
                         }
                       } />
-                      <CertificateList activeCert = {this.activeCert} operation = "certificate"/>
+                      <CertificateList activeCert = {this.handleActiveCert} operation = "certificate"/>
                     </div>
                     <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
                   </div>
