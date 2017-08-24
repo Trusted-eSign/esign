@@ -1,7 +1,6 @@
 import * as React from "react";
 import SearchElement from "../Filters/SearchElement";
 import { lang } from "../module/global_app";
-import { application } from "./certificate";
 
 //declare const $: any;
 
@@ -16,8 +15,15 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
     super(props);
   }
 
+  componentDidMount() {
+    $(".nav-small-btn").dropdown();
+  }
+
   certImport = () => {
-    application.emit("import_cert", "");
+    const CLICK_EVENT = document.createEvent("MouseEvents");
+
+    CLICK_EVENT.initEvent("click", true, true);
+    document.querySelector("#choose-cert").dispatchEvent(CLICK_EVENT);
   }
 
   render() {
