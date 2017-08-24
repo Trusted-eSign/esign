@@ -5,7 +5,6 @@ import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { dlg, lang } from "../module/global_app";
 import * as native from "../native";
 import { extFile, mapToArr } from "../utils";
-import { application } from "./certificate";
 import DropMenuForFile from "./DropMenuForFile";
 
 const dialog = window.electron.remote.dialog;

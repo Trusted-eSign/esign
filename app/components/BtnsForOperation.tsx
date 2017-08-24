@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import {activeFilesSelector} from "../selectors";
-import { filteredCertificatesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 
 interface IBtnsForOperationProps {

@@ -2,7 +2,6 @@ import * as React from "react";
 import { lang, LangApp } from "../module/global_app";
 import { lic, License } from "../module/license";
 import * as native from "../native";
-import { application } from "./certificate";
 import { LicenseKey } from "./components";
 declare let $: any;
 
