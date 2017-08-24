@@ -3,6 +3,7 @@ import { push, routerMiddleware } from "react-router-redux";
 import { applyMiddleware, compose, createStore } from "redux";
 import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
+import randomId from "../middlewares/randomId";
 import reducer from "../reducer/index";
 
 const history = createBrowserHistory();
@@ -21,10 +22,13 @@ const logger = createLogger({
 });
 
 const enhancer = composeEnhancers(
-  applyMiddleware(logger, thunk, router),
+  applyMiddleware(logger, thunk, router, randomId),
 );
 
 const store = createStore(reducer, {}, enhancer);
+
+//dev only
+window.store = store;
 
 if (module.hot) {
   module.hot.accept("../reducer", () =>
