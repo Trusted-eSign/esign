@@ -1,7 +1,7 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates, selectSignerCertificate } from "../AC";
+import { selectSignerCertificate } from "../AC";
 import { lang } from "../module/global_app";
 import { filteredCertificatesSelector } from "../selectors";
 import BlockNotElements from "./BlockNotElements";
@@ -16,15 +16,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     super(props);
   }
 
-  componentDidMount() {
-    const { isLoaded, isLoading, loadAllCertificates } = this.props;
-
-    if (!isLoading && !isLoaded) {
-      loadAllCertificates();
-    }
-  }
-
-  activeCert = (event: any, cert: any) => {
+  activeCert = (cert: any) => {
     const { selectSignerCertificate } = this.props;
 
     selectSignerCertificate(cert.id);
@@ -136,4 +128,4 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { loadAllCertificates, selectSignerCertificate })(CertificateBlockForSignature);
+}, { selectSignerCertificate })(CertificateBlockForSignature);
