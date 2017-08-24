@@ -1,19 +1,17 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, selectFile } from "../AC";
-import { encrypt, EncryptApp } from "../module/encrypt_app";
-import { checkFiles, lang, LangApp } from "../module/global_app";
+import { encrypt } from "../module/encrypt_app";
+import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
 import { utils } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
-import { application, CertComponentsForEncrypt } from "./certificate";
+import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import { Dialog } from "./components";
 import EncryptSettings from "./EncryptSettings";
 import FileSelector from "./FileSelector";
-
-const dialog = window.electron.remote.dialog;
 
 class EncryptWindow extends React.Component<any, any> {
   constructor(props: any) {
@@ -153,7 +151,7 @@ class EncryptWindow extends React.Component<any, any> {
         <div className="content">
           <div className="content-tem">
             <div className="col s6 m6 l6 content-item">
-              <CertComponentsForEncrypt />
+              <CertificateBlockForEncrypt />
             </div>
             <div className="col s6 m6 l6 content-item">
               <EncryptSettings />
