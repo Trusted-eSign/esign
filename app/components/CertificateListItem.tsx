@@ -8,7 +8,7 @@ import { sign } from "../module/sign_app";
 //declare const $: any;
 
 interface ICertificateListItemProps {
-  chooseCert: (event: any) => void;
+  chooseCert: () => void;
   selectedCert: (event: any) => void;
   operation: string;
   isOpen: boolean;
@@ -37,16 +37,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     document.querySelector("#cert-key-import").dispatchEvent(CLICK_EVENT);
   }
 
-  activeCert() {
-    const { cert, isOpen } = this.props;
-    if (isOpen) {
-      certs_app.set_certificate_for_info = cert;
-      if (this.props.operation === "sign") {
-        sign.set_certificate_for_info = cert;
-      }
-    }
-  }
-
   componentDidMount() {
     this.checkAndVerify(this.props);
   }
@@ -59,6 +49,13 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     if (!cert.verified) {
       verifyCertificate(cert.id);
     }
+  }
+
+  handleClick = () => {
+    const { chooseCert, toggleOpen} = this.props;
+
+    chooseCert();
+    toggleOpen();
   }
 
   render() {
@@ -94,7 +91,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     return <div key={cert.id.toString()} className={"collection-item avatar certs-collection " + active}
-      onClick={chooseCert}
+      onClick={this.handleClick}
       onDoubleClick={doubleClick}>
       <div className="r-iconbox-link">
         <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
@@ -102,7 +99,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
         <p className="collection-info cert-info">{cert.issuerFriendlyName}</p>
       </div>
       {certKeyMenu}
-      {this.activeCert()}
     </div>;
   }
 }
