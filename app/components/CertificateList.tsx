@@ -1,5 +1,4 @@
 import * as React from "react";
-import { PropTypes } from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates } from "../AC";
 import accordion from "../decorators/accordion";
@@ -7,7 +6,15 @@ import {filteredCertificatesSelector} from "../selectors";
 import CertificateListItem from "./CertificateListItem";
 import ProgressBars from "./ProgressBars";
 
-class CertificateList extends React.Component<any, any> {
+interface ICertificateListProps {
+  activeCert: (certificate: any) => void;
+}
+
+class CertificateList extends React.Component<ICertificateListProps, ICertificateListProps> {
+  constructor(props: ICertificateListProps) {
+    super(props);
+  }
+
   componentDidMount() {
     const { isLoaded, isLoading, loadAllCertificates } = this.props;
 
@@ -26,7 +33,7 @@ class CertificateList extends React.Component<any, any> {
       <CertificateListItem
         key = {cert.id}
         cert={cert}
-        chooseCert={(event: any) => activeCert(event, cert)}
+        chooseCert={() => activeCert(cert)}
         operation={operation}
         selectedCert={() => selectedCert(cert)}
         isOpen={isItemOpened(cert.id.toString())}
