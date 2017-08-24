@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>TrustedeSign</title>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function () {
+      if (!process.env.HOT) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './dist/style.css';
+        // HACK: Writing the script path should be done with webpack
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
+    }());
+  </script>
+</head>
+
+<body>
+  <div id="container"></div>
+  <script src="js/jquery-3.1.1.min.js"></script>
+
+  <script>
+    if (process.versions.nw === undefined) {
+      window.$ = window.jQuery = require('./js/jquery-3.1.1.min.js');
+      window.Hammer = require("./js/hammer.min.js");
+      window.electron = require('electron');
+      window.mainWindow = electron.remote.getCurrentWindow();
+      window.RESOURCES_PATH = __dirname;
+      window.framework_NW = false;
+    } else {
+      window.gui = require("nw.gui");
+      window.mainWindow = gui.Window.get();
+      gui.Window.open("preloader_index.html", {
+        position: 'center',
+        width: 496,
+        height: 149,
+        frame: false,
+        resizable: false,
+        show: false
+      }, function (win) {
+        win.on('loaded', function () {
+          win.show();
+        });
+        setTimeout(function () {
+          win.hide();
+          win.close();
+          mainWindow.show()
+        }, 1000);
+      });
+      window.mainWindow.isMaximized = false;
+      window.shell = gui.Shell;
+      window.RESOURCES_PATH = process.cwd();
+      window.framework_NW = true;
+    }
+    var trusted = require('trusted-crypto');
+    window.path = require('path');
+    window.fs = require('fs');
+    window.os = require('os');
+    window.archiver = require('archiver');
+    window.sudo = require('sudo-prompt');
+
+    if (process.env.NODE_ENV === "development") {
+      window.DEFAULT_PATH = `${__dirname}`;
+    } else {
+      window.DEFAULT_PATH = path.dirname(process.execPath);
+    }
+
+    window.HOME_DIR = os.homedir();
+    window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
+    window.PLATFORM = process.platform;
+    window.LICENSE_PATH = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
+
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted'), { mode: 0o700 });
+    }
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'), { mode: 0o700 });
+    }
+
+    document.ondragover = function (evt) {
+      evt.preventDefault();
+    };
+    document.ondrop = function (evt) {
+      evt.preventDefault();
+    }
+  </script>
+  <script src="./js/materialize.min.js"></script>
+  <script src="./js/trusted_operation.js"></script>
+  <!-- <script src="./bundle_Trusted_eSign.js"></script> -->
+  <script>
+    {
+      const scripts = [];
+
+      // Dynamically insert the DLL script in development env in the
+      // renderer process
+      if (process.env.NODE_ENV === 'development') {
+        scripts.push('../../dll/vendor.dll.js');
+      }
+
+      // Dynamically insert the bundled app script in the renderer process
+      const port = process.env.PORT || 1212;
+      scripts.push(
+        (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/bundle.js'
+          : './dist/bundle.js'
+      );
+
+      document.write(
+        scripts
+          .map(script => '<script defer src="' + script + '"><\/script>')
+          .join('')
+      );
+    }
+  </script>
+</body>
+
+</html>

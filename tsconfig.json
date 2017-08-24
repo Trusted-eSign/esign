@@ -1,16 +1,53 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2015",
-        "noImplicitAny": true,
-        "sourceMap": false,
-        "jsx": "react",
-        "rootDir": "src",
-        "outDir": "tmp"
-    },
-    "files": [
-        "typings/tsd.d.ts",
-        "src/Trusted_eSign/main.tsx",
-        "src/Trusted_Plus/main.tsx"
-    ]
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "ES6",
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    //"noEmitOnError": true,
+    "strict": true,
+    "allowJs": true,
+    "pretty": true,
+    "sourceMap": false,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "rootDir": "app",
+    "outDir": "tmp"
+  },
+  "exclude": [
+    "node_modules",
+    "app/node_modules"
+  ],
+  "externalTranspiler": {
+    "name": "babel",
+    "options": {
+      "presets": [
+        ["env", {
+          "targets": { "node": 6 },
+          "useBuiltIns": true
+        }],
+        "es2015",
+        "stage-0",
+        "react",
+		    "react-hmre"
+      ],
+      "plugins": ["add-module-exports", "dynamic-import-webpack"],
+      "env": {
+        "production": {
+          "presets": ["react-optimize"],
+          "plugins": ["babel-plugin-dev-expression"]
+        },
+        "development": {
+          "plugins": [
+            "transform-class-properties",
+            "transform-es2015-classes",
+            "react-hot-loader/babel"
+          ]
+        }
+      }
+    }
+  }
 }
