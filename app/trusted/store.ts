@@ -1,4 +1,4 @@
-/// <reference path="../../../types/index.d.ts" />
+/// <reference path="../../types/index.d.ts" />
 // tslint:disable:variable-name
 
 import { lang } from "../module/global_app";
