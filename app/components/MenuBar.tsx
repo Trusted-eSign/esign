@@ -1,5 +1,4 @@
 import * as React from "react";
-import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { lang, SETTINGS_JSON } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
@@ -16,7 +15,7 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const sign_to_json = ({ settings_for_sign: sign.get_settings, certificate_for_sign: sign.get_sign_certificate });
-    const encrypt_to_json = ({ settings_for_encrypt: encrypt.get_settings, certificates_for_encrypt: encrypt.get_certificates_for_encrypt });
+    const encrypt_to_json = ({ settings_for_encrypt: [], certificates_for_encrypt: [] });
     const main_json = ({ lang: lang.get_lang });
     const system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
     const ssystem = JSON.stringify(system, null, 4);

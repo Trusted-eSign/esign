@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, selectFile } from "../AC";
-import { encrypt } from "../module/encrypt_app";
 import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
@@ -23,7 +22,7 @@ class EncryptWindow extends React.Component<any, any> {
 
     if (files.length > 0) {
       let format = trusted.DataFormat.PEM;
-      let certs = encrypt.get_certificates_for_encrypt;
+      let certs = [];
       let folderOut = settings.outfolder;
       let policies = { deleteFiles: false, archiveFiles: false };
       let res = true;

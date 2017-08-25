@@ -1,6 +1,5 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { encrypt, EncryptApp } from "../module/encrypt_app";
 import {activeFilesSelector} from "../selectors";
 import { mapToArr } from "../utils";
 
@@ -34,7 +33,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   render() {
     const { files, signer } = this.props;
     const active = files.length > 0 ? "active" : "";
-    const certsOperation: any = this.props.operation === "sign" ? signer : encrypt.get_certificates_for_encrypt;
+    const certsOperation: any = this.props.operation === "sign" ? signer : [];
     let disabledFirst = "";
     let disabledSecond = "";
     let disabledUnsign = "disabled";

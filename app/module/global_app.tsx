@@ -189,5 +189,3 @@ export class DialogBox extends EventEmitter {
     }
 }
 export let dlg = new DialogBox();
-
-import { encrypt } from "./encrypt_app";
