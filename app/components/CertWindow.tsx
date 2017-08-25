@@ -1,7 +1,6 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { get_Certificates, lang, LangApp } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
 import BlockNotElements from "./BlockNotElements";
@@ -27,14 +26,15 @@ class CertWindow extends React.Component<any, any> {
   }
 
   certImport = (event: any) => {
+    const { certificates } = this.props;
+
     const CERT_PATH = event[0].path;
-    let certCount;
+    const certCount = certificates.length;
 
     if (!window.PKISTORE.importCert(CERT_PATH)) {
       this.p12Import(event);
     } else {
-      certCount = certs_app.get_certificates.length;
-      if (certCount === certs_app.get_certificates.length) {
+      if (certCount === certificates.length) {
         $(".toast-cert_imported").remove();
         Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, "toast-cert_imported");
       } else {
@@ -45,9 +45,11 @@ class CertWindow extends React.Component<any, any> {
   }
 
   p12Import = (event: any) => {
+    const { certificates } = this.props;
+
     const P12_PATH = event[0].path;
     let p12: trusted.pki.Pkcs12;
-    let certCount;
+    const certCount = certificates.length;
 
     try {
       p12 = trusted.pki.Pkcs12.load(P12_PATH);
@@ -67,8 +69,7 @@ class CertWindow extends React.Component<any, any> {
           $(".toast-cert_import_failed").remove();
           Materialize.toast(lang.get_resource.Certificate.cert_import_failed, 2000, "toast-cert_import_failed");
         } else {
-          certCount = certs_app.get_certificates.length;
-          if (certCount === certs_app.get_certificates.length) {
+          if (certCount === certificates.length) {
             $(".toast-cert_imported").remove();
             Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, ".toast-cert_imported");
           } else {
@@ -104,8 +105,10 @@ class CertWindow extends React.Component<any, any> {
 
   importCertKeyHelper(path: string, pass: string) {
     $("#cert-key-import").val("");
+
+    const { certificates } = this.props;
     const KEY_PATH = path;
-    const CERTIFICATES = certs_app.get_certificates;
+    const CERTIFICATES = certificates;
     const RES = window.PKISTORE.importKey(KEY_PATH, pass);
     let key = 0;
 
@@ -116,7 +119,6 @@ class CertWindow extends React.Component<any, any> {
           key = i;
         }
       }
-      certs_app.set_certificates = CERTIFICATES;
 
       $(".toast-key_import_ok").remove();
       Materialize.toast(lang.get_resource.Certificate.key_import_ok, 2000, "toast-key_import_ok");
@@ -148,7 +150,7 @@ class CertWindow extends React.Component<any, any> {
     if (file) {
       $("#get-password").openModal({
         complete() {
-          const CERT_ITEM = certs_app.get_certificate_for_info;
+          const CERT_ITEM = this.state.activeCertificate;
           const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
           const KEY = window.PKISTORE.findKey(CERT_ITEM);
 

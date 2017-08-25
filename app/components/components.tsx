@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "react-router";
-import { CertificatesApp, certs_app } from "../module/certificates_app";
 import { encrypt, EncryptApp } from "../module/encrypt_app";
 import { DialogBox, dlg, extFile, lang, SETTINGS_JSON } from "../module/global_app";
 import { getLicensePath, getStatus, lic, licenseParse } from "../module/license";
