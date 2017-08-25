@@ -3,65 +3,6 @@ import * as native from "../native";
 
 export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
-export let get_Certificates = function (operation: string) {
-    let certCollection: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
-    let certs: any = [];
-    let certList: any = [];
-    if (operation === "sign") {
-        certList = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
-            return item.type === "CERTIFICATE" && item.category === "MY";
-        });
-    } else if (operation === "encrypt") {
-        certList = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
-            return item.type === "CERTIFICATE" && (item.category === "MY" || item.category === "AddressBook");
-        });
-    } else {
-        certList = window.PKIITEMS.filter(function (item: trusted.pkistore.PkiItem) {
-            return item.type === "CERTIFICATE";
-        });
-    }
-    for (let i = 0; i < 4; i++) {
-        certs.push({
-            format: certList[i].format,
-            type: certList[i].type,
-            category: certList[i].category,
-            provider: certList[i].provider,
-            uri: certList[i].uri,
-            hash: certList[i].hash,
-            serial: certList[i].serial,
-            notAfter: certList[i].notAfter,
-            notBefore: certList[i].notBefore,
-            fullSubjectName: certList[i].subjectName,
-            fullIssuerName: certList[i].issuerName,
-            name: certList[i].subjectFriendlyName,
-            issuerName: certList[i].issuerFriendlyName,
-            organization: certList[i].organizationName,
-            status: certVerify(certList[i], certCollection),
-            algSign: certList[i].signatureAlgorithm,
-            privateKey: certList[i].key.length > 0,
-            active: false,
-            key: i,
-        });
-    }
-    if (operation === "sign") {
-        let cert = sign.get_sign_certificate;
-        if (cert) {
-            certs[cert.key].active = true;
-        }
-    }
-    if (operation === "encrypt") {
-        let cert = encrypt.get_certificates_for_encrypt;
-        if (cert) {
-            if (cert.length > 0) {
-                for (let i = 0; i < cert.length; i++) {
-                    certs[cert[i].key].active = true;
-                }
-            }
-        }
-    }
-    return certs;
-};
-
 export let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
     let chain: trusted.pki.Chain;
     let chainForVerify: trusted.pki.CertificateCollection;
@@ -248,33 +189,5 @@ export class DialogBox extends EventEmitter {
     }
 }
 export let dlg = new DialogBox();
-export let checkFiles = function (operation: string) {
-    let files = operation === "sign" || operation === "verify" ? sign.get_files : encrypt.get_files;
-    let files_for_operation: any = [];
-    let count: any = [];
-    for (let i = 0; i < files.length; i++) {
-        if (!native.fs.existsSync(files[i].path)) {
-            count.push(i);
-        }
-    }
-    for (let i = count.length - 1; i > -1; i--) {
-        files.splice(count[i], 1);
-    }
-    for (let j = 0; j < files.length; j++) {
-        files[j].key = j;
-        if (files[j].active === true) {
-            files_for_operation.push(files[j]);
-        }
-    }
-    operation === "sign" || operation === "verify" ? sign.set_files = files : encrypt.set_files = files;
-    operation === "sign" || operation === "verify" ? sign.set_files_for_sign = files_for_operation : encrypt.set_files_for_encrypt = files_for_operation;
-    if (files_for_operation.length === 0) {
-        $(".toast-files_not_found").remove();
-        Materialize.toast(lang.get_resource.Common.files_not_found, 3000, "toast-files_not_found");
-        return false;
-    }
-    return true;
-};
 
 import { encrypt } from "./encrypt_app";
-import { sign } from "./sign_app";

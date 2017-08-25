@@ -1,7 +1,6 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { get_Certificates, lang, LangApp } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
