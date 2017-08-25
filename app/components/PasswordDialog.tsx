@@ -1,6 +1,5 @@
 import * as React from "react";
 import { lang } from "../module/global_app";
-import { application } from "./certificate";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class PasswordDialog extends React.Component<any, any> {
