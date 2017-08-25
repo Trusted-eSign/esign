@@ -1,14 +1,16 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { selectSignerCertificate } from "../AC";
+import { addRecipientCertificate, deleteRecipient} from "../AC";
 import { lang } from "../module/global_app";
 import { filteredCertificatesSelector } from "../selectors";
+import { extFile, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import ProgressBars from "./ProgressBars";
+import RecipientsList from "./RecipientsList";
 import ToolBarForEncryptCertificateBlock from "./ToolBarForEncryptCertificateBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -22,11 +24,10 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   activeCert = (cert: any) => {
-    const { selectSignerCertificate } = this.props;
+    const { addRecipientCertificate } = this.props;
 
-    this.handleActiveCert(cert);
-    selectSignerCertificate(cert.id);
-
+   //this.handleActiveCert(cert);
+    addRecipientCertificate(cert.id);
   }
 
   handleActiveCert = (certificate: any) => {
@@ -37,20 +38,26 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     this.setState({activeCertificate: null});
   }
 
+  removeChooseCerts = () => {
+    const { deleteRecipient, recipients } = this.props;
+
+    recipients.forEach((recipient) => deleteRecipient(recipient.certId));
+  }
+
   render() {
-    const { certificates, isLoading, signer } = this.props;
+    const { certificates, isLoading, recipients } = this.props;
 
     if (isLoading) {
       return <ProgressBars />;
     }
 
-    const CERTIFICATES_FOR_ENCRYPT = signer;
+    const CERTIFICATES_FOR_ENCRYPT = recipients;
     const CERTIFICATES_IS_ACTIVE = certificates;
     const CERTIFICATE_FOR_INFO = this.state.activeCertificate;
     const CHOOSE = !CERTIFICATES_IS_ACTIVE || CERTIFICATE_FOR_INFO ? "not-active" : "active";
     const CHOOSE_VIEW = !CERTIFICATES_IS_ACTIVE ? "active" : "not-active";
     const DISABLE = !CERTIFICATES_IS_ACTIVE ? "disabled" : "";
-    const NOT_ACTIVE = CERTIFICATES_FOR_ENCRYPT ? "not-active" : "";
+    const NOT_ACTIVE = recipients && recipients.length > 0 ? "not-active" : "";
     let activeButton: any = null;
     let cert: any = null;
     let title: any = null;
@@ -88,9 +95,10 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
         <ToolBarForEncryptCertificateBlock certificates={certificates} />
-        <div className={"cert-contents " + NOT_ACTIVE}>
+        <div className={"cert-contents " + "not-active"}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{lang.get_resource.Certificate.Select_Cert_Encrypt}</a>
         </div>
+        <RecipientsList />
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
             <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={() => {
@@ -126,7 +134,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection collection " + CHOOSE}>
-                           <CertificateList activeCert = {this.activeCert} operation="encrypt" />
+                          <CertificateList activeCert = {this.handleActiveCert} operation="encrypt" />
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={lang.get_resource.Certificate.cert_not_select} />
@@ -151,6 +159,6 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
-    signer: state.certificates.getIn(["entities", state.signers.signer]),
+    recipients: mapToArr(state.recipients).forEach((recipient) => state.certificates.getIn(["entities", recipient])),
   };
-}, { selectSignerCertificate })(CertificateBlockForEncrypt);
+}, { addRecipientCertificate, deleteRecipient })(CertificateBlockForEncrypt);

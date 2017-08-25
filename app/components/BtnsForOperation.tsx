@@ -23,6 +23,7 @@ interface IBtnsForOperationProps {
     active: boolean,
   }>;
   signer: string;
+  recipients: number[];
 }
 
 class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
@@ -31,9 +32,9 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   }
 
   render() {
-    const { files, signer } = this.props;
+    const { files, recipients, signer } = this.props;
     const active = files.length > 0 ? "active" : "";
-    const certsOperation: any = this.props.operation === "sign" ? signer : [];
+    const certsOperation: any = this.props.operation === "sign" ? signer : recipients;
     let disabledFirst = "";
     let disabledSecond = "";
     let disabledUnsign = "disabled";
@@ -92,6 +93,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
 export default connect((state) => {
   return {
     files: activeFilesSelector(state, {active: true}),
-    signer: state.certificates.getIn(["entities", state.signers.signer]),
+    recipients: state.recipients,
+    signer: state.signers.signer,
   };
 })(BtnsForOperation);

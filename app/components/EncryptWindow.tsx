@@ -18,11 +18,11 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   encrypt = () => {
-    const { files, settings, deleteFile, selectFile } = this.props;
+    const { files, settings, deleteFile, selectFile, recipients } = this.props;
 
     if (files.length > 0) {
       let format = trusted.DataFormat.PEM;
-      let certs = [];
+      let certs = recipients;
       let folderOut = settings.outfolder;
       let policies = { deleteFiles: false, archiveFiles: false };
       let res = true;
@@ -174,6 +174,7 @@ class EncryptWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     files: activeFilesSelector(state, { active: true }),
+    recipients: state.recipients.forEach((recipient) => state.certificates.getIn(["entities", recipient])),
     settings: state.settings.encrypt,
   };
 }, { deleteFile, selectFile })(EncryptWindow);
