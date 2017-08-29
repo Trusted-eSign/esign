@@ -165,7 +165,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    certificates: filteredCertificatesSelector(state),
+    certificates: filteredCertificatesSelector(state, {operation: "encrypt"}),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
     recipients: mapToArr(state.recipients.entities),

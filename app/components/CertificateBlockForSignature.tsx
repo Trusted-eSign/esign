@@ -123,7 +123,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    certificates: filteredCertificatesSelector(state),
+    certificates: filteredCertificatesSelector(state, {operation: "sign"}),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),

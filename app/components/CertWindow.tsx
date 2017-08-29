@@ -269,7 +269,7 @@ class CertWindow extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    certificates: filteredCertificatesSelector(state),
+    certificates: filteredCertificatesSelector(state, {operation: "certificate"}),
     isLoading: state.certificates.loading,
   };
 })(CertWindow);

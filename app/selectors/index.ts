@@ -5,15 +5,26 @@ export const certificatesGetter = (state) => state.certificates.entities;
 export const filtersGetter = (state) => state.filters;
 export const filesGetter = (state) => state.files.entities;
 export const idGetter = (state, props) => props.id;
-export const operationGetter = (state) => state.operation;
+export const operationGetter = (state, props) => props.operation;
 
 const activeGetter = (state, props) => props.active;
 
 export const filteredCertificatesSelector = createSelector(certificatesGetter, filtersGetter, operationGetter, (certificates, filters, operation) => {
   const { searchValue } = filters;
   const search = searchValue.toLowerCase();
+  let сertificatesByOperations = mapToArr(certificates);
 
-  return mapToArr(certificates).filter((certificate) => {
+  if (operation === "sign") {
+    сertificatesByOperations = сertificatesByOperations.filter((item: trusted.pkistore.PkiItem) => {
+      return item.category === "MY" && item.key.length > 0;
+    });
+  } else if (operation === "encrypt") {
+    сertificatesByOperations = сertificatesByOperations.filter((item: trusted.pkistore.PkiItem) => {
+      return (item.category === "MY" || item.category === "AddressBook");
+    });
+  }
+
+  return сertificatesByOperations.filter((certificate) => {
     return (
       certificate.hash.toLowerCase().match(search) ||
       certificate.issuerFriendlyName.toLowerCase().match(search) ||

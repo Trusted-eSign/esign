@@ -48,9 +48,13 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
   }
 }
 
-export default connect((state) => {
+interface IOwnProps {
+  operation: string;
+}
+
+export default connect((state, ownProps: IOwnProps) => {
   return {
-    certificates: filteredCertificatesSelector(state),
+    certificates: filteredCertificatesSelector(state, {operation: ownProps.operation}),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
