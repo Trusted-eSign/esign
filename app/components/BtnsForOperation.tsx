@@ -93,7 +93,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
 export default connect((state) => {
   return {
     files: activeFilesSelector(state, {active: true}),
-    recipients: state.recipients,
+    recipients: mapToArr(state.recipients.entities),
     signer: state.signers.signer,
   };
 })(BtnsForOperation);
