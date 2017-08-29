@@ -1,13 +1,9 @@
 import * as React from "react";
 import { lang } from "../module/global_app";
 
-class ToolBarForEncryptCetrificateBlock extends React.Component<any, any> {
+class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
   constructor(props) {
     super(props);
-  }
-
-  removeAllChooseCerts() {
-    return;
   }
 
   render() {
@@ -26,7 +22,7 @@ class ToolBarForEncryptCetrificateBlock extends React.Component<any, any> {
             <i className="nav-small-icon material-icons">more_vert</i>
           </a>
           <ul id="dropdown-btn-set-cert" className="dropdown-content">
-            <li><a onClick={this.removeAllChooseCerts.bind(this)}>{lang.get_resource.Settings.remove_list}</a></li>
+            <li><a onClick={this.props.handleCleanList}>{lang.get_resource.Settings.remove_list}</a></li>
           </ul>
         </li>
       </ul>
@@ -34,4 +30,4 @@ class ToolBarForEncryptCetrificateBlock extends React.Component<any, any> {
   }
 }
 
-export default ToolBarForEncryptCetrificateBlock;
+export default ToolBarForEncryptCertificateBlock;

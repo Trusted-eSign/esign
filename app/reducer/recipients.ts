@@ -14,7 +14,7 @@ export default (recipients = new DefaultReducerState(), action) => {
 
   switch (type) {
     case ADD_RECIPIENT_CERTIFICATE:
-      return recipients.mergeIn(["entities", payload.certId], new RecipientModel({
+      return recipients.setIn(["entities", payload.certId], new RecipientModel({
         certId: payload.certId,
       }));
 

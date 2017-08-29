@@ -1,6 +1,5 @@
 import { Map, OrderedMap, Record } from "immutable";
 import { ACTIVE_FILE, DELETE_FILE, SELECT_FILE, SUCCESS, VERIFY_SIGNATURE } from "../constants";
-import { arrayToMap } from "../utils";
 
 const FileModel = Record({
   active: true,

@@ -5,7 +5,7 @@ import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
-import { utils } from "../utils";
+import { mapToArr, utils } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import { Dialog } from "./components";
@@ -174,7 +174,7 @@ class EncryptWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     files: activeFilesSelector(state, { active: true }),
-    recipients: state.recipients.forEach((recipient) => state.certificates.getIn(["entities", recipient])),
+    recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };
 }, { deleteFile, selectFile })(EncryptWindow);

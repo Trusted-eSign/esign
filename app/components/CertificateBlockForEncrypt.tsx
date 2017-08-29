@@ -23,10 +23,20 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
    });
   }
 
+  componentDidMount() {
+    $(".nav-small-btn").dropdown({
+      alignment: "left",
+      belowOrigin: false,
+      constrainWidth: false,
+      gutter: 0,
+      inDuration: 300,
+      outDuration: 225,
+    });
+  }
+
   activeCert = (cert: any) => {
     const { addRecipientCertificate } = this.props;
 
-   //this.handleActiveCert(cert);
     addRecipientCertificate(cert.id);
   }
 
@@ -38,7 +48,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     this.setState({activeCertificate: null});
   }
 
-  removeChooseCerts = () => {
+  handleCleanList = () => {
     const { deleteRecipient, recipients } = this.props;
 
     recipients.forEach((recipient) => deleteRecipient(recipient.certId));
@@ -51,7 +61,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       return <ProgressBars />;
     }
 
-    const CERTIFICATES_FOR_ENCRYPT = recipients;
     const CERTIFICATES_IS_ACTIVE = certificates;
     const CERTIFICATE_FOR_INFO = this.state.activeCertificate;
     const CHOOSE = !CERTIFICATES_IS_ACTIVE || CERTIFICATE_FOR_INFO ? "not-active" : "active";
@@ -81,7 +90,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
           <i className="nav-small-icon material-icons">more_vert</i>
         </a>
         <ul id="dropdown-btn-certlist" className="dropdown-content">
-          <li><a onClick={this.removeChooseCerts}>{lang.get_resource.Settings.remove_list}</a></li>
+          <li><a onClick={this.handleCleanList}>{lang.get_resource.Settings.remove_list}</a></li>
         </ul>
       </li>;
     }
@@ -94,8 +103,8 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <ToolBarForEncryptCertificateBlock certificates={certificates} />
-        <div className={"cert-contents " + "not-active"}>
+        <ToolBarForEncryptCertificateBlock certificates={certificates} handleCleanList={this.handleCleanList}/>
+        <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{lang.get_resource.Certificate.Select_Cert_Encrypt}</a>
         </div>
         <RecipientsList />
@@ -159,6 +168,6 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
-    recipients: mapToArr(state.recipients).forEach((recipient) => state.certificates.getIn(["entities", recipient])),
+    recipients: mapToArr(state.recipients.entities),
   };
 }, { addRecipientCertificate, deleteRecipient })(CertificateBlockForEncrypt);
