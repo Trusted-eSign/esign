@@ -100,7 +100,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       <div className="r-iconbox-link">
         <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
         <p className="collection-title">{cert.subjectFriendlyName}</p>
-        <p className="collection-info cert-info">{cert.issuerFriendlyName}</p>
+        {/* <p className="collection-info cert-info ">{cert.issuerFriendlyName}</p> */}
       </div>
       {certKeyMenu}
     </div>;
