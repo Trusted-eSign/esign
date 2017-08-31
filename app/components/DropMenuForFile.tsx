@@ -1,5 +1,4 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 
 interface IDropMenuForFileProps {
   file_name: string;
@@ -15,6 +14,11 @@ interface IDropMenuForFileProps {
 }
 
 class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: IDropMenuForFileProps) {
     super(props);
   }
@@ -46,6 +50,8 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     let self = this;
     let classStatus = "";
     let toolTipText = "";
@@ -58,10 +64,10 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
     if (this.props.operation === "sign") {
       if (this.props.verify_status === "status_ok") {
         classStatus = this.props.verify_status + " tooltipped";
-        toolTipText = lang.get_resource.Sign.sign_ok;
+        toolTipText = localize("Sign.sign_ok", locale);
       } else if (this.props.verify_status === "status_error") {
         classStatus = this.props.verify_status + " tooltipped";
-        toolTipText = lang.get_resource.Sign.sign_error;
+        toolTipText = localize("Sign.sign_error", locale);
       }
     }
 
@@ -70,7 +76,7 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
         <div className="r-iconbox-link">
           <div className="r-iconbox-icon"><i className={this.props.file_type} id="file-avatar"></i></div>
           <p className="collection-title">{this.props.file_name}</p>
-          <p className="collection-info">{this.props.file_date.toLocaleDateString(lang.get_lang, {
+          <p className="collection-info">{this.props.file_date.toLocaleDateString(locale, {
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -83,9 +89,9 @@ class DropMenuForFile extends React.Component<IDropMenuForFileProps, any> {
         <i className="file-setting-item waves-effect material-icons secondary-content"
           data-activates={"dropdown-btn-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
         <ul id={"dropdown-btn-set-file-" + this.props.index} className="dropdown-content">
-          <li><a onClick={function (event: any) { self.openFile(event, self.props.file_path); }}>{lang.get_resource.Settings.open_file}</a></li>
-          <li><a onClick={function (event: any) { self.openFileFolder(event, self.props.file_path); }}>{lang.get_resource.Settings.go_to_file}</a></li>
-          <li><a onClick={this.props.removeFiles}>{lang.get_resource.Settings.delete_file}</a></li>
+          <li><a onClick={function (event: any) { self.openFile(event, self.props.file_path); }}>{localize("Settings.open_file", locale)}</a></li>
+          <li><a onClick={function (event: any) { self.openFileFolder(event, self.props.file_path); }}>{localize("Settings.go_to_file", locale)}</a></li>
+          <li><a onClick={this.props.removeFiles}>{localize("Settings.delete_file", locale)}</a></li>
         </ul>
       </div>
     );

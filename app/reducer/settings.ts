@@ -1,9 +1,9 @@
 import {
-  BASE64,
-  CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT, CHANGE_DELETE_FILES_AFTER_ENCRYPT,
+  BASE64, CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT, CHANGE_DELETE_FILES_AFTER_ENCRYPT,
   CHANGE_ECRYPT_ENCODING, CHANGE_ENCRYPT_OUTFOLDER,
-  CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING,
-  CHANGE_SIGNATURE_OUTFOLDER, CHANGE_SIGNATURE_TIMESTAMP,
+  CHANGE_LOCALE, CHANGE_SIGNATURE_DETACHED,
+  CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER, CHANGE_SIGNATURE_TIMESTAMP,
+  EN, RU,
 } from "../constants";
 
 const defaultSettings = {
@@ -13,6 +13,7 @@ const defaultSettings = {
     encoding: BASE64,
     outfolder: "",
   },
+  locale: EN,
   sign: {
     detached: false,
     encoding: BASE64,
@@ -48,6 +49,8 @@ export default (settings = defaultSettings, action) => {
 
     case CHANGE_ENCRYPT_OUTFOLDER:
       return { ...settings, encrypt: { ...settings.encrypt, outfolder: payload.outfolder } };
+    case CHANGE_LOCALE:
+      return { ...settings, locale: payload.locale };
   }
 
   return settings;

@@ -1,6 +1,5 @@
 import * as React from "react";
 import SearchElement from "../Filters/SearchElement";
-import { lang } from "../module/global_app";
 
 //declare const $: any;
 
@@ -11,6 +10,11 @@ interface IToolBarWithSearchProps {
 }
 
 export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: IToolBarWithSearchProps) {
     super(props);
   }
@@ -27,6 +31,8 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     let btn: any = null;
     let style = {};
 
@@ -37,7 +43,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
           <i className="nav-small-icon material-icons cert-settings">more_vert</i>
         </a>
         <ul id="dropdown-btn-import" className="dropdown-content">
-          <li><a onClick={this.certImport}>{lang.get_resource.Certificate.cert_import}</a></li>
+          <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
         </ul>
       </li>;
     } else {

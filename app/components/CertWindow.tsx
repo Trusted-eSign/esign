@@ -1,7 +1,6 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { lang } from "../module/global_app";
 import {filteredCertificatesSelector} from "../selectors";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
@@ -13,6 +12,11 @@ import { ToolBarWithSearch } from "./ToolBarWithSearch";
 const DIALOG = window.electron.remote.dialog;
 
 class CertWindow extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
 
@@ -27,6 +31,7 @@ class CertWindow extends React.Component<any, any> {
 
   certImport = (event: any) => {
     const { certificates } = this.props;
+    const { localize, locale } = this.context;
 
     const CERT_PATH = event[0].path;
     const certCount = certificates.length;
@@ -36,16 +41,17 @@ class CertWindow extends React.Component<any, any> {
     } else {
       if (certCount === certificates.length) {
         $(".toast-cert_imported").remove();
-        Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, "toast-cert_imported");
+        Materialize.toast(localize("Certificate.cert_imported", locale), 2000, "toast-cert_imported");
       } else {
         $(".toast-cert_import_ok").remove();
-        Materialize.toast(lang.get_resource.Certificate.cert_import_ok, 2000, ".toast-cert_import_ok");
+        Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
       }
     }
   }
 
   p12Import = (event: any) => {
     const { certificates } = this.props;
+    const { localize, locale } = this.context;
 
     const P12_PATH = event[0].path;
     let p12: trusted.pki.Pkcs12;
@@ -59,7 +65,7 @@ class CertWindow extends React.Component<any, any> {
 
     if (!p12) {
       $(".toast-cert_load_failed").remove();
-      Materialize.toast(lang.get_resource.Certificate.cert_load_failed, 2000, "toast-cert_load_failed");
+      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
       return;
     }
 
@@ -67,14 +73,14 @@ class CertWindow extends React.Component<any, any> {
       complete() {
         if (!window.PKISTORE.importPkcs12(P12_PATH, this.state.pass_value)) {
           $(".toast-cert_import_failed").remove();
-          Materialize.toast(lang.get_resource.Certificate.cert_import_failed, 2000, "toast-cert_import_failed");
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
         } else {
           if (certCount === certificates.length) {
             $(".toast-cert_imported").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_imported, 2000, ".toast-cert_imported");
+            Materialize.toast(localize("Certificate.cert_imported", locale), 2000, ".toast-cert_imported");
           } else {
             $(".toast-cert_import_ok").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_import_ok, 2000, "toast-cert_import_ok");
+            Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_import_ok");
           }
 
         }
@@ -107,6 +113,8 @@ class CertWindow extends React.Component<any, any> {
     $("#cert-key-import").val("");
 
     const { certificates } = this.props;
+    const { localize, locale } = this.context;
+
     const KEY_PATH = path;
     const CERTIFICATES = certificates;
     const RES = window.PKISTORE.importKey(KEY_PATH, pass);
@@ -121,14 +129,16 @@ class CertWindow extends React.Component<any, any> {
       }
 
       $(".toast-key_import_ok").remove();
-      Materialize.toast(lang.get_resource.Certificate.key_import_ok, 2000, "toast-key_import_ok");
+      Materialize.toast(localize("Certificate.key_import_ok", locale), 2000, "toast-key_import_ok");
     } else {
       $(".toast-key_import_failed").remove();
-      Materialize.toast(lang.get_resource.Certificate.key_import_failed, 2000, "toast-key_import_failed");
+      Materialize.toast(localize("Certificate.key_import_failed", locale), 2000, "toast-key_import_failed");
     }
   }
 
   exportDirectory = () => {
+    const { localize, locale } = this.context;
+
     if (window.framework_NW) {
       const CLICK_EVENT = document.createEvent("MouseEvents");
 
@@ -136,15 +146,17 @@ class CertWindow extends React.Component<any, any> {
       document.querySelector("#choose-folder-export").dispatchEvent(CLICK_EVENT);
     } else {
       const FILE = DIALOG.showSaveDialog({
-        defaultPath: lang.get_resource.Certificate.certificate + ".pfx",
-        filters: [{ name: lang.get_resource.Certificate.certs, extensions: ["pfx"] }],
-        title: lang.get_resource.Certificate.export_cert,
+        defaultPath: localize("Certificate.certificate", locale) + ".pfx",
+        filters: [{ name: localize("Certificate.certs", locale), extensions: ["pfx"] }],
+        title: localize("Certificate.export_cert", locale),
       });
       this.exportCert(FILE);
     }
   }
 
   exportCert = (file: string) => {
+    const { localize, locale } = this.context;
+
     let p12: trusted.pki.Pkcs12;
 
     if (file) {
@@ -156,26 +168,27 @@ class CertWindow extends React.Component<any, any> {
 
           if (!CERT || !KEY) {
             $(".toast-cert_export_failed").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_export_failed, 2000, "toast-cert_export_failed");
+            Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
           } else {
             p12 = new trusted.pki.Pkcs12();
             p12.create(CERT, KEY, null, this.state.pass_value, CERT_ITEM.subjectFriendlyName);
             p12.save(file);
             $(".toast-cert_export_ok").remove();
-            Materialize.toast(lang.get_resource.Certificate.cert_export_ok, 2000, "toast-cert_export_ok");
+            Materialize.toast(localize("Certificate.cert_export_ok", locale), 2000, "toast-cert_export_ok");
           }
         },
         dismissible: false,
       });
     } else {
       $(".toast-cert_export_cancel").remove();
-      Materialize.toast(lang.get_resource.Certificate.cert_export_cancel, 2000, "toast-cert_export_cancel");
+      Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
     }
   }
 
   render() {
     const { certificates, isLoading } = this.props;
     const { certificate } = this.state;
+    const { localize, locale } = this.context;
 
     if (isLoading) {
       return  <ProgressBars />;
@@ -193,7 +206,7 @@ class CertWindow extends React.Component<any, any> {
       </div>;
     } else {
       cert = "";
-      title = <span>{lang.get_resource.Certificate.cert_info}</span>;
+      title = <span>{localize("Certificate.cert_info", locale)}</span>;
     }
 
     const NAME = certificates.length < 1 ? "active" : "not-active";
@@ -221,7 +234,7 @@ class CertWindow extends React.Component<any, any> {
                       } />
                       <CertificateList activeCert = {this.handleActiveCert} operation = "certificate"/>
                     </div>
-                    <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
+                    <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                   </div>
                 </div>
               </div>
@@ -235,7 +248,7 @@ class CertWindow extends React.Component<any, any> {
                     <li className="cert-bar-text">
                       {title}
                       <input type="file" ref={(direct) => direct &&
-                        direct.setAttribute("nwsaveas", lang.get_resource.Certificate.certificate + ".pfx")}
+                        direct.setAttribute("nwsaveas", localize("Certificate.certificate", locale) + ".pfx")}
                         accept=".pfx" value="" id="choose-folder-export"
                         onChange={(event: any) => {
                           this.exportCert(event.target.value);
@@ -246,7 +259,7 @@ class CertWindow extends React.Component<any, any> {
                         <i className="nav-small-icon material-icons cert-settings">more_vert</i>
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.exportDirectory}>{lang.get_resource.Certificate.cert_export}</a></li>
+                        <li><a onClick={this.exportDirectory}>{localize("Certificate.cert_export", locale)}</a></li>
                       </ul>
                     </li>
                   </ul>
@@ -254,7 +267,7 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div className="add-certs-item">
                     {cert}
-                    <BlockNotElements name={CURRENT} title={lang.get_resource.Certificate.cert_not_select} />
+                    <BlockNotElements name={CURRENT} title={localize("Certificate.cert_not_select", locale)} />
                   </div>
                 </div>
               </div>

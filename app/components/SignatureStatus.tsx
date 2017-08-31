@@ -1,5 +1,4 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 import { sign } from "../module/sign_app";
 
 interface ISignatureStatusProps {
@@ -7,6 +6,11 @@ interface ISignatureStatusProps {
 }
 
 class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: ISignatureStatusProps) {
     super(props);
   }
@@ -19,16 +23,17 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
 
   render() {
     const { signed_data } = this.props;
+    const { localize, locale } = this.context;
 
     let self = this;
     let status = "";
     let icon = "";
 
     if (signed_data.status_verify === true) {
-      status = lang.get_resource.Sign.sign_ok;
+      status = localize("Sign.sign_ok", locale);
       icon = "status_cert_ok_icon";
     } else {
-      status = lang.get_resource.Sign.sign_error;
+      status = localize("Sign.sign_error", locale);
       icon = "status_cert_fail_icon";
     }
 
@@ -37,13 +42,13 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
         <div className="r-iconbox-link">
           <div className="r-iconbox-cert-icon"><i className={icon}></i></div>
           <p className="collection-title si-title">{status}</p>
-          <p className="collection-info cert-info si-info">{lang.get_resource.Sign.status}</p>
+          <p className="collection-info cert-info si-info">{localize("Sign.status", locale)}</p>
           <p className="collection-title si-title">{signed_data.subject}</p>
-          <p className="collection-info cert-info si-info">{lang.get_resource.Certificate.subject}</p>
+          <p className="collection-info cert-info si-info">{localize("Certificate.subject", locale)}</p>
           <p className="collection-title si-title">{signed_data.alg}</p>
-          <p className="collection-info cert-info si-info">{lang.get_resource.Sign.alg}</p>
+          <p className="collection-info cert-info si-info">{localize("Sign.alg", locale)}</p>
           <p className="collection-title si-title">{signed_data.digestAlgorithm}</p>
-          <p className="collection-info cert-info si-info">{lang.get_resource.Sign.digest_alg}</p>
+          <p className="collection-info cert-info si-info">{localize("Sign.digest_alg", locale)}</p>
         </div>
       </div>
     );

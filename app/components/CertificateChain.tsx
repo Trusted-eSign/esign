@@ -1,9 +1,13 @@
 import * as React from "react";
-import { lang, LangApp } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class CertificateChain extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
@@ -25,6 +29,8 @@ class CertificateChain extends React.Component<any, any> {
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     const self = this;
     const certs = sign.get_sign_certs_info ? sign.get_sign_certs_info : [];
     let padding = -5;
@@ -64,7 +70,7 @@ class CertificateChain extends React.Component<any, any> {
 
     return (
       <div className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={lang.get_resource.Certificate.cert_chain} />
+        <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={localize("Certificate.cert_chain", locale)} />
         <div className="sign-info-content">
           <div className="add-cs-collection collection ">
             {elements}

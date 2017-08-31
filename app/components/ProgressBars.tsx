@@ -1,7 +1,8 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 
-export default function ProgressBars() {
+export default function ProgressBars({children}, context) {
+  const { localize, locale } = context;
+
   return (
     <div className="preloader-content">
       <div className="preloader-wrapper big active">
@@ -17,7 +18,12 @@ export default function ProgressBars() {
           </div>
         </div>
       </div>
-      <div className="preloader-text">{lang.get_resource.Settings.wait}</div>
+      <div className="preloader-text">{localize("Settings.wait", locale)}</div>
     </div>
   );
 }
+
+ProgressBars.contextTypes = {
+  locale: React.PropTypes.string,
+  localize: React.PropTypes.func,
+};

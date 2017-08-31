@@ -1,8 +1,12 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class PasswordDialog extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
     this.state = ({
@@ -49,6 +53,8 @@ class PasswordDialog extends React.Component<any, any> {
 
   render(): any {
     const self = this;
+    const { localize, locale } = this.context;
+
     let active = "";
 
     if (this.state.pass_value.length > 0) {
@@ -58,7 +64,7 @@ class PasswordDialog extends React.Component<any, any> {
     return (
       <div id="get-password" className="modal password-modal">
         <div className="password-modal-main">
-          <HeaderWorkspaceBlock text={lang.get_resource.Settings.pass_enter} new_class="modal-bar" icon="close" onСlickBtn={this.closeModal.bind(this)} />
+          <HeaderWorkspaceBlock text={localize("Settings.pass_enter", locale)} new_class="modal-bar" icon="close" onСlickBtn={this.closeModal.bind(this)} />
           <div className="password-modal-content">
             <div className="input-password">
               <div className="input-field col s6 input-field-password">
@@ -77,9 +83,9 @@ class PasswordDialog extends React.Component<any, any> {
                     }
                   }
                 />
-                <label htmlFor="input_password" className={active}>{lang.get_resource.Settings.password}</label>
+                <label htmlFor="input_password" className={active}>{localize("Settings.password", locale)}</label>
               </div>
-              <a className="waves-effect waves-light btn modal-close" id="enter-pass" onClick={this.verifyValid.bind(this)}>{lang.get_resource.License.Entered}</a>
+              <a className="waves-effect waves-light btn modal-close" id="enter-pass" onClick={this.verifyValid.bind(this)}>{localize("License.Entered", locale)}</a>
             </div>
           </div>
         </div>

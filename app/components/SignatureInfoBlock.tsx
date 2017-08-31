@@ -1,18 +1,24 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { lang, LangApp } from "../module/global_app";
 import { activeFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import SignatureStatus from "./SignatureStatus";
 
 class SignatureInfoBlock extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
 
   render() {
     const { files, signatures } = this.props;
+    const { localize, locale } = this.context;
+
     let elements = null;
     let file = null;
 
@@ -38,7 +44,7 @@ class SignatureInfoBlock extends React.Component<any, any> {
       <div className={"col s6 m6 l6 sign-info content-item-height "}>
         <div className="file-content-height">
           <div className="content-wrapper z-depth-1">
-            <HeaderWorkspaceBlock icon="arrow_back" text={lang.get_resource.Sign.sign_info} second_text={file.filename} />
+            <HeaderWorkspaceBlock icon="arrow_back" text={localize("Sign.sign_info", locale)} second_text={file.filename} />
             <div className="sign-info-content">
               <div className={"add-cert-collection collection "}>
                 {elements}

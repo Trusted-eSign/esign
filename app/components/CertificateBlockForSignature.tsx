@@ -2,7 +2,6 @@ import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
 import { selectSignerCertificate } from "../AC";
-import { lang } from "../module/global_app";
 import { filteredCertificatesSelector } from "../selectors";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
@@ -12,6 +11,11 @@ import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class CertificateBlockForSignature extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
@@ -40,6 +44,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
   render() {
     const { certificates, isLoading, signer } = this.props;
+    const { localize, locale } = this.context;
 
     const ACTIVE_SIGNER = signer ? "active" : "not-active";
     const NOT_ACTIVE_SIGNER = signer ? "not-active" : "active";
@@ -58,7 +63,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
       itemBar = <HeaderWorkspaceBlock text={signer.subjectFriendlyName} second_text={signer.issuerFriendlyName} />;
     } else {
       cert = "";
-      itemBar = <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />;
+      itemBar = <HeaderWorkspaceBlock text={localize("Certificate.cert_info", locale)} />;
     }
 
     const SETTINGS = {
@@ -67,16 +72,16 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certificate} icon="add" onСlickBtn={function () {
+        <HeaderWorkspaceBlock text={localize("Certificate.certificate", locale)} icon="add" onСlickBtn={function () {
           $("#add-cert").openModal();
         }} />
         <div className={"cert-contents " + NOT_ACTIVE_SIGNER}>
-          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{lang.get_resource.Certificate.Select_Cert_Sign}</a>
+          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{localize("Certificate.Select_Cert_Sign", locale)}</a>
         </div>
         {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={function () {
+            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={function () {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
@@ -91,7 +96,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                             activeCert={this.activeCert}
                             operation="sign" />
                         </div>
-                        <BlockNotElements name={CERTIFICATES_ACTIVE} title={lang.get_resource.Certificate.cert_not_found} />
+                        <BlockNotElements name={CERTIFICATES_ACTIVE} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>
                   </div>
@@ -104,12 +109,12 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         {cert}
-                        <BlockNotElements name={NOT_ACTIVE_SIGNER} title={lang.get_resource.Certificate.cert_not_select} />
+                        <BlockNotElements name={NOT_ACTIVE_SIGNER} title={localize("Certificate.cert_not_select", locale)} />
                       </div>
                     </div>
                   </div>
                   <div className={"choose-cert " + ACTIVE_SIGNER}>
-                    <a className="waves-effect waves-light btn-large choose-btn modal-close" >{lang.get_resource.Settings.choose}</a>
+                    <a className="waves-effect waves-light btn-large choose-btn modal-close" >{localize("Settings.choose", locale)}</a>
                   </div>
                 </div>
               </div>

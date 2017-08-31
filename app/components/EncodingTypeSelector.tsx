@@ -1,6 +1,5 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
-import { lang } from "../module/global_app";
 
 interface IEncodingTypeSelectorProps {
   EncodingValue: string;
@@ -8,6 +7,11 @@ interface IEncodingTypeSelectorProps {
 }
 
 class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: IEncodingTypeSelectorProps) {
     super(props);
   }
@@ -28,12 +32,14 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, a
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     return <div className="row settings-item">
-      <div className="col sign-set-encoding">{lang.get_resource.Settings.encoding}</div>
+      <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
       <div className="col input-field">
         <select ref="select" id="encoding" defaultValue={this.props.EncodingValue} onChange={this.handleChange}>
-          <option value={lang.get_resource.Settings.BASE}>{lang.get_resource.Settings.BASE}</option>
-          <option value={lang.get_resource.Settings.DER}>{lang.get_resource.Settings.DER}</option>
+          <option value={localize("Settings.BASE", locale)}>{localize("Settings.BASE", locale)}</option>
+          <option value={localize("Settings.DER", locale)}>{localize("Settings.DER", locale)}</option>
         </select>
       </div>
     </div>;

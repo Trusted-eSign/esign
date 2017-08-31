@@ -1,9 +1,11 @@
 import * as React from "react";
-import { lang, LangApp } from "../module/global_app";
-
-//declare const $: any;
 
 export class AboutWindow extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
     this.state = ({
@@ -14,6 +16,8 @@ export class AboutWindow extends React.Component<any, any> {
   }
 
   send = () => {
+    const { localize, locale } = this.context;
+
     $.ajax({
       data: {
         email: this.state.email.text,
@@ -24,11 +28,11 @@ export class AboutWindow extends React.Component<any, any> {
       url: "https://net.trusted.ru/trustedapp/app/feedback",
       success(): void {
         $(".toast-message_send").remove();
-        Materialize.toast(lang.get_resource.About.message_send, 2000, "toast-message_send");
+        Materialize.toast(localize("About.message_send", locale), 2000, "toast-message_send");
       },
       error(): void {
         $(".toast-error_message_send").remove();
-        Materialize.toast(lang.get_resource.About.error_message_send, 2000, "toast-error_message_send");
+        Materialize.toast(localize("About.error_message_send", locale), 2000, "toast-error_message_send");
       },
     });
   }
@@ -46,22 +50,24 @@ export class AboutWindow extends React.Component<any, any> {
   }
 
   validDatas = () => {
+    const { localize, locale } = this.context;
+
     const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
     if (this.state.username.text.length === 0) {
-      this.state.username.error = lang.get_resource.Settings.field_empty;
-      this.setState({ username: { text: this.state.username.text, error: lang.get_resource.Settings.field_empty } });
+      this.state.username.error = localize("Settings.field_empty", locale);
+      this.setState({ username: { text: this.state.username.text, error: localize("Settings.field_empty", locale) } });
     }
     if (this.state.email.text.length === 0) {
-      this.state.email.error = lang.get_resource.Settings.field_empty;
-      this.setState({ email: { text: this.state.email.text, error: lang.get_resource.Settings.field_empty } });
+      this.state.email.error = localize("Settings.field_empty", locale);
+      this.setState({ email: { text: this.state.email.text, error: localize("Settings.field_empty", locale) } });
     } else if (REQULAR_EXPRESSION.test(this.state.email.text) === false) {
-      this.state.email.error = lang.get_resource.Settings.email_error;
-      this.setState({ email: { text: this.state.email.text, error: lang.get_resource.Settings.email_error } });
+      this.state.email.error = localize("Settings.email_error", locale);
+      this.setState({ email: { text: this.state.email.text, error: localize("Settings.email_error", locale) } });
     }
     if (this.state.message.text.length === 0) {
-      this.state.message.error = lang.get_resource.Settings.field_empty;
-      this.setState({ message: { text: this.state.message.text, error: lang.get_resource.Settings.field_empty } });
+      this.state.message.error = localize("Settings.field_empty", locale);
+      this.setState({ message: { text: this.state.message.text, error: localize("Settings.field_empty", locale) } });
     }
     if (this.state.email.error.length === 0 && this.state.message.error.length === 0 && this.state.username.error.length === 0) {
       this.send();
@@ -69,6 +75,8 @@ export class AboutWindow extends React.Component<any, any> {
   }
 
   render(): any {
+    const { localize, locale } = this.context;
+
     let errUser = "";
     let errEmail = "";
     let errMessage = "";
@@ -96,22 +104,22 @@ export class AboutWindow extends React.Component<any, any> {
                   <div className="card contact">
                     <div className="card-content white-text">
                       <div className="row">
-                        <span className="card-title">{lang.get_resource.About.product_NAME}</span>
+                        <span className="card-title">{localize("About.product_NAME", locale)}</span>
                         <span className="card-infos">
-                          <p>{lang.get_resource.About.version}</p>
+                          <p>{localize("About.version", locale)}</p>
                         </span>
                       </div>
                       <div className="row">
-                        <span className="card-title">{lang.get_resource.About.Info}</span>
+                        <span className="card-title">{localize("About.Info", locale)}</span>
                       </div>
                       <div className="row">
                         <div className="contact-icon"></div>
-                        <h6 className="contact-text">{lang.get_resource.About.about_programm}<br></br><br></br>{lang.get_resource.About.reason_build}
+                        <h6 className="contact-text">{localize("About.about_programm", locale)}<br></br><br></br>{localize("About.reason_build", locale)}
                         </h6>
                       </div>
                       <div className="row">
                         <div className="contact-icon"><i className="mail_contact_icon"></i></div>
-                        <h6 className="contact-title">{lang.get_resource.About.info}</h6>
+                        <h6 className="contact-title">{localize("About.info", locale)}</h6>
                       </div>
                     </div>
                     <div className="card-action">
@@ -122,12 +130,12 @@ export class AboutWindow extends React.Component<any, any> {
                 <div className="col s12 m6">
                   <div className="card infoapp">
                     <div className="card-content gray-text">
-                      <span className="card-title">{lang.get_resource.About.FeedBack}</span>
+                      <span className="card-title">{localize("About.FeedBack", locale)}</span>
                       <form onSubmit={this.validDatas} className="col s12">
                         <div className="row form">
                           <div className="input-field col s12">
                             <input ref="username" id="username" type="text" onChange={(evt) => this.setUserName(evt.target.value)}></input>
-                            <label htmlFor="username">{lang.get_resource.About.username}</label>
+                            <label htmlFor="username">{localize("About.username", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errUser}>
                             <i className="material-icons icon-error">warning</i>
@@ -137,7 +145,7 @@ export class AboutWindow extends React.Component<any, any> {
                         <div className="row form">
                           <div className="input-field col s12">
                             <input ref="email" id="email" type="email" onChange={(evt) => this.setEmail(evt.target.value)}></input>
-                            <label htmlFor="email" >{lang.get_resource.About.email}</label>
+                            <label htmlFor="email" >{localize("About.email", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errEmail}>
                             <i className="material-icons icon-error">warning</i>
@@ -147,7 +155,7 @@ export class AboutWindow extends React.Component<any, any> {
                         <div className="row form message">
                           <div className="input-field col s12 mes-textarea">
                             <textarea ref="message" id="message" className="materialize-textarea" onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
-                            <label htmlFor="message">{lang.get_resource.About.message}</label>
+                            <label htmlFor="message">{localize("About.message", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errMessage}>
                             <i className="material-icons icon-error">warning</i>
@@ -157,7 +165,7 @@ export class AboutWindow extends React.Component<any, any> {
                       </form>
                     </div>
                     <div className="card-action">
-                      <a onClick={this.validDatas}>{lang.get_resource.About.send}</a>
+                      <a onClick={this.validDatas}>{localize("About.send", locale)}</a>
                     </div>
                   </div>
                 </div>

@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, selectFile, verifySignature } from "../AC";
-import { lang, LangApp } from "../module/global_app";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as signs from "../trusted/sign";
@@ -31,18 +30,24 @@ interface ISignatureWindowProps {
 }
 
 class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: ISignatureWindowProps) {
     super(props);
   }
 
   signed = () => {
     const { files, settings, signer, deleteFile, selectFile } = this.props;
+    const { localize, locale } = this.context;
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
       if (!key) {
         $(".toast-key_not_found").remove();
-        Materialize.toast(lang.get_resource.Sign.key_not_found, 2000, "toast-key_not_found");
+        Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
         return;
       }
 
@@ -55,7 +60,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       if (folderOut.length > 0) {
         if (!utils.dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
-          Materialize.toast(lang.get_resource.Settings.failed_find_directory, 2000, "toast-failed_find_directory");
+          Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
         }
       }
@@ -68,7 +73,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         policies.splice(0, 1);
       }
 
-      if (settings.encoding !== lang.get_resource.Settings.BASE) {
+      if (settings.encoding !== localize("Settings.BASE", locale)) {
         format = trusted.DataFormat.DER;
       }
 
@@ -84,22 +89,23 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       if (res) {
         $(".toast-files_signed").remove();
-        Materialize.toast(lang.get_resource.Sign.files_signed, 2000, "toast-files_signed");
+        Materialize.toast(localize("Sign.files_signed", locale), 2000, "toast-files_signed");
       } else {
         $(".toast-files_signed_failed").remove();
-        Materialize.toast(lang.get_resource.Sign.files_signed_failed, 2000, "toast-files_signed_failed");
+        Materialize.toast(localize("Sign.files_signed_failed", locale), 2000, "toast-files_signed_failed");
       }
     }
   }
 
   resign = () => {
     const { files, settings, signer, deleteFile, selectFile } = this.props;
+    const { localize, locale } = this.context;
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
       if (!key) {
         $(".toast-key_not_found").remove();
-        Materialize.toast(lang.get_resource.Sign.key_not_found, 2000, "toast-key_not_found");
+        Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
         return;
       }
 
@@ -112,7 +118,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       if (folderOut.length > 0) {
         if (!utils.dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
-          Materialize.toast(lang.get_resource.Settings.failed_find_directory, 2000, "toast-failed_find_directory");
+          Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
         }
       }
@@ -121,7 +127,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         policies.splice(0, 1);
       }
 
-      if (settings.encoding !== lang.get_resource.Settings.BASE) {
+      if (settings.encoding !== localize("Settings.BASE", locale)) {
         format = trusted.DataFormat.DER;
       }
 
@@ -137,16 +143,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       if (res) {
         $(".toast-files_resigned").remove();
-        Materialize.toast(lang.get_resource.Sign.files_resigned, 2000, "toast-files_resigned");
+        Materialize.toast(localize("Sign.files_resigned", locale), 2000, "toast-files_resigned");
       } else {
         $(".toast-files_resigned_failed").remove();
-        Materialize.toast(lang.get_resource.Sign.files_resigned_failed, 2000, "toast-files_resigned_failed");
+        Materialize.toast(localize("Sign.files_resigned_failed", locale), 2000, "toast-files_resigned_failed");
       }
     }
   }
 
   unSign = () => {
     const { files, settings, deleteFile, selectFile } = this.props;
+    const { localize, locale } = this.context;
 
     if (files.length > 0) {
       const folderOut = settings.outfolder;
@@ -164,16 +171,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       if (res) {
         $(".toast-files_unsigned_ok").remove();
-        Materialize.toast(lang.get_resource.Sign.files_unsigned_ok, 2000, "toast-files_unsigned_ok");
+        Materialize.toast(localize("Sign.files_unsigned_ok", locale), 2000, "toast-files_unsigned_ok");
       } else {
         $(".toast-files_unsigned_failed").remove();
-        Materialize.toast(lang.get_resource.Sign.files_unsigned_failed, 2000, "toast-files_unsigned_failed");
+        Materialize.toast(localize("Sign.files_unsigned_failed", locale), 2000, "toast-files_unsigned_failed");
       }
     }
   }
 
   verifySign = () => {
     const { files, verifySignature, signatures } = this.props;
+    const { localize, locale } = this.context;
 
     let res = true;
 
@@ -189,14 +197,16 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     if (res) {
       $(".toast-verify_sign_ok").remove();
-      Materialize.toast(lang.get_resource.Sign.verify_sign_ok, 2000, "toast-verify_sign_ok");
+      Materialize.toast(localize("Sign.verify_sign_ok", locale), 2000, "toast-verify_sign_ok");
     } else {
       $(".toast-verify_sign_founds_errors").remove();
-      Materialize.toast(lang.get_resource.Sign.verify_sign_founds_errors, 2000, "toast-verify_sign_founds_errors");
+      Materialize.toast(localize("Sign.verify_sign_founds_errors", locale), 2000, "toast-verify_sign_founds_errors");
     }
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     return (
       <div className="main">
         <Dialog />
@@ -213,10 +223,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
           <SignerCertificateInfo />
           <div className="col s6 m6 l6 content-item-height">
             <BtnsForOperation
-              btn_name_first={lang.get_resource.Sign.sign}
-              btn_name_second={lang.get_resource.Sign.verify}
-              btn_resign={lang.get_resource.Sign.resign}
-              btn_unsign={lang.get_resource.Sign.unsign}
+              btn_name_first={localize("Sign.sign", locale)}
+              btn_name_second={localize("Sign.verify", locale)}
+              btn_resign={localize("Sign.resign", locale)}
+              btn_unsign={localize("Sign.unsign", locale)}
               operation_first={this.signed}
               operation_second={this.verifySign}
               operation_unsign={this.unSign}

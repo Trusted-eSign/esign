@@ -1,14 +1,19 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 import MainWindowWorkSpace from "./MainWindowWorkSpace";
 
 class MainWindow extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
 
   render() {
     const { children } = this.props;
+    const { localize, locale } = this.context;
 
     return (
       <div className="main">
@@ -23,7 +28,7 @@ class MainWindow extends React.Component<any, any> {
                 <div className="col l3 s4">
                   <div className="copyright">
                     <div className="white-text text-lighten-3">
-                      {lang.get_resource.About.company_name}<br />{lang.get_resource.About.copyright}
+                      {localize("About.company_name", locale)}<br />{localize("About.copyright", locale)}
                     </div>
                   </div>
                 </div>

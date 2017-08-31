@@ -27,3 +27,7 @@ export const START = "_START";
 
 export const DER = "DER";
 export const BASE64 = "BASE-64";
+
+export const CHANGE_LOCALE = "CHANGE_LOCALE";
+export const RU = "RU";
+export const EN = "EN";

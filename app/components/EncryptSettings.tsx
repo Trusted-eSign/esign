@@ -4,7 +4,6 @@ import {
   changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt,
   changeEncryptEncoding, changeEncryptOutfolder,
 } from "../AC";
-import { lang } from "../module/global_app";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
@@ -13,6 +12,11 @@ import SelectFolder from "./SelectFolder";
 const dialog = window.electron.remote.dialog;
 
 class EncryptSettings extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
@@ -55,20 +59,21 @@ class EncryptSettings extends React.Component<any, any> {
 
   render() {
     const { settings } = this.props;
+    const { localize, locale } = this.context;
 
     return (
       <div id="encode-settings-content" className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={lang.get_resource.Encrypt.encrypt_setting} />
+        <HeaderWorkspaceBlock text={localize("Encrypt.encrypt_setting", locale)} />
         <div className="settings-content">
           <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange}/>
           <CheckBoxWithLabel onClickCheckBox={this.handleDeleteClick}
             isChecked={settings.delete}
             elementId="delete_files"
-            title={lang.get_resource.Encrypt.delete_files_after} />
+            title={localize("Encrypt.delete_files_after", locale)} />
           <CheckBoxWithLabel onClickCheckBox={this.handleArchiveClick}
             isChecked={settings.archive}
             elementId="archive_files"
-            title={lang.get_resource.Encrypt.archive_files_before} />
+            title={localize("Encrypt.archive_files_before", locale)} />
           <SelectFolder directory={settings.outfolder} viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
         </div>

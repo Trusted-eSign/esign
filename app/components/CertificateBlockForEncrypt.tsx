@@ -2,7 +2,6 @@ import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
 import { addRecipientCertificate, deleteRecipient} from "../AC";
-import { lang } from "../module/global_app";
 import { filteredCertificatesSelector } from "../selectors";
 import { extFile, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
@@ -15,6 +14,11 @@ import ToolBarForEncryptCertificateBlock from "./ToolBarForEncryptCertificateBlo
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class CertificateBlockForEncrypt extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
 
@@ -56,6 +60,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
   render() {
     const { certificates, isLoading, recipients } = this.props;
+    const { localize, locale } = this.context;
 
     if (isLoading) {
       return <ProgressBars />;
@@ -84,13 +89,13 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       </li>;
     } else {
       cert = "";
-      title = <span>{lang.get_resource.Certificate.certs_getters}</span>;
+      title = <span>{localize("Certificate.certs_getters", locale)}</span>;
       activeButton = <li className="right">
         <a className={"nav-small-btn waves-effect waves-light " + DISABLE} data-activates="dropdown-btn-certlist">
           <i className="nav-small-icon material-icons">more_vert</i>
         </a>
         <ul id="dropdown-btn-certlist" className="dropdown-content">
-          <li><a onClick={this.handleCleanList}>{lang.get_resource.Settings.remove_list}</a></li>
+          <li><a onClick={this.handleCleanList}>{localize("Settings.remove_list", locale)}</a></li>
         </ul>
       </li>;
     }
@@ -105,12 +110,12 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       <div id="cert-content" className="content-wrapper z-depth-1">
         <ToolBarForEncryptCertificateBlock certificates={certificates} handleCleanList={this.handleCleanList}/>
         <div className={"cert-contents " + NOT_ACTIVE}>
-          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{lang.get_resource.Certificate.Select_Cert_Encrypt}</a>
+          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{localize("Certificate.Select_Cert_Encrypt", locale)}</a>
         </div>
         <RecipientsList />
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <HeaderWorkspaceBlock text={lang.get_resource.Certificate.certs} new_class="modal-bar" icon="close" onСlickBtn={() => {
+            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
@@ -123,7 +128,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                         <div className={"add-cert-collection collection " + VIEW}>
                           <CertificateList activeCert = {this.activeCert} operation="encrypt" />
                         </div>
-                        <BlockNotElements name={NAME} title={lang.get_resource.Certificate.cert_not_found} />
+                        <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>
                   </div>
@@ -146,12 +151,12 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                           <CertificateList activeCert = {this.handleActiveCert} operation="encrypt" />
                         </div>
                         {cert}
-                        <BlockNotElements name={CHOOSE_VIEW} title={lang.get_resource.Certificate.cert_not_select} />
+                        <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
                       </div>
                     </div>
                   </div>
                   <div className={"choose-cert " + CHOOSE}>
-                    <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={this.chooseCert}>{lang.get_resource.Settings.choose}</a>
+                    <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={this.chooseCert}>{localize("Settings.choose", locale)}</a>
                   </div>
                 </div>
               </div>

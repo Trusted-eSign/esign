@@ -1,10 +1,16 @@
 import * as React from "react";
-import { lang, SETTINGS_JSON } from "../module/global_app";
+import { SETTINGS_JSON } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
+import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
 
 class MenuBar extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
@@ -14,41 +20,40 @@ class MenuBar extends React.Component<any, any> {
   }
 
   closeWindow() {
+    const { localize, locale } = this.context;
+
     const sign_to_json = ({ settings_for_sign: sign.get_settings, certificate_for_sign: sign.get_sign_certificate });
     const encrypt_to_json = ({ settings_for_encrypt: [], certificates_for_encrypt: [] });
-    const main_json = ({ lang: lang.get_lang });
+    const main_json = ({ lang: locale });
     const system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
     const ssystem = JSON.stringify(system, null, 4);
     native.fs.writeFile(SETTINGS_JSON, ssystem, (err: any) => {
       if (err) {
-        console.log(lang.get_resource.Settings.write_file_failed);
+        console.log(localize("Settings.write_file_failed", locale));
       }
-      console.log(lang.get_resource.Settings.write_file_ok);
+      console.log(localize("Settings.write_file_ok", locale));
       mainWindow.close();
     });
   }
 
-  langChange() {
-    lang.get_lang === "RU" ? lang.set_lang = "EN" : lang.set_lang = "RU";
-  }
-
   getTitle() {
+    const { localize, locale } = this.context;
     const pathname = this.props.location.pathname;
     let title: string;
     if (pathname === "/sign")
-      title = lang.get_resource.Sign.sign_and_verify;
+      title = localize("Sign.sign_and_verify", locale);
     else if (pathname === "/encrypt")
-      title = lang.get_resource.Encrypt.encrypt_and_decrypt;
+      title = localize("Encrypt.encrypt_and_decrypt", locale);
     else if (pathname === "/certificate")
-      title = lang.get_resource.Certificate.certs;
+      title = localize("Certificate.certs", locale);
     else if (pathname === "/about")
-      title = lang.get_resource.About.about;
+      title = localize("About.about", locale);
     else if (pathname === "/license")
-      title = lang.get_resource.License.license;
+      title = localize("License.license", locale);
     else if (pathname === "/help")
-      title = lang.get_resource.Help.help;
+      title = localize("Help.help", locale);
     else
-      title = lang.get_resource.About.product_NAME;
+      title = localize("About.product_NAME", locale);
 
     return title;
   }
@@ -74,9 +79,7 @@ class MenuBar extends React.Component<any, any> {
               <li>
                 <ul>
                   <li>
-                    <div className="lang" style={{ visibility: "hidden" }}>
-                      <a className={lang.get_lang} onClick={this.langChange.bind(this)} />
-                    </div>
+                    <LocaleSelect />
                   </li>
                   <li>
                     <a className="minimize-window-btn waves-effect waves-light" onClick={this.minimizeWindow.bind(this)}>

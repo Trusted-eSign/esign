@@ -1,11 +1,15 @@
 import * as React from "react";
-import { lang, LangApp } from "../module/global_app";
 import { sign, SignApp } from "../module/sign_app";
 import CertificateChain from "./CertificateChain";
 import CertificateInfo from "./CertificateInfo";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class SignerCertificateInfo extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
     this.change = this.change.bind(this);
@@ -24,6 +28,8 @@ class SignerCertificateInfo extends React.Component<any, any> {
   }
 
   getCertificateInfo() {
+    const { localize, locale } = this.context;
+
     const certificate = sign.get_sign_cert_info;
     let certificateInfo: any = null;
 
@@ -37,7 +43,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
 
     return (
       <div className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={lang.get_resource.Certificate.cert_info} />
+        <HeaderWorkspaceBlock text={localize("Certificate.cert_info", locale)} />
         {certificateInfo}
       </div>
     );

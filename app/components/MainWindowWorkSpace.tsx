@@ -1,14 +1,20 @@
 import * as React from "react";
-import { lang } from "../module/global_app";
 import MainWindow from "./MainWindow";
 import MainWindowOperation from "./MainWindowOperation";
 
 class MainWindowWorkSpace extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
   }
 
   render() {
+    const { localize, locale } = this.context;
+
     return (
       <div>
         <div className="header image">
@@ -18,7 +24,7 @@ class MainWindowWorkSpace extends React.Component<any, any> {
             </div>
             <div className="col s8">
               <div className="white-text cryptobanner">
-                <p>{lang.get_resource.About.info_about_product}</p>
+                <p>{localize("About.info_about_product", locale)}</p>
               </div>
             </div>
           </div>
@@ -27,21 +33,21 @@ class MainWindowWorkSpace extends React.Component<any, any> {
           <div className="appfunction">
             <div className="row">
               <MainWindowOperation
-                info={lang.get_resource.About.info_about_sign}
-                title_pre={lang.get_resource.Settings.Digital}
-                title_post={lang.get_resource.Sign.Signature}
+                info={localize("About.info_about_sign", locale)}
+                title_pre={localize("Settings.Digital", locale)}
+                title_post={localize("Sign.Signature", locale)}
                 operation="sign"
               />
               <MainWindowOperation
-                info={lang.get_resource.About.info_about_encrypt}
-                title_pre={lang.get_resource.Encrypt.Encryption}
-                title_post={lang.get_resource.Settings.Datas}
+                info={localize("About.info_about_encrypt", locale)}
+                title_pre={localize("Encrypt.Encryption", locale)}
+                title_post={localize("Settings.Datas", locale)}
                 operation="encrypt"
               />
               <MainWindowOperation
-                info={lang.get_resource.About.info_about_certificate}
-                title_pre={lang.get_resource.Settings.Control}
-                title_post={lang.get_resource.Certificate.FCertificates}
+                info={localize("About.info_about_certificate", locale)}
+                title_pre={localize("Settings.Control", locale)}
+                title_post={localize("Certificate.FCertificates", locale)}
                 operation="certificate"
               />
             </div>

@@ -1,6 +1,8 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { hashHistory, IndexRoute, Route, Router } from "react-router";
 import history from "../history";
+import localize from "../i18n/localize";
 import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
 import EncryptWindow from "./EncryptWindow";
@@ -10,8 +12,21 @@ import MenuBar from "./MenuBar";
 import SignatureWindow from "./SignatureWindow";
 
 class App extends React.Component<any, any> {
+  static childContextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
+  }
+
+  getChildContext() {
+    const { locale } = this.props;
+    return {
+      locale,
+      localize,
+    };
   }
 
   render() {
@@ -30,4 +45,6 @@ class App extends React.Component<any, any> {
   }
 }
 
-export default App;
+export default connect(state => ({
+  locale: state.settings.locale,
+}))(App);

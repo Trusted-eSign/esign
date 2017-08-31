@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
-import { lang } from "../module/global_app";
 
 //declare const $: any;
 
@@ -15,6 +14,11 @@ interface ICertificateListItemProps {
 }
 
 class CertificateListItem extends React.Component<ICertificateListItemProps, ICertificateListItemProps> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: ICertificateListItemProps) {
     super(props);
   }
@@ -59,6 +63,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
   render() {
     const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
+    const { localize, locale } = this.context;
     let certKeyMenu: any = null;
     let active = "";
     let doubleClick: (event: any) => void;
@@ -78,7 +83,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
         <i className="cert-setting-item waves-effect material-icons secondary-content"
           data-activates={"cert-key-set-file-" + cert.key} onClick={this.stopEvent}>more_vert</i>
         <ul id={"cert-key-set-file-" + cert.key} className="dropdown-content">
-          <li><a onClick={this.addCertKey}>{lang.get_resource.Certificate.import_key}</a></li>
+          <li><a onClick={this.addCertKey}>{localize("Certificate.import_key", locale)}</a></li>
         </ul>
       </div>;
     } else {

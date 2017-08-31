@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, selectFile } from "../AC";
-import { dlg, lang } from "../module/global_app";
+import { dlg } from "../module/global_app";
 import * as native from "../native";
 import { extFile, mapToArr } from "../utils";
 import DropMenuForFile from "./DropMenuForFile";
@@ -13,6 +13,11 @@ interface IFileSelectorProps {
 }
 
 class FileSelector extends React.Component<IFileSelectorProps, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: IFileSelectorProps) {
     super(props);
   }
@@ -166,13 +171,15 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
   }
 
   dropHandler(event: any) {
+    const { localize, locale } = this.context;
+
     event.stopPropagation();
     event.preventDefault();
     event.target.classList.remove("draggedOver");
     document.querySelector("#droppableZone").classList.remove("droppableZone-active");
     this.checkFolder(event, (items, files, folder) => {
       if (folder) {
-        dlg.ShowDialog(lang.get_resource.Common.add_files, lang.get_resource.Common.add_all_files, (code) => {
+        dlg.ShowDialog(localize("Common.add_files", locale), localize("Common.add_all_files", locale), (code) => {
           if (code) {
             for (let i = 0; i < items.length; i++) {
               this.dropFolderAndFiles(items[i], (err, files) => {
@@ -231,6 +238,8 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
 
   render() {
     const { files, deleteFile } = this.props;
+    const { localize, locale } = this.context;
+
     const self = this;
     let active = files.length > 0 ? "active" : "not-active";
     let collection = files.length > 0 ? "collection" : "";
@@ -240,7 +249,7 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
         <div id="file-content" className="content-wrapper z-depth-1">
           <nav className="app-bar-content">
             <ul className="app-bar-items">
-              <li className="app-bar-item" style={{ width: "calc(100% - 85px)" }}><span>{lang.get_resource.Settings.add_files}</span></li>
+              <li className="app-bar-item" style={{ width: "calc(100% - 85px)" }}><span>{localize("Settings.add_files", locale)}</span></li>
               <li className="right">
                 <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
                   <i className="material-icons nav-small-icon">add</i>
@@ -249,9 +258,9 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
                   <i className="nav-small-icon material-icons">more_vert</i>
                 </a>
                 <ul id="dropdown-btn-set-add-files" className="dropdown-content">
-                  <li><a onClick={this.selectedAll.bind(this)}>{lang.get_resource.Settings.selected_all}</a></li>
-                  <li><a onClick={this.removeSelectedAll.bind(this)}>{lang.get_resource.Settings.remove_selected}</a></li>
-                  <li><a onClick={this.removeAllFiles.bind(this)}>{lang.get_resource.Settings.remove_all_files}</a></li>
+                  <li><a onClick={this.selectedAll.bind(this)}>{localize("Settings.selected_all", locale)}</a></li>
+                  <li><a onClick={this.removeSelectedAll.bind(this)}>{localize("Settings.remove_selected", locale)}</a></li>
+                  <li><a onClick={this.removeAllFiles.bind(this)}>{localize("Settings.remove_all_files", locale)}</a></li>
                 </ul>
               </li>
             </ul>
@@ -264,8 +273,8 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
             </div>
             <div className="add-files" onDragEnter={this.dropZoneActive.bind(this)}>
               <div className={"add-file-item " + active} id="items-hidden">
-                <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{lang.get_resource.Settings.choose_files}</a>
-                <div className="add-file-item-text">{lang.get_resource.Settings.drag_drop}</div>
+                <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
+                <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
                 <i className="material-icons large fullscreen">fullscreen</i>
               </div>
               <div className={"add-files-collection " + collection}>
