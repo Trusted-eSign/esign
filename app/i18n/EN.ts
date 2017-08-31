@@ -41,6 +41,10 @@ export default {
     certs_encrypt: "Encryption certificates",
     certs_getters: "The recipients' certificates",
     cert_imported: "The certificate is already imported",
+    my: "My",
+    root: "Root",
+    certificate_authority: "CertificateAuthority",
+    address_book: "AddressBook",
   },
   Key: {
     key_load_failed: "Error load key",

@@ -11,6 +11,11 @@ interface ICertificateListProps {
 }
 
 class CertificateList extends React.Component<ICertificateListProps, ICertificateListProps> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: ICertificateListProps) {
     super(props);
   }
@@ -27,6 +32,8 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
 
   render() {
     const { certificates, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened, isLoading } = this.props;
+    const { localize, locale } = this.context;
+
     if (isLoading) {
       return <ProgressBars />;
     }
@@ -64,19 +71,19 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
       <div>
         <ul className="collapsible" data-collapsible="accordion">
           <li>
-            <div className="collapsible-header active"><i className="material-icons">person</i>My</div>
+            <div className="collapsible-header active"><i className="material-icons">person</i>{localize("Certificate.my", locale)}</div>
             <div className="collapsible-body">{my}</div>
           </li>
           <li>
-            <div className="collapsible-header"><i className="material-icons">security</i>Root</div>
+            <div className="collapsible-header"><i className="material-icons">security</i>{localize("Certificate.root", locale)}</div>
             <div className="collapsible-body">{root}</div>
           </li>
           <li>
-            <div className="collapsible-header"><i className="material-icons">low_priority</i>CertificateAuthority</div>
+            <div className="collapsible-header"><i className="material-icons">low_priority</i>{localize("Certificate.certificate_authority", locale)}</div>
             <div className="collapsible-body">{ca}</div>
           </li>
           <li>
-            <div className="collapsible-header"><i className="material-icons">people</i>AddressBook</div>
+            <div className="collapsible-header"><i className="material-icons">people</i>{localize("Certificate.address_book", locale)}</div>
             <div className="collapsible-body">{adressbook}</div>
           </li>
         </ul>
