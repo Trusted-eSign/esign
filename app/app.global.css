@@ -2282,3 +2282,43 @@ a.cert-back-btn.waves-effect.waves-light {
 .modal-bar .nav-small-icon {
     color: #ffffff;
 }
+
+.numberCircle {
+  border-radius: 50%;
+  position: relative;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+
+  background: #fff;
+  border: 2px solid #2196f3;
+  color: #2196f3;
+  text-align: center;
+
+  font: 32px;
+  z-index: 2;
+}
+
+.statusOval {
+  background-color: #fff;
+  border: 2px solid #4caf50;
+  border-radius: 50%;
+  -moz-border-radius: 10px; -webkit-border-radius: 10px;
+  color: #4caf50;
+  display: table;
+  font-size: 1em;
+  height: 100%;
+  margin: 0 auto;
+  width: 125px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  float: right;
+}
+
+.rectangle {
+	width: 2px;
+	height: 55px;
+  background: red;
+  float: left;
+}

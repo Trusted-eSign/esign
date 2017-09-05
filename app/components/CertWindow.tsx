@@ -1,8 +1,9 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import {filteredCertificatesSelector} from "../selectors";
+import { filteredCertificatesSelector } from "../selectors";
 import BlockNotElements from "./BlockNotElements";
+import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
 import PasswordDialog from "./PasswordDialog";
@@ -21,12 +22,19 @@ class CertWindow extends React.Component<any, any> {
     super(props);
 
     this.state = ({
-       activeCertificate: null,
+      activeCertificate: null,
+      activeTab: false,
+    });
+  }
+
+  handleTest = ev => {
+    this.setState({
+      activeTab: !this.state.activeTab,
     });
   }
 
   handleActiveCert = (certificate: any) => {
-    this.setState({certificate});
+    this.setState({ certificate });
   }
 
   certImport = (event: any) => {
@@ -191,15 +199,31 @@ class CertWindow extends React.Component<any, any> {
     const { localize, locale } = this.context;
 
     if (isLoading) {
-      return  <ProgressBars />;
+      return <ProgressBars />;
     }
 
     const CURRENT = certificate ? "not-active" : "active";
     let cert: any = null;
     let title: any = null;
 
-    if (certificate) {
+    if (certificate && this.state.activeTab) {
       cert = <CertificateInfo certificate={certificate} />;
+      title = <div className="cert-title-main">
+        <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
+        <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
+      </div>;
+    } else if (certificate) {
+      cert = (
+        <div>
+          <p />
+          <a className="collection-info cert-info" style={{ color: "#2196f3" }}>{localize("Certificate.cert_chain_status", locale)}</a>
+          <div className="collection-info">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
+          <p />
+          <a className="collection-info cert-info" style={{ color: "#2196f3" }}>{localize("Certificate.cert_chain_info", locale)}</a>
+          <p />
+          <CertificateChainInfo certificate={certificate} />
+        </div>
+      );
       title = <div className="cert-title-main">
         <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
         <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
@@ -232,7 +256,7 @@ class CertWindow extends React.Component<any, any> {
                           this.importCertKey(event.target.files);
                         }
                       } />
-                      <CertificateList activeCert = {this.handleActiveCert} operation = "certificate"/>
+                      <CertificateList activeCert={this.handleActiveCert} operation="certificate" />
                     </div>
                     <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                   </div>
@@ -265,6 +289,12 @@ class CertWindow extends React.Component<any, any> {
                   </ul>
                 </nav>
                 <div className="add-certs">
+                  <div>
+                    <ul id="tabs-swipe-demo" className="tabs">
+                      <li className="tab col s1"><a className="cert-info active" onClick={this.handleTest} style={{ "font-size": "55%" }}>{localize("Certificate.cert_info", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info" onClick={this.handleTest} style={{ "font-size": "55%" }}>{localize("Certificate.cert_chain", locale)}</a></li>
+                    </ul>
+                  </div>
                   <div className="add-certs-item">
                     {cert}
                     <BlockNotElements name={CURRENT} title={localize("Certificate.cert_not_select", locale)} />
@@ -282,7 +312,7 @@ class CertWindow extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    certificates: filteredCertificatesSelector(state, {operation: "certificate"}),
+    certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
     isLoading: state.certificates.loading,
   };
 })(CertWindow);

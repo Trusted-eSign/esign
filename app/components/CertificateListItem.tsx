@@ -64,15 +64,31 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   render() {
     const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
     const { localize, locale } = this.context;
+
+    const trueCertStatus = {
+      border: "2px solid #4caf50",
+      color: "#4caf50",
+    };
+
+    const falseCertStatus = {
+      border: "2px solid red",
+      color: "red",
+    };
+
     let certKeyMenu: any = null;
     let active = "";
     let doubleClick: (event: any) => void;
+    let curStyle;
 
-    let status: string;
-    if (cert.status) {
-      status = "status_cert_ok_icon";
+    const status = cert.status;
+    let statusIcon = "";
+
+    if (status) {
+      statusIcon = "status_cert_ok_icon";
+      curStyle = trueCertStatus;
     } else {
-      status = "status_cert_fail_icon";
+      statusIcon = "status_cert_fail_icon";
+      curStyle = falseCertStatus;
     }
 
     if (isOpen) {
@@ -98,9 +114,11 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       onClick={this.handleClick}
       onDoubleClick={doubleClick}>
       <div className="r-iconbox-link">
-        <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
-        <p className="collection-title">{cert.subjectFriendlyName}</p>
-        {/* <p className="collection-info cert-info ">{cert.issuerFriendlyName}</p> */}
+        <div className={"rectangle"} style={status ? {background: "#4caf50"} : {background: "red"}}></div>
+        <div className="collection-title">{cert.subjectFriendlyName}</div>
+        <div className="collection-info cert-info ">{cert.issuerFriendlyName}
+          <div className="statusOval" style={curStyle}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+        </div>
       </div>
       {certKeyMenu}
     </div>;
