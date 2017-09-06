@@ -24,7 +24,7 @@ class RecipientsList extends React.Component<any, any> {
             } else {
               status = "status_cert_fail_icon";
             }
-            return <div className="collection-item avatar certs-collection" key={element.id + 1} onClick={onActive}>
+            return <div className="collection-item avatar certs-collection" key={element.id + 1} onClick={() => onActive(element)}>
               <div className="r-iconbox-link">
                 <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
                 <p className="collection-title">{element.subjectFriendlyName}</p>

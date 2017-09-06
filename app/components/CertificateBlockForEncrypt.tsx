@@ -147,8 +147,8 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     </nav>
                     <div className="add-certs">
                       <div className="add-certs-item">
-                        <div className={"add-cert-collection choose-cert-collection collection " + CHOOSE}>
-                          <CertificateList activeCert = {this.handleActiveCert} operation="encrypt" />
+                        <div className={"add-cert-collection choose-cert-collection " + CHOOSE}>
+                          <RecipientsList onActive = {this.handleActiveCert}/>
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
