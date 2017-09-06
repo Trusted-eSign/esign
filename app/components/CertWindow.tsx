@@ -11,6 +11,8 @@ import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 const DIALOG = window.electron.remote.dialog;
+const CERT_INFO_TAB = 1;
+const CERT_CHAIN_TAB = 2;
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -23,13 +25,15 @@ class CertWindow extends React.Component<any, any> {
 
     this.state = ({
       activeCertificate: null,
-      activeTab: false,
+      activeTab: CERT_INFO_TAB,
     });
   }
 
-  handleTest = ev => {
+  handleTest = (ev, tab) => {
+    ev.preventDefault();
+
     this.setState({
-      activeTab: !this.state.activeTab,
+      activeTab: tab,
     });
   }
 
@@ -195,7 +199,7 @@ class CertWindow extends React.Component<any, any> {
 
   render() {
     const { certificates, isLoading } = this.props;
-    const { certificate } = this.state;
+    const { activeTab, certificate } = this.state;
     const { localize, locale } = this.context;
 
     if (isLoading) {
@@ -206,7 +210,7 @@ class CertWindow extends React.Component<any, any> {
     let cert: any = null;
     let title: any = null;
 
-    if (certificate && this.state.activeTab) {
+    if (certificate && activeTab === CERT_INFO_TAB) {
       cert = <CertificateInfo certificate={certificate} />;
       title = <div className="cert-title-main">
         <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
@@ -291,8 +295,8 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div>
                     <ul id="tabs-swipe-demo" className="tabs">
-                      <li className="tab col s1"><a className="cert-info active" onClick={this.handleTest} style={{ "font-size": "55%" }}>{localize("Certificate.cert_info", locale)}</a></li>
-                      <li className="tab col s1"><a className="cert-info" onClick={this.handleTest} style={{ "font-size": "55%" }}>{localize("Certificate.cert_chain", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={{ "font-size": "55%" }}>{localize("Certificate.cert_info", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={{ "font-size": "55%" }}>{localize("Certificate.cert_chain", locale)}</a></li>
                     </ul>
                   </div>
                   <div className="add-certs-item">
