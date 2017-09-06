@@ -66,12 +66,12 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     const { localize, locale } = this.context;
 
     const trueCertStatus = {
-      border: "2px solid #4caf50",
+      border: "1px solid #4caf50",
       color: "#4caf50",
     };
 
     const falseCertStatus = {
-      border: "2px solid red",
+      border: "1px solid red",
       color: "red",
     };
 

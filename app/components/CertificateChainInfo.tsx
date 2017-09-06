@@ -1,12 +1,12 @@
 import * as React from "react";
 
 const TRUE_CERT_STATUS = {
-  border: "2px solid #4caf50",
+  border: "1px solid #4caf50",
   color: "#4caf50",
 };
 
 const FALSE_CERT_STATUS = {
-  border: "2px solid red",
+  border: "1px solid red",
   color: "red",
 };
 
