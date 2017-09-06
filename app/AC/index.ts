@@ -121,7 +121,7 @@ export function verifySignature(fileId: string) {
       signaruteStatus = signs.verifySign(cms);
       signatureInfo = signs.getSignPropertys(cms);
       signatureInfo = signatureInfo.map((info) => {
-        return {...info, fileId};
+        return {...info, id: fileId, fileId};
       });
 
     } catch (error) {
