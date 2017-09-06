@@ -2317,7 +2317,7 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 
 .rectangle {
-	width: 2px;
+	width: 4px;
 	height: 55px;
   background: red;
   float: left;
