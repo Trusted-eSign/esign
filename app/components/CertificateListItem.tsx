@@ -2,7 +2,23 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
 
-//declare const $: any;
+const trueCertStatus = {
+  border: "1px solid #4caf50",
+  color: "#4caf50",
+};
+
+const falseCertStatus = {
+  border: "1px solid red",
+  color: "red",
+};
+
+const rectangleValidStyle = {
+  background: "#4caf50",
+};
+
+const rectangleUnvalidStyle = {
+  background: "red",
+};
 
 interface ICertificateListItemProps {
   chooseCert: () => void;
@@ -25,7 +41,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
   shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
     return nextProps.isOpen !== this.props.isOpen ||
-           nextProps.cert.verified !== this.props.cert.verified;
+      nextProps.cert.verified !== this.props.cert.verified;
   }
 
   stopEvent = (event: any) => {
@@ -55,7 +71,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   }
 
   handleClick = () => {
-    const { chooseCert, toggleOpen} = this.props;
+    const { chooseCert, toggleOpen } = this.props;
 
     chooseCert();
     toggleOpen();
@@ -65,20 +81,10 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
     const { localize, locale } = this.context;
 
-    const trueCertStatus = {
-      border: "1px solid #4caf50",
-      color: "#4caf50",
-    };
-
-    const falseCertStatus = {
-      border: "1px solid red",
-      color: "red",
-    };
-
     let certKeyMenu: any = null;
     let active = "";
-    let doubleClick: (event: any) => void;
     let curStyle;
+    let rectangleStyle;
 
     const status = cert.status;
     let statusIcon = "";
@@ -86,42 +92,43 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     if (status) {
       statusIcon = "status_cert_ok_icon";
       curStyle = trueCertStatus;
+      rectangleStyle = rectangleValidStyle;
     } else {
       statusIcon = "status_cert_fail_icon";
       curStyle = falseCertStatus;
+      rectangleStyle = rectangleUnvalidStyle;
     }
 
     if (isOpen) {
       active = "active";
     }
     if (operation === "certificate" && cert.key.length === 0 && cert.provider === "SYSTEM") {
-      certKeyMenu = <div key={"i" + "_" + cert.key.toString()}>
-        <i className="cert-setting-item waves-effect material-icons secondary-content"
-          data-activates={"cert-key-set-file-" + cert.key} onClick={this.stopEvent}>more_vert</i>
-        <ul id={"cert-key-set-file-" + cert.key} className="dropdown-content">
-          <li><a onClick={this.addCertKey}>{localize("Certificate.import_key", locale)}</a></li>
-        </ul>
-      </div>;
-    } else {
-      certKeyMenu = "";
-    }
-
-    if (operation === "sign") {
-      doubleClick = selectedCert;
-    }
-
-    return <div key={cert.id.toString()} className={"collection-item avatar certs-collection " + active}
-      onClick={this.handleClick}
-      onDoubleClick={doubleClick}>
-      <div className="r-iconbox-link">
-        <div className={"rectangle"} style={status ? {background: "#4caf50"} : {background: "red"}}></div>
-        <div className="collection-title">{cert.subjectFriendlyName}</div>
-        <div className="collection-info cert-info ">{cert.issuerFriendlyName}
-          <div className="statusOval" style={curStyle}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+      certKeyMenu = (
+        <div>
+          <i className="cert-setting-item waves-effect material-icons secondary-content"
+            data-activates={"cert-key-set-file"} onClick={this.stopEvent}>more_vert</i>
+          <ul id={"cert-key-set-file"} className="dropdown-content">
+            <li><a onClick={this.addCertKey}>{localize("Certificate.import_key", locale)}</a></li>
+          </ul>
         </div>
+      );
+    } else {
+      certKeyMenu = null;
+    }
+
+    return (
+      <div className={"collection-item avatar certs-collection " + active}
+        onClick={this.handleClick}>
+        <div className="r-iconbox-link">
+          <div className={"rectangle"} style={rectangleStyle}></div>
+          <div className="collection-title">{cert.subjectFriendlyName}</div>
+          <div className="collection-info cert-info ">{cert.issuerFriendlyName}
+            <div className="statusOval" style={curStyle}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+          </div>
+        </div>
+        {certKeyMenu}
       </div>
-      {certKeyMenu}
-    </div>;
+    );
   }
 }
 

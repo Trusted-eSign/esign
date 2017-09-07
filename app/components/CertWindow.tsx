@@ -233,7 +233,7 @@ class CertWindow extends React.Component<any, any> {
           <p />
           <a className="collection-info cert-info" style={blueTextStyle}>{localize("Certificate.cert_chain_info", locale)}</a>
           <p />
-          <CertificateChainInfo certificate={certificate} />
+          <CertificateChainInfo certificate={certificate}  key={"chain_" + certificate.id}/>
         </div>
       );
       title = <div className="cert-title-main">
