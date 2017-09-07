@@ -68,7 +68,7 @@ function CertificateChainInfo({ certificate }, context) {
           <div className="collection-title">{certificate.subjectFriendlyName}</div>
           <div className="collection-info cert-info ">{certificate.issuerFriendlyName}
             <div>
-              <div className="statusOval" style={FALSE_CERT_STATUS}>{status ? "действителен" : "недействителен"}</div>
+              <div className="statusOval" style={FALSE_CERT_STATUS}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
             </div>
           </div>
         </div>
