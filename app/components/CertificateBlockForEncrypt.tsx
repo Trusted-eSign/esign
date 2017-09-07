@@ -24,6 +24,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     this.state = ({
       activeCertificate: null,
+      modalCertList: false,
    });
   }
 
@@ -56,6 +57,22 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const { deleteRecipient, recipients } = this.props;
 
     recipients.forEach((recipient) => deleteRecipient(recipient.certId));
+  }
+
+  getCertificateList() {
+    const { modalCertList } = this.state;
+
+    if (!modalCertList) {
+      return null;
+    }
+
+    $(".lean-overlay").remove();
+
+    return (
+      <div className={"add-cert-collection collection "}>
+        <CertificateList activeCert={this.activeCert} operation="encrypt" />
+      </div>
+    );
   }
 
   render() {
@@ -110,7 +127,10 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       <div id="cert-content" className="content-wrapper z-depth-1">
         <ToolBarForEncryptCertificateBlock certificates={certificates} handleCleanList={this.handleCleanList}/>
         <div className={"cert-contents " + NOT_ACTIVE}>
-          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{localize("Certificate.Select_Cert_Encrypt", locale)}</a>
+          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
+            this.setState({modalCertList: true});
+            return $("#add-cert").openModal(); }
+            }>{localize("Certificate.Select_Cert_Encrypt", locale)}</a>
         </div>
         <RecipientsList />
         <div id="add-cert" className="modal cert-window">
@@ -125,9 +145,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="encrypt" />
                     <div className="add-certs">
                       <div className="add-certs-item">
-                        <div className={"add-cert-collection collection " + VIEW}>
-                          <CertificateList activeCert = {this.activeCert} operation="encrypt" />
-                        </div>
+                        {this.getCertificateList()}
                         <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>

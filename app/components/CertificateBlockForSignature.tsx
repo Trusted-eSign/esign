@@ -18,6 +18,9 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+    this.state = ({
+      modalCertList: false,
+    });
   }
 
   activeCert = (cert: any) => {
@@ -40,6 +43,24 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     } else {
       return (<div></div>);
     }
+  }
+
+  getCertificateList() {
+    const { modalCertList } = this.state;
+
+    if (!modalCertList) {
+      return null;
+    }
+
+    $(".lean-overlay").remove();
+
+    return (
+      <div className={"add-cert-collection collection "}>
+        <CertificateList
+          activeCert={this.activeCert}
+          operation="sign" />
+      </div>
+    );
   }
 
   render() {
@@ -76,7 +97,10 @@ class CertificateBlockForSignature extends React.Component<any, any> {
           $("#add-cert").openModal();
         }} />
         <div className={"cert-contents " + NOT_ACTIVE_SIGNER}>
-          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {$("#add-cert").openModal(); }}>{localize("Certificate.Select_Cert_Sign", locale)}</a>
+          <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
+            this.setState({modalCertList: true});
+            $("#add-cert").openModal(); }
+            }>{localize("Certificate.Select_Cert_Sign", locale)}</a>
         </div>
         {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
@@ -91,11 +115,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                     <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="sign" />
                     <div className="add-certs">
                       <div className="add-certs-item">
-                        <div className={"add-cert-collection collection " + CERTIFICATES_NOT_ACTIVE}>
-                          <CertificateList
-                            activeCert={this.activeCert}
-                            operation="sign" />
-                        </div>
+                        {this.getCertificateList()}
                         <BlockNotElements name={CERTIFICATES_ACTIVE} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>
