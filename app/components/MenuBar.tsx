@@ -22,7 +22,7 @@ class MenuBar extends React.Component<any, any> {
   closeWindow() {
     const { localize, locale } = this.context;
 
-    const sign_to_json = ({ settings_for_sign: sign.get_settings, certificate_for_sign: sign.get_sign_certificate });
+    const sign_to_json = ({});
     const encrypt_to_json = ({ settings_for_encrypt: [], certificates_for_encrypt: [] });
     const main_json = ({ lang: locale });
     const system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
