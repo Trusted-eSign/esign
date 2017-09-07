@@ -49,7 +49,14 @@ class SignerCertificateInfo extends React.Component<any, any> {
     );
   }
 
+  removeSignInfo() {
+    sign.set_sign_certs_info = null;
+    sign.set_sign_cert_info = null;
+  }
+
   render() {
+    const { localize, locale } = this.context;
+
     if (!sign.get_sign_certs_info) {
       return null;
     }
@@ -57,6 +64,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
     return (
       <div className={"content-tem sign-info "}>
         <div className="col s6 m6 l6 content-item">
+          <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={this.removeSignInfo.bind(this)} text={localize("Certificate.cert_chain", locale)} />
           <CertificateChain />
         </div>
         <div className="col s6 m6 l6 content-item">

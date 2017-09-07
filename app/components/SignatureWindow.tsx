@@ -204,6 +204,15 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
   }
 
+  getSignatureInfo() {
+    return (
+      <div>
+        <SignatureInfoBlock />
+        <SignerCertificateInfo />
+      </div>
+    );
+  }
+
   render() {
     const { localize, locale } = this.context;
 
@@ -219,8 +228,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
               <SignatureSettings />
             </div>
           </div>
-          <SignatureInfoBlock />
-          <SignerCertificateInfo />
+          {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
             <BtnsForOperation
               btn_name_first={localize("Sign.sign", locale)}

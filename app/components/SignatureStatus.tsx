@@ -25,7 +25,6 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
     const { signed_data } = this.props;
     const { localize, locale } = this.context;
 
-    let self = this;
     let status = "";
     let icon = "";
 
@@ -38,7 +37,7 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
     }
 
     return (
-      <div className="collection-item avatar certs-collection" onClick={function(event: any) { self.viewSignCertInfo(event, signed_data.certs); }}>
+      <div className="collection-item avatar certs-collection" onClick={(event: any) => { this.viewSignCertInfo(event, signed_data.certs); }}>
         <div className="r-iconbox-link">
           <div className="r-iconbox-cert-icon"><i className={icon}></i></div>
           <p className="collection-title si-title">{status}</p>
