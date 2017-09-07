@@ -8,6 +8,10 @@ import DropMenuForFile from "./DropMenuForFile";
 
 const dialog = window.electron.remote.dialog;
 
+const appBarStyle = {
+  width: "calc(100% - 85px)",
+};
+
 interface IFileSelectorProps {
   operation: string;
 }
@@ -249,7 +253,7 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
         <div id="file-content" className="content-wrapper z-depth-1">
           <nav className="app-bar-content">
             <ul className="app-bar-items">
-              <li className="app-bar-item" style={{ width: "calc(100% - 85px)" }}><span>{localize("Settings.add_files", locale)}</span></li>
+              <li className="app-bar-item" style={appBarStyle}><span>{localize("Settings.add_files", locale)}</span></li>
               <li className="right">
                 <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
                   <i className="material-icons nav-small-icon">add</i>

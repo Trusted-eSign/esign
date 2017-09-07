@@ -40,7 +40,7 @@ class HeaderWorkspaceBlock extends React.Component<ItemBarProps, any> {
     return (
       <nav className={"app-bar-content " + name}>
         <ul className="app-bar-items">
-          <li className="app-bar-item" style={{ width: 100 + "%" }}>
+          <li className="app-bar-item">
             {element}
           </li>
           {this.getButtons()}

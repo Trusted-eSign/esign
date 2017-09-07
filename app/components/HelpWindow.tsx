@@ -17,7 +17,7 @@ class HelpWindow extends React.Component<any, any> {
     return (
       <div className="tmain">
         <div className="content">
-          <webview src="help/help.html" style={{ width: 100 + "%" }}></webview>
+          <webview src="help/help.html"></webview>
         </div>
       </div>
     );

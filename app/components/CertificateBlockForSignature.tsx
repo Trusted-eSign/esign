@@ -85,7 +85,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
-              <div className="col s6 m6 l6 content-item-height" style={{ paddingRight: 0 }}>
+              <div className="col s6 m6 l6 content-item-height">
                 <div className="cert-content-item">
                   <div className="content-wrapper z-depth-1">
                     <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="sign" />

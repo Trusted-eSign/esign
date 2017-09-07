@@ -14,7 +14,7 @@ class LocaleSelect extends Component {
     const { locale } = this.props;
 
     return (
-      <div className="lang" style={{ visibility: "" }}>
+      <div className="lang">
         <a className={locale} onClick={this.handleChange} />
       </div>
     );

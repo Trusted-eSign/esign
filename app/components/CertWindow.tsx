@@ -14,6 +14,14 @@ const DIALOG = window.electron.remote.dialog;
 const CERT_INFO_TAB = 1;
 const CERT_CHAIN_TAB = 2;
 
+const blueTextStyle = {
+  color: "#2196f3",
+};
+
+const tabHeaderStyle = {
+  "font-size": "55%",
+};
+
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
     locale: React.PropTypes.string,
@@ -220,10 +228,10 @@ class CertWindow extends React.Component<any, any> {
       cert = (
         <div>
           <p />
-          <a className="collection-info cert-info" style={{ color: "#2196f3" }}>{localize("Certificate.cert_chain_status", locale)}</a>
+          <a className="collection-info cert-info" style={blueTextStyle}>{localize("Certificate.cert_chain_status", locale)}</a>
           <div className="collection-info">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
           <p />
-          <a className="collection-info cert-info" style={{ color: "#2196f3" }}>{localize("Certificate.cert_chain_info", locale)}</a>
+          <a className="collection-info cert-info" style={blueTextStyle}>{localize("Certificate.cert_chain_info", locale)}</a>
           <p />
           <CertificateChainInfo certificate={certificate} />
         </div>
@@ -244,7 +252,7 @@ class CertWindow extends React.Component<any, any> {
     return (
       <div className="main">
         <div className="content">
-          <div className="col s6 m6 l6 content-item-height" style={{ paddingRight: 0 }}>
+          <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
                 <ToolBarWithSearch operation="certificate" disable="" import={
@@ -295,8 +303,8 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div>
                     <ul id="tabs-swipe-demo" className="tabs">
-                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={{ "font-size": "55%" }}>{localize("Certificate.cert_info", locale)}</a></li>
-                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={{ "font-size": "55%" }}>{localize("Certificate.cert_chain", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
                     </ul>
                   </div>
                   <div className="add-certs-item">
