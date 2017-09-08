@@ -1,12 +1,6 @@
 import * as React from "react";
 
-//declare let $: any;
-// tslint:disable-next-line:no-namespace
-// declare global { namespace JSX {
-//   interface IntrinsicElements {
-//         webview: any;
-//     }
-// } }
+const webviewStyle = { width: 100 + "%" };
 
 class HelpWindow extends React.Component<any, any> {
   constructor(props: any) {
@@ -14,10 +8,11 @@ class HelpWindow extends React.Component<any, any> {
   }
 
   render() {
+
     return (
       <div className="tmain">
         <div className="content">
-          <webview src="help/help.html"></webview>
+          <webview src="help/help.html" style={webviewStyle}></webview>
         </div>
       </div>
     );
