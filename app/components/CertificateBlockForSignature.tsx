@@ -93,7 +93,8 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={localize("Certificate.certificate", locale)} icon="add" onСlickBtn={function () {
+        <HeaderWorkspaceBlock text={localize("Certificate.certificate", locale)} icon="add" onСlickBtn={() => {
+          this.setState({modalCertList: true});
           $("#add-cert").openModal();
         }} />
         <div className={"cert-contents " + NOT_ACTIVE_SIGNER}>
