@@ -4,7 +4,7 @@
   "productName": "trusted-esign",
   "version": "1.1.0",
   "main": "./main.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "archiver": "1.3.0",
     "async": "2.3.0",
