@@ -233,7 +233,7 @@ class CertWindow extends React.Component<any, any> {
           <p />
           <a className="collection-info cert-info" style={blueTextStyle}>{localize("Certificate.cert_chain_info", locale)}</a>
           <p />
-          <CertificateChainInfo certificate={certificate}  key={"chain_" + certificate.id}/>
+          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} />
         </div>
       );
       title = <div className="cert-title-main">
@@ -303,8 +303,8 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div>
                     <ul id="tabs-swipe-demo" className="tabs">
-                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
-                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
+                      <li className="tab col s1"><a className="active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
+                      <li className="tab col s1"><a onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
                     </ul>
                   </div>
                   <div className="add-certs-item">

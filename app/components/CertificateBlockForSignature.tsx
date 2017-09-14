@@ -154,4 +154,5 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { selectSignerCertificate })(CertificateBlockForSignature);
+}, { selectSignerCertificate }, null, {
+  pure: false})(CertificateBlockForSignature);

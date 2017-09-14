@@ -102,4 +102,5 @@ export default connect((state, ownProps: IOwnProps) => {
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates })(accordion(CertificateList));
+}, { loadAllCertificates }, null, {
+  pure: false})(accordion(CertificateList));

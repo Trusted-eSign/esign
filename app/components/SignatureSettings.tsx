@@ -85,4 +85,5 @@ class SignatureSettings extends React.Component<any, any> {
 
 export default connect((state) => ({
   settings: state.settings.sign,
-}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp })(SignatureSettings);
+}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp }, null, {
+  pure: false})(SignatureSettings);

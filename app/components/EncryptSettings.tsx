@@ -84,4 +84,5 @@ class EncryptSettings extends React.Component<any, any> {
 
 export default connect((state) => ({
   settings: state.settings.encrypt,
-}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder })(EncryptSettings);
+}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder }, null, {
+  pure: false})(EncryptSettings);
