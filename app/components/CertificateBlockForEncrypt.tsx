@@ -69,7 +69,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     $(".lean-overlay").remove();
 
     return (
-      <div className={"add-cert-collection collection "}>
+      <div className={"add-cert-collection collection small_cert_collection"}>
         <CertificateList activeCert={this.activeCert} operation="encrypt" />
       </div>
     );
@@ -132,7 +132,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
             return $("#add-cert").openModal(); }
             }>{localize("Certificate.Select_Cert_Encrypt", locale)}</a>
         </div>
-        <RecipientsList />
+        <RecipientsList dialogType='window'/>
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
             <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
@@ -166,7 +166,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection " + CHOOSE}>
-                          <RecipientsList onActive = {this.handleActiveCert}/>
+                          <RecipientsList onActive = {this.handleActiveCert} dialogType='modal'/>
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
@@ -193,5 +193,4 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     recipients: mapToArr(state.recipients.entities),
   };
-}, { addRecipientCertificate, deleteRecipient }, null, {
-  pure: false})(CertificateBlockForEncrypt);
+}, { addRecipientCertificate, deleteRecipient })(CertificateBlockForEncrypt);

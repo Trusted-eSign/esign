@@ -23,22 +23,23 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
     return (
       <div className="add-cert-collection collection cert-info-list">
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
           <div className={"collection-title "}>{certificate.serial}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.serialNumber", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.subject", locale)}</div>
           <div className={"collection-title "}>{certificate.subjectFriendlyName}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.subject", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.organization", locale)}</div>
           <div className={"collection-title "}>{certificate.organizationName}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.organization", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.issuer_name", locale)}</div>
           <div className={"collection-title "}>{certificate.issuerFriendlyName}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.issuer_name", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.cert_valid", locale)}</div>        
           <div className={"collection-title "}>{(new Date(certificate.notAfter)).toLocaleDateString(locale, {
             day: "numeric",
             hour: "numeric",
@@ -46,19 +47,18 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
             month: "long",
             year: "numeric",
           })}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.cert_valid", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Sign.alg", locale)}</div>
           <div className={"collection-title "}>{certificate.signatureAlgorithm}</div>
-          <div className={"collection-info cert-info "}>{localize("Sign.alg", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.thumbprint", locale)}</div>
           <div className={"collection-title "}>{certificate.hash}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.thumbprint", locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.priv_key", locale)}</div>
           <div className={"collection-title "}>{PRIV_KEY}</div>
-          <div className={"collection-info cert-info "}>{localize("Certificate.priv_key", locale)}</div>
         </div>
       </div>
     );

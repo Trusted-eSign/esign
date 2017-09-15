@@ -40,8 +40,9 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
 
     const my: object[] = [];
     const root: object[] = [];
-    const ca: object[] = [];
-    const adressbook: object[] = [];
+    const intermediate: object[] = [];
+    const other: object[] = [];
+    const token: object[] = [];    
 
     certificates.forEach((cert) => {
       const element = (
@@ -61,9 +62,11 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
         case "ROOT":
           return root.push(element);
         case "CA":
-          return ca.push(element);
+          return intermediate.push(element);
         case "AddressBook":
-          return adressbook.push(element);
+          return other.push(element);
+        case "TOKEN":
+          return token.push(element);       
       }
     });
 
@@ -71,20 +74,24 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
       <div>
         <ul className="collapsible" data-collapsible="accordion">
           <li>
-            <div className="collapsible-header active"><i className="material-icons">person</i>{localize("Certificate.my", locale)}</div>
+            <div className="collapsible-header color"><i className="material-icons left my"></i>{localize("Certificate.certs_my", locale)}</div>
             <div className="collapsible-body">{my}</div>
           </li>
           <li>
-            <div className="collapsible-header"><i className="material-icons">security</i>{localize("Certificate.root", locale)}</div>
+            <div className="collapsible-header color"><i className="material-icons left other"></i>{localize("Certificate.certs_other", locale)}</div>
+            <div className="collapsible-body">{other}</div>
+          </li>
+          <li>
+            <div className="collapsible-header color"><i className="material-icons left intermediate"></i>{localize("Certificate.certs_intermediate", locale)}</div>
+            <div className="collapsible-body">{intermediate}</div>
+          </li>
+          <li>
+            <div className="collapsible-header color"><i className="material-icons left root"></i>{localize("Certificate.certs_root", locale)}</div>
             <div className="collapsible-body">{root}</div>
           </li>
           <li>
-            <div className="collapsible-header"><i className="material-icons">low_priority</i>{localize("Certificate.certificate_authority", locale)}</div>
-            <div className="collapsible-body">{ca}</div>
-          </li>
-          <li>
-            <div className="collapsible-header"><i className="material-icons">people</i>{localize("Certificate.address_book", locale)}</div>
-            <div className="collapsible-body">{adressbook}</div>
+            <div className="collapsible-header color"><i className="material-icons left token"></i>{localize("Certificate.certs_token", locale)}</div>
+            <div className="collapsible-body">{token}</div>
           </li>
         </ul>
       </div>
@@ -102,5 +109,4 @@ export default connect((state, ownProps: IOwnProps) => {
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates }, null, {
-  pure: false})(accordion(CertificateList));
+}, { loadAllCertificates },null,{pure:false})(accordion(CertificateList));

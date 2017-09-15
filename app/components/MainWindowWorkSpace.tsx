@@ -19,7 +19,7 @@ class MainWindowWorkSpace extends React.Component<any, any> {
       <div>
         <div className="header image">
           <div className="row">
-            <div className="col s4">
+            <div className="col s3">
               <i className="logo"></i>
             </div>
             <div className="col s8">

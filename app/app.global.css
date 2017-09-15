@@ -63,7 +63,7 @@ nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
     font-size: 100%;
 }
 .app-bar, .menu-logo{
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 .menu-elements {
     position: absolute;
@@ -102,7 +102,7 @@ nav .input-field input {
     display:flex;
     min-width: 800px;
     min-height: 536px;
-    border: 2px solid #b64729;
+    border: 2px solid #bf3817;
     border-top: none;
     width: 100%;
     height: calc(100% - 48px);
@@ -279,7 +279,7 @@ body {
 }
 
 .btn:hover, .add-cert-btn:hover, .operation-btn:hover {
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 /*--- file list---*/
 .collection {
@@ -288,6 +288,11 @@ body {
     margin: 0;
     border: none;
 }
+
+.small_cert_collection {
+    font-size: 70%;
+}
+
 .collection-info {
     font-size: 90%;
 }
@@ -372,13 +377,21 @@ div::-webkit-scrollbar-thumb {
 
 
 /*---------------------------------Стили главного меню-----------------------*/
-.logo-trusted img {
+/*.logo-trusted img {
   width: 60px;
   height: 60px;
-}
+}*/
 .logo-trusted {
-    padding: 5px 0;
+    position:absolute;
+    padding-left: 0px;
+    margin-left: 80px;
+    margin-top: 6px;
+    padding-top: 5px;
     height: 60px;
+    width: 60px;
+    background: url(./resources/image/trusted-esign.png);
+    background-size: 60px 60px;
+
 }
 
 /*-------------------------------Стили блоков внутри страницы------------------*/
@@ -421,7 +434,7 @@ div::-webkit-scrollbar-thumb {
 /*-------------------------------Стили кнопок------------------*/
 
 .btn, .add-cert-btn, .operation-btn, .choose-btn {
-    background-color: #b64729;
+    background-color: #bf3817;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -429,17 +442,17 @@ div::-webkit-scrollbar-thumb {
 }
 
 .choose-btn:hover{
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 
 
 
 .add-file-but {
-    background-color: #b64729;
+    background-color: #bf3817;
     font-size:60%;
 }
 .add-file-but:hover {
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 
 .btn-large {
@@ -462,7 +475,7 @@ div::-webkit-scrollbar-thumb {
 .side-nav {
     height: 100%;
     width: 240px;
-    border: 2px solid #b64729;
+    border: 2px solid #bf3817;
     overflow: hidden;
 }
 
@@ -614,16 +627,16 @@ i.material-icons.choosefolder {
 }
 .RU {
     display: block;
-    width: 30px;
-    height: 20px;
-    background: url(./resources/image/Flag_of_Russia.png);
+    /*width: 30px;
+    height: 20px;*/
+    /*//background: url(./resources/image/Flag_of_Russia.png);*/
     background-size: 100%;
 }
 .EN {
     display: block;
-    width: 30px;
-    height: 20px;
-    background: url(./resources/image/Flag_of_United_States.png);
+    /*width: 30px;
+    height: 20px;*/
+    /*//background: url(./resources/image/Flag_of_United_States.png);*/
     background-size: 100%;
 }
 .RU:hover, .EN:hover {
@@ -636,7 +649,32 @@ i.material-icons.choosefolder {
     margin: 0 10px;
 }
 
+.triangle-down {
+	width: 0;
+	height: 0;
+	border-left: 50px solid transparent;
+	border-right: 50px solid transparent;
+	border-top: 100px solid white;
+}
+
 /*-------------------------------Стили сомпонента выбора сертификатов------------------*/
+
+.tabs .tab a{
+    color:black;
+}
+
+.tabs .tab a:hover{
+    color:gray;
+}
+
+.tabs .indicator{
+    background-color: #334294;
+}
+
+.collapsible-header.color{
+    background-color: ghostwhite;
+}
+
 .cert-text {
     color: white;
 }
@@ -648,7 +686,7 @@ i.material-icons.choosefolder {
     display:flex;
     width: 100%;
     height: calc(100% - 48px);
-    border: 2px solid #b64729;
+    border: 2px solid #bf3817;
     border-top: none;
 }
 .add-cert-content {
@@ -725,6 +763,35 @@ nav .cert-seacrh label i {
 .cert-info {
     color: gray;
 }
+
+.cert-info-blue {
+    color: #334294;
+    /*font-size: 95%;*/
+    font-size: 13px;
+} 
+
+.chain-info-blue {
+    color: #334294;
+    /*font-size: 95%;*/
+    font-size: 13px;
+} 
+
+.chain-status {
+    padding-top: 0px;
+    padding-bottom: 10px;
+    font-size: 14px;
+} 
+
+.row.chain-item{
+    margin-bottom:0px;
+    height: 64px;
+}
+
+.chain-text{
+    padding-left:0px;
+}
+
+
 .collection-item.certs-collection.certificate-info {
     padding: 10px 10px;
     border: none;
@@ -776,7 +843,10 @@ nav .cert-seacrh label i {
     visibility: hidden;
 }
 .collection-item.avatar.certs-collection {
-    padding: 5px 10px;
+    padding-top: 0px;
+    padding-right: 10px;
+    padding-bottom: 0px;
+    padding-left: 0px;
     color: black;
     min-height: 0;
     border-bottom: 1px solid #e0e0e0;
@@ -919,6 +989,56 @@ nav .cert-seacrh label i {
   padding: 6px 6px;
 }
 
+i.material-icons.left.my {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_my.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
+i.material-icons.left.other {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_other.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
+i.material-icons.left.intermediate {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_intermediate.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
+i.material-icons.left.root {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_root.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
+i.material-icons.left.token {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_token.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
 /*-----------------Главная страница--------------------*/
 .header{
     margin-top: 1px;
@@ -926,7 +1046,8 @@ nav .cert-seacrh label i {
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
-    height: 46%;
+    /*height: 46%;*/
+    height: 184px;
     background: url(./resources/image/main_window_header.png);
 }
 
@@ -939,11 +1060,12 @@ nav .cert-seacrh label i {
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
+  height: 184px;
 }
 
 .mainfooter{
   height: 68px;
-  background-color: #b64729;
+  background-color: #bf3817;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
@@ -955,7 +1077,7 @@ nav .cert-seacrh label i {
   text-indent: -9999px;
   width: 100px;
   height: 100px;
-  background: url(./resources/trusted-esign.png);
+  background: url(./resources/image/trusted-esign.svg);
   background-size: 100px 100px;
   margin-top: 30px;
   margin-left: 55px;
@@ -1145,14 +1267,14 @@ h5.r-iconbox-title {
   line-height: 110%;
   padding-left: 75px;
   padding-top: 16px;
-  color: #b64729;
+  color: #bf3817;
 }
 
 h6.r-iconbox-title {
 display: inline-block;
     position: absolute;
     margin-left: 18px;
-    color: #b64729;
+    color: #bf3817;
     font-size: 1.3rem;
     margin-top: 14px;
 }
@@ -1200,7 +1322,7 @@ display: inline-block;
 }
 
 span.card-title {
-  color: #b64729;
+  color: #bf3817;
   font-size: 20px;
 }
 
@@ -1214,7 +1336,7 @@ span.card-title {
 }
 
 .card .card-action a:not(.btn):not(.btn-large):not(.btn-floating) {
-  color: #b64729;
+  color: #bf3817;
   margin-right: 20px;
   transition: color .3s ease;
   text-transform: uppercase;
@@ -1472,14 +1594,17 @@ a {
 }
 
 a.menuheaderlink {
-    background-color:  #b64729;
+    background-color:  #bf3817;
 }
 
 a.menuheaderlink:hover {
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 
 .logo-text {
+    position: absolute;
+    left: 55px;
+    margin-top: 60px;
     color: white;
     font-size: 150%;
     height: 38px;
@@ -1520,15 +1645,15 @@ a.menuheaderlink:hover {
   text-indent: -9999px;
   width: 16px;
   height: 16px;
-  background: #b64729;
+  background: #bf3817;
   border-radius: 100%;
   background-size: 16px 16px;
 }
 
 .desktoplic_area{
     height: 300px;
-    border-left: 1px solid #b64729;
-    border-right: 1px solid #b64729;
+    border-left: 1px solid #bf3817;
+    border-right: 1px solid #bf3817;
 }
 
 .onlinelic_area{
@@ -1591,7 +1716,7 @@ p.message_onlinelic{
 .licence-modal-content {
     padding: 15px;
     font-size: 80%;
-    border: 2px solid #b64729;
+    border: 2px solid #bf3817;
     border-top: none;
 }
 .input-field-licence {
@@ -1795,17 +1920,17 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 .slider-red .indicators .indicator-item {
   background-color: #ffffff;
-  border: 2px solid #b64729;
+  border: 2px solid #bf3817;
 }
 .slider-white .indicators .indicator-item {
-  background-color: #b64729;
+  background-color: #bf3817;
   border: 2px solid #ffffff;
 }
 .slider.fullscreen ul.indicators {
     bottom: 0;
 }
 .slider-red .indicators .indicator-item.active {
-  background-color: #b64729;
+  background-color: #bf3817;
 }
 .slider-white .indicators .indicator-item.active {
   background-color: #ffffff;
@@ -1828,7 +1953,7 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 .material-icons.slider-btn-red {
     font-size: 44px;
-    color: #b64729;
+    color: #bf3817;
 }
 .material-icons.slider-btn-white {
     font-size: 44px;
@@ -2083,6 +2208,68 @@ a.cert-back-btn.waves-effect.waves-light {
     height: 90px;
     left: 50px;
 }
+
+.key {
+    background: url(./resources/image/key.svg);
+    background-size: 100%;
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    margin-left: 331px;
+    top: 40px;
+    padding-left: 0px;
+    left: 0px;
+}
+
+.key.short {
+    margin-left: 265px;
+}
+
+
+.cert_status_ok {
+    background: url(./resources/image/cert_status_ok.svg);
+    background-size: 100%;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    margin-left: 326px;
+    top: 7px;
+    padding-left: 0px;
+    left: 0px;
+}
+
+.cert_status_error {
+    background: url(./resources/image/cert_status_error.svg);
+    background-size: 100%;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    margin-left: 326px;
+    top: 7px;
+    padding-left: 0px;
+    left: 0px;
+}
+
+.cert_status_ok.short {
+    margin-left: 261px;
+}
+
+.cert_status_error.short {
+    margin-left: 261px;
+}
+
+.cert_status_ok.long{
+    margin-left: 355px;
+}
+
+.cert_status_error.long {
+    margin-left: 355px;
+}
+
+.key.long{
+    margin-left: 359px;
+}
+
 /*---------------вход по сертификату---------------*/
 .reg-cert-content {
     height: calc(100% - 120px);
@@ -2222,7 +2409,7 @@ a.cert-back-btn.waves-effect.waves-light {
 .dialog-bar {
     height: 35px;
     line-height: 35px;
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 .dialog-bar .app-bar-item {
     color: #ffffff;
@@ -2244,6 +2431,68 @@ a.cert-back-btn.waves-effect.waves-light {
     margin-left: 5px;
 }
 /*---------cert chain--------------*/
+
+i.material-icons.left {
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
+}
+
+i.material-icons.left.chain_1 {
+  background: url(./resources/image/chain_1.svg);
+}
+
+i.material-icons.left.chain_2 {
+  background: url(./resources/image/chain_2.svg);
+}
+
+i.material-icons.left.chain_3 {
+  background: url(./resources/image/chain_3.svg);
+}
+
+i.material-icons.left.chain_4 {
+  background: url(./resources/image/chain_4.svg);
+}
+
+i.material-icons.left.chain_5 {
+  background: url(./resources/image/chain_5.svg);
+}
+
+i.material-icons.left.chain_6 {
+  background: url(./resources/image/chain_6.svg);
+}
+
+i.material-icons.left.chain_7 {
+  background: url(./resources/image/chain_7.svg);
+}
+
+i.material-icons.left.chain_8 {
+  background: url(./resources/image/chain_8.svg);
+}
+
+i.material-icons.left.chain_9 {
+  background: url(./resources/image/chain_9.svg);
+}
+
+i.material-icons.left.chain_10 {
+  background: url(./resources/image/chain_10.svg);
+}
+
+i.material-icons.left.line {
+  display: block;
+  text-indent: -9999px;
+  width: 4px;
+  height: 24px;
+  background: url(./resources/image/chain_vertline.svg);
+  background-size: 4px 24px;
+}
+
+.chain_textblock{
+    padding-top: 11px;
+}
 
 .collection .collection-item.avatar.cs-chain {
     padding: 4px;
@@ -2274,7 +2523,7 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 /*----------------------------*/
 .modal-bar {
-    background-color: #b64729;
+    background-color: #bf3817;
 }
 .modal-bar .app-bar-item {
     color: #ffffff;
@@ -2315,8 +2564,19 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 
 .rectangle {
-	width: 4px;
-	height: 55px;
-  background: red;
+	width: 3px;
+	height: 63px;
+  background: #bf3817;
   float: left;
+}
+
+.vert_line {
+	position:absolute;
+    float:left;
+    background: #334294;
+    left: 0px;
+    margin-left: 21px;
+    margin-top: 47px;
+    height: 34px;
+    width: 2px;
 }

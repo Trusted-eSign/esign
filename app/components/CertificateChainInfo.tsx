@@ -10,6 +10,8 @@ const FALSE_CERT_STATUS = {
   color: "red",
 };
 
+
+
 const getChain = (certItem: any) => {
   try {
     const cert = window.PKISTORE.getPkiObject(certItem);
@@ -40,37 +42,69 @@ function CertificateChainInfo({ certificate }, context) {
   const chain = getChain(certificate);
   const elements = [];
   let curStyle;
+  let curStatusStyle = {};
+  let curKeyStyle = {};
 
   if (chain && chain.length) {
     for (let j: number = chain.length - 1; j >= 0; j--) {
       const element = chain.items(j);
       const status = certVerify(element);
-
-      status ? curStyle = TRUE_CERT_STATUS : curStyle = FALSE_CERT_STATUS;
+      let circleStyle = "material-icons left chain_1";
+      let vertlineStyle = {
+          visibility: 'hidden',
+      };
+      let  curKeyStyle = "";
+      if(j<10) circleStyle = "material-icons left chain_" + (j + 1);
+      else circleStyle = "material-icons left chain_10";
+      if(j > 0) vertlineStyle.visibility= 'visible';
+      if (status) {
+            curStatusStyle = "cert_status_ok";
+          } else {
+            curStatusStyle = "cert_status_error";
+          }
+      curKeyStyle = certificate.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
       elements.push(
-        <div className={"collection collection-item avatar certs-collection "}>
-          <div className="r-iconbox-link">
-            <div className={"r-iconbox-cert-icon numberCircle"}>{j + 1}</div>
-            <div className="collection-title">{element.subjectFriendlyName}</div>
-            <div className="collection-info cert-info ">{element.issuerFriendlyName}
-              <div>
-                <div className="statusOval" style={curStyle}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+        <div className={"collection collection-item avatar certs-collection chain-text"}>
+          <div className="row chain-item">
+              <div className="col s1">
+                  <i className={circleStyle}></i>
+                   <div className={"vert_line"} style={vertlineStyle}></div>
               </div>
-            </div>
+              <div className="col s8">
+                <div className="r-iconbox-link">
+                  <div className="collection-title chain_textblock">{element.subjectFriendlyName}</div>
+                  <div className="collection-info cert-info ">{element.issuerFriendlyName}</div>
+                </div>              
+              </div>
+              <div className={curKeyStyle}></div>
+              <div className={curStatusStyle}></div>  
           </div>
         </div>);
     }
   } else {
-    elements.push(
-      <div className={"collection collection-item avatar certs-collection "}>
-        <div className="r-iconbox-link">
-          <div className={"r-iconbox-cert-icon numberCircle"}>1</div>
-          <div className="collection-title">{certificate.subjectFriendlyName}</div>
-          <div className="collection-info cert-info ">{certificate.issuerFriendlyName}
-            <div>
-              <div className="statusOval" style={FALSE_CERT_STATUS}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+      let circleStyle = "material-icons left chain_1";
+      let vertlineStyle = {
+          visibility: 'hidden',
+      };
+      curStatusStyle = "cert_status_error";
+      let  curKeyStyle = certificate.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
+      elements.push(
+      <div className={"collection collection-item avatar certs-collection chain-text"}>
+        <div className="row chain-item">
+            <div className="col s1">
+                  <i className={circleStyle}></i>
+                  <div className={"vert_line"} style={vertlineStyle}></div>
             </div>
-          </div>
+            <div className="col s8">
+              <div className="r-iconbox-link">
+                <div className="collection-title chain_textblock">{certificate.subjectFriendlyName}</div>
+                <div className="collection-info cert-info ">{certificate.issuerFriendlyName}<div>
+              </div>
+            </div>
+            <div className={curKeyStyle}></div>
+            <div className={curStatusStyle}></div>  
+        </div>
+      </div>
         </div>
       </div>);
   }

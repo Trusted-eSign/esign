@@ -32,7 +32,7 @@ class SideMenu extends React.Component<any, any> {
         <nav className="menu-logo">
           <div className="center">
             <Link to="/" className="menuheaderlink" href="/" {...settings}>
-              <i className="logo-trusted"><img src="trusted-esign.png" {...settings} /></i><div className="logo-text">{localize("About.product_NAME", locale)}</div>
+              <i className="logo-trusted"></i><div className="logo-text">{localize("About.product_NAME", locale)}</div>
             </Link>
           </div>
         </nav>

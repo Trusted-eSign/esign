@@ -2,22 +2,12 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
 
-const trueCertStatus = {
-  border: "1px solid #4caf50",
-  color: "#4caf50",
-};
-
-const falseCertStatus = {
-  border: "1px solid red",
-  color: "red",
-};
-
 const rectangleValidStyle = {
   background: "#4caf50",
 };
 
 const rectangleUnvalidStyle = {
-  background: "red",
+  background: "#bf3817",
 };
 
 interface ICertificateListItemProps {
@@ -43,6 +33,8 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     return nextProps.isOpen !== this.props.isOpen ||
       nextProps.cert.verified !== this.props.cert.verified;
   }
+
+
 
   stopEvent = (event: any) => {
     event.stopPropagation();
@@ -83,21 +75,29 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
     let certKeyMenu: any = null;
     let active = "";
-    let curStyle;
+    let curStatusStyle;
+    let curKeyStyle;
     let rectangleStyle;
 
     const status = cert.status;
     let statusIcon = "";
 
     if (status) {
-      statusIcon = "status_cert_ok_icon";
-      curStyle = trueCertStatus;
+      curStatusStyle = "cert_status_ok";
       rectangleStyle = rectangleValidStyle;
     } else {
-      statusIcon = "status_cert_fail_icon";
-      curStyle = falseCertStatus;
+      curStatusStyle = "cert_status_error";
       rectangleStyle = rectangleUnvalidStyle;
     }
+
+    if(operation=='encrypt' || operation=='sign'){
+        curKeyStyle = cert.key.length > 0 ? curKeyStyle="key short" : curKeyStyle="";
+        curStatusStyle+=" short";
+    }else{
+        curKeyStyle = cert.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
+
+    }
+ 
 
     if (isOpen) {
       active = "active";
@@ -123,7 +123,8 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
           <div className={"rectangle"} style={rectangleStyle}></div>
           <div className="collection-title">{cert.subjectFriendlyName}</div>
           <div className="collection-info cert-info ">{cert.issuerFriendlyName}
-            <div className="statusOval" style={curStyle}>{status ? localize("Certificate.cert_status_true", locale) : localize("Certificate.cert_status_false", locale)}</div>
+          <div className={curKeyStyle}></div>
+          <div className={curStatusStyle}></div>          
           </div>
         </div>
         {certKeyMenu}

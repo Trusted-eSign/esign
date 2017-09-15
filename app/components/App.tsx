@@ -45,6 +45,6 @@ class App extends React.Component<any, any> {
   }
 }
 
-export default connect((state) => ({
+export default connect(state => ({
   locale: state.settings.locale,
 }))(App);

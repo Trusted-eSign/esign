@@ -15,7 +15,7 @@ class LocaleSelect extends Component {
 
     return (
       <div className="lang">
-        <a className={locale} onClick={this.handleChange} />
+        <a className={locale} onClick={this.handleChange}>{locale}</a>
       </div>
     );
   }

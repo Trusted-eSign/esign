@@ -55,7 +55,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     $(".lean-overlay").remove();
 
     return (
-      <div className={"add-cert-collection collection "}>
+      <div className={"add-cert-collection collection small_cert_collection"}>
         <CertificateList
           activeCert={this.activeCert}
           operation="sign" />
@@ -154,5 +154,4 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { selectSignerCertificate }, null, {
-  pure: false})(CertificateBlockForSignature);
+}, { selectSignerCertificate })(CertificateBlockForSignature);

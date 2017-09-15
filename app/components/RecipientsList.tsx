@@ -2,13 +2,22 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { mapToArr } from "../utils";
 
+
+const rectangleValidStyle = {
+  background: "#4caf50",
+};
+
+const rectangleUnvalidStyle = {
+  background: "#bf3817",
+};
+
 class RecipientsList extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
   }
 
   render() {
-    const { certificates, recipients, onActive } = this.props;
+    const { certificates, recipients, onActive, dialogType } = this.props;
 
     if (!recipients || !recipients.length) {
       return null;
@@ -19,16 +28,28 @@ class RecipientsList extends React.Component<any, any> {
         <div className={"add-cert-collection collection "}>
           {recipients.map((element) => {
             let status: string;
+            let curStatusStyle;
+            let curKeyStyle;
+            let rectangleStyle;
             if (element.status) {
-              status = "status_cert_ok_icon";
+                (dialogType=='modal') ? curStatusStyle = "cert_status_ok short": curStatusStyle = "cert_status_ok long";
+                rectangleStyle = rectangleValidStyle;
             } else {
-              status = "status_cert_fail_icon";
+                (dialogType=='modal') ? curStatusStyle = "cert_status_error short": curStatusStyle = "cert_status_error long";
+                rectangleStyle = rectangleUnvalidStyle;
             }
+            if(element.key.length > 0) 
+                (dialogType=='modal') ? curKeyStyle="key short" : curKeyStyle="key long";
+            else curKeyStyle="";
+
             return <div className="collection-item avatar certs-collection" key={element.id + 1} onClick={() => onActive(element)}>
               <div className="r-iconbox-link">
-                <div className="r-iconbox-cert-icon"><i className={status} id="cert-status"></i></div>
-                <p className="collection-title">{element.subjectFriendlyName}</p>
-                <p className="collection-info cert-info">{element.issuerFriendlyName}</p>
+                <div className={"rectangle"} style={rectangleStyle}></div>
+                <div className="collection-title">{element.subjectFriendlyName}</div>
+                <div className="collection-info cert-info ">{element.issuerFriendlyName}
+                  <div className={curKeyStyle}></div>
+                  <div className={curStatusStyle}></div>  
+                </div>
               </div>
             </div>;
           })}
