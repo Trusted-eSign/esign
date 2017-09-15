@@ -31,3 +31,14 @@ export const BASE64 = "BASE-64";
 export const CHANGE_LOCALE = "CHANGE_LOCALE";
 export const RU = "RU";
 export const EN = "EN";
+
+export const MY = "MY";
+export const ADDRESS_BOOK = "AddressBook";
+export const ROOT = "ROOT";
+export const TRUST = "TRUST";
+export const CA = "CA";
+export const REQUEST = "Request";
+
+export const PROVIDER_SYSTEM = "PROVIDER_SYSTEM";
+export const PROVIDER_MICROSOFT = "PROVIDER_MICROSOFT";
+export const PROVIDER_CRYPTOPRO = "PROVIDER_CRYPTOPRO";

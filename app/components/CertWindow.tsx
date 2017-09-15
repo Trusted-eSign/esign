@@ -1,7 +1,9 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
+import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
+import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
@@ -52,24 +54,31 @@ class CertWindow extends React.Component<any, any> {
     this.setState({ certificate });
   }
 
-  certImport = (event: any) => {
+  handleCertificateImport = (event: any) => {
     const { certificates } = this.props;
     const { localize, locale } = this.context;
 
-    const CERT_PATH = event[0].path;
+    const path = event[0].path;
+    const format: trusted.DataFormat = getFileCoding(path);
     const certCount = certificates.length;
 
-    if (!window.PKISTORE.importCert(CERT_PATH)) {
-      this.p12Import(event);
-    } else {
-      if (certCount === certificates.length) {
-        $(".toast-cert_imported").remove();
-        Materialize.toast(localize("Certificate.cert_imported", locale), 2000, "toast-cert_imported");
-      } else {
-        $(".toast-cert_import_ok").remove();
-        Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
-      }
+    let certificate: trusted.pki.Certificate;
+    let providerType: string = PROVIDER_SYSTEM;
+
+    try {
+      certificate = trusted.pki.Certificate.load(path, format);
+    } catch (e) {
+      $(".toast-cert_load_failed").remove();
+      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+
+      return;
     }
+
+    if (OS_TYPE === "Windows_NT") {
+      providerType = PROVIDER_MICROSOFT;
+    }
+
+    window.PKISTORE.importCertificate(certificate, providerType);
   }
 
   p12Import = (event: any) => {
@@ -265,7 +274,7 @@ class CertWindow extends React.Component<any, any> {
               <div className="content-wrapper z-depth-1">
                 <ToolBarWithSearch operation="certificate" disable="" import={
                   (event: any) => {
-                    this.certImport(event.target.files);
+                    this.handleCertificateImport(event.target.files);
                   }
                 } />
                 <div className="add-certs">

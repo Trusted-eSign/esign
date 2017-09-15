@@ -106,7 +106,10 @@ declare namespace native {
             getSignatureAlgorithm(): string;
             getSignatureDigest(): string;
             getOrganizationName(): string;
+            getOCSPUrls(): string[];
+            getCAIssuersUrls(): string[];
             isSelfSigned(): boolean;
+            isCA(): boolean;
             load(filename: string, dataFormat: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
@@ -378,15 +381,15 @@ declare namespace native {
              * Возвращает ключ по фильтру
              * - фильтр задается относительно элементов, которые могут быть связаны с ключом
              */
-            findKey(filter: IFilter): IPkiItem;
+            findKey(filter: Filter): IPkiItem;
             /**
              * Возвращает объект из структуры
              */
             getItem(item: PkiItem): any;
             getCerts(): PKI.CertificateCollection;
             addProvider(provider: Provider): void;
-            addCert(provider: Provider, category: string, cert: PKI.Certificate, flags: number): string;
-            addCrl(provider: Provider, category: string, crl: PKI.CRL, flags: number): string;
+            addCert(provider: Provider, category: string, cert: PKI.Certificate): string;
+            addCrl(provider: Provider, category: string, crl: PKI.CRL): string;
             addKey(provider: Provider, key: PKI.Key, password: string): string;
             addCsr(provider: Provider, category: string, csr: PKI.CertificationRequest): string;
         }
@@ -554,6 +557,16 @@ declare namespace trusted.common {
          */
         constructor();
     }
+}
+declare namespace trusted.utils {
+    /**
+     * Download file
+     *
+     * @param {string} url Url to remote file
+     * @param {string} path Path for save in local system
+     * @param {Function} done callback function
+     */
+    function download(url: string, path: string, done: (err: Error, url?: string, path?: string) => void): void;
 }
 declare namespace trusted.utils {
     /**
@@ -1138,6 +1151,17 @@ declare namespace trusted.pki {
          */
         static import(buffer: Buffer, format?: DataFormat): Certificate;
         /**
+         * Download certificate
+         *
+         * @static
+         * @param {string[]} urls
+         * @param {string} pathForSave File path
+         * @param {Function} done callback
+         *
+         * @memberOf Certificate
+         */
+        static download(urls: string[], pathForSave: string, done: (err: Error, certificate: Certificate) => void): void;
+        /**
          * Creates an instance of Certificate.
          * @param {native.PKI.Certificate} [param]
          *
@@ -1257,6 +1281,22 @@ declare namespace trusted.pki {
          */
         readonly organizationName: string;
         /**
+         * Return array of OCSP urls
+         *
+         * @readonly
+         * @type {string[]}
+         * @memberof Certificate
+         */
+        readonly OCSPUrls: string[];
+        /**
+         * Return array of CA issuers urls
+         *
+         * @readonly
+         * @type {string[]}
+         * @memberof Certificate
+         */
+        readonly CAIssuersUrls: string[];
+        /**
          * Return true is a certificate is self signed
          *
          * @readonly
@@ -1264,6 +1304,14 @@ declare namespace trusted.pki {
          * @memberOf Certificate
          */
         readonly isSelfSigned: boolean;
+        /**
+         * Return true if it CA certificate (can be used to sign other certificates)
+         *
+         * @readonly
+         * @type {boolean}
+         * @memberOf Certificate
+         */
+        readonly isCA: boolean;
         /**
          * Compare certificates
          *
@@ -2920,24 +2968,22 @@ declare namespace trusted.pkistore {
          * @param {native.PKISTORE.Provider} provider SYSTEM, MICROSOFT, CRYPTOPRO
          * @param {string} category MY, OTHERS, TRUST, CRL
          * @param {Certificate} cert Certificate
-         * @param {number} flags
          * @returns {string}
          *
          * @memberOf PkiStore
          */
-        addCert(provider: native.PKISTORE.Provider, category: string, cert: pki.Certificate, flags: number): string;
+        addCert(provider: native.PKISTORE.Provider, category: string, cert: pki.Certificate): string;
         /**
          * Import CRL to local store
          *
          * @param {native.PKISTORE.Provider} provider SYSTEM, MICROSOFT, CRYPTOPRO
          * @param {string} category MY, OTHERS, TRUST, CRL
          * @param {Crl} crl CRL
-         * @param {number} flags
          * @returns {string}
          *
          * @memberOf PkiStore
          */
-        addCrl(provider: native.PKISTORE.Provider, category: string, crl: pki.Crl, flags: number): string;
+        addCrl(provider: native.PKISTORE.Provider, category: string, crl: pki.Crl): string;
         /**
          * Import key to local store
          *

@@ -22,7 +22,9 @@ export function loadAllCertificates() {
 
     setTimeout(() => {
       const certificateStore = new Store();
-      certificateStore.importCert(native.DEFAULT_PATH + "/cert1.crt");
+
+      const certificate = trusted.pki.Certificate.load(native.DEFAULT_PATH + "/cert1.crt", trusted.DataFormat.PEM);
+      certificateStore.importCertificate(certificate);
       certificateStore.importKey(native.DEFAULT_PATH + "/cert1.key", "");
 
       window.PKISTORE = certificateStore;
