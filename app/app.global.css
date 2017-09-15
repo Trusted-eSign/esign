@@ -358,15 +358,13 @@ body {
 }
 /*-----------------*/
 div::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
     height: 0;
 }
 div::-webkit-scrollbar-track {
     background: #cccccc;
-    border-radius: 5px;
 }
 div::-webkit-scrollbar-thumb {
-    border-radius: 5px;
     background: gray;
 }
 /*--------------------------*/
