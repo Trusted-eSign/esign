@@ -2,6 +2,7 @@ import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
+import * as native from "../native";
 import { filteredCertificatesSelector } from "../selectors";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
@@ -23,9 +24,6 @@ const CERT_CHAIN_TAB = 2;
 const tabHeaderStyle = {
   "font-size": "55%",
 };
-
-
-        
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -55,12 +53,10 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleCertificateImport = (event: any) => {
-    const { certificates } = this.props;
     const { localize, locale } = this.context;
-
     const path = event[0].path;
     const format: trusted.DataFormat = getFileCoding(path);
-    const certCount = certificates.length;
+    const OS_TYPE = native.os.type();
 
     let certificate: trusted.pki.Certificate;
     let providerType: string = PROVIDER_SYSTEM;

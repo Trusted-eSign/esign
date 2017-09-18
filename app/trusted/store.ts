@@ -203,7 +203,7 @@ export class Store {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     let urls = cert.CAIssuersUrls;
-    const pathForSave = window.HOME_DIR + "/downloaded.cer";
+    const pathForSave = native.path.join(window.TMP_DIR, `certificate_${Date.now()}.cer`);
     let tempCert;
 
     if (provider instanceof trusted.pkistore.Provider_System) {
@@ -225,7 +225,7 @@ export class Store {
       return callback();
     }
 
-    trusted.pki.Certificate.download(urls, pathForSave, function (err, res) {
+    trusted.pki.Certificate.download(urls, pathForSave, function(err, res) {
       if (err) {
         return callback(err);
       } else {

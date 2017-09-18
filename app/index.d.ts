@@ -10,6 +10,7 @@ interface Window {
     RESOURCES_PATH: string;
     DEFAULT_PATH: string;
     HOME_DIR: string;
+    TMP_DIR: string;
     DEFAULT_CERTSTORE_PATH: string;
     LICENSE_PATH: string;
     PLATFORM: string;

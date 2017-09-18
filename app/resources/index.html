@@ -70,6 +70,7 @@
     }
 
     window.HOME_DIR = os.homedir();
+    window.TMP_DIR = os.tmpdir();
     window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
     window.PLATFORM = process.platform;
     window.LICENSE_PATH = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
