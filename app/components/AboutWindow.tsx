@@ -144,7 +144,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="email" id="email" type="email" onChange={(evt) => this.setEmail(evt.target.value)}></input>
+                            <input ref="email" id="email" type="email" className="validate" onChange={(evt) => this.setEmail(evt.target.value)}></input>
                             <label htmlFor="email" >{localize("About.email", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errEmail}>
