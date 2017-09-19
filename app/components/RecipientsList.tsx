@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { mapToArr } from "../utils";
 
-
 const rectangleValidStyle = {
   background: "#4caf50",
 };
@@ -27,20 +26,22 @@ class RecipientsList extends React.Component<any, any> {
       <div className="cert-view-main choose-certs-view">
         <div className={"add-cert-collection collection "}>
           {recipients.map((element) => {
-            let status: string;
             let curStatusStyle;
             let curKeyStyle;
             let rectangleStyle;
             if (element.status) {
-                (dialogType=='modal') ? curStatusStyle = "cert_status_ok short": curStatusStyle = "cert_status_ok long";
+                (dialogType === "modal") ? curStatusStyle = "cert_status_ok short": curStatusStyle = "cert_status_ok long";
                 rectangleStyle = rectangleValidStyle;
             } else {
-                (dialogType=='modal') ? curStatusStyle = "cert_status_error short": curStatusStyle = "cert_status_error long";
+                (dialogType === "modal") ? curStatusStyle = "cert_status_error short": curStatusStyle = "cert_status_error long";
                 rectangleStyle = rectangleUnvalidStyle;
             }
-            if(element.key.length > 0) 
-                (dialogType=='modal') ? curKeyStyle="key short" : curKeyStyle="key long";
-            else curKeyStyle="";
+
+            if (element.key.length > 0) {
+              (dialogType === "modal") ? curKeyStyle = "key short" : curKeyStyle = "key long";
+            } else {
+              curKeyStyle = "";
+            }
 
             return <div className="collection-item avatar certs-collection" key={element.id + 1} onClick={() => onActive(element)}>
               <div className="r-iconbox-link">
@@ -48,7 +49,7 @@ class RecipientsList extends React.Component<any, any> {
                 <div className="collection-title">{element.subjectFriendlyName}</div>
                 <div className="collection-info cert-info ">{element.issuerFriendlyName}
                   <div className={curKeyStyle}></div>
-                  <div className={curStatusStyle}></div>  
+                  <div className={curStatusStyle}></div>
                 </div>
               </div>
             </div>;

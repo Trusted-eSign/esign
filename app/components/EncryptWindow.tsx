@@ -26,10 +26,11 @@ class EncryptWindow extends React.Component<any, any> {
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
+      const certs = recipients;
+      const folderOut = settings.outfolder;
+      const policies = { deleteFiles: false, archiveFiles: false };
+
       let format = trusted.DataFormat.PEM;
-      let certs = recipients;
-      let folderOut = settings.outfolder;
-      let policies = { deleteFiles: false, archiveFiles: false };
       let res = true;
 
       if (folderOut.length > 0) {

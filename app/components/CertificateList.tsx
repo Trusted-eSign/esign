@@ -42,7 +42,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     const root: object[] = [];
     const intermediate: object[] = [];
     const other: object[] = [];
-    const token: object[] = [];    
+    const token: object[] = [];
 
     certificates.forEach((cert) => {
       const element = (
@@ -66,7 +66,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
         case "AddressBook":
           return other.push(element);
         case "TOKEN":
-          return token.push(element);       
+          return token.push(element);
       }
     });
 
@@ -109,4 +109,4 @@ export default connect((state, ownProps: IOwnProps) => {
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates },null,{pure:false})(accordion(CertificateList));
+}, { loadAllCertificates }, null, {pure: false})(accordion(CertificateList));

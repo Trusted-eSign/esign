@@ -10,9 +10,9 @@ interface IBtnsForOperationProps {
   btn_name_second: string;
   operation_second: () => void;
   btn_resign?: string;
-  operation_resign?: () => void;
+  operation_resign: () => void;
   btn_unsign?: string;
-  operation_unsign?: () => void;
+  operation_unsign: () => void;
   files: Array<{
     id: string,
     filename: string,

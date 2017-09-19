@@ -80,7 +80,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     let rectangleStyle;
 
     const status = cert.status;
-    let statusIcon = "";
 
     if (status) {
       curStatusStyle = "cert_status_ok";
@@ -90,18 +89,17 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       rectangleStyle = rectangleUnvalidStyle;
     }
 
-    if(operation=='encrypt' || operation=='sign'){
-        curKeyStyle = cert.key.length > 0 ? curKeyStyle="key short" : curKeyStyle="";
-        curStatusStyle+=" short";
-    }else{
-        curKeyStyle = cert.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
-
+    if (operation === "encrypt" || operation === "sign") {
+        curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key short" : curKeyStyle = "";
+        curStatusStyle += " short";
+    } else {
+        curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
     }
- 
 
     if (isOpen) {
       active = "active";
     }
+
     if (operation === "certificate" && cert.key.length === 0 && cert.provider === "SYSTEM") {
       certKeyMenu = (
         <div>
@@ -124,7 +122,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
           <div className="collection-title">{cert.subjectFriendlyName}</div>
           <div className="collection-info cert-info ">{cert.issuerFriendlyName}
           <div className={curKeyStyle}></div>
-          <div className={curStatusStyle}></div>          
+          <div className={curStatusStyle}></div>
           </div>
         </div>
         {certKeyMenu}

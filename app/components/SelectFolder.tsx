@@ -22,7 +22,7 @@ class SelectFolder extends React.Component<ISelectFolderProps, any> {
     return (
       <div className="row settings-item">
         <div className="col sign-set-add-folder">
-          <input type="file" ref={node => node && node.setAttribute("nwdirectory", "")} id="choose-folder" onChange={this.props.viewDirect} />
+          <input type="file" ref={(node) => node && node.setAttribute("nwdirectory", "")} id="choose-folder" onChange={this.props.viewDirect} />
           <input id="directory" type="text" placeholder={localize("Settings.directory_file_save", locale)}
             value={this.props.directory} onChange={this.props.viewDirect.bind(this)} />
           <a className="btn-add-folder waves-effect" id="add-directory" onClick={this.props.openDirect.bind(this)}>

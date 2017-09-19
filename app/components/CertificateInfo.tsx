@@ -39,7 +39,7 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
           <div className={"collection-title "}>{certificate.issuerFriendlyName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
-          <div className={"collection-info cert-info-blue"}>{localize("Certificate.cert_valid", locale)}</div>        
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.cert_valid", locale)}</div>
           <div className={"collection-title "}>{(new Date(certificate.notAfter)).toLocaleDateString(locale, {
             day: "numeric",
             hour: "numeric",

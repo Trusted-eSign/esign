@@ -2,13 +2,13 @@ import * as React from "react";
 
 interface IHeaderWorkspaceBlockProps {
   text: string;
-  second_text: string;
-  onСlickBtn: () => void;
-  icon: string;
-  new_class: string;
+  second_text?: string;
+  onСlickBtn?: () => void;
+  icon?: string;
+  new_class?: string;
 }
 
-class HeaderWorkspaceBlock extends React.Component<ItemBarProps, any> {
+class HeaderWorkspaceBlock extends React.Component<IHeaderWorkspaceBlockProps, any> {
   getButtons() {
     const { icon, onСlickBtn } = this.props;
 

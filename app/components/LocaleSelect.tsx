@@ -21,6 +21,6 @@ class LocaleSelect extends Component {
   }
 }
 
-export default connect(state => ({
+export default connect((state) => ({
   locale: state.settings.locale,
 }), { changeLocale })(LocaleSelect);

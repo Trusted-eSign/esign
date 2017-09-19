@@ -40,6 +40,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   activeCert = (cert: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { addRecipientCertificate } = this.props;
 
     addRecipientCertificate(cert.id);
@@ -54,6 +55,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   handleCleanList = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { deleteRecipient, recipients } = this.props;
 
     recipients.forEach((recipient) => deleteRecipient(recipient.certId));
