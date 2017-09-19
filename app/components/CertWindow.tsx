@@ -314,7 +314,7 @@ class CertWindow extends React.Component<any, any> {
                   </ul>
                 </nav>
                 <div className="add-certs">
-                  <div class="row">
+                  <div className="row">
                     <ul id="tabs-swipe-demo" className="tabs">
                       <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
                       <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
