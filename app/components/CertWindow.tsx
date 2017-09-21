@@ -9,6 +9,8 @@ import BlockNotElements from "./BlockNotElements";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
+import CSR from "./CSR";
+import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
@@ -16,10 +18,6 @@ import { ToolBarWithSearch } from "./ToolBarWithSearch";
 const DIALOG = window.electron.remote.dialog;
 const CERT_INFO_TAB = 1;
 const CERT_CHAIN_TAB = 2;
-
-// const blueTextStyle = {
-//   color: "#2196f3",
-// };
 
 const tabHeaderStyle = {
   "font-size": "55%",
@@ -40,7 +38,17 @@ class CertWindow extends React.Component<any, any> {
     });
   }
 
-  handleTest = (ev, tab) => {
+  componentDidMount() {
+    $(document).ready(function() {
+      $("ul.tabs").tabs();
+    });
+
+    $(document).ready(function() {
+      $("ul.tabs").tabs("select_tab", "tab_id");
+    });
+  }
+
+  handleChangeActiveTab = (ev, tab) => {
     ev.preventDefault();
 
     this.setState({
@@ -115,13 +123,6 @@ class CertWindow extends React.Component<any, any> {
       },
       dismissible: false,
     });
-  }
-
-  certAdd = () => {
-    const CLICK_EVENT = document.createEvent("MouseEvents");
-
-    CLICK_EVENT.initEvent("click", true, true);
-    document.querySelector("#choose-cert").dispatchEvent(CLICK_EVENT);
   }
 
   importCertKey = (event: any) => {
@@ -218,14 +219,6 @@ class CertWindow extends React.Component<any, any> {
     const { activeTab, certificate } = this.state;
     const { localize, locale } = this.context;
 
-    $(document).ready(function(){
-        $('ul.tabs').tabs();
-      });
-
-    $(document).ready(function(){
-        $('ul.tabs').tabs('select_tab', 'tab_id');
-      });
-
     if (isLoading) {
       return <ProgressBars />;
     }
@@ -246,7 +239,7 @@ class CertWindow extends React.Component<any, any> {
           <a className="collection-info chain-info-blue">{localize("Certificate.cert_chain_status", locale)}</a>
           <div className="collection-info chain-status">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
           <a className="collection-info cert-info-blue">{localize("Certificate.cert_chain_info", locale)}</a>
-          <CertificateChainInfo certificate={certificate}  key={"chain_" + certificate.id}/>
+          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} />
         </div>
       );
       title = <div className="cert-title-main">
@@ -273,6 +266,14 @@ class CertWindow extends React.Component<any, any> {
                     this.handleCertificateImport(event.target.files);
                   }
                 } />
+                <div id="modal-createCertificateRequest" className="modal cert-window">
+                  <div className="add-cert-content">
+                    <HeaderWorkspaceBlock text={localize("CSR.create_selfSigned", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
+                      $("#modal-createCertificateRequest").closeModal();
+                    }} />
+                    <CSR />
+                  </div>
+                </div>
                 <div className="add-certs">
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
@@ -316,8 +317,8 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div className="row">
                     <ul id="tabs-swipe-demo" className="tabs">
-                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleTest(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
-                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleTest(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleChangeActiveTab(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
+                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleChangeActiveTab(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
                     </ul>
                   </div>
                   <div className="add-certs-item">
