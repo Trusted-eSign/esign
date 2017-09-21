@@ -1,5 +1,6 @@
 @import "./resources/css/font-awesome-animation.min.css";
 @import "./resources/css/materialize.min.css";
+@import "./resources/css/nouislider.css";
 @import "./resources/fonts/material-design-icons/material-icons.css";
 
 /* Стили заголовка окна  */
@@ -766,19 +767,19 @@ nav .cert-seacrh label i {
     color: #334294;
     /*font-size: 95%;*/
     font-size: 13px;
-} 
+}
 
 .chain-info-blue {
     color: #334294;
     /*font-size: 95%;*/
     font-size: 13px;
-} 
+}
 
 .chain-status {
     padding-top: 0px;
     padding-bottom: 10px;
     font-size: 14px;
-} 
+}
 
 .row.chain-item{
     margin-bottom:0px;
@@ -2577,4 +2578,8 @@ i.material-icons.left.line {
     margin-top: 47px;
     height: 34px;
     width: 2px;
+}
+
+.csr-window__workspace {
+  margin-top: 20px;
 }

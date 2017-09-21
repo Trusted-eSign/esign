@@ -6,7 +6,7 @@ body {
     height: 0;
 }
 ::-webkit-scrollbar-track {
-    background: #cccccc; 
+    background: #cccccc;
     border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb {
@@ -38,7 +38,7 @@ p{
 
 .row{
   margin-bottom: 4px;
-  margin-top: 4px; 
+  margin-top: 4px;
 }
 
 
@@ -48,7 +48,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/sign_roundbutton_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .sign_roundbutton_icon:hover{
@@ -57,7 +57,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/sign_roundbutton_over_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .encrypt_roundbutton_icon{
@@ -66,7 +66,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/encrypt_roundbutton_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .encrypt_roundbutton_icon:hover{
@@ -75,7 +75,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/encrypt_roundbutton_over_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .cert_roundbutton_icon{
@@ -84,7 +84,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/cert_roundbutton_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .cert_roundbutton_icon:hover{
@@ -93,7 +93,7 @@ p{
   width: 32px;
   height: 32px;
   background: url(../../image/cert_roundbutton_over_icon.svg);
-  background-size: 32px 32px; 
+  background-size: 32px 32px;
 }
 
 .card .card-title {
@@ -119,7 +119,7 @@ i.material-icons.right {
   width: 24px;
   height: 24px;
   background: url(../image/menu_button.png);
-  background-size: 24px 24px; 
+  background-size: 24px 24px;
 }
 
 .collection a.collection-item {
