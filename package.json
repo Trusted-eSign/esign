@@ -34,7 +34,6 @@
     "email": "chentsulin@gmail.com",
     "url": "https://github.com/chentsulin"
   },
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/TrustedPlus/esign/issues"
   },
@@ -80,6 +79,7 @@
     "@types/material-ui": "^0.17.2",
     "@types/materialize-css": "^0.98.0",
     "@types/node": "^7.0.21",
+    "@types/nouislider": "^9.0.1",
     "@types/orchestrator": "0.0.30",
     "@types/q": "1.0.0",
     "@types/react": "^15.0.24",
@@ -134,6 +134,7 @@
     "minimist": "^1.2.0",
     "nan": "^2.6.2",
     "node-sass": "^4.5.2",
+    "nouislider": "^10.1.0",
     "react-addons-test-utils": "^15.5.1",
     "react-test-renderer": "^15.5.4",
     "redux-logger": "^3.0.1",
