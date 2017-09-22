@@ -195,4 +195,4 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     recipients: mapToArr(state.recipients.entities),
   };
-}, { addRecipientCertificate, deleteRecipient })(CertificateBlockForEncrypt);
+}, { addRecipientCertificate, deleteRecipient }, null, {pure: false})(CertificateBlockForEncrypt);
