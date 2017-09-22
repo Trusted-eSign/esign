@@ -47,6 +47,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
   getCertificateList() {
     const { modalCertList } = this.state;
+    const { certificates } = this.props;
 
     if (!modalCertList) {
       return null;
@@ -61,6 +62,17 @@ class CertificateBlockForSignature extends React.Component<any, any> {
           operation="sign" />
       </div>
     );
+  }
+
+  getSignerCertificateInfo() {
+    const {signer } = this.props;
+    const { localize, locale } = this.context;
+
+    if (!signer) {
+      return <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />;
+    }
+
+    return <CertificateInfo certificate={signer} />;
   }
 
   render() {
@@ -129,8 +141,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                     {itemBar}
                     <div className="add-certs">
                       <div className="add-certs-item">
-                        {cert}
-                        <BlockNotElements name={NOT_ACTIVE_SIGNER} title={localize("Certificate.cert_not_select", locale)} />
+                        {this.getSignerCertificateInfo()}
                       </div>
                     </div>
                   </div>

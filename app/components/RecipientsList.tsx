@@ -30,11 +30,11 @@ class RecipientsList extends React.Component<any, any> {
             let curKeyStyle;
             let rectangleStyle;
             if (element.status) {
-                (dialogType === "modal") ? curStatusStyle = "cert_status_ok short": curStatusStyle = "cert_status_ok long";
-                rectangleStyle = rectangleValidStyle;
+              (dialogType === "modal") ? curStatusStyle = "cert_status_ok short" : curStatusStyle = "cert_status_ok long";
+              rectangleStyle = rectangleValidStyle;
             } else {
-                (dialogType === "modal") ? curStatusStyle = "cert_status_error short": curStatusStyle = "cert_status_error long";
-                rectangleStyle = rectangleUnvalidStyle;
+              (dialogType === "modal") ? curStatusStyle = "cert_status_error short" : curStatusStyle = "cert_status_error long";
+              rectangleStyle = rectangleUnvalidStyle;
             }
 
             if (element.key.length > 0) {
