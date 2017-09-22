@@ -25,10 +25,6 @@ class CSR extends React.Component<any, any> {
     };
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    console.log("nextState", nextState);
-  }
-
   componentDidMount() {
     const self = this;
     $(document).ready(function () {

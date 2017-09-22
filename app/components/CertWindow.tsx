@@ -8,6 +8,7 @@ import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
+import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
 import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
@@ -16,12 +17,6 @@ import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 const DIALOG = window.electron.remote.dialog;
-const CERT_INFO_TAB = 1;
-const CERT_CHAIN_TAB = 2;
-
-const tabHeaderStyle = {
-  "font-size": "55%",
-};
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -33,26 +28,16 @@ class CertWindow extends React.Component<any, any> {
     super(props);
 
     this.state = ({
-      activeCertificate: null,
-      activeTab: CERT_INFO_TAB,
+      activeTabIsCertInfo: true,
+      certificate: null,
     });
   }
 
-  componentDidMount() {
-    $(document).ready(function() {
-      $("ul.tabs").tabs();
-    });
-
-    $(document).ready(function() {
-      $("ul.tabs").tabs("select_tab", "tab_id");
-    });
-  }
-
-  handleChangeActiveTab = (ev, tab) => {
+  handleChangeActiveTab = (ev) => {
     ev.preventDefault();
 
     this.setState({
-      activeTab: tab,
+      activeTabIsCertInfo: !this.state.activeTabIsCertInfo,
     });
   }
 
@@ -191,7 +176,7 @@ class CertWindow extends React.Component<any, any> {
     if (file) {
       $("#get-password").openModal({
         complete() {
-          const CERT_ITEM = this.state.activeCertificate;
+          const CERT_ITEM = this.state.certificate;
           const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
           const KEY = window.PKISTORE.findKey(CERT_ITEM);
 
@@ -214,25 +199,20 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
-  render() {
-    const { certificates, isLoading } = this.props;
-    const { activeTab, certificate } = this.state;
+  getCertificateInfoBody() {
+    const { activeTabIsCertInfo, certificate } = this.state;
     const { localize, locale } = this.context;
 
-    if (isLoading) {
-      return <ProgressBars />;
+    if (!certificate) {
+      return (
+        <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />
+      );
     }
 
-    const CURRENT = certificate ? "not-active" : "active";
     let cert: any = null;
-    let title: any = null;
 
-    if (certificate && activeTab === CERT_INFO_TAB) {
+    if (certificate && activeTabIsCertInfo) {
       cert = <CertificateInfo certificate={certificate} />;
-      title = <div className="cert-title-main">
-        <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
-        <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
-      </div>;
     } else if (certificate) {
       cert = (
         <div>
@@ -242,15 +222,46 @@ class CertWindow extends React.Component<any, any> {
           <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} />
         </div>
       );
+    }
+
+    return (
+      <div className="add-certs">
+        <CertificateInfoTabs onActiveTab={this.handleChangeActiveTab}/>
+        <div className="add-certs-item">
+          {cert}
+        </div>
+      </div>
+    );
+  }
+
+  getTitle() {
+    const { activeTabIsCertInfo, certificate } = this.state;
+    const { localize, locale } = this.context;
+
+    let title: any = null;
+
+    if (certificate) {
       title = <div className="cert-title-main">
         <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
         <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
       </div>;
     } else {
-      cert = "";
       title = <span>{localize("Certificate.cert_info", locale)}</span>;
     }
 
+    return title;
+  }
+
+  render() {
+    const { certificates, isLoading } = this.props;
+    const { activeTabIsCertInfo, certificate } = this.state;
+    const { localize, locale } = this.context;
+
+    if (isLoading) {
+      return <ProgressBars />;
+    }
+
+    const CURRENT = certificate ? "not-active" : "active";
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";
@@ -296,7 +307,7 @@ class CertWindow extends React.Component<any, any> {
                 <nav className="app-bar-cert">
                   <ul className="app-bar-items">
                     <li className="cert-bar-text">
-                      {title}
+                      {this.getTitle()}
                       <input type="file" ref={(direct) => direct &&
                         direct.setAttribute("nwsaveas", localize("Certificate.certificate", locale) + ".pfx")}
                         accept=".pfx" value="" id="choose-folder-export"
@@ -314,18 +325,7 @@ class CertWindow extends React.Component<any, any> {
                     </li>
                   </ul>
                 </nav>
-                <div className="add-certs">
-                  <div className="row">
-                    <ul id="tabs-swipe-demo" className="tabs">
-                      <li className="tab col s1"><a className="cert-info active" onClick={(ev) => this.handleChangeActiveTab(ev, CERT_INFO_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_info", locale)}</a></li>
-                      <li className="tab col s1"><a className="cert-info" onClick={(ev) => this.handleChangeActiveTab(ev, CERT_CHAIN_TAB)} style={tabHeaderStyle}>{localize("Certificate.cert_chain", locale)}</a></li>
-                    </ul>
-                  </div>
-                  <div className="add-certs-item">
-                    {cert}
-                    <BlockNotElements name={CURRENT} title={localize("Certificate.cert_not_select", locale)} />
-                  </div>
-                </div>
+                {this.getCertificateInfoBody()}
               </div>
             </div>
           </div>
