@@ -33,7 +33,6 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
 
   render() {
     const { files, recipients, signer } = this.props;
-    const active = files.length > 0 ? "active" : "";
     const certsOperation: any = this.props.operation === "sign" ? signer : recipients;
     let disabledFirst = "";
     let disabledSecond = "";
@@ -73,7 +72,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
     }
     if (!disabledUnsign) {
       return (
-        <div className={"btns-for-operation " + active}>
+        <div className={"btns-for-operation active"}>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledFirst} onClick={this.props.operation_resign.bind(this)}>{this.props.btn_resign}</a>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledSecond} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.operation_unsign.bind(this)}>{this.props.btn_unsign}</a>
@@ -81,7 +80,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
       );
     } else {
       return (
-        <div className={"btns-for-operation " + active}>
+        <div className={"btns-for-operation active"}>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledFirst} onClick={this.props.operation_first.bind(this)}>{this.props.btn_name_first}</a>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledSecond} onClick={this.props.operation_second.bind(this)}>{this.props.btn_name_second}</a>
         </div>
