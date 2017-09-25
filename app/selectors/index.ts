@@ -24,6 +24,21 @@ export const filteredCertificatesSelector = createSelector(certificatesGetter, f
     });
   }
 
+  сertificatesByOperations = сertificatesByOperations.sort((a, b) => {
+    const aCertificateSN = a.subjectFriendlyName.toLowerCase();
+    const bCertificateSN = b.subjectFriendlyName.toLowerCase();
+
+    if (aCertificateSN < bCertificateSN) {
+      return -1;
+    }
+
+    if (aCertificateSN > bCertificateSN) {
+      return 1;
+    }
+
+    return 0;
+  });
+
   return сertificatesByOperations.filter((certificate) => {
     return (
       certificate.hash.toLowerCase().match(search) ||
