@@ -31,7 +31,7 @@ export function loadAllCertificates() {
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
+      const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
         if (!item.id) {
           item.id = Date.now() + Math.random();
         }

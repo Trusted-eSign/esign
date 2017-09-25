@@ -154,7 +154,7 @@ export class Store {
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
         Materialize.toast("Certificate import error", 2000, "toast-cert_import_error");
       } else {
@@ -207,7 +207,13 @@ export class Store {
     let tempCert;
 
     if (provider instanceof trusted.pkistore.Provider_System) {
-      store.addCert(provider.handle, MY, cert);
+      const uri = store.addCert(provider.handle, MY, cert);
+      const newItem = provider.objectToPkiItem(uri);
+
+      const ARR: any[] = [newItem];
+      this._store.cash.import(ARR);
+
+      this._items.push(newItem);
     } else {
       const bCA = cert.isCA;
       const hasKey = provider.hasPrivateKey(cert);
