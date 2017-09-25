@@ -34,8 +34,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       nextProps.cert.verified !== this.props.cert.verified;
   }
 
-
-
   stopEvent = (event: any) => {
     event.stopPropagation();
   }
@@ -90,10 +88,10 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     if (operation === "encrypt" || operation === "sign") {
-        curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key short" : curKeyStyle = "";
-        curStatusStyle += " short";
+      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key short" : curKeyStyle = "";
+      curStatusStyle += " short";
     } else {
-        curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
+      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
     }
 
     if (isOpen) {
@@ -115,14 +113,17 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     return (
-      <div className={"collection-item avatar certs-collection " + active}
-        onClick={this.handleClick}>
-        <div className="r-iconbox-link">
+      <div className="row certificate-list-item">
+        <div className={"collection-item avatar certs-collection " + active}
+          onClick={this.handleClick}>
           <div className={"rectangle"} style={rectangleStyle}></div>
-          <div className="collection-title">{cert.subjectFriendlyName}</div>
-          <div className="collection-info cert-info ">{cert.issuerFriendlyName}
-          <div className={curKeyStyle}></div>
-          <div className={curStatusStyle}></div>
+          <div className="col s11">
+            <div className="collection-title">{cert.subjectFriendlyName}</div>
+            <div className="collection-info cert-info ">{cert.issuerFriendlyName}</div>
+          </div>
+          <div className="col s1">
+            <div className={curKeyStyle}></div>
+            <div className={curStatusStyle}></div>
           </div>
         </div>
         {certKeyMenu}

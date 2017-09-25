@@ -900,6 +900,10 @@ nav .cert-seacrh label i {
     align-items: center;
 }
 
+.certificate-list-item {
+  margin-bottom: 0px;
+}
+
 
 .disabled{
   box-shadow: none;
@@ -2520,6 +2524,7 @@ i.material-icons.left.line {
 .collection .collection-item .collection-info.si-info {
     margin-bottom: 10px;
 }
+
 /*----------------------------*/
 .modal-bar {
     background-color: #bf3817;
