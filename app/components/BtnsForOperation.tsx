@@ -13,7 +13,16 @@ interface IBtnsForOperationProps {
   operation_resign: () => void;
   btn_unsign?: string;
   operation_unsign: () => void;
-  files: Array<{
+  activeFiles: Array<{
+    id: string,
+    filename: string,
+    lastModifiedDate: Date,
+    fullpath: string,
+    extension: string,
+    verified: boolean,
+    active: boolean,
+  }>;
+  allFiles: Array<{
     id: string,
     filename: string,
     lastModifiedDate: Date,
@@ -92,8 +101,8 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
 
 export default connect((state) => {
   return {
-    allFiles: mapToArr(state.files.entities),
     activeFiles: activeFilesSelector(state, {active: true}),
+    allFiles: mapToArr(state.files.entities),
     recipients: mapToArr(state.recipients.entities),
     signer: state.signers.signer,
   };
