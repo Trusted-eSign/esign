@@ -10,8 +10,6 @@ const FALSE_CERT_STATUS = {
   color: "red",
 };
 
-
-
 const getChain = (certItem: any) => {
   try {
     const cert = window.PKISTORE.getPkiObject(certItem);
@@ -41,70 +39,77 @@ function CertificateChainInfo({ certificate }, context) {
   const { localize, locale } = context;
   const chain = getChain(certificate);
   const elements = [];
-  let curStyle;
   let curStatusStyle = {};
-  let curKeyStyle = {};
 
   if (chain && chain.length) {
     for (let j: number = chain.length - 1; j >= 0; j--) {
       const element = chain.items(j);
       const status = certVerify(element);
       let circleStyle = "material-icons left chain_1";
-      let vertlineStyle = {
-          visibility: 'hidden',
+      const vertlineStyle = {
+        visibility: "hidden",
       };
-      let  curKeyStyle = "";
-      if(j<10) circleStyle = "material-icons left chain_" + (j + 1);
-      else circleStyle = "material-icons left chain_10";
-      if(j > 0) vertlineStyle.visibility= 'visible';
+      let curKeyStyle = "";
+      if (j < 10)  {
+        circleStyle = "material-icons left chain_" + (j + 1);
+      } else {
+        circleStyle = "material-icons left chain_10";
+      }
+
+      if (j > 0) {
+        vertlineStyle.visibility = "visible";
+      }
+
       if (status) {
-            curStatusStyle = "cert_status_ok";
-          } else {
-            curStatusStyle = "cert_status_error";
-          }
-      curKeyStyle = certificate.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
+        curStatusStyle = "cert_status_ok";
+      } else {
+        curStatusStyle = "cert_status_error";
+      }
+
+      curKeyStyle = certificate.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
+
       elements.push(
         <div className={"collection collection-item avatar certs-collection chain-text"}>
           <div className="row chain-item">
-              <div className="col s1">
-                  <i className={circleStyle}></i>
-                   <div className={"vert_line"} style={vertlineStyle}></div>
+            <div className="col s1">
+              <i className={circleStyle}></i>
+              <div className={"vert_line"} style={vertlineStyle}></div>
+            </div>
+            <div className="col s8">
+              <div className="r-iconbox-link">
+                <div className="collection-title chain_textblock">{element.subjectFriendlyName}</div>
+                <div className="collection-info cert-info ">{element.issuerFriendlyName}</div>
               </div>
-              <div className="col s8">
-                <div className="r-iconbox-link">
-                  <div className="collection-title chain_textblock">{element.subjectFriendlyName}</div>
-                  <div className="collection-info cert-info ">{element.issuerFriendlyName}</div>
-                </div>              
-              </div>
-              <div className={curKeyStyle}></div>
-              <div className={curStatusStyle}></div>  
+            </div>
+            <div className={curKeyStyle}></div>
+            <div className={curStatusStyle}></div>
           </div>
         </div>);
     }
   } else {
-      let circleStyle = "material-icons left chain_1";
-      let vertlineStyle = {
-          visibility: 'hidden',
-      };
-      curStatusStyle = "cert_status_error";
-      let  curKeyStyle = certificate.key.length > 0 ? curKeyStyle="key" : curKeyStyle="";
-      elements.push(
+    const circleStyle = "material-icons left chain_1";
+    const vertlineStyle = {
+      visibility: "hidden",
+    };
+    curStatusStyle = "cert_status_error";
+    let curKeyStyle = certificate.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
+    elements.push(
       <div className={"collection collection-item avatar certs-collection chain-text"}>
         <div className="row chain-item">
-            <div className="col s1">
-                  <i className={circleStyle}></i>
-                  <div className={"vert_line"} style={vertlineStyle}></div>
-            </div>
-            <div className="col s8">
-              <div className="r-iconbox-link">
-                <div className="collection-title chain_textblock">{certificate.subjectFriendlyName}</div>
-                <div className="collection-info cert-info ">{certificate.issuerFriendlyName}<div>
+          <div className="col s1">
+            <i className={circleStyle}></i>
+            <div className={"vert_line"} style={vertlineStyle}></div>
+          </div>
+          <div className="col s8">
+            <div className="r-iconbox-link">
+              <div className="collection-title chain_textblock">{certificate.subjectFriendlyName}</div>
+              <div className="collection-info cert-info ">{certificate.issuerFriendlyName}<div>
               </div>
+              </div>
+              <div className={curKeyStyle}></div>
+              <div className={curStatusStyle}></div>
             </div>
-            <div className={curKeyStyle}></div>
-            <div className={curStatusStyle}></div>  
-        </div>
-      </div>
+          </div>
         </div>
       </div>);
   }
