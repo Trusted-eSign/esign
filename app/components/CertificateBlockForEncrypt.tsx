@@ -127,7 +127,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <ToolBarForEncryptCertificateBlock certificates={certificates} handleCleanList={this.handleCleanList}/>
+        <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients} handleCleanList={this.handleCleanList}/>
         <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
             this.setState({modalCertList: true});

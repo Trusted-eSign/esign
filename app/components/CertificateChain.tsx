@@ -1,6 +1,5 @@
 import * as React from "react";
 import { sign } from "../module/sign_app";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class CertificateChain extends React.Component<any, any> {
   constructor(props: any) {
