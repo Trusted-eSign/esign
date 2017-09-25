@@ -18,7 +18,6 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
     const { localize, locale } = this.context;
     const { certificates, recipients } = this.props;
 
-    const CERTIFICATES_FOR_ENCRYPT = this.props.certificates;
     const DISABLED = certificates.length > 0 ? "" : "disabled";
     const ACTIVE = recipients.length > 0 ? "active" : "not-active";
 

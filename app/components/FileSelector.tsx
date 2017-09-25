@@ -245,9 +245,9 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
     const { localize, locale } = this.context;
 
     const self = this;
-    let active = files.length > 0 ? "active" : "not-active";
-    let collection = files.length > 0 ? "collection" : "";
-    let disabled = files.length > 0 ? "" : "disabled";
+    const active = files.length > 0 ? "active" : "not-active";
+    const collection = files.length > 0 ? "collection" : "";
+    const disabled = files.length > 0 ? "" : "disabled";
     return (
       <div className={"file-content-height " + active}>
         <div id="file-content" className="content-wrapper z-depth-1">
@@ -282,7 +282,7 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
                 <i className="material-icons large fullscreen">fullscreen</i>
               </div>
               <div className={"add-files-collection " + collection}>
-                {files.map((file) => {
+                {files.map((file, i) => {
                   return <DropMenuForFile removeFiles={function (event: any) { self.removeFile(event, file.id); }}
                     onClickBtn={function (event: any) { self.toggleActive(file); }}
                     file_name={file.filename}
@@ -290,7 +290,7 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
                     file_path={file.fullpath}
                     file_type={file.extension}
                     verify_status={file.verified}
-                    index={file.key}
+                    index={i}
                     operation={self.props.operation}
                     active_file={file.active}
                     key={file.id}
