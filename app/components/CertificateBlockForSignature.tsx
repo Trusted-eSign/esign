@@ -20,13 +20,19 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     super(props);
     this.state = ({
       modalCertList: false,
+      selectedSigner: "",
     });
   }
 
   activeCert = (cert: any) => {
-    const { selectSignerCertificate } = this.props;
+    this.setState({selectedSigner: cert});
+  }
 
-    selectSignerCertificate(cert.id);
+  handleChooseSigner = () => {
+    const { selectSignerCertificate } = this.props;
+    const { selectedSigner } = this.state;
+
+    selectSignerCertificate(selectedSigner.id);
   }
 
   getCertificateInfo() {
@@ -47,7 +53,6 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
   getCertificateList() {
     const { modalCertList } = this.state;
-    const { certificates } = this.props;
 
     if (!modalCertList) {
       return null;
@@ -65,21 +70,22 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   }
 
   getSignerCertificateInfo() {
-    const {signer } = this.props;
+    const { selectedSigner } = this.state;
     const { localize, locale } = this.context;
 
-    if (!signer) {
+    if (!selectedSigner) {
       return <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />;
     }
 
-    return <CertificateInfo certificate={signer} />;
+    return <CertificateInfo certificate={selectedSigner} />;
   }
 
   render() {
     const { certificates, isLoading, signer } = this.props;
+    const { selectedSigner } = this.state;
     const { localize, locale } = this.context;
 
-    const ACTIVE_SIGNER = signer ? "active" : "not-active";
+    const ACTIVE_SIGNER = selectedSigner ? "active" : "not-active";
     const NOT_ACTIVE_SIGNER = signer ? "not-active" : "active";
     const CERTIFICATES_ACTIVE = certificates.length < 1 ? "active" : "not-active";
     const CERTIFICATES_NOT_ACTIVE = certificates.length < 1 ? "not-active" : "";
@@ -148,7 +154,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                     </div>
                   </div>
                   <div className={"choose-cert " + ACTIVE_SIGNER}>
-                    <a className="waves-effect waves-light btn-large choose-btn modal-close" >{localize("Settings.choose", locale)}</a>
+                    <a className="waves-effect waves-light btn-large choose-btn modal-close" onClick={this.handleChooseSigner}>{localize("Settings.choose", locale)}</a>
                   </div>
                 </div>
               </div>
