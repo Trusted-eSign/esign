@@ -4,7 +4,7 @@ import { activeFile, deleteFile, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
 import * as native from "../native";
 import { extFile, mapToArr } from "../utils";
-import DropMenuForFile from "./DropMenuForFile";
+import FileListItem from "./FileListItem";
 
 const dialog = window.electron.remote.dialog;
 
@@ -283,16 +283,11 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
               </div>
               <div className={"add-files-collection " + collection}>
                 {files.map((file, i) => {
-                  return <DropMenuForFile removeFiles={function (event: any) { self.removeFile(event, file.id); }}
-                    onClickBtn={function (event: any) { self.toggleActive(file); }}
-                    file_name={file.filename}
-                    file_date={file.lastModifiedDate}
-                    file_path={file.fullpath}
-                    file_type={file.extension}
-                    verify_status={file.verified}
+                  return <FileListItem removeFiles={function(event: any) { self.removeFile(event, file.id); }}
+                    onClickBtn={function(event: any) { self.toggleActive(file); }}
+                    file={file}
                     index={i}
                     operation={self.props.operation}
-                    active_file={file.active}
                     key={file.id}
                   />;
                 })}

@@ -27,7 +27,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
       loadAllCertificates();
     }
 
-    $('.collapsible').collapsible();
+    $(".collapsible").collapsible();
   }
 
   render() {

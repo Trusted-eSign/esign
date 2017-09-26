@@ -123,7 +123,11 @@ export function verifySignature(fileId: string) {
       signaruteStatus = signs.verifySign(cms);
       signatureInfo = signs.getSignPropertys(cms);
       signatureInfo = signatureInfo.map((info) => {
-        return {...info, id: fileId, fileId};
+        return {
+          fileId,
+          ...info,
+           id: fileId,
+           status_verify: signaruteStatus};
       });
 
     } catch (error) {
