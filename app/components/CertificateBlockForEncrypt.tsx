@@ -25,6 +25,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     this.state = ({
       activeCertificate: null,
       modalCertList: false,
+      selectedRecipients: [],
     });
   }
 
@@ -39,26 +40,47 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     });
   }
 
-  activeCert = (cert: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { addRecipientCertificate } = this.props;
-
-    addRecipientCertificate(cert.id);
+  handleAddRecipient = (cert: any) => {
+    this.setState({
+      selectedRecipients: [...this.state.selectedRecipients, cert],
+    });
   }
 
   handleActiveCert = (certificate: any) => {
     this.setState({ activeCertificate: certificate });
   }
 
+  handleChooseRecipients = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { addRecipientCertificate } = this.props;
+    const { selectedRecipients } = this.state;
+
+    if (selectedRecipients.length === 0) {
+      this.handleCleanRecipientsList();
+    }
+
+    for (const recipient of selectedRecipients) {
+      addRecipientCertificate(recipient.id);
+    }
+
+    $("#add-cert").closeModal();
+  }
+
   backViewChooseCerts = () => {
     this.setState({ activeCertificate: null });
   }
 
-  handleCleanList = () => {
+  handleCleanStateList = () => {
+    this.setState({
+      selectedRecipients: [],
+    });
+  }
+
+  handleCleanRecipientsList = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteRecipient, recipients } = this.props;
 
-    recipients.forEach((recipient) => deleteRecipient(recipient.certId));
+    recipients.forEach((recipient) => deleteRecipient(recipient.id));
   }
 
   getCertificateList() {
@@ -66,7 +88,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div className={"add-cert-collection collection small_cert_collection"}>
-        <CertificateList activeCert={this.activeCert} operation="encrypt" />
+        <CertificateList activeCert={this.handleAddRecipient} operation="encrypt" />
       </div>
     );
   }
@@ -80,9 +102,9 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div className={"choose-cert active"}>
-        <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={() => {
-          $("#add-cert").closeModal();
-        }} >
+        <a className="waves-effect waves-light btn choose-cert-btn modal-close" onClick={
+          this.handleChooseRecipients
+        }>
           {localize("Settings.choose", locale)}
         </a>
       </div>
@@ -90,6 +112,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   render() {
+    const { selectedRecipients } = this.state;
     const { certificates, isLoading, recipients } = this.props;
     const { localize, locale } = this.context;
 
@@ -126,7 +149,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
           <i className="nav-small-icon material-icons">more_vert</i>
         </a>
         <ul id="dropdown-btn-certlist" className="dropdown-content">
-          <li><a onClick={this.handleCleanList}>{localize("Settings.remove_list", locale)}</a></li>
+          <li><a onClick={this.handleCleanStateList}>{localize("Settings.remove_list", locale)}</a></li>
         </ul>
       </li>;
     }
@@ -139,7 +162,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients} handleCleanList={this.handleCleanList} />
+        <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients} handleCleanRecipientsList={this.handleCleanRecipientsList} />
         <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
             this.setState({ modalCertList: true });
@@ -147,7 +170,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
           }
           }>{localize("Certificate.Select_Cert_Encrypt", locale)}</a>
         </div>
-        <RecipientsList dialogType="window" />
+        <RecipientsList dialogType="window" recipients={recipients} />
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
             <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
@@ -181,7 +204,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection " + CHOOSE}>
-                          <RecipientsList onActive={this.handleActiveCert} dialogType="modal" />
+                          <RecipientsList onActive={this.handleActiveCert} dialogType="modal" recipients={selectedRecipients}/>
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
@@ -204,6 +227,6 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "encrypt" }),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
-    recipients: mapToArr(state.recipients.entities),
+    recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
   };
 }, { addRecipientCertificate, deleteRecipient }, null, { pure: false })(CertificateBlockForEncrypt);

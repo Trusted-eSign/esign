@@ -1,6 +1,4 @@
 import * as React from "react";
-import { connect } from "react-redux";
-import { mapToArr } from "../utils";
 
 const rectangleValidStyle = {
   background: "#4caf50",
@@ -16,7 +14,7 @@ class RecipientsList extends React.Component<any, any> {
   }
 
   render() {
-    const { certificates, recipients, onActive, dialogType } = this.props;
+    const { recipients, onActive, dialogType } = this.props;
 
     if (!recipients || !recipients.length) {
       return null;
@@ -60,9 +58,4 @@ class RecipientsList extends React.Component<any, any> {
   }
 }
 
-export default connect((state) => {
-  return {
-    certificates: state.certificates,
-    recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
-  };
-})(RecipientsList);
+export default RecipientsList;

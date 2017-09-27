@@ -16,7 +16,7 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
 
   render() {
     const { localize, locale } = this.context;
-    const { certificates, recipients } = this.props;
+    const { certificates, recipients, handleCleanRecipientsList } = this.props;
 
     const DISABLED = certificates.length > 0 ? "" : "disabled";
     const ACTIVE = recipients.length > 0 ? "active" : "not-active";
@@ -32,7 +32,7 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
             <i className="nav-small-icon material-icons">more_vert</i>
           </a>
           <ul id="dropdown-btn-set-cert" className="dropdown-content">
-            <li><a onClick={this.props.handleCleanList}>{localize("Settings.remove_list", locale)}</a></li>
+            <li><a onClick={handleCleanRecipientsList}>{localize("Settings.remove_list", locale)}</a></li>
           </ul>
         </li>
       </ul>
