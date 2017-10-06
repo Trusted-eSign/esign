@@ -1,11 +1,16 @@
 import * as React from "react";
-import { DialogBox, dlg, lang } from "../module/global_app";
+import { DialogBox, dlg } from "../module/global_app";
 import * as native from "../native";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 const dialog = window.electron.remote.dialog;
 
 class Dialog extends React.Component<any, any> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: any) {
     super(props);
     this.changeSettings = this.changeSettings.bind(this);
@@ -32,6 +37,7 @@ class Dialog extends React.Component<any, any> {
   }
 
   render() {
+    const { localize, locale } = this.context;
     let active = "";
 
     if (dlg.get_dlg_open) {
@@ -46,8 +52,8 @@ class Dialog extends React.Component<any, any> {
             <div className="dialog-message">{dlg.get_dlg_message}</div>
           </div>
           <div className="dialog-buttons">
-            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickYes.bind(this)}>{lang.get_resource.Common.yes}</a>
-            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickNo.bind(this)}>{lang.get_resource.Common.no}</a>
+            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickYes.bind(this)}>{localize("Common.yes", locale)}</a>
+            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickNo.bind(this)}>{localize("Common.no", locale)}</a>
           </div>
         </div>
       </div>
