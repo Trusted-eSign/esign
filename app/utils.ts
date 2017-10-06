@@ -32,6 +32,36 @@ export function extFile(filename: string) {
     return file_type;
 }
 
+function padString(input: string): string {
+  const segmentLength = 4;
+  const stringLength = input.length;
+  const diff = stringLength % segmentLength;
+
+  if (!diff) {
+      return input;
+  }
+
+  let position = stringLength;
+  let padLength = segmentLength - diff;
+  const paddedStringLength = stringLength + padLength;
+  const buffer = new Buffer(paddedStringLength);
+
+  buffer.write(input);
+
+  while (padLength--) {
+      buffer.write("=", position++);
+  }
+
+  return buffer.toString();
+}
+
+export function toBase64(base64url: string | Buffer): string {
+  base64url = base64url.toString();
+  return padString(base64url)
+      .replace(/\-/g, "+")
+      .replace(/_/g, "/");
+}
+
 export let utils = {
   /**
    * Не работает. Временно вынесено в js

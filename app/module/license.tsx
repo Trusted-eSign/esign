@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { lang } from "../module/global_app";
 import * as native from "../native";
 import * as jwt from "../trusted/jwt";
+import { toBase64 } from "../utils";
 
 export let getLicensePath = function () {
     let licFilePath = native.path.join(window.LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
@@ -131,40 +132,8 @@ export class License extends EventEmitter {
     }
 }
 
-export default function padString(input: string): string {
-    let segmentLength = 4;
-    let stringLength = input.length;
-    let diff = stringLength % segmentLength;
-
-    if (!diff) {
-        return input;
-    }
-
-    let position = stringLength;
-    let padLength = segmentLength - diff;
-    let paddedStringLength = stringLength + padLength;
-    let buffer = new Buffer(paddedStringLength);
-
-    buffer.write(input);
-
-    while (padLength--) {
-        buffer.write("=", position++);
-    }
-
-    return buffer.toString();
-}
-
 function decode(base64url: string, encoding: string = "utf8"): string {
     return new Buffer(toBase64(base64url), "base64").toString(encoding);
-}
-
-function toBase64(base64url: string | Buffer): string {
-    // We this to be a string so we can do .replace on it. If it's
-    // already a string, this is a noop.
-    base64url = base64url.toString();
-    return padString(base64url)
-        .replace(/\-/g, "+")
-        .replace(/_/g, "/");
 }
 
 export let lic = new License();
