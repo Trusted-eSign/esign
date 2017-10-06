@@ -1,5 +1,4 @@
 import * as React from "react";
-import { lang } from "../../module/global_app";
 import { getLicensePath, getStatus, lic, licenseParse } from "../../module/license";
 import * as native from "../../native";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
@@ -18,6 +17,11 @@ interface ILicenseSetupModalState {
 }
 
 class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicenseSetupModalState> {
+  static contextTypes = {
+    locale: React.PropTypes.string,
+    localize: React.PropTypes.func,
+  };
+
   constructor(props: ILicenseSetupModalProps) {
     super(props);
 
@@ -38,6 +42,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
   }
 
   setupLicense() {
+    const { localize, locale } = this.context;
     const licFilePath = getLicensePath();
     const path = native.path.dirname(licFilePath);
     const options = {
@@ -76,10 +81,10 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               lic.setStatus = status;
 
               $(".toast-lic_key_setup").remove();
-              Materialize.toast(lang.get_resource.License.lic_key_setup, 2000, "toast-lic_key_setup");
+              Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
             } else {
               $(".toast-write_file_error").remove();
-              Materialize.toast(lang.get_resource.Common.write_file_error, 2000, "toast-write_file_error");
+              Materialize.toast(localize("Common.write_file_error", locale), 2000, "toast-write_file_error");
             }
           });
         } else {
@@ -88,7 +93,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
         }
       } else {
         $(".toast-lic_key_uncorrect").remove();
-        Materialize.toast(lang.get_resource.License.lic_key_uncorrect, 2000, "toast-lic_key_uncorrect");
+        Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
       }
     } else {
       if (native.fs.existsSync(this.state.license_file)) {
@@ -113,10 +118,10 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
                   lic.setInfo = info;
                   lic.setStatus = status;
                   $(".toast-lic_key_setup").remove();
-                  Materialize.toast(lang.get_resource.License.lic_key_setup, 2000, "toast-lic_key_setup");
+                  Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
                 } else {
                   $(".toast-write_file_error").remove();
-                  Materialize.toast(lang.get_resource.Common.write_file_error, 2000, "toast-write_file_error");
+                  Materialize.toast(localize("Common.write_file_error", locale), 2000, "toast-write_file_error");
                 }
               });
             } else {
@@ -125,25 +130,27 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             }
           } else {
             $(".toast-lic_file_uncorrect").remove();
-            Materialize.toast(lang.get_resource.License.lic_file_uncorrect, 2000, "toast-lic_file_uncorrect");
+            Materialize.toast(localize("License.lic_file_uncorrect", locale), 2000, "toast-lic_file_uncorrect");
           }
         } else {
           $(".toast-read_file_error").remove();
-          Materialize.toast(lang.get_resource.Common.read_file_error, 2000, "toast-read_file_error");
+          Materialize.toast(localize("Common.read_file_error", locale), 2000, "toast-read_file_error");
         }
       } else {
         $(".toast-lic_file_not_found").remove();
-        Materialize.toast(lang.get_resource.License.lic_file_not_found, 2000, "toast-lic_file_not_found");
+        Materialize.toast(localize("License.lic_file_not_found", locale), 2000, "toast-lic_file_not_found");
       }
     }
     this.props.closeWindow();
   }
 
   openLicenseFile() {
+    const { localize, locale } = this.context;
+
     if (!window.framework_NW) {
       const file = dialog.showOpenDialog({
         filters: [
-          { name: lang.get_resource.License.license, extensions: ["lic"] },
+          { name: localize("License.license", locale), extensions: ["lic"] },
         ],
         properties: ["openFile"],
       });
@@ -155,13 +162,14 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
   }
 
   render() {
+    const { localize, locale } = this.context;
     const self = this;
     const disable = this.state.license_file || this.state.license_key ? "" : "disabled";
 
     return (
     <div id="add-licence-key" className="modal licence-modal">
       <div className="licence-modal-main">
-        <HeaderWorkspaceBlock text={lang.get_resource.License.enter_key} new_class="modal-bar" icon="close" onСlickBtn={this.props.closeWindow.bind(this)} />
+        <HeaderWorkspaceBlock text={localize("License.enter_key", locale)} new_class="modal-bar" icon="close" onСlickBtn={this.props.closeWindow.bind(this)} />
         <div className="licence-modal-content">
           <div className="license-key">
             <div className="input-field col s6 input-field-licence">
@@ -169,14 +177,14 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               <textarea id="input_key" className="materialize-textarea" value={this.state.license_key} onChange={function(e: any) {
                 self.setState({ license_file: self.state.license_file, license_key: e.target.value });
               }} />
-              <label htmlFor="input_key">{lang.get_resource.License.entered_the_key}</label>
+              <label htmlFor="input_key">{localize("License.entered_the_key", locale)}</label>
               <a className="nav-small-btn waves-effect" onClick={this.paste.bind(this)}>
                 <i className="nav-small-icon material-icons">content_copy</i>
               </a>
             </div>
           </div>
           <div className="or">
-            {lang.get_resource.Common.or}
+            {localize("Common.or", locale)}
           </div>
           <div className="license-file">
             <div className="input-field col s6 input-field-licence">
@@ -184,14 +192,14 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               <input id="input_file" type="text" value={this.state.license_file} onChange={function(e: any) {
                 self.setState({ license_file: e.target.value, license_key: self.state.license_key });
               }} />
-              <label htmlFor="input_file">{lang.get_resource.License.lic_file_choose}</label>
+              <label htmlFor="input_file">{localize("License.lic_file_choose", locale)}</label>
               <a className="nav-small-btn waves-effect" onClick={this.openLicenseFile.bind(this)}>
                 <i className="nav-small-icon material-icons">insert_drive_file</i>
               </a>
             </div>
           </div>
           <div className="license-btn">
-            <a className={"waves-effect waves-light btn " + disable} onClick={this.setupLicense.bind(this)}>{lang.get_resource.License.Entered}</a>
+            <a className={"waves-effect waves-light btn " + disable} onClick={this.setupLicense.bind(this)}>{localize("License.Entered", locale)}</a>
           </div>
         </div>
       </div>
