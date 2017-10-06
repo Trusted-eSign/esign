@@ -1,5 +1,3 @@
-/// <reference path="../../types/index.d.ts" />
-
 import {
   ADDRESS_BOOK, CA, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,

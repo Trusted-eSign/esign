@@ -1,5 +1,3 @@
-/// <reference path="../../types/index.d.ts" />
-
 import { lang } from "../module/global_app";
 import * as native from "../native";
 import { utils } from "../utils";

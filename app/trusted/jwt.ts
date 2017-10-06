@@ -1,5 +1,3 @@
-/// <reference path="../../../types/index.d.ts" />
-
 import { lang } from "../module/global_app";
 
 const CTLICENSE_R_NO_ERROR: number = 900;

@@ -1,6 +1,3 @@
-/// <reference path="../../../types/index.d.ts" />
-/// <reference path="../../index.d.ts" />
-
 import { EventEmitter } from "events";
 import { lang } from "../module/global_app";
 import * as native from "../native";
