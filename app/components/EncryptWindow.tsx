@@ -7,7 +7,7 @@ import * as encrypts from "../trusted/encrypt";
 import { mapToArr, utils } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
-import { Dialog } from "./components";
+import Dialog from "./Dialog";
 import EncryptSettings from "./EncryptSettings";
 import FileSelector from "./FileSelector";
 

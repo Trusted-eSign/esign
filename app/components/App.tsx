@@ -7,6 +7,7 @@ import { AboutWindow } from "./AboutWindow";
 import CertWindow from "./CertWindow";
 import EncryptWindow from "./EncryptWindow";
 import HelpWindow from "./HelpWindow";
+import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
 import SignatureWindow from "./SignatureWindow";
@@ -37,6 +38,7 @@ class App extends React.Component<any, any> {
           <Route path="/sign" component={SignatureWindow} />
           <Route path="/encrypt" component={EncryptWindow} />
           <Route path="/certificate" component={CertWindow} />
+          <Route path="/license" component={LicenseWindow} />
           <Route path="/about" component={AboutWindow} />
           <Route path="/help" component={HelpWindow} />
         </Route>

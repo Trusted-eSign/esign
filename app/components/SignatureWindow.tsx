@@ -9,7 +9,7 @@ import { mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
-import { Dialog } from "./components";
+import Dialog from "./Dialog";
 import FileSelector from "./FileSelector";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";

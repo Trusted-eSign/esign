@@ -15,12 +15,15 @@ class SideMenu extends React.Component<any, any> {
     super(props);
     this.state = { open: false };
   }
+
   handleToggle() {
     this.setState({ open: !this.state.open });
   }
+
   handleClose() {
     this.setState({ open: false });
   }
+
   render() {
     const { localize, locale } = this.context;
     const settings = {
@@ -41,6 +44,7 @@ class SideMenu extends React.Component<any, any> {
         <Link to="/certificate" {...settings} style={MenuStyle}>{localize("Certificate.Certificate", locale)}<i className="material-icons left cert">library_books</i></Link>
         <div className="menu-elements">
           <Link className={"bordered--top"} {...settings} to="/about" style={MenuStyle}>{localize("About.About", locale)}<i className="material-icons left about">about</i></Link>
+          <Link to="/license" {...settings} style={MenuStyle}>{localize("License.License", locale)}<i className="material-icons left license">license</i></Link>
           <Link to="/help" {...settings} style={MenuStyle}>{localize("Help.Help", locale)}<i className="material-icons left help">help</i></Link>
         </div>
       </div>
