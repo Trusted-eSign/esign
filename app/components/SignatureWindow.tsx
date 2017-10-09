@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { deleteFile, selectFile, verifySignature } from "../AC";
+import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as signs from "../trusted/sign";
@@ -11,6 +11,7 @@ import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
 import Dialog from "./Dialog";
 import FileSelector from "./FileSelector";
+import ProgressBars from "./ProgressBars";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 import SignerCertificateInfo from "./SignerCertificateInfo";
@@ -37,6 +38,14 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   constructor(props: ISignatureWindowProps) {
     super(props);
+  }
+
+  componentDidMount() {
+    const { certificatesLoaded, certificatesLoading, loadAllCertificates } = this.props;
+
+    if (!certificatesLoading && !certificatesLoaded) {
+      loadAllCertificates();
+    }
   }
 
   signed = () => {
@@ -214,7 +223,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   render() {
-    const { localize, locale } = this.context;
+    const { certificatesLoading, localize, locale } = this.context;
+
+    if (certificatesLoading) {
+      return <ProgressBars />;
+    }
 
     return (
       <div className="main">
@@ -250,9 +263,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
 export default connect((state) => {
   return {
+    certificatesLoaded: state.certificates.loaded,
+    certificatesLoading: state.certificates.loading,
     files: activeFilesSelector(state, { active: true }),
     settings: state.settings.sign,
     signatures: mapToArr(state.signatures.entities),
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { deleteFile, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, loadAllCertificates, selectFile, verifySignature })(SignatureWindow);
