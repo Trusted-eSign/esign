@@ -1,4 +1,5 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { SETTINGS_JSON } from "../module/global_app";
 import { sign } from "../module/sign_app";
 import * as native from "../native";
@@ -26,13 +27,18 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const { localize, locale } = this.context;
+    const { encSettings, signSettings } = this.props;
 
-    const sign_to_json = ({});
-    const encrypt_to_json = ({ settings_for_encrypt: [], certificates_for_encrypt: [] });
-    const main_json = ({ lang: locale });
-    const system = ({ SIGN: sign_to_json, ENCRYPT: encrypt_to_json, MAIN: main_json });
-    const ssystem = JSON.stringify(system, null, 4);
-    native.fs.writeFile(SETTINGS_JSON, ssystem, (err: any) => {
+    const state = ({
+      settings: {
+        encrypt: encSettings,
+        locale,
+        sign: signSettings,
+      },
+    });
+
+    const sstate = JSON.stringify(state, null, 4);
+    native.fs.writeFile(SETTINGS_JSON, sstate, (err: any) => {
       if (err) {
         console.log(localize("Settings.write_file_failed", locale));
       }
@@ -110,4 +116,9 @@ class MenuBar extends React.Component<any, any> {
   }
 }
 
-export default MenuBar;
+export default connect((state) => {
+  return {
+    encSettings: state.settings.encrypt,
+    signSettings: state.settings.sign,
+  };
+})(MenuBar);

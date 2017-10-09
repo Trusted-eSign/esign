@@ -5,6 +5,7 @@ import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
 import randomId from "../middlewares/randomId";
 import reducer from "../reducer/index";
+import preloadedState from "./preloadedState";
 
 const history = createBrowserHistory();
 const router = routerMiddleware(history);
@@ -25,7 +26,7 @@ const enhancer = composeEnhancers(
   applyMiddleware(logger, thunk, router, randomId),
 );
 
-const store = createStore(reducer, {}, enhancer);
+const store = createStore(reducer, preloadedState, enhancer);
 
 //dev only
 window.store = store;

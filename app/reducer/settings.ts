@@ -13,7 +13,7 @@ const defaultSettings = {
     encoding: BASE64,
     outfolder: "",
   },
-  locale: EN,
+  locale: RU,
   sign: {
     detached: false,
     encoding: BASE64,
