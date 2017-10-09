@@ -2,7 +2,7 @@
   "author": "Trusted Plus development team",
   "name": "trusted-esign",
   "productName": "trusted-esign",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "./main.js",
   "license": "Apache-2.0",
   "dependencies": {
