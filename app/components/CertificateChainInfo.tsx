@@ -39,7 +39,7 @@ function CertificateChainInfo({ certificate }, context) {
   const { localize, locale } = context;
   const chain = getChain(certificate);
   const elements = [];
-  let curStatusStyle = {};
+  let curStatusStyle: string;
 
   if (chain && chain.length) {
     for (let j: number = chain.length - 1; j >= 0; j--) {
