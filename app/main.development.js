@@ -9,6 +9,14 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
+var options = process.argv;
+
+if (options.indexOf('logcrypto') !== -1) {
+  global.sharedObject = {logcrypto: true};
+} else {
+  global.sharedObject = {logcrypto: false};
+}
+
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
   const path = require('path');
@@ -63,6 +71,11 @@ app.on('ready', async () => {
 
   mainWindow.loadURL(`file://${__dirname}/resources/index.html`);
   preloader.loadURL(`file://${__dirname}/resources/preloader_index.html`);
+
+  if (options.indexOf("devtools") !== -1) {
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  }
 
   preloader.webContents.on("did-finish-load", () => {
     preloader.show();

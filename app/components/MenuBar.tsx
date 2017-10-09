@@ -5,6 +5,11 @@ import * as native from "../native";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
 
+const remote = window.electron.remote;
+if (remote.getGlobal("sharedObject").logcrypto) {
+  window.logger = trusted.utils.Logger.start(native.path.join(native.os.homedir(), ".Trusted", "trusted-crypto.log"));
+}
+
 class MenuBar extends React.Component<any, any> {
   static contextTypes = {
     locale: React.PropTypes.string,
