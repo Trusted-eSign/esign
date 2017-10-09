@@ -30,6 +30,23 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     $(".collapsible").collapsible();
   }
 
+  getCollapsibleElement(head: string, name: string, elements: object[]) {
+    if (!elements || elements.length === 0) {
+      return null;
+    }
+
+    return (
+      <li>
+        <div className="collapsible-header color">
+          <i className={`material-icons left ${name}`}>
+          </i>
+          {head}
+        </div>
+        <div className="collapsible-body">{elements}</div>
+      </li>
+    );
+  }
+
   render() {
     const { certificates, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened, isLoading } = this.props;
     const { localize, locale } = this.context;
@@ -73,26 +90,11 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     return (
       <div>
         <ul className="collapsible" data-collapsible="accordion">
-          <li>
-            <div className="collapsible-header color"><i className="material-icons left my"></i>{localize("Certificate.certs_my", locale)}</div>
-            <div className="collapsible-body">{my}</div>
-          </li>
-          <li>
-            <div className="collapsible-header color"><i className="material-icons left other"></i>{localize("Certificate.certs_other", locale)}</div>
-            <div className="collapsible-body">{other}</div>
-          </li>
-          <li>
-            <div className="collapsible-header color"><i className="material-icons left intermediate"></i>{localize("Certificate.certs_intermediate", locale)}</div>
-            <div className="collapsible-body">{intermediate}</div>
-          </li>
-          <li>
-            <div className="collapsible-header color"><i className="material-icons left root"></i>{localize("Certificate.certs_root", locale)}</div>
-            <div className="collapsible-body">{root}</div>
-          </li>
-          <li>
-            <div className="collapsible-header color"><i className="material-icons left token"></i>{localize("Certificate.certs_token", locale)}</div>
-            <div className="collapsible-body">{token}</div>
-          </li>
+          {this.getCollapsibleElement(localize("Certificate.certs_my", locale), "my", my)}
+          {this.getCollapsibleElement(localize("Certificate.certs_other", locale), "other", other)}
+          {this.getCollapsibleElement(localize("Certificate.certs_intermediate", locale), "intermediate", intermediate)}
+          {this.getCollapsibleElement(localize("Certificate.certs_root", locale), "root", root)}
+          {this.getCollapsibleElement(localize("Certificate.certs_token", locale), "token", token)}
         </ul>
       </div>
     );
