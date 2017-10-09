@@ -44,7 +44,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
         </a>
         <ul id="dropdown-btn-import" className="dropdown-content">
           <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
-          <li><a onClick={function() { $("#modal-createCertificateRequest").openModal(); }}>{"Create self signed certificate"}</a></li>
+          {/* <li><a onClick={function() { $("#modal-createCertificateRequest").openModal(); }}>{"Create self signed certificate"}</a></li> */}
         </ul>
       </li>;
     } else {
