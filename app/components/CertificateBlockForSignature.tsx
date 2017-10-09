@@ -38,11 +38,26 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   getCertificateInfo() {
     const { signer } = this.props;
 
+    let curStatusStyle;
+
+    if (signer && signer.status) {
+      curStatusStyle = "cert_status_ok";
+    } else {
+      curStatusStyle = "cert_status_error";
+    }
+
     if (signer) {
       return (
         <div className="add-certs">
           <div className="add-certs-item">
-            <CertificateInfo certificate={signer} />
+            <div className="row">
+              <div className="col s11">
+                <CertificateInfo certificate={signer} />
+              </div>
+              <div className="col s1">
+                <div className={curStatusStyle} />
+              </div>
+            </div>
           </div>
         </div>
       );
