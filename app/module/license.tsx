@@ -65,6 +65,7 @@ export let getStatus = function(key?: string) {
     const dateNow = new Date().getTime();
     const dateDif = dateExp - dateNow;
     const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
+    const unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
     let ruDay: string = " дней";
 
     if (fullDays < 14) {
@@ -84,6 +85,7 @@ export let getStatus = function(key?: string) {
       return {
         message: lang.get_resource.License.lic_key_correct + fullDays + ")",
         type: "ok",
+        unlimited,
       };
     } else {
       return {

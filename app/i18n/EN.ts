@@ -259,6 +259,7 @@ export default {
     lic_status: "The licence status",
     lic_notbefore: "Issue date of the license",
     lic_notafter: "Expiration date of the license",
+    lic_unlimited: "Unlimited",
     jwtErrorInternal: "The license checking internal error",
     jwtErrorLoad: "Loading license failed",
     jwtErrorTokenFormat: "The license token invalid format",

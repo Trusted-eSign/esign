@@ -25,8 +25,15 @@ class LicenseStatus extends React.Component<any, any> {
     this.setState({});
   }
 
+  getInfoText(status): string {
+    const { localize, locale } = this.context;
+
+    return status.unlimited ? localize("License.lic_unlimited", locale) : status.message;
+  }
+
   render() {
     const { localize, locale } = this.context;
+    const status = lic.getStatus;
     const settings = {
       draggable: false,
     };
@@ -34,11 +41,11 @@ class LicenseStatus extends React.Component<any, any> {
     let style: any;
     let styleRow: any;
 
-    if (lic.getStatus.type) {
+    if (status.type) {
       style = { color: "red" };
       styleRow = { border: "2px solid red", padding: "5px" };
 
-      if (lic.getStatus.type === "ok") {
+      if (status.type === "ok") {
         style = { color: "green" };
         styleRow = { border: "2px solid green", padding: "5px" };
       }
@@ -46,7 +53,7 @@ class LicenseStatus extends React.Component<any, any> {
 
     return (
       <div className="row leftshifter">
-        <LicenseInfoField title={localize("License.lic_status", locale)} info={lic.getStatus.message} style={style} styleRow={styleRow} />
+        <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText(status)} style={style} styleRow={styleRow} />
         <div className="col s6">
           <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
             {localize("License.Enter_Key", locale)}

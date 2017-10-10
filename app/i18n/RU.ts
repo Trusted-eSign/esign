@@ -258,6 +258,7 @@ export default {
     lic_status: "Статус лицензии",
     lic_notbefore: "Дата выдачи",
     lic_notafter: "Дата истечения",
+    lic_unlimited: "Бессрочная",
     jwtErrorInternal: "Ошибка проверки лицензии",
     jwtErrorLoad: "Ошибка чтения лицензии",
     jwtErrorTokenFormat: "Неверный формат лицензии",

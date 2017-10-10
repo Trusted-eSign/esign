@@ -49,7 +49,9 @@ class LicenseInfo extends React.Component<any, any> {
     if (lic.getInfo.exp === "-") {
       notAfter = "-";
     } else {
-      notAfter = this.getLocaleDate(lic.getInfo.exp * 1000);
+      const exp = new Date(lic.getInfo.exp * 1000);
+
+      notAfter = exp.getFullYear() === 2038 ? localize("License.lic_unlimited", locale) : this.getLocaleDate(lic.getInfo.exp * 1000);
     }
 
     if (lic.getInfo.iat === "-") {
