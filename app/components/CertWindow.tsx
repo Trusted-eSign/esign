@@ -67,7 +67,11 @@ class CertWindow extends React.Component<any, any> {
       providerType = PROVIDER_MICROSOFT;
     }
 
-    window.PKISTORE.importCertificate(certificate, providerType);
+    if (!window.PKISTORE.importCertificate(certificate, providerType)) {
+      Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+    } else {
+      Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+    }
   }
 
   p12Import = (event: any) => {

@@ -24,7 +24,6 @@ class PasswordDialog extends React.Component<any, any> {
       active: "not-active",
     });
 
-    application.emit("pass_value", this.state.pass_value);
     $("#get-password").closeModal();
     this.setState({ pass_value: "" });
   }
@@ -34,7 +33,6 @@ class PasswordDialog extends React.Component<any, any> {
       active: "not-active",
     });
 
-    application.emit("pass_value", "");
     $("#get-password").closeModal();
     this.setState({ pass_value: "" });
   }

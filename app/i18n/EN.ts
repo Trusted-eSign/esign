@@ -252,7 +252,7 @@ export default {
     lic_file_not_found: "The license file is not found",
     lic_file_uncorrect: "The license file is not correct",
     lic_key_uncorrect: "The license key is not correct",
-    lic_key_correct: "The license key is valid. Days left: ",
+    lic_key_correct: "The license key is valid (Days left: ",
     lic_key_correct_days: "Error: license key is not correct",
     lic_key_setup: "The license key is successfully set up",
     lic_file_choose: "Choose the license file",

@@ -154,9 +154,9 @@ export class Store {
 
     this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
-        Materialize.toast("Certificate import error", 2000, "toast-cert_import_error");
+        return false;
       } else {
-        Materialize.toast("Certificates imported", 2000, "toast-cert_imported");
+        return true;
       }
     });
   }
@@ -208,10 +208,22 @@ export class Store {
       const uri = store.addCert(provider.handle, MY, cert);
       const newItem = provider.objectToPkiItem(uri);
 
-      const ARR: any[] = [newItem];
-      this._store.cash.import(ARR);
+      const items = this._store.cash.export();
+      let isNewItem = true;
 
-      this._items.push(newItem);
+      for (const item of items) {
+        if (item.hash === newItem.hash) {
+          isNewItem = false;
+          break;
+        }
+      }
+
+      if (isNewItem) {
+        const ARR: any[] = [newItem];
+        this._store.cash.import(ARR);
+
+        this._items.push(newItem);
+      }
     } else {
       const bCA = cert.isCA;
       const hasKey = provider.hasPrivateKey(cert);
