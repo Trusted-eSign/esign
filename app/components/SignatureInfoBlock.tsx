@@ -58,8 +58,14 @@ class SignatureInfoBlock extends React.Component<any, any> {
 }
 
 export default connect((state) => {
+  let signatures: object[] = [];
+
+  mapToArr(state.signatures.entities).forEach((element) => {
+    signatures = signatures.concat(mapToArr(element));
+  });
+
   return {
     files: activeFilesSelector(state, { active: true }),
-    signatures: mapToArr(state.signatures.entities),
+    signatures,
   };
 })(SignatureInfoBlock);

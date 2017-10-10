@@ -199,8 +199,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     });
 
     signatures.forEach((signature) => {
-      if (!signature.status_verify) {
-        res = false;
+      for (const file of files) {
+        if (file.id === signature.fileId && !signature.status_verify) {
+          res = false;
+          break;
+        }
       }
     });
 
@@ -262,12 +265,18 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 }
 
 export default connect((state) => {
+  let signatures: object[] = [];
+
+  mapToArr(state.signatures.entities).forEach((element) => {
+    signatures = signatures.concat(mapToArr(element));
+  });
+
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
     files: activeFilesSelector(state, { active: true }),
     settings: state.settings.sign,
-    signatures: mapToArr(state.signatures.entities),
+    signatures,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
 }, { deleteFile, loadAllCertificates, selectFile, verifySignature })(SignatureWindow);

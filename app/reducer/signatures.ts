@@ -7,6 +7,7 @@ const SignatureModel = Record({
   certs: [],
   digestAlgorithm: null,
   fileId: null,
+  id: null,
   status_verify: null,
   subject: null,
 });
@@ -20,7 +21,7 @@ export default (signatures = new DefaultReducerState(), action) => {
 
   switch (type) {
     case VERIFY_SIGNATURE + SUCCESS:
-      return signatures.mergeIn(["entities"], arrayToMap(payload.signatureInfo, SignatureModel));
+      return signatures.setIn(["entities", payload.fileId], arrayToMap(payload.signatureInfo, SignatureModel));
   }
 
   return signatures;

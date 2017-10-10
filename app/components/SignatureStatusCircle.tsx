@@ -1,5 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { mapToArr } from "../utils";
 
 interface ISignatureStatusCircleProps {
   fileId: number;
@@ -32,16 +33,26 @@ class SignatureStatusCircle extends React.Component<ISignatureStatusCircleProps,
 
   getCircleBody() {
     const { localize, locale } = this.context;
-    const { signature } = this.props;
+    const { signatures } = this.props;
 
     let statusIcon = "status_default";
     let toolTipText = "";
+    let res = true;
 
-    if (signature) {
-      signature.status_verify ? statusIcon = "status_ok" : statusIcon = "status_error";
+    if (signatures) {
+      const arrSigns = mapToArr(signatures);
+
+      for (const element of arrSigns) {
+        if (!element.status_verify) {
+          res = false;
+          break;
+        }
+      }
     } else {
       return null;
     }
+
+    res ? statusIcon = "status_ok" : statusIcon = "status_error";
 
     const classStatus = statusIcon + " tooltipped";
 
@@ -69,6 +80,6 @@ class SignatureStatusCircle extends React.Component<ISignatureStatusCircleProps,
 
 export default connect((state, ownProps) => {
   return {
-    signature: state.signatures.getIn(["entities", ownProps.fileId]),
+    signatures: state.signatures.getIn(["entities", ownProps.fileId]),
   };
 })(SignatureStatusCircle);
