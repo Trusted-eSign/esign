@@ -120,7 +120,7 @@ export class LangApp extends EventEmitter {
     // protected lang = "EN"; // get_settings_from_json("MAIN", "lang");
     // protected resource = get_string_resources(this.lang);
     // static SETTINGS = "lang_change";
-    lang = "EN"; // get_settings_from_json("MAIN", "lang");
+    lang = get_settings_from_json("settings", "locale");
     resource = get_string_resources(this.lang);
     SETTINGS = "lang_change";
     get get_lang() {
