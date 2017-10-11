@@ -37,7 +37,7 @@ class SearchElement extends React.Component<any, any> {
 
     let mainClassName: string;
 
-    this.state.open ? mainClassName = "active" :  mainClassName = "";
+    this.state.open || searchValue.length ? mainClassName = "active" :  mainClassName = "";
 
     return (
       <div className={"search right " + mainClassName}>
