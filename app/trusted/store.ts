@@ -39,6 +39,13 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
       this._store.addProvider(this._providerMicrosoft.handle);
+    } else {
+      try {
+        this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
+        this._store.addProvider(this._providerCryptopro.handle);
+      } catch (e) {
+        console.log(`Error init CryptoPro \n ${e}`);
+      }
     }
   }
 
@@ -150,6 +157,10 @@ export class Store {
         break;
       default:
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    if (!provider) {
+      Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
     this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {

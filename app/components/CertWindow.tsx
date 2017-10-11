@@ -65,6 +65,8 @@ class CertWindow extends React.Component<any, any> {
 
     if (OS_TYPE === "Windows_NT") {
       providerType = PROVIDER_MICROSOFT;
+    } else {
+      providerType = PROVIDER_CRYPTOPRO;
     }
 
     if (!window.PKISTORE.importCertificate(certificate, providerType)) {
