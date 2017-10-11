@@ -9,12 +9,35 @@ const rectangleUnvalidStyle = {
 };
 
 class RecipientsList extends React.Component<any, any> {
+  timer: number | NodeJS.Timer = 0;
+  delay = 200;
+  prevent: boolean = false;
+
   constructor(props: any) {
     super(props);
   }
 
+  handleClick = (element) => {
+    const { onActive } = this.props;
+
+    this.timer = setTimeout(() => {
+      if (!this.prevent) {
+        onActive(element);
+      }
+      this.prevent = false;
+    }, this.delay);
+  }
+
+  handleDoubleClick = (element) => {
+    const { handleRemoveRecipient } = this.props;
+
+    clearTimeout(this.timer);
+    this.prevent = true;
+    handleRemoveRecipient(element);
+  }
+
   render() {
-    const { recipients, onActive, dialogType } = this.props;
+    const { recipients, onActive, handleRemoveRecipient, dialogType } = this.props;
 
     if (!recipients || !recipients.length) {
       return null;
@@ -41,7 +64,9 @@ class RecipientsList extends React.Component<any, any> {
               curKeyStyle = "";
             }
 
-            return <div className="collection-item avatar certs-collection" key={element.id + 1} onClick={() => onActive(element)}>
+            return <div className="collection-item avatar certs-collection" key={element.id + 1}
+             onClick={() => this.handleClick(element)}
+             onDoubleClick={() => this.handleDoubleClick(element)}>
               <div className="r-iconbox-link">
                 <div className={"rectangle"} style={rectangleStyle}></div>
                 <div className="collection-title">{element.subjectFriendlyName}</div>

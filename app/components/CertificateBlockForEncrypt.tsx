@@ -46,13 +46,19 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     });
   }
 
+  handleRemoveRecipient = (cert: any) => {
+    this.setState({
+      selectedRecipients: this.state.selectedRecipients.filter((item: object) => item !== cert),
+    });
+  }
+
   handleActiveCert = (certificate: any) => {
     this.setState({ activeCertificate: certificate });
   }
 
   handleChooseRecipients = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { addRecipientCertificate } = this.props;
+    const { addRecipientCertificate, recipients } = this.props;
     const { selectedRecipients } = this.state;
 
     if (selectedRecipients.length === 0) {
@@ -204,7 +210,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection " + CHOOSE}>
-                          <RecipientsList onActive={this.handleActiveCert} dialogType="modal" recipients={selectedRecipients}/>
+                          <RecipientsList onActive={this.handleActiveCert} handleRemoveRecipient={this.handleRemoveRecipient} dialogType="modal" recipients={selectedRecipients}/>
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
