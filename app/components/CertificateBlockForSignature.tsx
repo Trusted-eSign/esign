@@ -67,13 +67,21 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   }
 
   getCertificateList() {
+    const { certificates } = this.props;
     const { modalCertList } = this.state;
+    const { localize, locale } = this.context;
 
     if (!modalCertList) {
       return null;
     }
 
     $(".lean-overlay").remove();
+
+    if (!certificates.length) {
+      return (
+        <BlockNotElements name={"active"} title={localize("Certificate.cert_not_found", locale)} />
+      );
+    }
 
     return (
       <div className={"add-cert-collection collection small_cert_collection"}>
@@ -102,7 +110,6 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
     const ACTIVE_SIGNER = selectedSigner ? "active" : "not-active";
     const NOT_ACTIVE_SIGNER = signer ? "not-active" : "active";
-    const CERTIFICATES_ACTIVE = certificates.length < 1 ? "active" : "not-active";
     const CERTIFICATES_NOT_ACTIVE = certificates.length < 1 ? "not-active" : "";
 
     if (isLoading) {
@@ -152,7 +159,6 @@ class CertificateBlockForSignature extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         {this.getCertificateList()}
-                        <BlockNotElements name={CERTIFICATES_ACTIVE} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>
                   </div>

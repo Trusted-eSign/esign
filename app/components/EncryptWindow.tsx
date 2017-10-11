@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { deleteFile, selectFile } from "../AC";
+import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
@@ -10,6 +10,7 @@ import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import Dialog from "./Dialog";
 import EncryptSettings from "./EncryptSettings";
 import FileSelector from "./FileSelector";
+import ProgressBars from "./ProgressBars";
 
 class EncryptWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -19,6 +20,14 @@ class EncryptWindow extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+  }
+
+  componentDidMount() {
+    const { certificatesLoaded, certificatesLoading, loadAllCertificates } = this.props;
+
+    if (!certificatesLoading && !certificatesLoaded) {
+      loadAllCertificates();
+    }
   }
 
   encrypt = () => {
@@ -152,6 +161,11 @@ class EncryptWindow extends React.Component<any, any> {
 
   render() {
     const { localize, locale } = this.context;
+    const { certificatesLoading } = this.props;
+
+    if (certificatesLoading) {
+      return <ProgressBars />;
+    }
 
     return (
       <div className="main">
@@ -182,8 +196,10 @@ class EncryptWindow extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
+    certificatesLoaded: state.certificates.loaded,
+    certificatesLoading: state.certificates.loading,
     files: activeFilesSelector(state, { active: true }),
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };
-}, { deleteFile, selectFile })(EncryptWindow);
+}, { deleteFile, loadAllCertificates, selectFile })(EncryptWindow);

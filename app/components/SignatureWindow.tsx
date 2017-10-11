@@ -226,7 +226,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   render() {
-    const { certificatesLoading, localize, locale } = this.context;
+    const { localize, locale } = this.context;
+    const { certificatesLoading } = this.props;
 
     if (certificatesLoading) {
       return <ProgressBars />;

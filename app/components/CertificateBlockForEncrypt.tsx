@@ -90,7 +90,16 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   getCertificateList() {
+    const { certificates } = this.props;
+    const { localize, locale } = this.context;
+
     $(".lean-overlay").remove();
+
+    if (!certificates.length) {
+      return (
+        <BlockNotElements name={"active"} title={localize("Certificate.cert_not_found", locale)} />
+      );
+    }
 
     return (
       <div className={"add-cert-collection collection small_cert_collection"}>
@@ -160,8 +169,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       </li>;
     }
 
-    const NAME = certificates < 1 ? "active" : "not-active";
-    const VIEW = certificates < 1 ? "not-active" : "";
     const SETTINGS = {
       draggable: false,
     };
@@ -190,7 +197,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         {this.getCertificateList()}
-                        <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                       </div>
                     </div>
                   </div>
