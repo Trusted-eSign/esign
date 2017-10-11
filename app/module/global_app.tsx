@@ -61,9 +61,9 @@ export function get_settings_from_json(operation: string, settings_name: string)
             } else {
                 return null;
             }
-        } else if (operation === "MAIN") {
-            if (settings_name === "lang") {
-                return "EN";
+        } else if (operation === "settings") {
+            if (settings_name === "locale") {
+                return "RU";
             }
         } else {
             if (settings_name === "settings_for_encrypt") {
