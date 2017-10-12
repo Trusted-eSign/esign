@@ -11,6 +11,13 @@ class SignerCertificateInfo extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+    this.state = ({
+      certForInfo: props.certificate,
+    });
+  }
+
+  handleClick = (certificate: any) => {
+    this.setState({ certForInfo: certificate });
   }
 
   getCertificateInfo() {
@@ -31,6 +38,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
 
   render() {
     const { certificate, handleBackView } = this.props;
+    const { certForInfo } = this.state;
     const { localize, locale } = this.context;
 
     if (!certificate) {
@@ -41,7 +49,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
       <div className={"content-tem sign-info "}>
         <div className="col s6 m6 l6 content-item">
           <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={handleBackView} text={localize("Certificate.cert_chain", locale)} />
-          <CertificateChainInfo certificate={certificate} />
+          <CertificateChainInfo certificate={certificate} onClick={this.handleClick}/>
         </div>
         <div className="col s6 m6 l6 content-item">
           {this.getCertificateInfo()}

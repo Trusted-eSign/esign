@@ -12,10 +12,9 @@ const FALSE_CERT_STATUS = {
 
 const getChain = (certItem: any) => {
   try {
-    const cert = window.PKISTORE.getPkiObject(certItem);
+    const cert = certItem.object ? certItem.object : window.PKISTORE.getPkiObject(certItem);
     const chain = new trusted.pki.Chain();
     const chainForVerify = chain.buildChain(cert, window.TRUSTEDCERTIFICATECOLLECTION);
-
     return chainForVerify;
   } catch (e) {
     return null;
@@ -35,7 +34,7 @@ const certVerify = (cert: trusted.pki.Certificate) => {
   }
 };
 
-function CertificateChainInfo({ certificate }, context) {
+function CertificateChainInfo({ certificate, onClick }, context) {
   const { localize, locale } = context;
   const chain = getChain(certificate);
   const elements = [];
@@ -75,7 +74,7 @@ function CertificateChainInfo({ certificate }, context) {
               <i className={circleStyle}></i>
               <div className={"vert_line"} style={vertlineStyle}></div>
             </div>
-            <div className="col s8">
+            <div className="col s8" onClick={() => onClick(element)}>
               <div className="r-iconbox-link">
                 <div className="collection-title chain_textblock">{element.subjectFriendlyName}</div>
                 <div className="collection-info cert-info ">{element.issuerFriendlyName}</div>

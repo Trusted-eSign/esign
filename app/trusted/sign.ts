@@ -334,17 +334,19 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
               certificatesSignStatus = false;
               $(".toast-build_chain_failed").remove();
               Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
-
               certSign.push({
                 active: false,
                 serial: cert.serialNumber,
                 subjectFriendlyName: cert.subjectFriendlyName,
+                subjectName: cert.subjectName,
                 organizationName: cert.organizationName,
                 issuerFriendlyName: cert.issuerFriendlyName,
+                issuerName: cert.issuerName,
                 notAfter: cert.notAfter,
                 signatureAlgorithm: cert.signatureAlgorithm,
                 hash: cert.thumbprint,
                 key: false,
+                object: cert,
               });
             } else {
               for (let j: number = ch.length - 1; j >= 0; j--) {
@@ -363,6 +365,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
                   hash: it.thumbprint,
                   key: false,
                   status: certSignStatus,
+                  object: cert,
                 });
               }
             }
