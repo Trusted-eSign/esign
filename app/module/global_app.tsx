@@ -88,6 +88,7 @@ export interface IX509Certificate {
     version: string;
     hash: string;
     serial: string;
+    serialNumber: string;
     notAfter: Date;
     notBefore: string;
     subjectName: string;

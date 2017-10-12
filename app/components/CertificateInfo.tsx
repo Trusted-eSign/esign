@@ -18,13 +18,13 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
   render() {
     const { localize, locale } = this.context;
     const { certificate } = this.props;
-    const PRIV_KEY = certificate.key.length > 0 ? localize("Certificate.present", locale) : localize("Certificate.absent", locale);
+    const PRIV_KEY = certificate.key && certificate.key.length > 0 ? localize("Certificate.present", locale) : localize("Certificate.absent", locale);
 
     return (
       <div className="add-cert-collection collection cert-info-list">
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
-          <div className={"collection-title "}>{certificate.serial}</div>
+          <div className={"collection-title "}>{certificate.serial ? certificate.serial : certificate.serialNumber}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.subject", locale)}</div>
