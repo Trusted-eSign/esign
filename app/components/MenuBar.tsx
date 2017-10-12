@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { SETTINGS_JSON } from "../module/global_app";
-import { sign } from "../module/sign_app";
 import * as native from "../native";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
