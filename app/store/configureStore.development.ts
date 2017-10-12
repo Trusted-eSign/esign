@@ -28,9 +28,6 @@ const enhancer = composeEnhancers(
 
 const store = createStore(reducer, preloadedState, enhancer);
 
-//dev only
-window.store = store;
-
 if (module.hot) {
   module.hot.accept("../reducer", () =>
     store.replaceReducer(require("../reducer")), // eslint-disable-line global-require
