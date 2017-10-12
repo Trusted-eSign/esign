@@ -21,7 +21,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
   }
 
   getCertificateInfo() {
-    const { certificate } = this.props;
+    const { certForInfo } = this.state;
     const { localize, locale } = this.context;
 
     return (
@@ -29,7 +29,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
         <HeaderWorkspaceBlock text={localize("Certificate.cert_info", locale)} />
         <div className="add-certs">
           <div className="add-certs-item">
-            <CertificateInfo certificate={certificate} />
+            <CertificateInfo certificate={certForInfo} />
           </div>
         </div>;
       </div>
@@ -38,7 +38,6 @@ class SignerCertificateInfo extends React.Component<any, any> {
 
   render() {
     const { certificate, handleBackView } = this.props;
-    const { certForInfo } = this.state;
     const { localize, locale } = this.context;
 
     if (!certificate) {
