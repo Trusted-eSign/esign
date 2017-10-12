@@ -14,7 +14,6 @@ import FileSelector from "./FileSelector";
 import ProgressBars from "./ProgressBars";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
-import SignerCertificateInfo from "./SignerCertificateInfo";
 
 const dialog = window.electron.remote.dialog;
 
@@ -38,6 +37,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   constructor(props: ISignatureWindowProps) {
     super(props);
+    this.state = ({
+      signerCertificate: null,
+    });
+  }
+
+  handleActiveCert = (certificate: any) => {
+    this.setState({ signerCertificate: certificate });
+  }
+
+  handleBackView = () => {
+    this.setState({ signerCertificate: null });
   }
 
   componentDidMount() {
@@ -217,12 +227,44 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   getSignatureInfo() {
-    return (
-      <div>
-        <SignatureInfoBlock />
-        <SignerCertificateInfo />
-      </div>
-    );
+    const { signerCertificate } = this.state;
+    const { files, signatures } = this.props;
+
+    let file = null;
+    let fileSignatures = null;
+
+    if (files && files.length === 1 && signatures && signatures.length) {
+      file = files[0];
+
+      fileSignatures = signatures.filter((signature) => {
+        return signature.fileId === file.id;
+      });
+    }
+
+    if (fileSignatures && fileSignatures.length) {
+      return (
+        <div className="content-tem">
+          <SignatureInfoBlock
+            signerCertificate={signerCertificate}
+            handleActiveCert={this.handleActiveCert}
+            handleBackView={this.handleBackView}
+            signatures={fileSignatures}
+            filename={file.filename}
+          />
+        </div>
+      );
+    } else {
+      return (
+        <div className="content-tem">
+          <div className="col s6 m6 l6 content-item">
+            <CertificateBlockForSignature />
+          </div>
+          <div className="col s6 m6 l6 content-item">
+            <SignatureSettings />
+          </div>
+        </div>
+      );
+    }
   }
 
   render() {
@@ -237,14 +279,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       <div className="main">
         <Dialog />
         <div className="content">
-          <div className="content-tem">
-            <div className="col s6 m6 l6 content-item">
-              <CertificateBlockForSignature />
-            </div>
-            <div className="col s6 m6 l6 content-item">
-              <SignatureSettings />
-            </div>
-          </div>
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
             <BtnsForOperation

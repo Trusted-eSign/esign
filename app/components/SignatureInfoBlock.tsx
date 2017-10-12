@@ -4,6 +4,7 @@ import { activeFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import SignatureStatus from "./SignatureStatus";
+import SignerCertificateInfo from "./SignerCertificateInfo";
 
 class SignatureInfoBlock extends React.Component<any, any> {
   static contextTypes = {
@@ -16,35 +17,24 @@ class SignatureInfoBlock extends React.Component<any, any> {
   }
 
   render() {
-    const { files, signatures } = this.props;
+    const { signerCertificate, filename, signatures, handleActiveCert, handleBackView } = this.props;
     const { localize, locale } = this.context;
 
-    let elements = null;
-    let file = null;
-
-    if (files.length === 1 && signatures.length ) {
-      file = files[0];
-
-      const signs = signatures.filter((signature) => {
-        return signature.fileId === file.id;
-      });
-
-      if (!signs.length) {
-        return null;
-      }
-
-      elements = signs.map((signature) => {
-        return <SignatureStatus key={signature.id} signed_data={signature} />;
-      });
-    } else {
-      return null;
+    if (signerCertificate) {
+      return (
+        <SignerCertificateInfo handleBackView={handleBackView} certificate={signerCertificate} />
+      );
     }
+
+    const elements = signatures.map((signature) => {
+      return <SignatureStatus key={signature.id} signature={signature} handleActiveCert={handleActiveCert} />;
+    });
 
     return (
       <div className={"col s6 m6 l6 sign-info content-item-height "}>
         <div className="file-content-height">
           <div className="content-wrapper z-depth-1">
-            <HeaderWorkspaceBlock icon="arrow_back" text={localize("Sign.sign_info", locale)} second_text={file.filename} />
+            <HeaderWorkspaceBlock icon="arrow_back" text={localize("Sign.sign_info", locale)} second_text={filename} />
             <div className="sign-info-content">
               <div className={"add-cert-collection collection "}>
                 {elements}
@@ -57,15 +47,4 @@ class SignatureInfoBlock extends React.Component<any, any> {
   }
 }
 
-export default connect((state) => {
-  let signatures: object[] = [];
-
-  mapToArr(state.signatures.entities).forEach((element) => {
-    signatures = signatures.concat(mapToArr(element));
-  });
-
-  return {
-    files: activeFilesSelector(state, { active: true }),
-    signatures,
-  };
-})(SignatureInfoBlock);
+export default SignatureInfoBlock;
