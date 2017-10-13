@@ -142,7 +142,7 @@ export class Store {
     return res;
   }
 
-  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM): void {
+  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }): void {
     let provider;
 
     switch (providerType) {
@@ -165,9 +165,9 @@ export class Store {
 
     this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
-        return false;
+        done(err);
       } else {
-        return true;
+        done();
       }
     });
   }

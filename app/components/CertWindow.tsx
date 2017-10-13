@@ -1,6 +1,7 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
+import { loadAllCertificates } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import * as native from "../native";
 import { filteredCertificatesSelector } from "../selectors";
@@ -52,6 +53,7 @@ class CertWindow extends React.Component<any, any> {
 
   handleCertificateImport = (event: any) => {
     const { localize, locale } = this.context;
+    const { isLoading, loadAllCertificates } = this.props;
     const path = event[0].path;
     const format: trusted.DataFormat = getFileCoding(path);
     const OS_TYPE = native.os.type();
@@ -74,11 +76,17 @@ class CertWindow extends React.Component<any, any> {
       providerType = PROVIDER_CRYPTOPRO;
     }
 
-    if (!window.PKISTORE.importCertificate(certificate, providerType)) {
-      Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-    } else {
-      Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
-    }
+    window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
+      if (err) {
+        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+      } else {
+        if (!isLoading) {
+          loadAllCertificates();
+        }
+
+        Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+      }
+    });
   }
 
   p12Import = (event: any) => {
@@ -240,7 +248,7 @@ class CertWindow extends React.Component<any, any> {
 
     return (
       <div className="add-certs">
-        <CertificateInfoTabs onActiveTab={this.handleChangeActiveTab}/>
+        <CertificateInfoTabs onActiveTab={this.handleChangeActiveTab} />
         <div className="add-certs-item">
           {cert}
         </div>
@@ -344,7 +352,7 @@ class CertWindow extends React.Component<any, any> {
             </div>
           </div>
         </div>
-        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange}/>
+        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
   }
@@ -355,4 +363,4 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
     isLoading: state.certificates.loading,
   };
-})(CertWindow);
+}, { loadAllCertificates })(CertWindow);
