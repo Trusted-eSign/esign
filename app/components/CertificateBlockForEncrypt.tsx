@@ -25,7 +25,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     this.state = ({
       activeCertificate: null,
       modalCertList: false,
-      selectedRecipients: [],
+      selectedRecipients: props.recipients,
     });
   }
 
@@ -61,9 +61,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const { addRecipientCertificate, recipients } = this.props;
     const { selectedRecipients } = this.state;
 
-    if (selectedRecipients.length === 0) {
-      this.handleCleanRecipientsList();
-    }
+    this.handleCleanRecipientsList();
 
     for (const recipient of selectedRecipients) {
       addRecipientCertificate(recipient.id);
