@@ -114,8 +114,7 @@ export class AboutWindow extends React.Component<any, any> {
                       </div>
                       <div className="row">
                         <div className="contact-icon"></div>
-                        <h6 className="contact-text">{localize("About.about_programm", locale)}<br></br><br></br>{localize("About.reason_build", locale)}
-                        </h6>
+                        <h6 className="contact-text">{localize("About.about_programm", locale)}</h6>
                       </div>
                       <div className="row">
                         <div className="contact-icon"><i className="mail_contact_icon"></i></div>
@@ -131,6 +130,7 @@ export class AboutWindow extends React.Component<any, any> {
                   <div className="card infoapp">
                     <div className="card-content gray-text">
                       <span className="card-title">{localize("About.FeedBack", locale)}</span>
+                      <h6 className="contact-text">{localize("About.feedback_description", locale)}</h6>
                       <form onSubmit={this.validDatas} className="col s12">
                         <div className="row form">
                           <div className="input-field col s12">

@@ -208,6 +208,7 @@ export default {
     product_NAME: "Trusted eSign",
     product_name: "Trusted eSign",
     FeedBack: "ОБРАТНАЯ СВЯЗЬ",
+    feedback_description: "Сообщить разработчикам об обнаруженных проблемах или предложить идеи по улучшению программы",
     username: "Имя",
     email: "Email",
     message: "Сообщение",
