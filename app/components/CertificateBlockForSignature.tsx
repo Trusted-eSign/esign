@@ -116,16 +116,13 @@ class CertificateBlockForSignature extends React.Component<any, any> {
       return <ProgressBars />;
     }
 
-    let cert: any = null;
     let itemBar: any = null;
     let icon = "";
 
     if (signer) {
-      cert = <CertificateInfo certificate={signer} />;
       icon = "add";
       itemBar = <HeaderWorkspaceBlock text={signer.subjectFriendlyName} second_text={signer.issuerFriendlyName} />;
     } else {
-      cert = "";
       itemBar = <HeaderWorkspaceBlock text={localize("Certificate.cert_info", locale)} />;
     }
 
@@ -148,7 +145,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
         {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={function () {
+            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={function() {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">

@@ -30,24 +30,26 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
 
     if (signature.status_verify === true) {
       status = localize("Sign.sign_ok", locale);
-      icon = "status_cert_ok_icon";
+      icon = "cert_status_ok";
     } else {
       status = localize("Sign.sign_error", locale);
-      icon = "status_cert_fail_icon";
+      icon = "cert_status_error";
     }
 
     return (
       <div className="collection-item avatar certs-collection" onClick={this.handleClick}>
-        <div className="r-iconbox-link">
-          <div className="r-iconbox-cert-icon"><i className={icon}></i></div>
-          <p className="collection-title si-title">{status}</p>
-          <p className="collection-info cert-info si-info">{localize("Sign.status", locale)}</p>
-          <p className="collection-title si-title">{signature.subject}</p>
-          <p className="collection-info cert-info si-info">{localize("Certificate.subject", locale)}</p>
-          <p className="collection-title si-title">{signature.alg}</p>
-          <p className="collection-info cert-info si-info">{localize("Sign.alg", locale)}</p>
-          <p className="collection-title si-title">{signature.digestAlgorithm}</p>
-          <p className="collection-info cert-info si-info">{localize("Sign.digest_alg", locale)}</p>
+        <div className="row">
+          <div className="col s11">
+            <p className="collection-title">{status}</p>
+            <p className="collection-info cert-info">{localize("Sign.status", locale)}</p>
+            <p className="collection-title">{signature.subject}</p>
+            <p className="collection-info cert-info">{localize("Certificate.subject", locale)}</p>
+            <p className="collection-title">{signature.alg}</p>
+            <p className="collection-info cert-info">{localize("Sign.alg", locale)}</p>
+            <p className="collection-title">{signature.digestAlgorithm}</p>
+            <p className="collection-info cert-info">{localize("Sign.digest_alg", locale)}</p>
+          </div>
+          <div className={icon} />
         </div>
       </div>
     );
