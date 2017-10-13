@@ -11,21 +11,11 @@ class PasswordDialog extends React.Component<any, any> {
     super(props);
     this.state = ({
       active: "not-active",
-      pass_value: "",
     });
   }
 
   componentDidMount(): void {
     $("input#input_password").characterCounter();
-  }
-
-  verifyValid(): void {
-    this.setState({
-      active: "not-active",
-    });
-
-    $("#get-password").closeModal();
-    this.setState({ pass_value: "" });
   }
 
   closeModal() {
@@ -34,28 +24,24 @@ class PasswordDialog extends React.Component<any, any> {
     });
 
     $("#get-password").closeModal();
-    this.setState({ pass_value: "" });
   }
 
-  changePassValue(event: any): void {
-    this.setState({
-      pass_value: event,
-    });
+  handleChange = (ev) => {
+    const { onChange } = this.props;
+    if (!onChange) {
+      return;
+    }
+
+    onChange(ev.target.value);
   }
 
-  keyDownPassword() {
-    const clickEvent = document.createEvent("MouseEvents");
-    clickEvent.initEvent("click", true, true);
-    document.querySelector("#enter-pass").dispatchEvent(clickEvent);
-  }
-
-  render(): any {
-    const self = this;
+  render() {
     const { localize, locale } = this.context;
+    const { value, onChange } = this.props;
 
     let active = "";
 
-    if (this.state.pass_value.length > 0) {
+    if (value && value.length > 0) {
       active = "active";
     }
 
@@ -67,23 +53,10 @@ class PasswordDialog extends React.Component<any, any> {
             <div className="input-password">
               <div className="input-field col s6 input-field-password">
                 <i className={"material-icons prefix key-prefix " + active}>vpn_key</i>
-                <input id="input_password" type="password" value={this.state.pass_value}
-                  onKeyDown={
-                    function(evt: any) {
-                      if (evt.keyCode === 13) {
-                        self.keyDownPassword();
-                      }
-                    }
-                  }
-                  onChange={
-                    function(event: any): void {
-                      self.changePassValue(event.target.value);
-                    }
-                  }
-                />
+                <input id="input_password" type="password" value={value} onChange={this.handleChange} />
                 <label htmlFor="input_password" className={active}>{localize("Settings.password", locale)}</label>
               </div>
-              <a className="waves-effect waves-light btn modal-close" id="enter-pass" onClick={this.verifyValid.bind(this)}>{localize("License.Entered", locale)}</a>
+              <a className="waves-effect waves-light btn modal-close" id="enter-pass">{localize("License.Entered", locale)}</a>
             </div>
           </div>
         </div>

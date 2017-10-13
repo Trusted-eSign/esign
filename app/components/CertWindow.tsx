@@ -30,7 +30,12 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeTabIsCertInfo: true,
       certificate: null,
+      password: "",
     });
+  }
+
+  handlePasswordChange = (password) => {
+    this.setState({ password });
   }
 
   handleChangeActiveTab = (ev) => {
@@ -175,6 +180,8 @@ class CertWindow extends React.Component<any, any> {
   }
 
   exportCert = (file: string) => {
+    const self = this;
+    const { certificate } = this.state;
     const { localize, locale } = this.context;
 
     let p12: trusted.pki.Pkcs12;
@@ -182,7 +189,8 @@ class CertWindow extends React.Component<any, any> {
     if (file) {
       $("#get-password").openModal({
         complete() {
-          const CERT_ITEM = this.state.certificate;
+          const password = self.state.password;
+          const CERT_ITEM = certificate;
           const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
           const KEY = window.PKISTORE.findKey(CERT_ITEM);
 
@@ -191,7 +199,7 @@ class CertWindow extends React.Component<any, any> {
             Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
           } else {
             p12 = new trusted.pki.Pkcs12();
-            p12.create(CERT, KEY, null, this.state.pass_value, CERT_ITEM.subjectFriendlyName);
+            p12 = p12.create(CERT, KEY, null, password, CERT_ITEM.subjectFriendlyName);
             p12.save(file);
             $(".toast-cert_export_ok").remove();
             Materialize.toast(localize("Certificate.cert_export_ok", locale), 2000, "toast-cert_export_ok");
@@ -336,7 +344,7 @@ class CertWindow extends React.Component<any, any> {
             </div>
           </div>
         </div>
-        <PasswordDialog />
+        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange}/>
       </div>
     );
   }
