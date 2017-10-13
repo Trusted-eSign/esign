@@ -1,7 +1,7 @@
 import * as events from "events";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates } from "../AC";
+import { loadAllCertificates, removeAllCertificates } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import * as native from "../native";
 import { filteredCertificatesSelector } from "../selectors";
@@ -53,7 +53,7 @@ class CertWindow extends React.Component<any, any> {
 
   handleCertificateImport = (event: any) => {
     const { localize, locale } = this.context;
-    const { isLoading, loadAllCertificates } = this.props;
+    const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
     const path = event[0].path;
     const format: trusted.DataFormat = getFileCoding(path);
     const OS_TYPE = native.os.type();
@@ -80,6 +80,8 @@ class CertWindow extends React.Component<any, any> {
       if (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       } else {
+        removeAllCertificates();
+
         if (!isLoading) {
           loadAllCertificates();
         }
@@ -363,4 +365,4 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates })(CertWindow);
+}, { loadAllCertificates, removeAllCertificates })(CertWindow);

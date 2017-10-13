@@ -1,5 +1,6 @@
 import { Map, OrderedMap, Record } from "immutable";
-import { LOAD_ALL_CERTIFICATES, START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
+import { LOAD_ALL_CERTIFICATES, REMOVE_ALL_CERTIFICATES,
+  START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
 import { arrayToMap } from "../utils";
 
 const CertificateModel = Record({
@@ -48,6 +49,9 @@ export default (certificates = new DefaultReducerState(), action) => {
       return certificates
         .setIn(["entities", payload.certificateId, "status"], payload.certificateStatus)
         .setIn(["entities", payload.certificateId, "verified"], true);
+
+    case REMOVE_ALL_CERTIFICATES:
+      return certificates = new DefaultReducerState();
   }
 
   return certificates;
