@@ -43,6 +43,10 @@
     "pki",
     "cms"
   ],
+  "build":{
+    "win": {"target":[{"target":"dir"}]},
+    "asar":false
+  },
   "homepage": "https://trustedplus.github.io/",
   "jest": {
     "moduleNameMapper": {
@@ -120,7 +124,7 @@
     "css-loader": "^0.28.0",
     "del": "^2.2.2",
     "devtron": "^1.4.0",
-    "electron": "^1.6.5",
+    "electron": "1.6.6",
     "electron-builder": "^17.0.1",
     "electron-devtools-installer": "^2.2.0",
     "enzyme": "^2.8.2",

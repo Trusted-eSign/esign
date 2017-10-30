@@ -48,7 +48,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
       <div className={"content-tem sign-info "}>
         <div className="col s6 m6 l6 content-item">
           <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={handleBackView} text={localize("Certificate.cert_chain", locale)} />
-          <CertificateChainInfo certificate={certificate} onClick={this.handleClick}/>
+          <CertificateChainInfo certificate={certificate} onClick={this.handleClick} style="trlink_block"/>
         </div>
         <div className="col s6 m6 l6 content-item">
           {this.getCertificateInfo()}

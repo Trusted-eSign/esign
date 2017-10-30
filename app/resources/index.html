@@ -56,6 +56,8 @@
       window.RESOURCES_PATH = process.cwd();
       window.framework_NW = true;
     }
+    var crypto_module = require('crypto');
+    crypto_module.loadConfig("./config/openssl.cfg");
     var trusted = require('trusted-crypto');
     window.path = require('path');
     window.fs = require('fs');

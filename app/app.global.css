@@ -2588,3 +2588,12 @@ i.material-icons.left.line {
 .csr-window__workspace {
   margin-top: 20px;
 }
+
+.trlink_block{
+    width: 100%;
+    height: calc(100% - 48px);
+    position: relative;
+    overflow: auto;
+    border-top: 2px solid #ffffff;
+    z-index: 2;
+}

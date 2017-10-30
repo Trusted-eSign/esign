@@ -34,7 +34,7 @@ const certVerify = (cert: trusted.pki.Certificate) => {
   }
 };
 
-function CertificateChainInfo({ certificate, onClick }, context) {
+function CertificateChainInfo({ certificate, onClick , style}, context) {
   const { localize, locale } = context;
   const chain = getChain(certificate);
   const elements = [];
@@ -114,7 +114,7 @@ function CertificateChainInfo({ certificate, onClick }, context) {
   }
 
   return (
-    <div>
+    <div className={style}>
       {elements}
     </ div>
   );
