@@ -38,6 +38,7 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
   const { localize, locale } = context;
   const chain = getChain(certificate);
   const elements = [];
+  let curKeyStyle = "";
   let curStatusStyle: string;
 
   if (chain && chain.length) {
@@ -48,7 +49,7 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
       const vertlineStyle = {
         visibility: "hidden",
       };
-      let curKeyStyle = "";
+
       if (j < 10)  {
         circleStyle = "material-icons left chain_" + (j + 1);
       } else {
@@ -65,7 +66,9 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
         curStatusStyle = "cert_status_error";
       }
 
-      curKeyStyle = certificate.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
+      if (j === 0) {
+        curKeyStyle = certificate.key.length > 0 ? "key" : "";
+      }
 
       elements.push(
         <div className={"collection collection-item avatar certs-collection chain-text"}>
