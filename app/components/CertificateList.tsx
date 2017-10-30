@@ -30,14 +30,16 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     $(".collapsible").collapsible();
   }
 
-  getCollapsibleElement(head: string, name: string, elements: object[]) {
+  getCollapsibleElement(head: string, name: string, elements: object[], active: boolean = false) {
     if (!elements || elements.length === 0) {
       return null;
     }
 
+    const activeSection = active ? "active" : "";
+
     return (
       <li>
-        <div className="collapsible-header color">
+        <div className={`collapsible-header color ${activeSection}`}>
           <i className={`material-icons left ${name}`}>
           </i>
           {head}
@@ -90,7 +92,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     return (
       <div>
         <ul className="collapsible" data-collapsible="accordion">
-          {this.getCollapsibleElement(localize("Certificate.certs_my", locale), "my", my)}
+          {this.getCollapsibleElement(localize("Certificate.certs_my", locale), "my", my, true)}
           {this.getCollapsibleElement(localize("Certificate.certs_other", locale), "other", other)}
           {this.getCollapsibleElement(localize("Certificate.certs_intermediate", locale), "intermediate", intermediate)}
           {this.getCollapsibleElement(localize("Certificate.certs_root", locale), "root", root)}
