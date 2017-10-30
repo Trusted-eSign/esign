@@ -1380,6 +1380,7 @@ form.col.s12 {
 }
 
 h6.contact-text {
+  -webkit-user-select: text;
   font-size: 1.0rem;
   line-height: 110%;
   color: #898989;
@@ -1387,6 +1388,7 @@ h6.contact-text {
 
 
 h6.contact-title {
+  -webkit-user-select: text;
   font-size: 1.0rem;
   line-height: 110%;
   padding-left: 52px;
