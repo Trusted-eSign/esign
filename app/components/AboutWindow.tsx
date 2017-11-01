@@ -15,8 +15,18 @@ export class AboutWindow extends React.Component<any, any> {
     });
   }
 
+  cleanState = () => {
+    this.setState(
+      {
+        email: { text: "", error: "" },
+        message: { text: "", error: "" },
+        username: { text: "", error: "" },
+      });
+  }
+
   send = () => {
     const { localize, locale } = this.context;
+    const self = this;
 
     $.ajax({
       data: {
@@ -27,6 +37,8 @@ export class AboutWindow extends React.Component<any, any> {
       method: "POST",
       url: "https://net.trusted.ru/trustedapp/app/feedback",
       success(): void {
+        self.cleanState();
+
         $(".toast-message_send").remove();
         Materialize.toast(localize("About.message_send", locale), 2000, "toast-message_send");
       },
@@ -76,6 +88,7 @@ export class AboutWindow extends React.Component<any, any> {
 
   render(): any {
     const { localize, locale } = this.context;
+    const { email, message, username } = this.state;
 
     let errUser = "";
     let errEmail = "";
@@ -134,7 +147,7 @@ export class AboutWindow extends React.Component<any, any> {
                       <form onSubmit={this.validDatas} className="col s12">
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="username" id="username" type="text" onChange={(evt) => this.setUserName(evt.target.value)}></input>
+                            <input ref="username" id="username" type="text" value={username.text} onChange={(evt) => this.setUserName(evt.target.value)}></input>
                             <label htmlFor="username">{localize("About.username", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errUser}>
@@ -144,7 +157,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form">
                           <div className="input-field col s12">
-                            <input ref="email" id="email" type="email" className="validate" onChange={(evt) => this.setEmail(evt.target.value)}></input>
+                            <input ref="email" id="email" type="email" className="validate" value={email.text} onChange={(evt) => this.setEmail(evt.target.value)}></input>
                             <label htmlFor="email" >{localize("About.email", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errEmail}>
@@ -154,7 +167,7 @@ export class AboutWindow extends React.Component<any, any> {
                         </div>
                         <div className="row form message">
                           <div className="input-field col s12 mes-textarea">
-                            <textarea ref="message" id="message" className="materialize-textarea" onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
+                            <textarea ref="message" id="message" className="materialize-textarea" value={message.text} onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
                             <label htmlFor="message">{localize("About.message", locale)}</label>
                           </div>
                           <div className={"about-error-info " + errMessage}>
