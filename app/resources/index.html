@@ -21,11 +21,9 @@
 
 <body>
   <div id="container"></div>
-  <script src="js/jquery-3.1.1.min.js"></script>
-
   <script>
     if (process.versions.nw === undefined) {
-      window.$ = window.jQuery = require('./js/jquery-3.1.1.min.js');
+      window.$ = window.jQuery = require('./js/jquery-3.2.1.min.js');
       window.Hammer = require("./js/hammer.min.js");
       window.electron = require('electron');
       window.mainWindow = electron.remote.getCurrentWindow();
