@@ -71,7 +71,7 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
       }
 
       elements.push(
-        <div className={"collection collection-item avatar certs-collection chain-text"}>
+        <div className={"collection collection-item avatar certs-collection chain-text"} key={element.serialNumber + "_" + element.thumbprint}>
           <div className="row chain-item">
             <div className="col s1">
               <i className={circleStyle}></i>
@@ -96,7 +96,7 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
     curStatusStyle = "cert_status_error";
     let curKeyStyle = certificate.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
     elements.push(
-      <div className={"collection collection-item avatar certs-collection chain-text"}>
+      <div className={"collection collection-item avatar certs-collection chain-text"}  key={certificate.serialNumber + "_" + certificate.thumbprint}>
         <div className="row chain-item">
           <div className="col s1">
             <i className={circleStyle}></i>
