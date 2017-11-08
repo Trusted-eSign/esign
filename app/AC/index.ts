@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import {
   ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE, CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
@@ -8,8 +10,8 @@ import {
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
+import { DEFAULT_PATH } from "../constants";
 import { certVerify } from "../module/global_app";
-import * as native from "../native";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
 import { extFile } from "../utils";
@@ -24,9 +26,9 @@ export function loadAllCertificates() {
       const certificateStore = new Store();
 
       try {
-        const certificate = trusted.pki.Certificate.load(native.DEFAULT_PATH + "/cert1.crt", trusted.DataFormat.PEM);
+        const certificate = trusted.pki.Certificate.load(DEFAULT_PATH + "/cert1.crt", trusted.DataFormat.PEM);
         certificateStore.importCertificate(certificate);
-        certificateStore.importKey(native.DEFAULT_PATH + "/cert1.key", "");
+        certificateStore.importKey(DEFAULT_PATH + "/cert1.key", "");
       } catch (e) {
         alert(`Error import test certificate! \n ${e}`);
       }
@@ -83,10 +85,10 @@ export function selectSignerCertificate(selected) {
 }
 
 export function selectFile(fullpath: string) {
-  const stat = native.fs.statSync(fullpath);
+  const stat = fs.statSync(fullpath);
   const file = {
     extension: extFile(fullpath),
-    filename: native.path.basename(fullpath),
+    filename: path.basename(fullpath),
     fullpath: fullpath,
     lastModifiedDate: stat.birthtime,
     size: stat.size,

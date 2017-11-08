@@ -1,5 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
 import { lang } from "../module/global_app";
-import * as native from "../native";
 import { utils } from "../utils";
 import * as jwt from "./jwt";
 
@@ -9,7 +10,6 @@ export function loadSign(uri: string): trusted.cms.SignedData {
     try {
         let format: trusted.DataFormat;
         let cms: trusted.cms.SignedData;
-        let tempURI: string;
 
         format = getFileCoding(uri);
         cms = new trusted.cms.SignedData();
@@ -31,7 +31,7 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
             let tempURI: string;
             tempURI = uri.substring(0, uri.lastIndexOf("."));
             if (!utils.fileExists(tempURI)) {
-                tempURI = dialog.showOpenDialog(null, { title: lang.get_resource.Sign.sign_content_file + native.path.basename(uri), properties: ["openFile"] });
+                tempURI = dialog.showOpenDialog(null, { title: lang.get_resource.Sign.sign_content_file + path.basename(uri), properties: ["openFile"] });
 
                 if (tempURI) {
                     tempURI = tempURI[0];
@@ -63,7 +63,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     let outURI: string;
 
     if (folderOut.length > 0) {
-        outURI = native.path.join(folderOut, native.path.basename(uri) + ".sig");
+        outURI = path.join(folderOut, path.basename(uri) + ".sig");
     } else {
         outURI = uri + ".sig";
     }
@@ -71,14 +71,14 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     let indexFile: number = 1;
     let newOutUri: string = outURI;
     while (utils.fileExists(newOutUri)) {
-        newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
+        newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }
 
     outURI = newOutUri;
 
     try {
-        let sd: trusted.cms.SignedData = new trusted.cms.SignedData();
+        const sd: trusted.cms.SignedData = new trusted.cms.SignedData();
         sd.policies = policies;
         sd.createSigner(cert, key);
         sd.content = {
@@ -104,7 +104,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
     let outURI: string;
 
     if (folderOut.length > 0) {
-        outURI = native.path.join(folderOut, native.path.basename(uri));
+        outURI = path.join(folderOut, path.basename(uri));
     } else {
         outURI = uri;
     }
@@ -112,7 +112,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
     try {
         let sd: trusted.cms.SignedData = loadSign(uri);
 
-        let certs: trusted.pki.CertificateCollection = sd.certificates();
+        const certs: trusted.pki.CertificateCollection = sd.certificates();
         let tempCert: trusted.pki.Certificate;
         for (let i = 0; i < certs.length; i++) {
             tempCert = certs.items(i);
@@ -140,8 +140,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
         sd.createSigner(cert, key);
         sd.sign();
         sd.save(outURI, format);
-    }
-    catch (err) {
+    } catch (err) {
       // let jwtRes: number = jwt.checkLicense();
       //  if (jwtRes) {
       //      $(".toast-jwt_error").remove();
@@ -159,7 +158,7 @@ export function unSign(uri: string, folderOut: string): any {
     let content: trusted.cms.ISignedDataContent;
 
     if (folderOut.length > 0) {
-        outURI = native.path.join(folderOut, native.path.basename(uri));
+        outURI = path.join(folderOut, path.basename(uri));
         outURI = outURI.substring(0, outURI.lastIndexOf("."));
     } else {
         outURI = uri.substring(0, uri.lastIndexOf("."));
@@ -168,7 +167,7 @@ export function unSign(uri: string, folderOut: string): any {
     let indexFile: number = 1;
     let newOutUri: string = outURI;
     while (utils.fileExists(newOutUri)) {
-        newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
+        newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }
 
@@ -180,7 +179,7 @@ export function unSign(uri: string, folderOut: string): any {
         if (!cms.isDetached()) {
             content = cms.content;
             try {
-                native.fs.writeFileSync(outURI, content.data);
+                fs.writeFileSync(outURI, content.data);
             } catch (err) {
                 return "";
             }

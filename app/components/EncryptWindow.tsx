@@ -1,7 +1,10 @@
+import * as archiver from "archiver";
+import * as fs from "fs";
+import * as path from "path";
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
-import * as native from "../native";
+import { HOME_DIR } from "../constants";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
 import { mapToArr, utils } from "../utils";
@@ -60,13 +63,13 @@ class EncryptWindow extends React.Component<any, any> {
       if (policies.archiveFiles) {
         let outURI: string;
         if (folderOut.length > 0) {
-          outURI = native.path.join(folderOut, localize("Encrypt.archive_name", locale));
+          outURI = path.join(folderOut, localize("Encrypt.archive_name", locale));
         } else {
-          outURI = native.path.join(native.HOME_DIR, localize("Encrypt.archive_name", locale));
+          outURI = path.join(HOME_DIR, localize("Encrypt.archive_name", locale));
         }
 
-        const output = native.fs.createWriteStream(outURI);
-        const archive = window.archiver("zip");
+        const output = fs.createWriteStream(outURI);
+        const archive = archiver("zip");
 
         output.on("close", () => {
           $(".toast-files_archived").remove();
@@ -74,7 +77,7 @@ class EncryptWindow extends React.Component<any, any> {
 
           if (policies.deleteFiles) {
             files.forEach((file) => {
-              native.fs.unlinkSync(file.fullpath);
+              fs.unlinkSync(file.fullpath);
             });
           }
 
@@ -105,7 +108,7 @@ class EncryptWindow extends React.Component<any, any> {
         archive.pipe(output);
 
         files.forEach((file) => {
-          archive.append(native.fs.createReadStream(file.fullpath), { name: file.filename });
+          archive.append(fs.createReadStream(file.fullpath), { name: file.filename });
         });
 
         archive.finalize();

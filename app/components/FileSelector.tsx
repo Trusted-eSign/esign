@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
-import * as native from "../native";
 import { extFile, mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
 

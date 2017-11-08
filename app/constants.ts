@@ -43,3 +43,10 @@ export const REQUEST = "Request";
 export const PROVIDER_SYSTEM = "PROVIDER_SYSTEM";
 export const PROVIDER_MICROSOFT = "PROVIDER_MICROSOFT";
 export const PROVIDER_CRYPTOPRO = "PROVIDER_CRYPTOPRO";
+
+export let DEFAULT_PATH: string = window.DEFAULT_PATH;
+export let DEFAULT_CERTSTORE_PATH: string = window.DEFAULT_CERTSTORE_PATH;
+export let HOME_DIR: string = window.HOME_DIR;
+export let RESOURCES_PATH: string = window.RESOURCES_PATH;
+export let PLATFORM: string = window.PLATFORM;
+export let TMP_DIR: string = window.TMP_DIR;

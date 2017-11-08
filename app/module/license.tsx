@@ -1,11 +1,12 @@
 import { EventEmitter } from "events";
+import * as fs from "fs";
+import * as path from "path";
 import { lang } from "../module/global_app";
-import * as native from "../native";
 import * as jwt from "../trusted/jwt";
 import { toBase64 } from "../utils";
 
 export let getLicensePath = function() {
-  const licFilePath = native.path.join(window.LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
+  const licFilePath = path.join(window.LICENSE_PATH, "/Trusted/Trusted eSign/license.lic");
   return licFilePath;
 };
 
@@ -43,8 +44,8 @@ export let licenseParse = function(info: string) {
 
 const getLicenseInfo = function() {
   const licensePath = getLicensePath();
-  if (native.fs.existsSync(licensePath)) {
-    const data = native.fs.readFileSync(licensePath, "utf8");
+  if (fs.existsSync(licensePath)) {
+    const data = fs.readFileSync(licensePath, "utf8");
     if (data) {
       return licenseParse(data);
     } else {
@@ -103,8 +104,8 @@ export let getStatus = function(key?: string) {
 
 export let getLicenseStatus = function() {
   const license = getLicensePath();
-  if (native.fs.existsSync(license)) {
-    const data = native.fs.readFileSync(license, "utf8");
+  if (fs.existsSync(license)) {
+    const data = fs.readFileSync(license, "utf8");
     return getStatus(data);
   } else {
     return {

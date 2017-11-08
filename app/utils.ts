@@ -1,7 +1,5 @@
-/// <reference types="node" />
-
+import * as fs from "fs";
 import {Map, OrderedMap} from "immutable";
-import * as native from "./native";
 
 export function arrayToMap(arr, RecordModel) {
     return arr.reduce((acc, el) => acc.set(el.id, RecordModel ? new RecordModel(el) : el), new OrderedMap({}))
@@ -67,11 +65,11 @@ export let utils = {
    * Не работает. Временно вынесено в js
    */
   fileCoding(filePath: string): number {
-    const FD: number = native.fs.openSync(filePath, "r");
+    const FD: number = fs.openSync(filePath, "r");
     const BUFFER: Buffer = new Buffer(2);
     let res: any;
 
-    native.fs.readSync(FD, BUFFER, 0, 2, 0);
+    fs.readSync(FD, BUFFER, 0, 2, 0);
 
     if (BUFFER.toString("utf8", 0, 2) === "--") {
       res = trusted.DataFormat.PEM;
@@ -79,7 +77,7 @@ export let utils = {
       res = trusted.DataFormat.DER;
     }
 
-    native.fs.closeSync(FD);
+    fs.closeSync(FD);
 
     return res;
   },
@@ -91,7 +89,7 @@ export let utils = {
    */
   fileExists(filePath: string): boolean {
     try {
-      return native.fs.statSync(filePath).isFile();
+      return fs.statSync(filePath).isFile();
     } catch (err) {
       return false;
     }
@@ -103,7 +101,7 @@ export let utils = {
    */
   dirExists(dirPath: string): boolean {
     try {
-      return native.fs.statSync(dirPath).isDirectory();
+      return fs.statSync(dirPath).isDirectory();
     } catch (err) {
       return false;
     }

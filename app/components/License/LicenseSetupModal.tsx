@@ -1,6 +1,8 @@
+import * as fs from "fs";
+import * as path from "path";
 import * as React from "react";
+import { PLATFORM } from "../../constants";
 import { getLicensePath, getStatus, lic, licenseParse } from "../../module/license";
-import * as native from "../../native";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
 const dialog = window.electron.remote.dialog;
@@ -44,7 +46,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
   setupLicense() {
     const { localize, locale } = this.context;
     const licFilePath = getLicensePath();
-    const path = native.path.dirname(licFilePath);
+    const path = path.dirname(licFilePath);
     const options = {
       name: "Trusted eSign",
     };
@@ -52,11 +54,11 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     let command = "";
     let status: any;
 
-    if (window.PLATFORM !== "win32") {
+    if (PLATFORM !== "win32") {
       command = "sh -c " + "\"";
       command = command + "mkdir -p " + "'" + path + "'" + " && ";
     } else {
-      if (!native.fs.existsSync(path)) {
+      if (!fs.existsSync(path)) {
         command = command + " mkdir " + '"' + path + '"' + " && ";
       }
     }
@@ -66,7 +68,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       if (data.sub !== "-") {
         status = getStatus(this.state.license_key);
         if (status.type === "ok") {
-          if (window.PLATFORM === "win32") {
+          if (PLATFORM === "win32") {
             command = command + "echo " + this.state.license_key.trim() + " > " + '"' + licFilePath + '"';
           } else {
             command = command + " printf " + this.state.license_key.trim() + " > " + "'" + licFilePath + "'" + " && ";
@@ -96,15 +98,15 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
         Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
       }
     } else {
-      if (native.fs.existsSync(this.state.license_file)) {
-        let data: string = native.fs.readFileSync(this.state.license_file, "utf8");
+      if (fs.existsSync(this.state.license_file)) {
+        let data: string = fs.readFileSync(this.state.license_file, "utf8");
         if (data) {
           data = data.trim();
           const info = licenseParse(data);
           if (info.sub !== "-") {
             status = getStatus(data);
             if (status.type === "ok") {
-              if (window.PLATFORM === "win32") {
+              if (PLATFORM === "win32") {
                 command = command + "echo " + data + " > " + '"' + licFilePath + '"';
               } else {
                 command = command + " printf " + data + " > " + "'" + licFilePath + "'" + " && ";

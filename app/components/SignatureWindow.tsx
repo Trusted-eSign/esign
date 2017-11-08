@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
-import * as native from "../native";
 import { activeFilesSelector } from "../selectors";
 import * as signs from "../trusted/sign";
 import { utils } from "../utils";

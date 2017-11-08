@@ -1,9 +1,9 @@
 import * as events from "events";
+import * as os from "os";
 import * as React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
-import * as native from "../native";
 import { filteredCertificatesSelector } from "../selectors";
 import { utils } from "../utils";
 import BlockNotElements from "./BlockNotElements";
@@ -56,7 +56,7 @@ class CertWindow extends React.Component<any, any> {
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
     const path = event[0].path;
     const format: trusted.DataFormat = getFileCoding(path);
-    const OS_TYPE = native.os.type();
+    const OS_TYPE = os.type();
 
     let certificate: trusted.pki.Certificate;
     let providerType: string = PROVIDER_SYSTEM;

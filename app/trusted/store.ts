@@ -1,14 +1,17 @@
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 import {
   ADDRESS_BOOK, CA, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
-  ROOT, TRUST
+  ROOT, TRUST,
 } from "../constants";
+import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR } from "../constants";
 import { lang } from "../module/global_app";
-import * as native from "../native";
 import { utils } from "../utils";
 import * as jwt from "./jwt";
 
-const OS_TYPE = native.os.type();
+const OS_TYPE = os.type();
 
 export class Store {
   _items: any[];
@@ -32,8 +35,8 @@ export class Store {
   }
 
   init() {
-    this._providerSystem = new trusted.pkistore.Provider_System(native.DEFAULT_CERTSTORE_PATH);
-    this._store = new trusted.pkistore.PkiStore(native.DEFAULT_CERTSTORE_PATH + "/cash.json");
+    this._providerSystem = new trusted.pkistore.Provider_System(DEFAULT_CERTSTORE_PATH);
+    this._store = new trusted.pkistore.PkiStore(DEFAULT_CERTSTORE_PATH + "/cash.json");
     this._store.addProvider(this._providerSystem.handle);
 
     if (OS_TYPE === "Windows_NT") {
@@ -130,7 +133,7 @@ export class Store {
 
     this._items = TEMP_PKI_ITEMS;
 
-    native.fs.writeFileSync(native.DEFAULT_CERTSTORE_PATH + "/cash.json", "{}", "utf8");
+    fs.writeFileSync(DEFAULT_CERTSTORE_PATH + "/cash.json", "{}", "utf8");
 
     this._store.cash.import(TEMP_PKI_ITEMS);
 
@@ -212,7 +215,7 @@ export class Store {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     let urls = cert.CAIssuersUrls;
-    const pathForSave = native.path.join(window.TMP_DIR, `certificate_${Date.now()}.cer`);
+    const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
     let tempCert;
 
     if (provider instanceof trusted.pkistore.Provider_System) {
@@ -266,7 +269,7 @@ export class Store {
 
   downloadCRL(cert: any, done: (err: any, res?: any) => void): any {
     const SELF = this;
-    const PATH_OUT: string = native.path.join(native.DEFAULT_PATH, "temp.crl");
+    const PATH_OUT: string = path.join(DEFAULT_PATH, "temp.crl");
     const RV: any = new trusted.pki.Revocation();
     const DIST_POINTS: string[] = RV.getCrlDistPoints(cert);
     let crl: any;

@@ -1,11 +1,13 @@
-import * as native from "../native";
+import * as fs from "fs";
+import * as path from "path";
+import { HOME_DIR } from "../constants";
 import { utils } from "../utils";
 
 let odata;
 
-const SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
+const SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 if (utils.fileExists(SETTINGS_JSON)) {
-  const data = native.fs.readFileSync(SETTINGS_JSON, "utf8");
+  const data = fs.readFileSync(SETTINGS_JSON, "utf8");
   odata = JSON.parse(data);
 }
 

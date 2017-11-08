@@ -168,6 +168,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "@types/archiver": "^2.0.1",
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
     "electron-debug": "^1.1.0",

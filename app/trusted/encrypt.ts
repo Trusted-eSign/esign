@@ -1,5 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
 import { lang } from "../module/global_app";
-import * as native from "../native";
 import { utils } from "../utils";
 
 export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>, policies: any, format: trusted.DataFormat, folderOut: string): string {
@@ -11,7 +12,7 @@ export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>,
     let outURI: string;
 
     if (folderOut.length > 0) {
-        outURI = native.path.join(folderOut, native.path.basename(uri) + ".enc");
+        outURI = path.join(folderOut, path.basename(uri) + ".enc");
     } else {
         outURI = uri + ".enc";
     }
@@ -19,8 +20,8 @@ export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>,
     indexFile = 1;
     newOutUri = outURI;
     while (utils.fileExists(newOutUri)) {
-        newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")"
-            + native.path.basename(outURI));
+        newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")"
+            + path.basename(outURI));
         indexFile++;
     }
 
@@ -43,7 +44,7 @@ export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>,
     }
 
     if (policies.deleteFiles) {
-        native.fs.unlinkSync(uri);
+        fs.unlinkSync(uri);
     }
 
     return outURI;
@@ -63,7 +64,7 @@ export function decryptFile(uri: string, folderOut: string): string {
     let indexFile: number = 1;
     let newOutUri: string = outURI;
     while (utils.fileExists(newOutUri)) {
-        newOutUri = native.path.join(native.path.parse(outURI).dir, "(" + indexFile + ")" + native.path.basename(outURI));
+        newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }
 

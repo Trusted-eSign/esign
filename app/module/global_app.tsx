@@ -1,7 +1,9 @@
 import { EventEmitter } from "events";
-import * as native from "../native";
+import * as fs from "fs";
+import * as path from "path";
+import { HOME_DIR, RESOURCES_PATH } from "../constants";
 
-export let SETTINGS_JSON = native.path.join(native.HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
+export let SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
 
 export let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
     let chain: trusted.pki.Chain;
@@ -46,7 +48,7 @@ export let certVerify = function (certItem: IX509Certificate, certCollection: tr
 };
 export function get_settings_from_json(operation: string, settings_name: string) {
     try {
-        let data = native.fs.readFileSync(SETTINGS_JSON, "utf8");
+        let data = fs.readFileSync(SETTINGS_JSON, "utf8");
         data = JSON.parse(data);
         return data[operation][settings_name];
     } catch (e) {
@@ -107,11 +109,11 @@ let get_string_resources = function (lang: string) {
     try {
         let RESOURCES_JSON: string;
         if (window.framework_NW) {
-            RESOURCES_JSON = window.RESOURCES_PATH + "/Trusted_eSign/language/" + lang + ".json";
+            RESOURCES_JSON = RESOURCES_PATH + "/Trusted_eSign/language/" + lang + ".json";
         } else {
-            RESOURCES_JSON = window.RESOURCES_PATH + "/language/" + lang + ".json";
+            RESOURCES_JSON = RESOURCES_PATH + "/language/" + lang + ".json";
         }
-        let data = native.fs.readFileSync(RESOURCES_JSON, "utf8");
+        let data = fs.readFileSync(RESOURCES_JSON, "utf8");
         data = JSON.parse(data);
         return data;
     } catch (e) {

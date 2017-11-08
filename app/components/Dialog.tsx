@@ -1,6 +1,5 @@
 import * as React from "react";
 import { DialogBox, dlg } from "../module/global_app";
-import * as native from "../native";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 const dialog = window.electron.remote.dialog;
