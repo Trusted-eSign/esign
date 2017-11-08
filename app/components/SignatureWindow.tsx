@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
 import { activeFilesSelector } from "../selectors";
 import * as signs from "../trusted/sign";
-import { dirExists } from "../utils";
-import { mapToArr } from "../utils";
+import { dirExists, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
@@ -76,7 +75,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       let format = trusted.DataFormat.PEM;
 
       if (folderOut.length > 0) {
-        if (!dirExists(folderOut)) {
+        if (!utils.dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
           Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
@@ -134,7 +133,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       let res = true;
 
       if (folderOut.length > 0) {
-        if (!dirExists(folderOut)) {
+        if (!utils.dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
           Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
