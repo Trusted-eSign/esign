@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { lang } from "../module/global_app";
-import { utils } from "../utils";
+import { fileExists, fileCoding } from "../utils";
 
 export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>, policies: any, format: trusted.DataFormat, folderOut: string): string {
     let cipher: trusted.pki.Cipher;
@@ -19,7 +19,7 @@ export function encryptFile(uri: string, certs: Array<trusted.pkistore.PkiItem>,
 
     indexFile = 1;
     newOutUri = outURI;
-    while (utils.fileExists(newOutUri)) {
+    while (fileExists(newOutUri)) {
         newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")"
             + path.basename(outURI));
         indexFile++;
@@ -63,7 +63,7 @@ export function decryptFile(uri: string, folderOut: string): string {
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utils.fileExists(newOutUri)) {
+    while (fileExists(newOutUri)) {
         newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }
@@ -71,7 +71,7 @@ export function decryptFile(uri: string, folderOut: string): string {
     outURI = newOutUri;
 
     try {
-        format = getFileCoding(uri);
+        format = fileCoding(uri);
         cipher = new trusted.pki.Cipher();
         ris = cipher.getRecipientInfos(uri, format);
 

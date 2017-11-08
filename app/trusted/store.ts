@@ -8,7 +8,7 @@ import {
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR } from "../constants";
 import { lang } from "../module/global_app";
-import { utils } from "../utils";
+import { fileCoding } from "../utils";
 import * as jwt from "./jwt";
 
 const OS_TYPE = os.type();
@@ -81,7 +81,7 @@ export class Store {
 
   importKey(keyPath: string, pass: string): boolean {
     try {
-      const FORMAT: trusted.DataFormat = getFileCoding(keyPath);
+      const FORMAT: trusted.DataFormat = fileCoding(keyPath);
       let key: trusted.pki.Key;
 
       try {

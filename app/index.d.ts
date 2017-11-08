@@ -22,6 +22,3 @@ interface Window {
 }
 
 declare var window: Window;
-
-declare function isEncryptedKey(path: string): boolean;
-declare function getFileCoding(path: string): trusted.DataFormat;

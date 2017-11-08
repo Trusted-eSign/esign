@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { lang } from "../module/global_app";
-import { utils } from "../utils";
+import { fileExists, fileCoding } from "../utils";
 import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
@@ -11,7 +11,7 @@ export function loadSign(uri: string): trusted.cms.SignedData {
         let format: trusted.DataFormat;
         let cms: trusted.cms.SignedData;
 
-        format = getFileCoding(uri);
+        format = fileCoding(uri);
         cms = new trusted.cms.SignedData();
         cms.policies = ["noSignerCertificateVerify"];
         cms.load(uri, format);
@@ -30,14 +30,14 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
         if (cms.isDetached()) {
             let tempURI: string;
             tempURI = uri.substring(0, uri.lastIndexOf("."));
-            if (!utils.fileExists(tempURI)) {
+            if (!fileExists(tempURI)) {
                 tempURI = dialog.showOpenDialog(null, { title: lang.get_resource.Sign.sign_content_file + path.basename(uri), properties: ["openFile"] });
 
                 if (tempURI) {
                     tempURI = tempURI[0];
                 }
 
-                if (!tempURI || !utils.fileExists(tempURI)) {
+                if (!tempURI || !fileExists(tempURI)) {
                     $(".toast-verify_get_content_failed").remove();
                     Materialize.toast(lang.get_resource.Sign.verify_get_content_failed, 2000, "toast-verify_get_content_failed");
                     return undefined;
@@ -70,7 +70,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utils.fileExists(newOutUri)) {
+    while (fileExists(newOutUri)) {
         newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }
@@ -166,7 +166,7 @@ export function unSign(uri: string, folderOut: string): any {
 
     let indexFile: number = 1;
     let newOutUri: string = outURI;
-    while (utils.fileExists(newOutUri)) {
+    while (fileExists(newOutUri)) {
         newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
         indexFile++;
     }

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
-import { utils } from "../utils";
+import { fileCoding } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
@@ -55,7 +55,7 @@ class CertWindow extends React.Component<any, any> {
     const { localize, locale } = this.context;
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
     const path = event[0].path;
-    const format: trusted.DataFormat = getFileCoding(path);
+    const format: trusted.DataFormat = fileCoding(path);
     const OS_TYPE = os.type();
 
     let certificate: trusted.pki.Certificate;

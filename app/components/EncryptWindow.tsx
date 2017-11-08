@@ -7,7 +7,7 @@ import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
-import { mapToArr, utils } from "../utils";
+import { dirExists, mapToArr } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import Dialog from "./Dialog";
@@ -46,7 +46,7 @@ class EncryptWindow extends React.Component<any, any> {
       let res = true;
 
       if (folderOut.length > 0) {
-        if (!utils.dirExists(folderOut)) {
+        if (!dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
           Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
