@@ -3,6 +3,7 @@ import * as os from "os";
 import * as path from "path";
 import * as React from "react";
 import { connect } from "react-redux";
+import { loadLicense } from "../AC";
 import { SETTINGS_JSON } from "../module/global_app";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
@@ -71,6 +72,10 @@ class MenuBar extends React.Component<any, any> {
   }
 
   componentDidMount() {
+    const { loadLicense } = this.props;
+
+    loadLicense();
+
     $(".menu-btn").sideNav({
       closeOnClick: true,
     });
@@ -122,4 +127,4 @@ export default connect((state) => {
     encSettings: state.settings.encrypt,
     signSettings: state.settings.sign,
   };
-})(MenuBar);
+}, {loadLicense})(MenuBar);

@@ -6,15 +6,65 @@ import {
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
-  FAIL, LOAD_ALL_CERTIFICATES, REMOVE_ALL_CERTIFICATES, SELECT_FILE,
+  FAIL, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_LICENSE,
+  REMOVE_ALL_CERTIFICATES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
-  VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
+  VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
 import { DEFAULT_PATH } from "../constants";
 import { certVerify } from "../module/global_app";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile } from "../utils";
+import { extFile, toBase64 } from "../utils";
+
+export function loadLicense() {
+  return (dispatch) => {
+    dispatch({
+      type: LOAD_LICENSE + START,
+    });
+
+    setTimeout(() => {
+      let data;
+      let parsedLicense;
+      let buffer;
+
+      if (fs.existsSync(LICENSE_PATH)) {
+        data = fs.readFileSync(LICENSE_PATH, "utf8");
+      }
+
+      if (data && data.length) {
+        const splitLicense = data.split(".");
+
+        if (splitLicense[1]) {
+          try {
+            buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+            parsedLicense = JSON.parse(buffer);
+
+            if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+              && parsedLicense.jti && parsedLicense.sub) {
+              dispatch({
+                lic: parsedLicense,
+                type: LOAD_LICENSE + SUCCESS,
+              });
+            } else {
+              dispatch({
+                type: LOAD_LICENSE + FAIL,
+              });
+            }
+          } catch (e) {
+            dispatch({
+              type: LOAD_LICENSE + FAIL,
+            });
+          }
+        } else {
+          dispatch({
+            type: LOAD_LICENSE + FAIL,
+          });
+        }
+      }
+    }, 0);
+  };
+}
 
 export function loadAllCertificates() {
   return (dispatch) => {

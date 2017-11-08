@@ -22,6 +22,9 @@ export const SELECT_FILE = "SELECT_FILE";
 export const ACTIVE_FILE = "ACTIVE_FILE";
 export const DELETE_FILE = "DELETE_FILE";
 
+export const LOAD_LICENSE = "LOAD_LICENSE";
+export const VERIFY_LICENSE = "VERIFY_LICENSE";
+
 export const SUCCESS = "_SUCCESS";
 export const FAIL = "_FAIL";
 export const START = "_START";
@@ -44,9 +47,10 @@ export const PROVIDER_SYSTEM = "PROVIDER_SYSTEM";
 export const PROVIDER_MICROSOFT = "PROVIDER_MICROSOFT";
 export const PROVIDER_CRYPTOPRO = "PROVIDER_CRYPTOPRO";
 
-export let DEFAULT_PATH: string = window.DEFAULT_PATH;
-export let DEFAULT_CERTSTORE_PATH: string = window.DEFAULT_CERTSTORE_PATH;
-export let HOME_DIR: string = window.HOME_DIR;
-export let RESOURCES_PATH: string = window.RESOURCES_PATH;
-export let PLATFORM: string = window.PLATFORM;
-export let TMP_DIR: string = window.TMP_DIR;
+export const DEFAULT_PATH: string = window.DEFAULT_PATH;
+export const DEFAULT_CERTSTORE_PATH: string = window.DEFAULT_CERTSTORE_PATH;
+export const HOME_DIR: string = window.HOME_DIR;
+export const RESOURCES_PATH: string = window.RESOURCES_PATH;
+export const PLATFORM: string = window.PLATFORM;
+export const TMP_DIR: string = window.TMP_DIR;
+export const LICENSE_PATH = window.LICENSE_PATH;
