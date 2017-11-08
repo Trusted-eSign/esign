@@ -1,4 +1,6 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { loadLicense } from "../../AC";
 import { lic, License } from "../../module/license";
 import LicenseInfoFiled from "./LicenseInfoField";
 
@@ -10,19 +12,14 @@ class LicenseInfo extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
-    this.change = this.change.bind(this);
   }
 
   componentDidMount() {
-    lic.on(License.CHANGE, this.change);
-  }
+    const { loaded, loading, loadLicense } = this.props;
 
-  componentWillUnmount() {
-    lic.removeListener(License.CHANGE, this.change);
-  }
-
-  change() {
-    this.setState({});
+    if (!loaded && !loading) {
+      loadLicense();
+    }
   }
 
   getLocaleDate = (time: number) => {
@@ -40,27 +37,29 @@ class LicenseInfo extends React.Component<any, any> {
 
   render() {
     const { localize, locale } = this.context;
+    const { license } = this.props;
+
     const style = { height: 39 + "px" };
 
     let notAfter: string;
     let notBefore: string;
     let productName: string;
 
-    if (lic.getInfo.exp === "-") {
+    if (license.exp === "-") {
       notAfter = "-";
     } else {
-      const exp = new Date(lic.getInfo.exp * 1000);
+      const exp = new Date(license.exp * 1000);
 
-      notAfter = exp.getFullYear() === 2038 ? localize("License.lic_unlimited", locale) : this.getLocaleDate(lic.getInfo.exp * 1000);
+      notAfter = exp.getFullYear() === 2038 ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
     }
 
-    if (lic.getInfo.iat === "-") {
+    if (license.iat === "-") {
       notBefore = "-";
     } else {
-      notBefore = this.getLocaleDate(lic.getInfo.iat * 1000);
+      notBefore = this.getLocaleDate(license.iat * 1000);
     }
 
-    if (lic.getInfo.sub === "Trusted eSign") {
+    if (license.sub === "Trusted eSign") {
       productName = localize("About.product_name", locale);
     } else {
       productName = "-";
@@ -70,8 +69,8 @@ class LicenseInfo extends React.Component<any, any> {
       <div>
         <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
         <div className="row leftshifter">
-          <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={lic.getInfo.iss} />
-          <LicenseInfoFiled title={localize("Common.subject", locale)} info={lic.getInfo.aud} />
+          <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+          <LicenseInfoFiled title={localize("Common.subject", locale)} info={license.aud} />
         </div>
         <div className="row leftshifter">
           <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
@@ -86,4 +85,10 @@ class LicenseInfo extends React.Component<any, any> {
   }
 }
 
-export default LicenseInfo;
+export default connect((state) => {
+  return {
+    license: state.license.license,
+    loaded: state.license.loaded,
+    loading: state.license.loading,
+  };
+}, {loadLicense})(LicenseInfo);
