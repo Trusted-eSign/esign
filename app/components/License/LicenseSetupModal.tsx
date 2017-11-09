@@ -1,8 +1,11 @@
 import * as fs from "fs";
-import * as path from "path";
+import * as npath from "path";
 import * as React from "react";
-import { PLATFORM } from "../../constants";
-import { getLicensePath, getStatus, lic, licenseParse } from "../../module/license";
+import { connect } from "react-redux";
+import { loadLicense, verifyLicense } from "../../AC";
+import { LICENSE_PATH, PLATFORM } from "../../constants";
+import * as jwt from "../../trusted/jwt";
+import { toBase64 } from "../../utils";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
 const dialog = window.electron.remote.dialog;
@@ -45,8 +48,10 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 
   setupLicense() {
     const { localize, locale } = this.context;
-    const licFilePath = getLicensePath();
-    const path = path.dirname(licFilePath);
+    const { license_key, license_file } = this.state;
+    const { loadLicense, verifyLicense } = this.props;
+
+    const path = npath.dirname(LICENSE_PATH);
     const options = {
       name: "Trusted eSign",
     };
@@ -63,86 +68,83 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       }
     }
 
-    if (this.state.license_key) {
-      const data = licenseParse(this.state.license_key);
-      if (data.sub !== "-") {
-        status = getStatus(this.state.license_key);
-        if (status.type === "ok") {
-          if (PLATFORM === "win32") {
-            command = command + "echo " + this.state.license_key.trim() + " > " + '"' + licFilePath + '"';
-          } else {
-            command = command + " printf " + this.state.license_key.trim() + " > " + "'" + licFilePath + "'" + " && ";
-            command = command + " chmod 777 " + "'" + licFilePath + "'" + "\"";
-          }
-          window.sudo.exec(command, options, function(error: any) {
-            if (!error) {
-              trusted.common.OpenSSL.stop();
-              trusted.common.OpenSSL.run();
+    let data = null;
+    let key;
 
-              lic.setInfo = data;
-              lic.setStatus = status;
+    if (license_key) {
+      key = license_key;
+    } else if (fs.existsSync(license_file)) {
+      const licFileContent: string = fs.readFileSync(license_file, "utf8");
 
-              $(".toast-lic_key_setup").remove();
-              Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
-            } else {
-              $(".toast-write_file_error").remove();
-              Materialize.toast(localize("Common.write_file_error", locale), 2000, "toast-write_file_error");
-            }
-          });
-        } else {
-          $(".toast-status.message").remove();
-          Materialize.toast(status.message, 2000, "toast-status.message");
-        }
+      if (licFileContent) {
+        key = licFileContent.trim();
       } else {
-        $(".toast-lic_key_uncorrect").remove();
-        Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
+        $(".toast-read_file_error").remove();
+        Materialize.toast(localize("Common.read_file_error", locale), 2000, "toast-read_file_error");
       }
     } else {
-      if (fs.existsSync(this.state.license_file)) {
-        let data: string = fs.readFileSync(this.state.license_file, "utf8");
-        if (data) {
-          data = data.trim();
-          const info = licenseParse(data);
-          if (info.sub !== "-") {
-            status = getStatus(data);
-            if (status.type === "ok") {
-              if (PLATFORM === "win32") {
-                command = command + "echo " + data + " > " + '"' + licFilePath + '"';
-              } else {
-                command = command + " printf " + data + " > " + "'" + licFilePath + "'" + " && ";
-                command = command + " chmod 777 " + "'" + licFilePath + "'" + "\"";
-              }
-              window.sudo.exec(command, options, function(error: any) {
-                if (!error) {
-                  trusted.common.OpenSSL.stop();
-                  trusted.common.OpenSSL.run();
+      $(".toast-lic_file_not_found").remove();
+      Materialize.toast(localize("License.lic_file_not_found", locale), 2000, "toast-lic_file_not_found");
+    }
 
-                  lic.setInfo = info;
-                  lic.setStatus = status;
-                  $(".toast-lic_key_setup").remove();
-                  Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
-                } else {
-                  $(".toast-write_file_error").remove();
-                  Materialize.toast(localize("Common.write_file_error", locale), 2000, "toast-write_file_error");
-                }
-              });
-            } else {
-              $(".toast-status.message").remove();
-              Materialize.toast(status.message, 2000, "toast-status.message");
-            }
-          } else {
-            $(".toast-lic_file_uncorrect").remove();
-            Materialize.toast(localize("License.lic_file_uncorrect", locale), 2000, "toast-lic_file_uncorrect");
+    if (!key) {
+      $(".toast-lic_key_uncorrect").remove();
+      Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
+    } else {
+      let parsedLicense;
+      let buffer;
+
+      const splitLicense = key.split(".");
+
+      if (splitLicense[1]) {
+        try {
+          buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+          parsedLicense = JSON.parse(buffer);
+
+          if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+            && parsedLicense.jti && parsedLicense.sub) {
+            data = parsedLicense;
           }
-        } else {
-          $(".toast-read_file_error").remove();
-          Materialize.toast(localize("Common.read_file_error", locale), 2000, "toast-read_file_error");
+        } catch (e) {
+          data = null;
         }
-      } else {
-        $(".toast-lic_file_not_found").remove();
-        Materialize.toast(localize("License.lic_file_not_found", locale), 2000, "toast-lic_file_not_found");
       }
     }
+
+    if (data && data.sub !== "-") {
+      status = jwt.checkLicense(key);
+
+      if (status === 0) {
+        if (PLATFORM === "win32") {
+          command = command + "echo " + license_key.trim() + " > " + '"' + LICENSE_PATH + '"';
+        } else {
+          command = command + " printf " + license_key.trim() + " > " + "'" + LICENSE_PATH + "'" + " && ";
+          command = command + " chmod 777 " + "'" + LICENSE_PATH + "'" + "\"";
+        }
+        window.sudo.exec(command, options, function(error: any) {
+          if (!error) {
+            trusted.common.OpenSSL.stop();
+            trusted.common.OpenSSL.run();
+
+            loadLicense();
+            verifyLicense(key);
+
+            $(".toast-lic_key_setup").remove();
+            Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
+          } else {
+            $(".toast-write_file_error").remove();
+            Materialize.toast(localize("Common.write_file_error", locale), 2000, "toast-write_file_error");
+          }
+        });
+      } else {
+        $(".toast-status.message").remove();
+        Materialize.toast(jwt.getErrorMessage(status), 2000, "toast-status.message");
+      }
+    } else {
+      $(".toast-lic_key_uncorrect").remove();
+      Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
+    }
+
     this.props.closeWindow();
   }
 
@@ -210,4 +212,9 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
   }
 }
 
-export default LicenseSetupModal;
+export default connect((state) => {
+  return {
+    loading: state.license.loading,
+    status: state.license.status,
+  };
+}, {loadLicense, verifyLicense})(LicenseSetupModal);
