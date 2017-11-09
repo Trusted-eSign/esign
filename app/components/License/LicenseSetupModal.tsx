@@ -116,9 +116,9 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 
       if (status === 0) {
         if (PLATFORM === "win32") {
-          command = command + "echo " + license_key.trim() + " > " + '"' + LICENSE_PATH + '"';
+          command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
         } else {
-          command = command + " printf " + license_key.trim() + " > " + "'" + LICENSE_PATH + "'" + " && ";
+          command = command + " printf " + key.trim() + " > " + "'" + LICENSE_PATH + "'" + " && ";
           command = command + " chmod 777 " + "'" + LICENSE_PATH + "'" + "\"";
         }
         window.sudo.exec(command, options, function(error: any) {

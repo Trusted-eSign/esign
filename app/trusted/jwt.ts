@@ -19,16 +19,10 @@ let code: number;
 
 export function checkLicense(key?: string): number {
     try {
-        key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
-        return 0;
-    } catch (err) {
-        if (~err.message.indexOf("Error check license")) {
-            pozition = err.message.indexOf("verify jwt license failed(error code");
-            if (pozition) {
-                return code = parseInt(err.message.substr(pozition + "verify jwt license failed(error code ".length, 3));
-            }
-        }
+        const res = key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
 
+        return res;
+    } catch (err) {
         return -1;
     }
 }
