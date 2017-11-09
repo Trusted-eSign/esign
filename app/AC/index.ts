@@ -43,7 +43,10 @@ export function loadLicense() {
             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
               && parsedLicense.jti && parsedLicense.sub) {
               dispatch({
-                lic: parsedLicense,
+                payload: {
+                  data,
+                  lic: parsedLicense,
+                },
                 type: LOAD_LICENSE + SUCCESS,
               });
             } else {

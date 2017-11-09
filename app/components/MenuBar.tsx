@@ -72,9 +72,11 @@ class MenuBar extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    const { loadLicense } = this.props;
+    const { loadLicense, loadedLicense, loadingLicense } = this.props;
 
-    loadLicense();
+    if (!loadedLicense && !loadingLicense) {
+      loadLicense();
+    }
 
     $(".menu-btn").sideNav({
       closeOnClick: true,
@@ -125,6 +127,8 @@ class MenuBar extends React.Component<any, any> {
 export default connect((state) => {
   return {
     encSettings: state.settings.encrypt,
+    loadedLicense: state.license.loaded,
+    loadingLicense: state.license.loading,
     signSettings: state.settings.sign,
   };
 }, {loadLicense})(MenuBar);

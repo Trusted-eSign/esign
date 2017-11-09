@@ -13,7 +13,8 @@ const LicenseModel = Record({
 });
 
 const DefaultReducerState = Record({
-  license: new LicenseModel(),
+  data: null,
+  info: new LicenseModel(),
   loaded: false,
   loading: false,
   status: null,
@@ -21,7 +22,7 @@ const DefaultReducerState = Record({
 });
 
 export default (license = new DefaultReducerState(), action) => {
-  const { type, lic, payload } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case LOAD_LICENSE + START:
@@ -29,7 +30,8 @@ export default (license = new DefaultReducerState(), action) => {
 
     case LOAD_LICENSE + SUCCESS:
       return license
-        .set("license", new LicenseModel(lic))
+        .set("info", new LicenseModel(payload.lic))
+        .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true);
   }

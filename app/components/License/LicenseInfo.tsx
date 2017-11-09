@@ -87,7 +87,7 @@ class LicenseInfo extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    license: state.license.license,
+    license: state.license.info,
     loaded: state.license.loaded,
     loading: state.license.loading,
   };
