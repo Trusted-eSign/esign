@@ -1,7 +1,6 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { loadLicense } from "../../AC";
-import { lic, License } from "../../module/license";
 import LicenseInfoFiled from "./LicenseInfoField";
 
 class LicenseInfo extends React.Component<any, any> {

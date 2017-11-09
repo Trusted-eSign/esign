@@ -34,6 +34,11 @@ export default (license = new DefaultReducerState(), action) => {
         .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true);
+
+    case VERIFY_LICENSE:
+      return license
+        .set("status", payload.licenseStatus)
+        .set("verified", true);
   }
 
   return license;

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { lic, License } from "../../module/license";
 import LicenseInfo from "./LicenseInfo";
 import LicenseInfoField from "./LicenseInfoField";
 import LicenseSetupModal from "./LicenseSetupModal";

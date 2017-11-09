@@ -13,6 +13,7 @@ import {
 } from "../constants";
 import { DEFAULT_PATH } from "../constants";
 import { certVerify } from "../module/global_app";
+import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
 import { extFile, toBase64 } from "../utils";
@@ -66,6 +67,17 @@ export function loadLicense() {
         }
       }
     }, 0);
+  };
+}
+
+export function verifyLicense(key: string) {
+  return (dispatch) => {
+    const licenseStatus = jwt.checkLicense(key);
+
+    dispatch({
+      payload: { licenseStatus },
+      type: VERIFY_LICENSE,
+    });
   };
 }
 
