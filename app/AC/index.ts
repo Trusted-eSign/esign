@@ -28,6 +28,7 @@ export function loadLicense() {
       let data;
       let parsedLicense;
       let buffer;
+      let lic;
 
       if (fs.existsSync(LICENSE_PATH)) {
         data = fs.readFileSync(LICENSE_PATH, "utf8");
@@ -43,29 +44,27 @@ export function loadLicense() {
 
             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
               && parsedLicense.jti && parsedLicense.sub) {
-              dispatch({
-                payload: {
-                  data,
-                  lic: parsedLicense,
-                },
-                type: LOAD_LICENSE + SUCCESS,
-              });
-            } else {
-              dispatch({
-                type: LOAD_LICENSE + FAIL,
-              });
+              lic = parsedLicense;
             }
           } catch (e) {
             dispatch({
               type: LOAD_LICENSE + FAIL,
             });
           }
-        } else {
-          dispatch({
-            type: LOAD_LICENSE + FAIL,
-          });
         }
       }
+
+      lic
+        ? dispatch({
+          payload: {
+            data,
+            lic,
+          },
+          type: LOAD_LICENSE + SUCCESS,
+        })
+        : dispatch({
+          type: LOAD_LICENSE + FAIL,
+        });
     }, 0);
   };
 }
