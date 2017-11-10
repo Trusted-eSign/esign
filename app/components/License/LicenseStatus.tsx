@@ -42,7 +42,7 @@ class LicenseStatus extends React.Component<any, any> {
         break;
 
       default:
-        message =  jwt.getErrorMessage(status);
+        message =  localize(jwt.getErrorMessage(status), locale);
     }
 
     return unlimited ? localize("License.lic_unlimited", locale) : message;

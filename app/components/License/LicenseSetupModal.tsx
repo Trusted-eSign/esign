@@ -138,7 +138,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
         });
       } else {
         $(".toast-status.message").remove();
-        Materialize.toast(jwt.getErrorMessage(status), 2000, "toast-status.message");
+        Materialize.toast(localize(jwt.getErrorMessage(status), locale), 2000, "toast-status.message");
       }
     } else {
       $(".toast-lic_key_uncorrect").remove();

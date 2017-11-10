@@ -1,5 +1,3 @@
-import { lang } from "../module/global_app";
-
 const CTLICENSE_R_NO_ERROR: number = 900;
 const CTLICENSE_R_ERROR_INTERNAL: number = 901;
 const CTLICENSE_R_ERROR_LOAD_LICENSE: number = 902;
@@ -14,9 +12,6 @@ const CTLICENSE_R_ERROR_OPERATION_BLOCK: number = 910;
 const CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE: number = 911;
 const CTLICENSE_R_ERROR_STORE_IS_LOCKED: number = 912;
 
-let pozition: number;
-let code: number;
-
 export function checkLicense(key?: string): number {
     try {
         const res = key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
@@ -28,32 +23,32 @@ export function checkLicense(key?: string): number {
 }
 
 export function getErrorMessage(errCode: number): string {
-    switch (errCode) {
+   switch (errCode) {
         case CTLICENSE_R_ERROR_INTERNAL:
-            return lang.get_resource.License.jwtErrorInternal;
+            return "License.jwtErrorInternal";
         case CTLICENSE_R_ERROR_LOAD_LICENSE:
-            return lang.get_resource.License.jwtErrorLoad;
+            return "License.jwtErrorLoad";
         case CTLICENSE_R_ERROR_TOKEN_FORMAT:
-            return lang.get_resource.License.jwtErrorTokenFormat;
+            return "License.jwtErrorTokenFormat";
         case CTLICENSE_R_ERROR_SIGN:
-            return lang.get_resource.License.jwtErrorSign;
+            return "License.jwtErrorSign";
         case CTLICENSE_R_ERROR_PARSING:
-            return lang.get_resource.License.jwtErrorParsing;
+            return "License.jwtErrorParsing";
         case CTLICENSE_R_ERROR_STUCTURE:
-            return lang.get_resource.License.jwtErrorStructure;
+            return "License.jwtErrorStructure";
         case CTLICENSE_R_ERROR_PRODUCT:
-            return lang.get_resource.License.jwtErrorProduct;
+            return "License.jwtErrorProduct";
         case CTLICENSE_R_ERROR_EXPIRED_TIME:
-            return lang.get_resource.License.jwtErrorExpired;
+            return "License.jwtErrorExpired";
         case CTLICENSE_R_ERROR_NOT_STARTED:
-            return lang.get_resource.License.jwtErrorStarted;
+            return "License.jwtErrorStarted";
         case CTLICENSE_R_ERROR_OPERATION_BLOCK:
-            return lang.get_resource.License.jwtErrorOperation;
+            return "License.jwtErrorOperation";
         case CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE:
-            return lang.get_resource.License.jwtErrorNoLicenseInStore;
+            return "License.jwtErrorNoLicenseInStore";
         case CTLICENSE_R_ERROR_STORE_IS_LOCKED:
-            return lang.get_resource.License.jwtErrorStoreIsLocked;
+            return "License.jwtErrorStoreIsLocked";
         default :
-            return lang.get_resource.License.jwtErrorCode;
+            return "License.jwtErrorCode";
     }
 }
