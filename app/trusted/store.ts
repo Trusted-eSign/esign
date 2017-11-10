@@ -166,7 +166,7 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
       if (err) {
         done(err);
       } else {
@@ -255,7 +255,7 @@ export class Store {
       return callback();
     }
 
-    trusted.pki.Certificate.download(urls, pathForSave, function(err, res) {
+    trusted.pki.Certificate.download(urls, pathForSave, function (err, res) {
       if (err) {
         return callback(err);
       } else {

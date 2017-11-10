@@ -13,42 +13,42 @@ const CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE: number = 911;
 const CTLICENSE_R_ERROR_STORE_IS_LOCKED: number = 912;
 
 export function checkLicense(key?: string): number {
-    try {
-        const res = key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
+  try {
+    const res = key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
 
-        return res;
-    } catch (err) {
-        return -1;
-    }
+    return res;
+  } catch (err) {
+    return -1;
+  }
 }
 
 export function getErrorMessage(errCode: number): string {
-   switch (errCode) {
-        case CTLICENSE_R_ERROR_INTERNAL:
-            return "License.jwtErrorInternal";
-        case CTLICENSE_R_ERROR_LOAD_LICENSE:
-            return "License.jwtErrorLoad";
-        case CTLICENSE_R_ERROR_TOKEN_FORMAT:
-            return "License.jwtErrorTokenFormat";
-        case CTLICENSE_R_ERROR_SIGN:
-            return "License.jwtErrorSign";
-        case CTLICENSE_R_ERROR_PARSING:
-            return "License.jwtErrorParsing";
-        case CTLICENSE_R_ERROR_STUCTURE:
-            return "License.jwtErrorStructure";
-        case CTLICENSE_R_ERROR_PRODUCT:
-            return "License.jwtErrorProduct";
-        case CTLICENSE_R_ERROR_EXPIRED_TIME:
-            return "License.jwtErrorExpired";
-        case CTLICENSE_R_ERROR_NOT_STARTED:
-            return "License.jwtErrorStarted";
-        case CTLICENSE_R_ERROR_OPERATION_BLOCK:
-            return "License.jwtErrorOperation";
-        case CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE:
-            return "License.jwtErrorNoLicenseInStore";
-        case CTLICENSE_R_ERROR_STORE_IS_LOCKED:
-            return "License.jwtErrorStoreIsLocked";
-        default :
-            return "License.jwtErrorCode";
-    }
+  switch (errCode) {
+    case CTLICENSE_R_ERROR_INTERNAL:
+      return "License.jwtErrorInternal";
+    case CTLICENSE_R_ERROR_LOAD_LICENSE:
+      return "License.jwtErrorLoad";
+    case CTLICENSE_R_ERROR_TOKEN_FORMAT:
+      return "License.jwtErrorTokenFormat";
+    case CTLICENSE_R_ERROR_SIGN:
+      return "License.jwtErrorSign";
+    case CTLICENSE_R_ERROR_PARSING:
+      return "License.jwtErrorParsing";
+    case CTLICENSE_R_ERROR_STUCTURE:
+      return "License.jwtErrorStructure";
+    case CTLICENSE_R_ERROR_PRODUCT:
+      return "License.jwtErrorProduct";
+    case CTLICENSE_R_ERROR_EXPIRED_TIME:
+      return "License.jwtErrorExpired";
+    case CTLICENSE_R_ERROR_NOT_STARTED:
+      return "License.jwtErrorStarted";
+    case CTLICENSE_R_ERROR_OPERATION_BLOCK:
+      return "License.jwtErrorOperation";
+    case CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE:
+      return "License.jwtErrorNoLicenseInStore";
+    case CTLICENSE_R_ERROR_STORE_IS_LOCKED:
+      return "License.jwtErrorStoreIsLocked";
+    default:
+      return "License.jwtErrorCode";
+  }
 }
