@@ -1,9 +1,6 @@
 import { EventEmitter } from "events";
 import * as fs from "fs";
-import * as path from "path";
-import { HOME_DIR, RESOURCES_PATH } from "../constants";
-
-export let SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
+import { HOME_DIR, RESOURCES_PATH, SETTINGS_JSON } from "../constants";
 
 export let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
     let chain: trusted.pki.Chain;

@@ -1,16 +1,14 @@
 import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 import * as React from "react";
 import { connect } from "react-redux";
 import { loadLicense } from "../AC";
-import { SETTINGS_JSON } from "../module/global_app";
+import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
 
 const remote = window.electron.remote;
 if (remote.getGlobal("sharedObject").logcrypto) {
-  window.logger = trusted.utils.Logger.start(path.join(os.homedir(), ".Trusted", "trusted-crypto.log"));
+  window.logger = trusted.utils.Logger.start(TRUSTED_CRYPTO_LOG);
 }
 
 class MenuBar extends React.Component<any, any> {
