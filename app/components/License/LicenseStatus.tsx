@@ -90,13 +90,8 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, any> {
     }
 
     return (
-      <div className="row leftshifter">
+      <div>
         <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText()} style={style} styleRow={styleRow} />
-        <div className="col s6">
-          <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-            {localize("License.Enter_Key", locale)}
-          </a>
-        </div>
       </div>
     );
   }

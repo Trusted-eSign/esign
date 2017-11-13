@@ -87,16 +87,28 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, any> {
       <div>
         <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
         <div className="row leftshifter">
-          <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
-          <LicenseInfoFiled title={localize("Common.subject", locale)} info={license.aud} />
+          <div className="col s6">
+            <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+          </div>
+          <div className="col s6">
+            <LicenseInfoFiled title={localize("Common.subject", locale)} info={license.aud} />
+          </div>
         </div>
         <div className="row leftshifter">
-          <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
-          <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+          <div className="col s6">
+            <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+          </div>
+          <div className="col s6">
+            <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+          </div>
         </div>
         <div className="row leftshifter">
-          <LicenseInfoFiled title="" info="" style={style} />
-          <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+          <div className="col s6">
+            <LicenseInfoFiled title="" info="" style={style} />
+          </div>
+          <div className="col s6">
+            <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+          </div>
         </div>
       </div>
     );

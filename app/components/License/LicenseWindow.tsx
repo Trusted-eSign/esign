@@ -22,11 +22,24 @@ class LicenseWindow extends React.Component<any, any> {
   render() {
     const { localize, locale } = this.context;
 
+    const settings = {
+      draggable: false,
+    };
+
     return (
       <div className="main">
         <div className="desktoplic_area">
           <LicenseInfo />
-          <LicenseStatus />
+          <div className="row">
+            <div className="col s6">
+              <LicenseStatus />
+            </div>
+            <div className="col s2">
+              <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                {localize("License.Enter_Key", locale)}
+              </a>
+            </div>
+          </div>
         </div>
         <div className="onlinelic_area">
         </div>
