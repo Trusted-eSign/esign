@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 
-class FeedbackForm extends React.Component<any, any> {
+class FeedbackForm extends React.PureComponent<any, any> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
