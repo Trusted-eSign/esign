@@ -91,4 +91,4 @@ export default connect((state) => {
     loaded: state.license.loaded,
     loading: state.license.loading,
   };
-}, {loadLicense})(LicenseInfo);
+}, {loadLicense}, null, {pure: false})(LicenseInfo);

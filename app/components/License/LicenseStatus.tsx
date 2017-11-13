@@ -89,4 +89,4 @@ export default connect((state) => {
     loading: state.license.loading,
     status: state.license.status,
   };
-}, {loadLicense, verifyLicense})(LicenseStatus);
+}, {loadLicense, verifyLicense}, null, {pure: false})(LicenseStatus);
