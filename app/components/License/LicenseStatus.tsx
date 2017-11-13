@@ -30,7 +30,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
+  constructor(props: ILicenseStatusProps) {
     super(props);
   }
 
