@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { IX509Certificate } from "../module/global_app";
 
@@ -7,8 +8,8 @@ interface ICertificateInfoProps {
 
 export default class CertificateInfo extends React.Component<ICertificateInfoProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: ICertificateInfoProps) {

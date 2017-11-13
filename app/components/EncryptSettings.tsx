@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import {
@@ -13,8 +14,8 @@ const dialog = window.electron.remote.dialog;
 
 class EncryptSettings extends React.Component<any, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: any) {

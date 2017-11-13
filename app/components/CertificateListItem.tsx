@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
@@ -21,8 +22,8 @@ interface ICertificateListItemProps {
 
 class CertificateListItem extends React.Component<ICertificateListItemProps, ICertificateListItemProps> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: ICertificateListItemProps) {

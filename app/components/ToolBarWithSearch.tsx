@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import SearchElement from "../Filters/SearchElement";
 
@@ -11,8 +12,8 @@ interface IToolBarWithSearchProps {
 
 export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: IToolBarWithSearchProps) {

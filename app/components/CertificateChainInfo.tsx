@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 
 const TRUE_CERT_STATUS = {
@@ -124,8 +125,8 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
 }
 
 CertificateChainInfo.contextTypes = {
-  locale: React.PropTypes.string,
-  localize: React.PropTypes.func,
+  locale: PropTypes.string,
+  localize: PropTypes.func,
 };
 
 export default CertificateChainInfo;

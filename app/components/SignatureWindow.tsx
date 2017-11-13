@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
@@ -29,8 +30,8 @@ interface ISignatureWindowProps {
 
 class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: ISignatureWindowProps) {

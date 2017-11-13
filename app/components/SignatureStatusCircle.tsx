@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { mapToArr } from "../utils";
@@ -9,8 +10,8 @@ interface ISignatureStatusCircleProps {
 
 class SignatureStatusCircle extends React.Component<ISignatureStatusCircleProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: ISignatureStatusCircleProps) {

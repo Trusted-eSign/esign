@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, selectFile } from "../AC";
@@ -17,8 +18,8 @@ interface IFileSelectorProps {
 
 class FileSelector extends React.Component<IFileSelectorProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: IFileSelectorProps) {

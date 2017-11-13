@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import SignatireStatusCicrcle from "./SignatureStatusCircle";
@@ -12,8 +13,8 @@ interface IFilelistItemProps {
 
 class FileListItem extends React.Component<IFilelistItemProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: IFilelistItemProps) {

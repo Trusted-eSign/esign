@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { hashHistory, IndexRoute, Route, Router } from "react-router";
@@ -14,8 +15,8 @@ import SignatureWindow from "./SignatureWindow";
 
 class App extends React.Component<any, any> {
   static childContextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: any) {

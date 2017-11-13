@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 
 export default function ProgressBars({children}, context) {
@@ -24,6 +25,6 @@ export default function ProgressBars({children}, context) {
 }
 
 ProgressBars.contextTypes = {
-  locale: React.PropTypes.string,
-  localize: React.PropTypes.func,
+  locale: PropTypes.string,
+  localize: PropTypes.func,
 };

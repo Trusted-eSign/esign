@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import ReactDOM from "react-dom";
 
@@ -8,8 +9,8 @@ interface IEncodingTypeSelectorProps {
 
 class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: IEncodingTypeSelectorProps) {

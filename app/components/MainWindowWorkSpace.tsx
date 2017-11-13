@@ -1,11 +1,12 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 import MainWindow from "./MainWindow";
 import MainWindowOperation from "./MainWindowOperation";
 
 class MainWindowWorkSpace extends React.Component<any, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: any) {

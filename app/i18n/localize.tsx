@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import PropTypes from "prop-types";
+import * as React from "react";
 import {EN, RU} from "../constants";
 import en from "./EN";
 import ru from "./RU";

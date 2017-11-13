@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import * as React from "react";
 
 const tabHeaderStyle = {
@@ -10,8 +11,8 @@ interface ICertificateInfoTabsProps {
 
 class CertificateInfoTabs extends React.Component<ICertificateInfoTabsProps, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: ICertificateInfoTabsProps) {

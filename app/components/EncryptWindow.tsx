@@ -1,6 +1,7 @@
 import * as archiver from "archiver";
 import * as fs from "fs";
 import * as path from "path";
+import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
@@ -17,8 +18,8 @@ import ProgressBars from "./ProgressBars";
 
 class EncryptWindow extends React.Component<any, any> {
   static contextTypes = {
-    locale: React.PropTypes.string,
-    localize: React.PropTypes.func,
+    locale: PropTypes.string,
+    localize: PropTypes.func,
   };
 
   constructor(props: any) {
