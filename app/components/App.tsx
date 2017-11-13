@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { hashHistory, IndexRoute, Route, Router } from "react-router";
 import history from "../history";
 import localize from "../i18n/localize";
-import { AboutWindow } from "./AboutWindow";
+import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import EncryptWindow from "./EncryptWindow";
 import HelpWindow from "./HelpWindow";
