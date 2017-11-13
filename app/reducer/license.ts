@@ -5,8 +5,8 @@ import { arrayToMap } from "../utils";
 
 const LicenseModel = Record({
   aud: "-",
-  exp: "-",
-  iat: "-",
+  exp: null,
+  iat: null,
   iss: "-",
   jti: "-",
   sub: "-",

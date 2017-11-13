@@ -12,9 +12,11 @@ import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 const dialog = window.electron.remote.dialog;
 
 interface ILicenseSetupModalProps {
-  text_info: string;
+  status: number;
+  loading: boolean;
   closeWindow: () => void;
-  icon: string;
+  loadLicense: () => void;
+  verifyLicense: (key: string) => void;
 }
 
 interface ILicenseSetupModalState {
@@ -50,6 +52,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
   setupLicense() {
     const { localize, locale } = this.context;
     const { license_key, license_file } = this.state;
+    // tslint:disable-next-line:no-shadowed-variable
     const { loadLicense, verifyLicense } = this.props;
 
     const path = npath.dirname(LICENSE_PATH);

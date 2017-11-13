@@ -4,18 +4,36 @@ import { connect } from "react-redux";
 import { loadLicense } from "../../AC";
 import LicenseInfoFiled from "./LicenseInfoField";
 
-class LicenseInfo extends React.Component<any, any> {
+interface ILicenseModel {
+  aud: string;
+  exp: number;
+  iat: number;
+  iss: string;
+  jti: string;
+  sub: string;
+}
+
+interface ILicenseInfoProps {
+  license: ILicenseModel;
+  loaded: boolean;
+  loading: boolean;
+  loadLicense: () => void;
+}
+
+class LicenseInfo extends React.Component<ILicenseInfoProps, any> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
+  constructor(props: ILicenseInfoProps) {
     super(props);
   }
 
   componentDidMount() {
-    const { loaded, loading, loadLicense } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { loadLicense } = this.props;
+    const { loaded, loading } = this.props;
 
     if (!loaded && !loading) {
       loadLicense();
@@ -45,7 +63,7 @@ class LicenseInfo extends React.Component<any, any> {
     let notBefore: string;
     let productName: string;
 
-    if (license.exp === "-") {
+    if (!license.exp) {
       notAfter = "-";
     } else {
       const exp = new Date(license.exp * 1000);
@@ -53,7 +71,7 @@ class LicenseInfo extends React.Component<any, any> {
       notAfter = exp.getFullYear() === 2038 ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
     }
 
-    if (license.iat === "-") {
+    if (!license.iat) {
       notBefore = "-";
     } else {
       notBefore = this.getLocaleDate(license.iat * 1000);

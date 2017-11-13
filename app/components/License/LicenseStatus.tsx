@@ -5,7 +5,26 @@ import { loadLicense, verifyLicense } from "../../AC";
 import * as jwt from "../../trusted/jwt";
 import LicenseInfoField from "./LicenseInfoField";
 
-class LicenseStatus extends React.Component<any, any> {
+interface ILicenseModel {
+  aud: string;
+  exp: number;
+  iat: number;
+  iss: string;
+  jti: string;
+  sub: string;
+}
+
+interface ILicenseStatusProps {
+  data: string;
+  license: ILicenseModel;
+  loaded: boolean;
+  loading: boolean;
+  status: number;
+  loadLicense: () => void;
+  verifyLicense: (key: string) => void;
+}
+
+class LicenseStatus extends React.Component<ILicenseStatusProps, any> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -16,7 +35,9 @@ class LicenseStatus extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    const { data, loaded, loading, loadLicense, verifyLicense } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { loadLicense, verifyLicense } = this.props;
+    const { data, loaded, loading } = this.props;
 
     if (!loaded && !loading) {
       loadLicense();
