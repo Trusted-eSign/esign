@@ -13,10 +13,6 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, a
     localize: PropTypes.func,
   };
 
-  constructor(props: IEncodingTypeSelectorProps) {
-    super(props);
-  }
-
   /**
    * https://github.com/facebook/react/issues/3667
    */

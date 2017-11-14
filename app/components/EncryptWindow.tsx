@@ -22,10 +22,6 @@ class EncryptWindow extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   componentDidMount() {
     const { certificatesLoaded, certificatesLoading, loadAllCertificates } = this.props;
 

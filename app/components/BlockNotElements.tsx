@@ -6,10 +6,6 @@ interface IBlockNotElementsProps {
 }
 
 class BlockNotElements extends React.Component<IBlockNotElementsProps, any> {
-  constructor(props: IBlockNotElementsProps) {
-    super(props);
-  }
-
   render() {
     const { name, title } = this.props;
     return <div className={"cert-item " + name}>

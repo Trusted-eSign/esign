@@ -13,10 +13,6 @@ class RecipientsList extends React.Component<any, any> {
   delay = 200;
   prevent: boolean = false;
 
-  constructor(props: any) {
-    super(props);
-  }
-
   handleClick = (element) => {
     const { onActive } = this.props;
 

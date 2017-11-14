@@ -13,10 +13,6 @@ class SignatureInfoBlock extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     const { signerCertificate, filename, signatures, handleActiveCert, handleBackView } = this.props;
     const { localize, locale } = this.context;

@@ -11,10 +11,6 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { localize, locale } = this.context;
     const { certificates, recipients, handleCleanRecipientsList } = this.props;

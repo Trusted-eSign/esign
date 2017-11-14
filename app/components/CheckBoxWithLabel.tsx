@@ -8,10 +8,6 @@ interface ICheckBoxWithLabelProps {
 }
 
 class CheckBoxWithLabel extends React.Component<ICheckBoxWithLabelProps, any> {
-  constructor(props: ICheckBoxWithLabelProps) {
-    super(props);
-  }
-
   render() {
     const { onClickCheckBox, isChecked, elementId, title } = this.props;
 

@@ -16,10 +16,6 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
     localize: PropTypes.func,
   };
 
-  constructor(props: IToolBarWithSearchProps) {
-    super(props);
-  }
-
   componentDidMount() {
     $(".nav-small-btn").dropdown();
   }

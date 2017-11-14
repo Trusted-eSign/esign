@@ -19,10 +19,6 @@ class SignatureSettings extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   addDirect() {
     const { changeSignatureOutfolder } = this.props;
 

@@ -15,10 +15,6 @@ class CertificateInfoTabs extends React.Component<ICertificateInfoTabsProps, any
     localize: PropTypes.func,
   };
 
-  constructor(props: ICertificateInfoTabsProps) {
-    super(props);
-  }
-
   componentDidMount() {
     $(document).ready(function() {
       $("ul.tabs").tabs();

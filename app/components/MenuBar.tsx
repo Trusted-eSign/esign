@@ -18,10 +18,6 @@ class MenuBar extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   minimizeWindow() {
     mainWindow.minimize();
   }

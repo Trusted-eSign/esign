@@ -19,10 +19,6 @@ class App extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   getChildContext() {
     const { locale } = this.props;
     return {

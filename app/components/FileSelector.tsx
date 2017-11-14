@@ -22,10 +22,6 @@ class FileSelector extends React.Component<IFileSelectorProps, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: IFileSelectorProps) {
-    super(props);
-  }
-
   componentDidMount() {
     $(".nav-small-btn, .file-setting-item").dropdown({
       inDuration: 300,

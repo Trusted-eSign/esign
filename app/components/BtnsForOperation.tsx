@@ -36,10 +36,6 @@ interface IBtnsForOperationProps {
 }
 
 class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
-  constructor(props: IBtnsForOperationProps) {
-    super(props);
-  }
-
   render() {
     const { allFiles, activeFiles, recipients, signer } = this.props;
     const active = allFiles.length > 0 ? "active" : "";

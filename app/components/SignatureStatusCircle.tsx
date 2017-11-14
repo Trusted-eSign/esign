@@ -14,10 +14,6 @@ class SignatureStatusCircle extends React.Component<ISignatureStatusCircleProps,
     localize: PropTypes.func,
   };
 
-  constructor(props: ISignatureStatusCircleProps) {
-    super(props);
-  }
-
   componentDidMount() {
     $(".tooltipped").tooltip("remove");
     $(".tooltipped").tooltip({ delay: 50 });

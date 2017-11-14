@@ -18,10 +18,6 @@ class EncryptSettings extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   addDirect() {
     const { changeEncryptOutfolder } = this.props;
 

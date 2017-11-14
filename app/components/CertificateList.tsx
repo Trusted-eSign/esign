@@ -17,10 +17,6 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     localize: PropTypes.func,
   };
 
-  constructor(props: ICertificateListProps) {
-    super(props);
-  }
-
   componentDidMount() {
     const { isLoaded, isLoading, loadAllCertificates } = this.props;
 

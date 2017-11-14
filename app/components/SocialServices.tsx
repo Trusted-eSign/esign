@@ -6,11 +6,7 @@ interface ISocialServicesProps {
 }
 
 class SocialServices extends React.Component<ISocialServicesProps, any> {
-  constructor(props: ISocialServicesProps) {
-    super(props);
-  }
-
-  toLinkSoc(address: string) {
+   toLinkSoc(address: string) {
     window.electron.shell.openExternal(address);
   }
 

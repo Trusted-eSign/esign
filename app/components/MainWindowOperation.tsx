@@ -9,10 +9,6 @@ interface IMainWindowOperationsProps {
 }
 
 class MainWindowOperation extends React.Component<IMainWindowOperationsProps, any> {
-  constructor(props: IMainWindowOperationsProps) {
-    super(props);
-  }
-
   render() {
     const { info, title_pre, title_post, operation } = this.props;
 

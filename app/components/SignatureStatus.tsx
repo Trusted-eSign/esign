@@ -12,10 +12,6 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: ISignatureStatusProps) {
-    super(props);
-  }
-
   handleClick = () => {
     const { signature, handleActiveCert } = this.props;
 

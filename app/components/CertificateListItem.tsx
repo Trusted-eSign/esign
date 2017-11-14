@@ -26,10 +26,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     localize: PropTypes.func,
   };
 
-  constructor(props: ICertificateListItemProps) {
-    super(props);
-  }
-
   shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
     return nextProps.isOpen !== this.props.isOpen ||
       nextProps.cert.verified !== this.props.cert.verified;

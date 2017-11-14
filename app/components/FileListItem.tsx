@@ -17,10 +17,6 @@ class FileListItem extends React.Component<IFilelistItemProps, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: IFilelistItemProps) {
-    super(props);
-  }
-
   componentDidMount() {
     $(".file-setting-item").dropdown({
       inDuration: 300,

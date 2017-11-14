@@ -12,10 +12,6 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
     localize: PropTypes.func,
   };
 
-  constructor(props: ICertificateInfoProps) {
-    super(props);
-  }
-
   render() {
     const { localize, locale } = this.context;
     const { certificate } = this.props;

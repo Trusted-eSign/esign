@@ -8,10 +8,6 @@ class MainWindow extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     const { children } = this.props;
     const { localize, locale } = this.context;

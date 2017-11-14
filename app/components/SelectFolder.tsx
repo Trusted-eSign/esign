@@ -13,10 +13,6 @@ class SelectFolder extends React.Component<ISelectFolderProps, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: ISelectFolderProps) {
-    super(props);
-  }
-
   render() {
     const { localize, locale } = this.context;
 

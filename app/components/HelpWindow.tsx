@@ -9,10 +9,6 @@ class HelpWindow extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     const { locale } = this.context;
     const path = `help/${locale}.html`;
