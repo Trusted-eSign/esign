@@ -1,13 +1,28 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 
-class FeedbackForm extends React.PureComponent<any, any> {
+interface IFeedbackFormState {
+  email: {
+    text: string,
+    error: string,
+  };
+  message: {
+    text: string,
+    error: string,
+  };
+  username: {
+    text: string,
+    error: string,
+  };
+}
+
+class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
+  constructor(props: {}) {
     super(props);
     this.state = ({
       email: { text: "", error: "" },
