@@ -20,15 +20,11 @@ interface ILicenseInfoProps {
   loadLicense: () => void;
 }
 
-class LicenseInfo extends React.Component<ILicenseInfoProps, any> {
+class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
-
-  constructor(props: ILicenseInfoProps) {
-    super(props);
-  }
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable

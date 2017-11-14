@@ -5,15 +5,11 @@ import LicenseInfoField from "./LicenseInfoField";
 import LicenseSetupModal from "./LicenseSetupModal";
 import LicenseStatus from "./LicenseStatus";
 
-class LicenseWindow extends React.Component<any, any> {
+class LicenseWindow extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
-
-  constructor(props: any) {
-    super(props);
-  }
 
   componentDidMount() {
     $(".add-licence-modal-btn").leanModal();

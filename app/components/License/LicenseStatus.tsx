@@ -24,7 +24,7 @@ interface ILicenseStatusProps {
   verifyLicense: (key: string) => void;
 }
 
-class LicenseStatus extends React.Component<ILicenseStatusProps, any> {
+class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
