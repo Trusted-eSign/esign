@@ -7,11 +7,7 @@ class ProductInformation extends React.PureComponent {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-  }
-
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
+  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 

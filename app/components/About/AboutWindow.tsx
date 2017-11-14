@@ -3,9 +3,6 @@ import FeedbackForm from "./FeedbackForm";
 import ProductInformation from "./ProductInformation";
 
 class AboutWindow extends React.PureComponent {
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
     return (
