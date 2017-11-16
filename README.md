@@ -1,3 +1,8 @@
+# Trusted eSign
+<p align="center">
+  <img alt="Trusted eSign in action" src="https://user-images.githubusercontent.com/16474118/32882951-f8d799fc-cac6-11e7-83f0-24fc70953963.png">
+</p>
+
 ## Install dependencies
 
 ```
