@@ -1,36 +1,68 @@
 import PropTypes from "prop-types";
 import * as React from "react";
-import MainWindowWorkSpace from "./MainWindowWorkSpace";
+import Footer from "./Footer";
+import MainWindowOperation from "./MainWindowOperation";
 
-class MainWindow extends React.Component<any, any> {
+class MainWindow extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
   render() {
-    const { children } = this.props;
     const { localize, locale } = this.context;
 
     return (
       <div className="main">
         <div className="main-window">
           <div className="main-window-workspace">
-            <MainWindowWorkSpace />
-          </div>
-          <div className="page-footer mainfooter">
-            <div className="footer-copyright">
+            <div className="header image">
               <div className="row">
-                <div className="col l3 s1"><i className="ctlogo"></i></div>
-                <div className="col l3 s4">
-                  <div className="copyright">
-                    <div className="white-text text-lighten-3">
-                      {localize("About.company_name", locale)}<br />{localize("About.copyright", locale)}
+                <div className="col s3">
+                  <i className="logo" />
+                </div>
+                <div className="col s9">
+                  <div className="white-text cryptobanner">
+                    <p>{localize("About.info_about_product", locale)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="maincontent">
+                <div className="appfunction">
+                  <div className="row">
+                    <div className="col s4">
+                      <MainWindowOperation
+                        info={localize("About.info_about_sign", locale)}
+                        title_pre={localize("Settings.Digital", locale)}
+                        title_post={localize("Sign.Signature", locale)}
+                        operation="sign"
+                      />
+                    </div>
+                    <div className="col s4">
+                      <MainWindowOperation
+                        info={localize("About.info_about_encrypt", locale)}
+                        title_pre={localize("Encrypt.Encryption", locale)}
+                        title_post={localize("Settings.Datas", locale)}
+                        operation="encrypt"
+                      />
+                    </div>
+                    <div className="col s4">
+                      <MainWindowOperation
+                        info={localize("About.info_about_certificate", locale)}
+                        title_pre={localize("Settings.Control", locale)}
+                        title_post={localize("Certificate.FCertificates", locale)}
+                        operation="certificate"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div className="row">
+            <Footer />
           </div>
         </div>
       </div>

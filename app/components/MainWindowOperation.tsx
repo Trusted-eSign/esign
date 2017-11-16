@@ -8,12 +8,12 @@ interface IMainWindowOperationsProps {
   operation: string;
 }
 
-class MainWindowOperation extends React.Component<IMainWindowOperationsProps, any> {
+class MainWindowOperation extends React.Component<IMainWindowOperationsProps, {}> {
   render() {
     const { info, title_pre, title_post, operation } = this.props;
 
     return (
-      <div className="col l3 s4">
+      <div>
         <Link to={"/" + operation} className="r-iconbox-link iconpos_left">
           <div className="r-iconbox-link">
             <div className="r-iconbox-icon">
