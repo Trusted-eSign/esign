@@ -76,7 +76,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       let format = trusted.DataFormat.PEM;
 
       if (folderOut.length > 0) {
-        if (!utils.dirExists(folderOut)) {
+        if (!dirExists(folderOut)) {
           $(".toast-failed_find_directory").remove();
           Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
           return;
