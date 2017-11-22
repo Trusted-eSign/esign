@@ -2,13 +2,21 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { changeSearchValue } from "../AC";
 
-class SearchElement extends React.Component<any, any> {
-  state = {
-    open: false,
-  };
+interface ISearchElementState {
+  open: boolean;
+}
 
-  constructor(props: any) {
+interface ISearchElementProps {
+  changeSearchValue: (ev: any) => void;
+}
+
+class SearchElement extends React.Component<ISearchElementProps, ISearchElementState> {
+  constructor(props: ISearchElementProps) {
     super(props);
+
+    this.state = ({
+      open: false,
+    });
   }
 
   handleOpen() {

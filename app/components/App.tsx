@@ -13,7 +13,11 @@ import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
 import SignatureWindow from "./SignatureWindow";
 
-class App extends React.Component<any, any> {
+interface IAppProps {
+  locale: string;
+}
+
+class App extends React.Component<IAppProps, {}> {
   static childContextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,

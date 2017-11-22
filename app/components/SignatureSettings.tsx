@@ -13,13 +13,27 @@ import SelectFolder from "./SelectFolder";
 
 const dialog = window.electron.remote.dialog;
 
-class SignatureSettings extends React.Component<any, any> {
+interface ISignatureSettingsProps {
+  changeSignatureTimestamp: (timestamp: boolean) => void;
+  changeSignatureOutfolder: (path: string) => void;
+  changeSignatureEncoding: (encoding: string) => void;
+  changeSignatureDetached: (detached: boolean) => void;
+  settings: {
+    detached: boolean,
+    encoding: string,
+    outfolder: string,
+    timestamp: boolean,
+  };
+}
+
+class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
   addDirect() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureOutfolder } = this.props;
 
     if (!window.framework_NW) {
@@ -35,22 +49,26 @@ class SignatureSettings extends React.Component<any, any> {
   }
 
   handleDetachedClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureDetached, settings } = this.props;
     changeSignatureDetached(!settings.detached);
   }
 
   handleTimestampClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureTimestamp, settings } = this.props;
     changeSignatureTimestamp(!settings.timestamp);
   }
 
-  handleOutfolderChange = ev => {
+  handleOutfolderChange = (ev: any) => {
     ev.preventDefault();
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureOutfolder } = this.props;
     changeSignatureOutfolder(ev.target.value);
   }
 
   handleEncodingChange = (encoding: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureEncoding } = this.props;
     changeSignatureEncoding(encoding);
   }

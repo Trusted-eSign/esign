@@ -12,13 +12,27 @@ import SelectFolder from "./SelectFolder";
 
 const dialog = window.electron.remote.dialog;
 
-class EncryptSettings extends React.Component<any, any> {
+interface IEncryptSettingsProps {
+  changeDeleteFilesAfterEncrypt: (del: boolean) => void;
+  changeEncryptOutfolder: (path: string) => void;
+  changeEncryptEncoding: (encoding: string) => void;
+  changeArchiveFilesBeforeEncrypt: (archive: boolean) => void;
+  settings: {
+    archive: boolean,
+    delete: boolean,
+    encoding: string,
+    outfolder: string,
+  };
+}
+
+class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
   addDirect() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeEncryptOutfolder } = this.props;
 
     if (!window.framework_NW) {
@@ -34,22 +48,26 @@ class EncryptSettings extends React.Component<any, any> {
   }
 
   handleDeleteClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeDeleteFilesAfterEncrypt, settings } = this.props;
     changeDeleteFilesAfterEncrypt(!settings.delete);
   }
 
   handleArchiveClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeArchiveFilesBeforeEncrypt, settings } = this.props;
     changeArchiveFilesBeforeEncrypt(!settings.archive);
   }
 
-  handleOutfolderChange = ev => {
+  handleOutfolderChange = (ev: any) => {
     ev.preventDefault();
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeEncryptOutfolder } = this.props;
     changeEncryptOutfolder(ev.target.value);
   }
 
   handleEncodingChange = (encoding: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeEncryptEncoding } = this.props;
     changeEncryptEncoding(encoding);
   }
