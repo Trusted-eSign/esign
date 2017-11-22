@@ -2,15 +2,13 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import SearchElement from "../Filters/SearchElement";
 
-//declare const $: any;
-
 interface IToolBarWithSearchProps {
   disable: string;
   import: (event: any) => void;
   operation: string;
 }
 
-export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, any> {
+export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -51,7 +49,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
     return <nav className="app-bar-cert">
       <ul className="app-bar-items">
         <li className="cert-bar-text" style={style}>
-          <SearchElement operation={this.props.operation} />
+          <SearchElement />
         </li>
         {btn}
       </ul>

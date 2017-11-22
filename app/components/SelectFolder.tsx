@@ -7,7 +7,7 @@ interface ISelectFolderProps {
   openDirect: () => void;
 }
 
-class SelectFolder extends React.Component<ISelectFolderProps, any> {
+class SelectFolder extends React.Component<ISelectFolderProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,

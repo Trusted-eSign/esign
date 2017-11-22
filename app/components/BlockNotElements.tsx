@@ -5,13 +5,15 @@ interface IBlockNotElementsProps {
   title: string;
 }
 
-class BlockNotElements extends React.Component<IBlockNotElementsProps, any> {
+class BlockNotElements extends React.Component<IBlockNotElementsProps, {}> {
   render() {
     const { name, title } = this.props;
-    return <div className={"cert-item " + name}>
-      <div className="add-file-item-text">{title}</div>
-      <i className="material-icons large fullscreen">block</i>
-    </div>;
+    return (
+      <div className={"cert-item " + name}>
+        <div className="add-file-item-text">{title}</div>
+        <i className="material-icons large fullscreen">block</i>
+      </div>
+    );
   }
 }
 

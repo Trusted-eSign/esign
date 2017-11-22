@@ -30,9 +30,7 @@
     "url": "git+https://github.com/TrustedPlus/esign.git"
   },
   "author": {
-    "name": "Trusted Plus development team",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "Trusted Plus development team"
   },
   "bugs": {
     "url": "https://github.com/TrustedPlus/esign/issues"

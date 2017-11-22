@@ -7,7 +7,7 @@ interface IEncodingTypeSelectorProps {
   handleChange: (encoding: string) => void;
 }
 
-class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, any> {
+class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -23,7 +23,7 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, a
     $(ReactDOM.findDOMNode(this.refs.select)).on("change", this.handleChange);
   }
 
-  handleChange = (event) => {
+  handleChange = (event: any) => {
     event.preventDefault();
     this.props.handleChange(event.target.value);
   }
@@ -31,15 +31,17 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, a
   render() {
     const { localize, locale } = this.context;
 
-    return <div className="row settings-item">
-      <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
-      <div className="col input-field">
-        <select ref="select" id="encoding" defaultValue={this.props.EncodingValue} onChange={this.handleChange}>
-          <option value={localize("Settings.BASE", locale)}>{localize("Settings.BASE", locale)}</option>
-          <option value={localize("Settings.DER", locale)}>{localize("Settings.DER", locale)}</option>
-        </select>
+    return (
+      <div className="row settings-item">
+        <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
+        <div className="col input-field">
+          <select ref="select" id="encoding" defaultValue={this.props.EncodingValue} onChange={this.handleChange}>
+            <option value={localize("Settings.BASE", locale)}>{localize("Settings.BASE", locale)}</option>
+            <option value={localize("Settings.DER", locale)}>{localize("Settings.DER", locale)}</option>
+          </select>
+        </div>
       </div>
-    </div>;
+    );
   }
 }
 
