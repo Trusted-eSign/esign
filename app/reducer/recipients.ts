@@ -6,7 +6,7 @@ const RecipientModel = Record({
 });
 
 const DefaultReducerState = Record({
-  entities: new OrderedMap({}),
+  entities: OrderedMap({}),
 });
 
 export default (recipients = new DefaultReducerState(), action) => {

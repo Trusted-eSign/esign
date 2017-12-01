@@ -11,7 +11,7 @@ const FileModel = Record({
 });
 
 const DefaultReducerState = Record({
-  entities: new OrderedMap({}),
+  entities: OrderedMap({}),
 });
 
 export default (files = new DefaultReducerState(), action) => {

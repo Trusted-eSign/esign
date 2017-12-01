@@ -28,7 +28,7 @@ const CertificateModel = Record({
 });
 
 const DefaultReducerState = Record({
-  entities: new OrderedMap({}),
+  entities: OrderedMap({}),
   loaded: false,
   loading: false,
 });

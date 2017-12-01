@@ -13,7 +13,7 @@ const SignatureModel = Record({
 });
 
 const DefaultReducerState = Record({
-  entities: new OrderedMap({}),
+  entities: OrderedMap({}),
 });
 
 export default (signatures = new DefaultReducerState(), action) => {
