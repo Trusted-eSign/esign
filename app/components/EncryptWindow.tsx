@@ -133,8 +133,14 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { files, settings, deleteFile, selectFile, licenseVerified, licenseStatus  } = this.props;
+    const { files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
     const { localize, locale } = this.context;
+
+    if (licenseLoaded && !licenseToken) {
+      $(".toast-jwtErrorLoad").remove();
+      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+      return;
+    }
 
     if (licenseVerified && licenseStatus !== 0) {
       $(".toast-jwtErrorLicense").remove();
@@ -205,9 +211,11 @@ export default connect((state) => {
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
-    licenseStatus: state.license.status,
-    licenseVerified: state.license.verified,
     files: activeFilesSelector(state, { active: true }),
+    licenseLoaded: state.license.loaded,
+    licenseStatus: state.license.status,
+    licenseToken: state.license.data,
+    licenseVerified: state.license.verified,
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };
