@@ -1,7 +1,7 @@
 {
   "author": "Trusted Plus development team",
-  "name": "trusted-esign",
-  "productName": "trusted-esign",
+  "name": "cryptoarm-gost",
+  "productName": "cryptoarm-gost",
   "version": "1.2.0",
   "main": "./main.js",
   "license": "Apache-2.0",

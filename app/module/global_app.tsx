@@ -106,7 +106,7 @@ let get_string_resources = function (lang: string) {
     try {
         let RESOURCES_JSON: string;
         if (window.framework_NW) {
-            RESOURCES_JSON = RESOURCES_PATH + "/Trusted_eSign/language/" + lang + ".json";
+            RESOURCES_JSON = RESOURCES_PATH + "/CryptoARM_GOST/language/" + lang + ".json";
         } else {
             RESOURCES_JSON = RESOURCES_PATH + "/language/" + lang + ".json";
         }
