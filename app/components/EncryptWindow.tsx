@@ -8,6 +8,7 @@ import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
+import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
@@ -132,8 +133,14 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { files, settings, deleteFile, selectFile } = this.props;
+    const { files, settings, deleteFile, selectFile, licenseVerified, licenseStatus  } = this.props;
     const { localize, locale } = this.context;
+
+    if (licenseVerified && licenseStatus !== 0) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(licenseStatus), locale), 5000, "toast-jwtErrorLicense");
+      return;
+    }
 
     if (files.length > 0) {
       const folderOut = settings.outfolder;
@@ -198,6 +205,8 @@ export default connect((state) => {
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
+    licenseStatus: state.license.status,
+    licenseVerified: state.license.verified,
     files: activeFilesSelector(state, { active: true }),
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,

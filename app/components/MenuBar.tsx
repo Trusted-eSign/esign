@@ -2,8 +2,9 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadLicense } from "../AC";
+import { loadLicense, verifyLicense } from "../AC";
 import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
+import * as jwt from "../trusted/jwt";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
 
@@ -67,7 +68,8 @@ class MenuBar extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    const { loadLicense, loadedLicense, loadingLicense } = this.props;
+    const { localize, locale } = this.context;
+    const { jwtLicense, loadLicense, loadedLicense, loadingLicense, verifyLicense, status, verifed } = this.props;
 
     if (!loadedLicense && !loadingLicense) {
       loadLicense();
@@ -76,6 +78,25 @@ class MenuBar extends React.Component<any, any> {
     $(".menu-btn").sideNav({
       closeOnClick: true,
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { localize, locale } = this.context;
+    const { loadedLicense, loadingLicense, verifyLicense, status, verified } = this.props;
+
+    if (loadedLicense !== nextProps.loadedLicense && !nextProps.jwtLicense) {
+      $(".toast-jwtErrorLoad").remove();
+      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+    }
+
+    if (!verified && !nextProps.verified && nextProps.loadedLicense && nextProps.jwtLicense) {
+      verifyLicense(nextProps.jwtLicense);
+    }
+
+    if (verified !== nextProps.verified && nextProps.status !== 0) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(nextProps.status ), locale), 5000, "toast-jwtErrorLicense");
+    }
   }
 
   render() {
@@ -121,9 +142,12 @@ class MenuBar extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
+    jwtLicense: state.license.data,
     encSettings: state.settings.encrypt,
     loadedLicense: state.license.loaded,
     loadingLicense: state.license.loading,
     signSettings: state.settings.sign,
+    verified: state.license.verified,
+    status: state.license.status,
   };
-}, {loadLicense})(MenuBar);
+}, {loadLicense, verifyLicense})(MenuBar);
