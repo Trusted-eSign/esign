@@ -67,6 +67,29 @@ class MenuBar extends React.Component<any, any> {
     return title;
   }
 
+  checkCPCSP = () => {
+    const { localize, locale } = this.context;
+
+    try {
+      if (!trusted.utils.Csp.isGost2001CSPAvailable()) {
+        $(".toast-noProvider2001").remove();
+        Materialize.toast(localize("Csp.noProvider2001", locale), 5000, "toast-noProvider2001");
+
+        return;
+      }
+
+      if (!trusted.utils.Csp.checkCPCSPLicense()) {
+        $(".toast-noCPLicense").remove();
+        Materialize.toast(localize("Csp.noCPLicense", locale), 5000, "toast-noCPLicense");
+
+        return;
+      }
+    } catch (e) {
+      $(".toast-cspErr").remove();
+      Materialize.toast(localize("Csp.cspErr", locale), 2000, "toast-cspErr");
+    }
+  }
+
   componentDidMount() {
     const { localize, locale } = this.context;
     const { jwtLicense, loadLicense, loadedLicense, loadingLicense, verifyLicense, status, verifed } = this.props;
@@ -74,6 +97,8 @@ class MenuBar extends React.Component<any, any> {
     if (!loadedLicense && !loadingLicense) {
       loadLicense();
     }
+
+    this.checkCPCSP();
 
     $(".menu-btn").sideNav({
       closeOnClick: true,

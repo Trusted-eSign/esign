@@ -305,4 +305,10 @@ export default {
     files_not_found: "Files are not found: perhaps they were removed or renamed",
     Back: "Back",
   },
+  Csp: {
+    cspErr: "Error check CSP parameters",
+    noCPLicense: "Error check license for CryptoPro CSP",
+    noProvider2001: "GOST 2001 provider not available",
+    noProvider2012: "GOST 2012 provider not available",
+  },
 };
