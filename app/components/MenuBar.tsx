@@ -118,7 +118,7 @@ class MenuBar extends React.Component<any, any> {
       verifyLicense(nextProps.jwtLicense);
     }
 
-    if (verified !== nextProps.verified && nextProps.status !== 0) {
+    if (verified !== nextProps.verified && nextProps.status > 0 ) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(nextProps.status ), locale), 5000, "toast-jwtErrorLicense");
     }
