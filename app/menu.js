@@ -1,7 +1,5 @@
 import { app, Menu, shell, BrowserWindow } from 'electron';
 
-var i18n = require('./menu_i18n/i18n');
-
 export default class MenuBuilder {
 
   constructor(mainWindow) {
@@ -9,18 +7,16 @@ export default class MenuBuilder {
   }
 
   buildMenu() {
-    let local = new i18n();
-    
     if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-      this.setupDevelopmentEnvironment(local);
+      this.setupDevelopmentEnvironment();
     }
 
     let template;
 
     if (process.platform === 'darwin') {
-      template = this.buildDarwinTemplate(local);
+      template = this.buildDarwinTemplate();
     } else {
-      template = this.buildDefaultTemplate(local);
+      template = this.buildDefaultTemplate();
     }
 
     const menu = Menu.buildFromTemplate(template);
@@ -29,14 +25,14 @@ export default class MenuBuilder {
     return menu;
   }
 
-  setupDevelopmentEnvironment(local) {
+  setupDevelopmentEnvironment() {
     this.mainWindow.openDevTools();
     this.mainWindow.webContents.on('context-menu', (e, props) => {
       const { x, y } = props;
 
       Menu
         .buildFromTemplate([{
-          label: local.__('Inspect element'),
+          label: 'Inspect element',
           click: () => {
             this.mainWindow.inspectElement(x, y);
           }
@@ -45,74 +41,140 @@ export default class MenuBuilder {
     });
   }
 
-  buildDarwinTemplate(local) {
+  buildDarwinTemplate() {
     const subMenuAbout = {
-      label: local.__("Electron"),
+      label: 'Electron',
       submenu: [
-        { label: local.__('Quit'), accelerator: 'Command+Q', click: () => { app.quit(); } }
+        { label: 'About ElectronReact', selector: 'orderFrontStandardAboutPanel:' },
+        { type: 'separator' },
+        { label: 'Services', submenu: [] },
+        { type: 'separator' },
+        { label: 'Hide ElectronReact', accelerator: 'Command+H', selector: 'hide:' },
+        { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
+        { label: 'Show All', selector: 'unhideAllApplications:' },
+        { type: 'separator' },
+        { label: 'Quit', accelerator: 'Command+Q', click: () => { app.quit(); } }
+      ]
+    };
+    const subMenuEdit = {
+      label: 'Edit',
+      submenu: [
+        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
+      ]
+    };
+    const subMenuViewDev = {
+      label: 'View',
+      submenu: [
+        { label: 'Reload', accelerator: 'Command+R', click: () => { this.mainWindow.webContents.reload(); } },
+        { label: 'Toggle Full Screen', accelerator: 'Ctrl+Command+F', click: () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()); } },
+        { label: 'Toggle Developer Tools', accelerator: 'Alt+Command+I', click: () => { this.mainWindow.toggleDevTools(); } }
+      ]
+    };
+    const subMenuViewProd = {
+      label: 'View',
+      submenu: [
+        { label: 'Toggle Full Screen', accelerator: 'Ctrl+Command+F', click: () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()); } }
       ]
     };
     const subMenuWindow = {
-      label: local.__('Window'),
+      label: 'Window',
       submenu: [
-        { label: local.__('Minimize'), accelerator: 'Command+M', selector: 'performMiniaturize:' },
-        { label: local.__('Close'), accelerator: 'Command+W', click: () => { app.quit(); }},
+        { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
+        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
         { type: 'separator' },
-        { label: local.__('Bring All to Front'), selector: 'arrangeInFront:' }
+        { label: 'Bring All to Front', selector: 'arrangeInFront:' }
       ]
     };
     const subMenuHelp = {
-      label: local.__('Help'),
+      label: 'Help',
       submenu: [
-        { label: local.__('Learn More'), click() { shell.openExternal('https://github.com/TrustedPlus'); } },
-        { label: local.__('Documentation'), click() { shell.openExternal('https://github.com/TrustedPlus'); } },
-        { label: local.__('Community Discussions'), click() { shell.openExternal('https://github.com/TrustedPlus'); } },
-        { label: local.__('Search Issues'), click() { shell.openExternal('https://github.com/TrustedPlus'); } }
+        { label: 'Learn More', click() { shell.openExternal('http://electron.atom.io'); } },
+        { label: 'Documentation', click() { shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme'); } },
+        { label: 'Community Discussions', click() { shell.openExternal('https://discuss.atom.io/c/electron'); } },
+        { label: 'Search Issues', click() { shell.openExternal('https://github.com/atom/electron/issues'); } }
       ]
     };
 
+    const subMenuView = process.env.NODE_ENV === 'development'
+      ? subMenuViewDev
+      : subMenuViewProd;
+
     return [
       subMenuAbout,
+      subMenuEdit,
+      subMenuView,
       subMenuWindow,
       subMenuHelp
     ];
   }
 
-  buildDefaultTemplate(local) {
+  buildDefaultTemplate() {
     const templateDefault = [{
-      label: local.__('&File'),
+      label: '&File',
       submenu: [{
-        label: local.__('&Open'),
+        label: '&Open',
         accelerator: 'Ctrl+O'
       }, {
-        label: local.__('&Close'),
+        label: '&Close',
         accelerator: 'Ctrl+W',
         click: () => {
           this.mainWindow.close();
-          app.quit(); 
         }
       }]
     }, {
-      label: local.__('Help'),
+      label: '&View',
+      submenu: (process.env.NODE_ENV === 'development') ? [{
+        label: '&Reload',
+        accelerator: 'Ctrl+R',
+        click: () => {
+          this.mainWindow.webContents.reload();
+        }
+      }, {
+        label: 'Toggle &Full Screen',
+        accelerator: 'F11',
+        click: () => {
+          this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+        }
+      }, {
+        label: 'Toggle &Developer Tools',
+        accelerator: 'Alt+Ctrl+I',
+        click: () => {
+          this.mainWindow.toggleDevTools();
+        }
+      }] : [{
+        label: 'Toggle &Full Screen',
+        accelerator: 'F11',
+        click: () => {
+          this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+        }
+      }]
+    }, {
+      label: 'Help',
       submenu: [{
-        label: local.__('Learn More'),
+        label: 'Learn More',
         click() {
-          shell.openExternal('https://github.com/TrustedPlus');
+          shell.openExternal('http://electron.atom.io');
         }
       }, {
-        label: local.__('Documentation'),
+        label: 'Documentation',
         click() {
-          shell.openExternal('https://github.com/TrustedPlus');
+          shell.openExternal('https://github.com/atom/electron/tree/master/docs#readme');
         }
       }, {
-        label: local.__('Community Discussions'),
+        label: 'Community Discussions',
         click() {
-          shell.openExternal('https://github.com/TrustedPlus');
+          shell.openExternal('https://discuss.atom.io/c/electron');
         }
       }, {
-        label: local.__('Search Issues'),
+        label: 'Search Issues',
         click() {
-          shell.openExternal('https://github.com/TrustedPlus');
+          shell.openExternal('https://github.com/atom/electron/issues');
         }
       }]
     }];
