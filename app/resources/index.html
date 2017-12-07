@@ -56,7 +56,14 @@
     }
     var crypto_module = require('crypto');
     crypto_module.loadConfig("./config/openssl.cfg");
-    var trusted = require('trusted-crypto');
+
+    var trusted;
+    try {
+      trusted = require('trusted-crypto');
+    } catch(err) {
+      window.tcerr = err;
+    }
+
     path = require('path');
     fs = require('fs');
     os = require('os');

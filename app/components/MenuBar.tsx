@@ -90,6 +90,18 @@ class MenuBar extends React.Component<any, any> {
     }
   }
 
+  checkTrustedCryptoLoadedErr = () => {
+    const { localize, locale } = this.context;
+
+    if (window.tcerr) {
+      if (~window.tcerr.message.indexOf("libcapi")) {
+        alert(localize("Csp.libcapi", locale));
+      } else {
+        alert(window.tcerr);
+      }
+    }
+  }
+
   componentDidMount() {
     const { localize, locale } = this.context;
     const { jwtLicense, loadLicense, loadedLicense, loadingLicense, verifyLicense, status, verifed } = this.props;
@@ -99,6 +111,7 @@ class MenuBar extends React.Component<any, any> {
     }
 
     this.checkCPCSP();
+    this.checkTrustedCryptoLoadedErr();
 
     $(".menu-btn").sideNav({
       closeOnClick: true,

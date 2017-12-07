@@ -307,6 +307,7 @@ export default {
   },
   Csp: {
     cspErr: "Error check CSP parameters",
+    libcapi: "Cannot find libcapi. Install CryptoPro CSP",
     noCPLicense: "Error check license for CryptoPro CSP",
     noProvider2001: "GOST 2001 provider not available",
     noProvider2012: "GOST 2012 provider not available",
