@@ -97,7 +97,7 @@ class MenuBar extends React.Component<any, any> {
       if (~window.tcerr.message.indexOf("libcapi")) {
         alert(localize("Csp.libcapi", locale));
       } else {
-        alert(window.tcerr);
+        alert(window.tcerr.message);
       }
     }
   }
