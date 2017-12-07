@@ -82,7 +82,7 @@ app.on('ready', async () => {
     preloader.focus();
   });
 
-  preloader.on("close", () => {
+  preloader.on("close", function() {
     preloader = null;
   });
 
@@ -97,10 +97,15 @@ app.on('ready', async () => {
     mainWindow.focus();
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on('closed', function() {
     mainWindow = null;
+    if (process.platform === 'darwin') {
+      app.quit();
+    }
   });
-
+  
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
+
+
