@@ -1,3 +1,6 @@
+# Media files
+*.ai
+
 # Logs
 logs
 *.log
