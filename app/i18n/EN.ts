@@ -274,6 +274,7 @@ export default {
     jwtErrorNoLicenseInStore: "No find valid license for operation",
     jwtErrorStoreIsLocked: "Load license was loked",
     jwtErrorCode: "Unknown error code",
+    jwtGetLicense: "For buy a license go to:",
   },
   Kegistration: {
     LoginAndPass: "A USERNAME AND PASSWORD AUTHENTICATION",
@@ -304,6 +305,7 @@ export default {
     product: "Product",
     files_not_found: "Files are not found: perhaps they were removed or renamed",
     Back: "Back",
+    error: "ERROR",
   },
   Csp: {
     cspErr: "Error check CSP parameters",

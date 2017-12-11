@@ -273,6 +273,7 @@ export default {
     jwtErrorNoLicenseInStore: "Не найдена лицензия для данной операции",
     jwtErrorStoreIsLocked: "Чтение лицензии заблокировано",
     jwtErrorCode: "Неизвестный код ошибки",
+    jwtGetLicense: "Для приобретения лицензии перейдите на сайт:",
   },
   Кegistration: {
     LoginAndPass: "АВТОРИЗАЦИЯ ПО ЛОГИНУ И ПАРОЛЮ",
@@ -303,6 +304,7 @@ export default {
     product: "Продукт",
     files_not_found: "Файлы не найдены (Возможно они были удалены или переименованы)",
     Back: "НАЗАД",
+    error: "ОШИБКА",
   },
   Csp: {
     cspErr: "Ошибка при проверке параметров криптопровайдера",

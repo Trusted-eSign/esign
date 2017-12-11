@@ -6,6 +6,7 @@ import { loadLicense, verifyLicense } from "../AC";
 import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
 import * as jwt from "../trusted/jwt";
 import LocaleSelect from "./LocaleSelect";
+import Modal from "./Modal";
 import SideMenu from "./SideMenu";
 
 const remote = window.electron.remote;
@@ -18,6 +19,14 @@ class MenuBar extends React.Component<any, any> {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
+
+  constructor(props: any) {
+    super(props);
+    this.state = ({
+      error: null,
+      jwtError: false,
+    });
+  }
 
   minimizeWindow() {
     mainWindow.minimize();
@@ -75,6 +84,8 @@ class MenuBar extends React.Component<any, any> {
         $(".toast-noProvider2001").remove();
         Materialize.toast(localize("Csp.noProvider2001", locale), 5000, "toast-noProvider2001");
 
+        this.setState({ error: localize("Csp.noProvider2001", locale) });
+
         return;
       }
 
@@ -82,22 +93,26 @@ class MenuBar extends React.Component<any, any> {
         $(".toast-noCPLicense").remove();
         Materialize.toast(localize("Csp.noCPLicense", locale), 5000, "toast-noCPLicense");
 
+        this.setState({ error: localize("Csp.noCPLicense", locale) });
+
         return;
       }
     } catch (e) {
       $(".toast-cspErr").remove();
       Materialize.toast(localize("Csp.cspErr", locale), 2000, "toast-cspErr");
+
+      this.setState({ error: localize("Csp.cspErr", locale) });
     }
   }
 
   checkTrustedCryptoLoadedErr = () => {
     const { localize, locale } = this.context;
 
-    if (window.tcerr) {
+    if (window.tcerr && window.tcerr.message) {
       if (~window.tcerr.message.indexOf("libcapi")) {
-        alert(localize("Csp.libcapi", locale));
+        this.setState({ error: localize("Csp.libcapi", locale) });
       } else {
-        alert(window.tcerr.message);
+        this.setState({ error: window.tcerr.message });
       }
     }
   }
@@ -106,12 +121,12 @@ class MenuBar extends React.Component<any, any> {
     const { localize, locale } = this.context;
     const { jwtLicense, loadLicense, loadedLicense, loadingLicense, verifyLicense, status, verifed } = this.props;
 
+    this.checkCPCSP();
+    this.checkTrustedCryptoLoadedErr();
+
     if (!loadedLicense && !loadingLicense) {
       loadLicense();
     }
-
-    this.checkCPCSP();
-    this.checkTrustedCryptoLoadedErr();
 
     $(".menu-btn").sideNav({
       closeOnClick: true,
@@ -125,22 +140,74 @@ class MenuBar extends React.Component<any, any> {
     if (loadedLicense !== nextProps.loadedLicense && !nextProps.jwtLicense) {
       $(".toast-jwtErrorLoad").remove();
       Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+
+      this.setState({ error: localize("License.jwtErrorLoad", locale) });
+      this.setState({ jwtError: true });
     }
 
     if (!verified && !nextProps.verified && nextProps.loadedLicense && nextProps.jwtLicense) {
       verifyLicense(nextProps.jwtLicense);
     }
 
-    if (verified !== nextProps.verified && nextProps.status > 0 ) {
+    if (verified !== nextProps.verified && nextProps.status > 0) {
       $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(nextProps.status ), locale), 5000, "toast-jwtErrorLicense");
+      Materialize.toast(localize(jwt.getErrorMessage(nextProps.status), locale), 5000, "toast-jwtErrorLicense");
+
+      this.setState({ error: localize(jwt.getErrorMessage(nextProps.status), locale) });
+      this.setState({ jwtError: true });
     }
+  }
+
+  gotoLink = (address: string) => {
+    window.electron.shell.openExternal(address);
+  }
+
+  getJwtLicense = () => {
+    const { localize, locale } = this.context;
+    const { jwtError } = this.state;
+
+    return jwtError ? (
+      <div>
+        <p>
+          {localize("License.jwtGetLicense", locale)}
+          <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+        </p>
+      </div>
+    ) : null;
+  }
+
+  showModalWithError = () => {
+    const { localize, locale } = this.context;
+    const { error, jwtError } = this.state;
+
+    if (!error) {
+      return null;
+    }
+
+    return (
+      <Modal
+        isOpen={true}
+        header={localize("Common.error", locale)}
+      >
+        <div className="main">
+          <div className="row">
+            <div className="col s12">
+              <span className="card-infos">
+                <p>{error}</p>
+                {this.getJwtLicense()}
+              </span>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    );
   }
 
   render() {
     return (
       <div className="main">
         <nav className="app-bar">
+          {this.showModalWithError()}
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
               <li>
@@ -188,4 +255,4 @@ export default connect((state) => {
     verified: state.license.verified,
     status: state.license.status,
   };
-}, {loadLicense, verifyLicense})(MenuBar);
+}, { loadLicense, verifyLicense })(MenuBar);
