@@ -7,7 +7,7 @@ import localize from "../i18n/localize";
 import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import EncryptWindow from "./EncryptWindow";
-import HelpWindow from "./HelpWindow";
+import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
