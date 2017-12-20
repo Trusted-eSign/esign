@@ -550,15 +550,25 @@ i.material-icons.left.help{
   margin-top: 10px;
 }
 
-i.material-icons.left.license{
+i.material-icons.left.keystore{
   display: block;
   text-indent: -9999px;
   width: 24px;
   height: 24px;
-  background: url(./resources/image/license_menu_icon.svg);
+  background: url(./resources/image/key_store_menu_icon.svg);
   background-size: 24px 24px;
   margin-top: 10px;
 }
+
+i.material-icons.left.license{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/license_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 10px;
+  }
 /*-------------------------------Стили списка файлов------------------*/
 .add-file-item {
     color: lightgray;
@@ -1321,7 +1331,7 @@ display: inline-block;
 }
 
 .card.contact {
-  height: 314px;
+  height: 447px;
 }
 
 span.card-title {
@@ -1332,6 +1342,14 @@ span.card-title {
 .card .card-title {
   font-size: 20px;
   font-weight: 300;
+}
+
+span.card-title.sub {
+    font-size: 16px;
+  }
+
+.mail-block {
+    height: 38px;
 }
 
 .card-action {
@@ -1349,6 +1367,14 @@ span.card-title {
 .card-infos{
   color: slategray;
   font-size: 16px;
+}
+
+span.card-infos.sub{
+    font-size: 14px;
+}
+
+span.card-infos.min{
+    font-size: 12px;
 }
 
 form.col.s12 {
@@ -1384,6 +1410,14 @@ h6.contact-text {
   font-size: 1.0rem;
   line-height: 110%;
   color: #898989;
+}
+
+.h6.text-center {
+    position: relative;
+    width: 8px;
+    top: -29px;
+    left: 37px;
+    font-size:14px;
 }
 
 

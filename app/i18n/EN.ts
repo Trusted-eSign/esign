@@ -265,7 +265,8 @@ export default {
     Info: "Info",
     about_programm: "CryptoARM GOST is a desktop app that allows you to sign documents and encrypt files using digital certificates and cryptographic algorithms.",
     reason_build: "The program was built on the basis of Electron v0.37.8 and OpenSSL v1.0.2k.",
-    company_name: "Company Digt",
+    developer: "Company-developer",
+    company_name: "Company Cifrovie Technologii",
     copyright: "Copyright 2016-2017",
     address: "Petrova St, 1, Yoshkar-Ola, Mari El Republic, Russia, 424033",
     phone: {
@@ -282,6 +283,11 @@ export default {
     link_vk: "http://vk.com/cryptoarm",
     link_twitter: "https://twitter.com/cryptoarm",
     link_trusred: "http://www.trusted.ru/",
+    AppVersion: "Version",
+    CspVersion: "CryptoProviders",
+    AppCoreVersion: "The kernel version of the application:",
+    Compatible: "(compatibility with Electron 1.6.6, OpenSSL 1.0.2k)",
+    CSPVersion: "CryptoPro CSP:",
   },
   License: {
     license: "License",
