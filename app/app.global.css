@@ -2797,8 +2797,8 @@ i.material-icons.left.line {
 }
 .contain-btn{
     position: relative;
-    left: 83%;
-    top: 7px;
+    left: 80%;
+    top: 2px;
 }
 
 .problem-contaner {
@@ -2807,4 +2807,18 @@ i.material-icons.left.line {
 
 .col.s6.m5.l6.problem-contaner {
     height: 400px;
+}
+
+.resolve-content {
+    line-height: 18px;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: black;
+}
+
+a.hlink {
+    cursor: pointer;
+    color: #b64729;
 }
