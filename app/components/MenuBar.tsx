@@ -29,6 +29,7 @@ class MenuBar extends React.Component<any, any> {
     super(props);
     this.state = ({
       activeError: null,
+      criticalError: false,
       errors: [],
     });
   }
@@ -95,6 +96,8 @@ class MenuBar extends React.Component<any, any> {
           type: NO_GOST_2001,
          }]});
 
+        this.setState({criticalError: true});
+
         return false;
       }
 
@@ -116,6 +119,8 @@ class MenuBar extends React.Component<any, any> {
         type: ERROR_CHECK_CSP_PARAMS,
       }]});
 
+      this.setState({criticalError: true});
+
       return false;
     }
 
@@ -131,6 +136,8 @@ class MenuBar extends React.Component<any, any> {
           type: ERROR_LOAD_TRUSTED_CRYPTO,
         }],
       });
+
+      this.setState({criticalError: true});
 
       return false;
     }
@@ -182,16 +189,20 @@ class MenuBar extends React.Component<any, any> {
     }
   }
 
-  gotoLink = (address: string) => {
-    window.electron.shell.openExternal(address);
-  }
-
   closeModal() {
     this.setState({
       active: "not-active",
     });
 
     $("#modal-window").closeModal();
+  }
+
+  handleMaybeCloseApp = () => {
+    const { criticalError } = this.state;
+
+    if (criticalError) {
+      this.closeWindow();
+    }
   }
 
   showModalWithError = () => {
@@ -221,7 +232,7 @@ class MenuBar extends React.Component<any, any> {
             </div>
             <div className="row">
               <div className="contain-btn">
-                <a className="waves-effect waves-light btn modal-close">{localize("Diagnostic.close", locale)}</a>
+                <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
               </div>
             </div>
            </div>
