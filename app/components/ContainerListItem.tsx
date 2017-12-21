@@ -13,10 +13,9 @@ class ContainerListItem extends React.Component<any, any> {
   }
 
   handleClick = () => {
-    const { activeContainer, toggleOpen } = this.props;
+    const { activeContainer } = this.props;
 
     activeContainer();
-    toggleOpen();
   }
 
   render() {

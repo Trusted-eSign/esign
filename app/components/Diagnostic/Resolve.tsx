@@ -19,34 +19,34 @@ class Resolve extends React.Component<any, any> {
     this.setState({ certForInfo: certificate });
   }
 
- 
+
   Resolvers = {
     problem_1: function() {
       //Решение проблемы отсутствия КриптоПро CSP
       const { localize, locale } = this.context;
       return (
         <div>
-         
+
         </div>
       );
     },
-  
+
     problem_2: function() {
       //Решение проблемы отсутствия лицензии на КриптоПро CSP
       const { localize, locale } = this.context;
       return (
         <div>
-         
+
         </div>
       );
     },
-  
+
     problem_3: function() {
       //Решение проблемы отсутствия лицензии на приложение
       const { localize, locale } = this.context;
       return (
         <div>
-         
+
         </div>
       );
     },
@@ -56,12 +56,12 @@ class Resolve extends React.Component<any, any> {
       const { localize, locale } = this.context;
       return (
         <div>
-         
+
         </div>
       );
     }
   }
-  
+
   getResolve() {
     const { certForInfo } = this.state;
     const { localize, locale } = this.context;

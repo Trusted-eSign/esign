@@ -26,24 +26,27 @@ class ContainersWindow extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  exportCert = (file: string) => {
-    console.log("export");
-  }
-
   handleInstallCertificate = () => {
     const { certificatesLoading, container, loadAllCertificates, removeAllCertificates } = this.props;
+    const { localize, locale } = this.context;
 
     if (!container.certificate) {
       return;
     }
 
-    trusted.utils.Csp.installCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+    try {
+      trusted.utils.Csp.installCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+    } catch (e) {
+      Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+    }
 
     removeAllCertificates();
 
     if (!certificatesLoading) {
       loadAllCertificates();
     }
+
+    Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
   }
 
   getCertificateInfoBody() {
@@ -60,7 +63,7 @@ class ContainersWindow extends React.Component<any, any> {
       getCertificateFromContainer(container.id);
     }
 
-    if (container.certificateLoading) {
+    if (!container.certificate || container.certificateLoading) {
       return <ProgressBars />;
     }
 
@@ -110,14 +113,6 @@ class ContainersWindow extends React.Component<any, any> {
                   <ul className="app-bar-items">
                     <li className="cert-bar-text">
                       <div className="collection-title">{localize("Containers.certificateInfo", locale)}</div>
-                    </li>
-                    <li className="right">
-                      <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-for-cert">
-                        <i className="nav-small-icon material-icons cert-settings">more_vert</i>
-                      </a>
-                      <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.exportCert}>{localize("Certificate.cert_export", locale)}</a></li>
-                      </ul>
                     </li>
                   </ul>
                 </nav>

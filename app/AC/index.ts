@@ -9,7 +9,7 @@ import {
   CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
   FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
-  LOAD_LICENSE, REMOVE_ALL_CERTIFICATES, SELECT_FILE,
+  LOAD_LICENSE, REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
@@ -188,6 +188,12 @@ export function loadAllContainers() {
   };
 }
 
+export function removeAllContainers() {
+  return {
+    type: REMOVE_ALL_CONTAINERS,
+  };
+}
+
 export function getCertificateFromContainer(container: number) {
   return (dispatch, getState) => {
     dispatch({
@@ -202,7 +208,7 @@ export function getCertificateFromContainer(container: number) {
       const certificateItem = {
         hash: certificate.hash,
         issuerFriendlyName: certificate.issuerFriendlyName,
-        key: true,
+        key: "1",
         notAfter: certificate.notAfter,
         organizationName: certificate.organizationName,
         serial: certificate.serialNumber,

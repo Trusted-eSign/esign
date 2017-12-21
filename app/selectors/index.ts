@@ -66,7 +66,6 @@ export const filteredContainersSelector = createSelector(containersGetter, filte
   let containersArr = mapToArr(containers);
 
   return containersArr.filter((container) => {
-    console.log("container", container.name)
     return (
       container.name.toLowerCase().match(search)
     );

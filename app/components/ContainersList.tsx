@@ -34,8 +34,7 @@ class ContainersList extends React.Component<any, any> {
       <li key={container.id}>
         <ContainerListItem
           container={container}
-          isOpen={isItemOpened(container.id) || active === container.id}
-          toggleOpen={toggleOpenItem(container.id)}
+          isOpen={active === container.id}
           activeContainer = {() => activeContainer(container.id)}
         />
       </li>);
@@ -55,4 +54,4 @@ export default connect((state) => {
     isLoaded: state.containers.loaded,
     isLoading: state.containers.loading,
   };
-}, { activeContainer, filteredContainersSelector, loadAllContainers })(accordion(ContainersList));
+}, { activeContainer, filteredContainersSelector, loadAllContainers })(ContainersList);
