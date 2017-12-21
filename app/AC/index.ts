@@ -172,10 +172,10 @@ export function loadAllContainers() {
       for (const cont of enumedContainers) {
         if (cont.toLowerCase().indexOf("registry") <= 0 ) {
           filteredContainers.push({
-            friendlyName: cont.substring(cont.lastIndexOf(path.sep) + 1),
+            friendlyName: cont.substring(cont.lastIndexOf("\\") + 1),
             id: Math.random(),
             name: cont,
-            reader: cont.substring(4, cont.lastIndexOf(path.sep)),
+            reader: cont.substring(4, cont.lastIndexOf("\\")),
           });
         }
       }
