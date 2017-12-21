@@ -1,13 +1,15 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE, CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
+  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE,
+  CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
-  FAIL, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_LICENSE,
-  REMOVE_ALL_CERTIFICATES, SELECT_FILE,
+  FAIL,
+  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
+  LOAD_LICENSE, REMOVE_ALL_CERTIFICATES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
@@ -145,6 +147,82 @@ export function selectSignerCertificate(selected) {
   return {
     payload: { selected },
     type: SELECT_SIGNER_CERTIFICATE,
+  };
+}
+
+export function loadAllContainers() {
+  return (dispatch) => {
+    dispatch({
+      type: LOAD_ALL_CONTAINERS + START,
+    });
+
+    setTimeout(() => {
+      let enumedContainers;
+
+      try {
+        enumedContainers = trusted.utils.Csp.enumContainers();
+      } catch (e) {
+        dispatch({
+          type: LOAD_ALL_CONTAINERS + FAIL,
+        });
+      }
+
+      const filteredContainers = [];
+
+      for (const cont of enumedContainers) {
+        if (cont.toLowerCase().indexOf("registry") <= 0 ) {
+          filteredContainers.push({
+            friendlyName: cont.substring(cont.lastIndexOf(path.sep) + 1),
+            id: Math.random(),
+            name: cont,
+            reader: cont.substring(4, cont.lastIndexOf(path.sep)),
+          });
+        }
+      }
+
+      dispatch({
+        containers: filteredContainers,
+        type: LOAD_ALL_CONTAINERS + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function getCertificateFromContainer(container: number) {
+  return (dispatch, getState) => {
+    dispatch({
+      payload: { container },
+      type: GET_CERTIFICATE_FROM_CONTAINER + START,
+    });
+
+    setTimeout(() => {
+      const { containers } = getState();
+      const cont = containers.getIn(["entities", container]);
+      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(cont.name, 75);
+      const certificateItem = {
+        hash: certificate.hash,
+        issuerFriendlyName: certificate.issuerFriendlyName,
+        key: true,
+        notAfter: certificate.notAfter,
+        organizationName: certificate.organizationName,
+        serial: certificate.serialNumber,
+        signatureAlgorithm: certificate.signatureAlgorithm,
+        subjectFriendlyName: certificate.subjectFriendlyName,
+        subjectName: null,
+      };
+
+      dispatch({
+        payload: { container, certificate, certificateItem },
+        type: GET_CERTIFICATE_FROM_CONTAINER + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function activeContainer(container: number) {
+  return {
+    payload: { container },
+    type: ACTIVE_CONTAINER,
   };
 }
 

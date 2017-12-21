@@ -53,6 +53,13 @@ export default {
     certs_root: "Доверенные корневые сертификаты",
     certs_token: "Сертификаты внешних носителей",
   },
+  Containers: {
+    containers: "КОНТЕЙНЕРЫ",
+    containersNotFound: "Контейнеры не найдены",
+    certificateInfo: "Сведения о сертификате",
+    contNotSelected: "Контейнер не выбран",
+    installCertificate: "Установить сертификат",
+  },
   CSR: {
     create_selfSigned: "Создание самоподписанного сертификата",
     template_label: "Шаблон сертификата",

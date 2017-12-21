@@ -64,6 +64,8 @@ class MenuBar extends React.Component<any, any> {
       title = localize("Encrypt.encrypt_and_decrypt", locale);
     else if (pathname === "/certificate")
       title = localize("Certificate.certs", locale);
+      else if (pathname === "/containers")
+      title = localize("Containers.containers", locale);
     else if (pathname === "/about")
       title = localize("About.about", locale);
     else if (pathname === "/license")

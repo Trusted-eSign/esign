@@ -53,6 +53,13 @@ export default {
     certs_root: "Trusted Root Certificates",
     certs_token: "External token/card certificates",
   },
+  Containers: {
+    containers: "CONTAINERS",
+    containersNotFound: "Containers not found",
+    certificateInfo: "Certificate information",
+    contNotSelected: "Container not selected",
+    installCertificate: "Install certificate",
+  },
   CSR: {
     create_selfSigned: "Create self-signed certificate",
     template_label: "Certificate template",

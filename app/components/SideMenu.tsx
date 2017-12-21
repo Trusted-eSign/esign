@@ -41,6 +41,11 @@ class SideMenu extends React.PureComponent {
             {localize("Certificate.Certificate", locale)}
             <i className="material-icons left cert">library_books</i>
           </Link>
+
+          <Link to="/containers">
+            {localize("Containers.containers", locale)}
+            <i className="material-icons left token">library_books</i>
+          </Link>
         </div>
         <div className="row">
           <div className="menu-elements">
