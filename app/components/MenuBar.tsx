@@ -8,6 +8,9 @@ import * as jwt from "../trusted/jwt";
 import LocaleSelect from "./LocaleSelect";
 import Modal from "./Modal";
 import SideMenu from "./SideMenu";
+import DiagnosticModal from "./Diagnostic/DiagnosticModal";
+import Problems from "./Diagnostic/Problems";
+import Resolve from "./Diagnostic/Resolve";
 
 const remote = window.electron.remote;
 if (remote.getGlobal("sharedObject").logcrypto) {
@@ -85,24 +88,19 @@ class MenuBar extends React.Component<any, any> {
       if (!trusted.utils.Csp.isGost2001CSPAvailable()) {
         $(".toast-noProvider2001").remove();
         Materialize.toast(localize("Csp.noProvider2001", locale), 5000, "toast-noProvider2001");
-
         this.setState({ error: localize("Csp.noProvider2001", locale) });
-
         return;
       }
 
       if (!trusted.utils.Csp.checkCPCSPLicense()) {
         $(".toast-noCPLicense").remove();
         Materialize.toast(localize("Csp.noCPLicense", locale), 5000, "toast-noCPLicense");
-
         this.setState({ error: localize("Csp.noCPLicense", locale) });
-
         return;
       }
     } catch (e) {
       $(".toast-cspErr").remove();
       Materialize.toast(localize("Csp.cspErr", locale), 2000, "toast-cspErr");
-
       this.setState({ error: localize("Csp.cspErr", locale) });
     }
   }
@@ -178,6 +176,14 @@ class MenuBar extends React.Component<any, any> {
     ) : null;
   }
 
+  closeModal() {
+    this.setState({
+      active: "not-active",
+    });
+
+    $("#modal-window").closeModal();
+  }
+
   showModalWithError = () => {
     const { localize, locale } = this.context;
     const { error, jwtError } = this.state;
@@ -185,23 +191,45 @@ class MenuBar extends React.Component<any, any> {
     if (!error) {
       return null;
     }
-
+  
     return (
-      <Modal
-        isOpen={true}
-        header={localize("Common.error", locale)}
-      >
-        <div className="main">
+      <DiagnosticModal 
+          isOpen={true}
+          header={localize("Diagnostic.header", locale)}>
+          <div className="main">
           <div className="row">
-            <div className="col s12">
-              <span className="card-infos">
-                <p>{error}</p>
-                {this.getJwtLicense()}
-              </span>
+            <div className={"diagnostic-content-item"}>
+              <div className="col s6 m5 l6 content-item">
+                <Problems />
+              </div>
+              <div className="col s6 m7 l6 content-item">
+                <Resolve />
+              </div>
+              
             </div>
-          </div>
-        </div>
-      </Modal>
+            <div className="row">
+              <div className="contain-btn">
+                <a className="waves-effect waves-light btn modal-close">{localize("Diagnostic.close", locale)}</a>
+              </div>
+            </div>
+           </div>
+         </div>
+      </DiagnosticModal>
+      // <Modal
+      //   isOpen={true}
+      //   header={localize("Common.error", locale)}
+      // >
+      //   <div className="main">
+      //     <div className="row">
+      //       <div className="col s12">
+      //         <span className="card-infos">
+      //           <p>{error}</p>
+      //           {this.getJwtLicense()}
+      //         </span>
+      //       </div>
+      //     </div>
+      //   </div>
+      // </Modal>
     );
   }
 

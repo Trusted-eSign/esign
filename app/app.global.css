@@ -2763,3 +2763,40 @@ i.material-icons.left.line {
     background: url(./resources/image/help/cert_windows_chain.png);
     background-size: 380px 285px;
 }
+
+/*---------Diagnostic master-------*/
+.diagnostic-modal{
+    width: 94%;
+    height: 85%;
+    max-height: 85%;
+    overflow-y: hidden;
+}
+
+.diagnostic-content-item {
+    padding-left: 0.75rem;
+    padding-top: 0.75rem;
+    height: 50%;
+    width: 100%;
+    padding-left: 0px;
+}
+
+.add-problems {
+    width: 100%;
+    height: calc(100% - 48px);
+    position: relative;
+    overflow: auto;
+    border-top: 2px solid #ffffff;
+    z-index: 2;
+}
+
+.add-problems-item {
+    position: relative;
+    width: 100%;
+    height: 290px;
+    background-color: white;
+}
+.contain-btn{
+    position: relative;
+    left: 83%;
+    top: 7px;
+}

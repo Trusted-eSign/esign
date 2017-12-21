@@ -7,8 +7,6 @@ class ProductInformation extends React.PureComponent {
     localize: PropTypes.func,
   };
 
-  versions = {"Ядро приложения":"v1.2.0", "Electron":"v1.6.6", "Node.js":"v7.4.0", "OpenSSL":"v1.0.2k"};
-
   shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
@@ -54,16 +52,6 @@ class ProductInformation extends React.PureComponent {
                 <p>{localize("About.CSPVersion", locale)} 5.0.10702 KC1</p>
               </span>
             </div>  
-            {/* <div className="row">
-              <span className="card-title sub">{localize("About.ModuleVersion", locale)}</span>
-            </div>               */}
-              {/* <span className="card-infos">
-                <p>{localize("About.version", locale)}</p>
-              </span> */}
-            {/* <div className="row">
-              <div className="contact-icon"><i className="mail_contact_icon"></i></div>
-              <h6 className="contact-title">{localize("About.info", locale)}</h6>
-            </div> */}
           </div>
         </div>
       </div>
