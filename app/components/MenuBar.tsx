@@ -210,7 +210,7 @@ class MenuBar extends React.Component<any, any> {
           <div className="row">
             <div className={"diagnostic-content-item"}>
               <div className="col s6 m5 l6 content-item">
-                <Problems errors={errors} onClick={this.handleClickOnError}/>
+                <Problems errors={errors} onClick={this.handleClickOnError} activeError={this.state.activeError}/>
               </div>
               <div className="col s6 m7 l6 content-item">
                 <Resolve errors={errors} activeError={this.state.activeError}/>

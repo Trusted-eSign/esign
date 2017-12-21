@@ -12,25 +12,69 @@ class Resolve extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  getResolveMessageByType = (error: string): string => {
+  gotoLink = (address: string) => {
+    window.electron.shell.openExternal(address);
+  }
+
+  getResolveByType = (error: string) => {
+    const { localize, locale } = this.context;
+
     switch (error) {
       case ERROR_LOAD_TRUSTED_CRYPTO:
-        return "Problems.problem_1";
+        return (
+          <div>
+            {localize("Problems.resolve_1_1", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+          </div>
+        );
       case NOT_INSTALLED_CSP:
-        return "Problems.problem_1";
+        return (
+          <div>
+            {localize("Problems.resolve_1_1", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+          </div>
+        );
       case ERROR_CHECK_CSP_LICENSE:
-        return "Problems.problem_2";
+        return (
+          <div>
+            {localize("Problems.problem_2", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          </div>
+        );
       case NO_GOST_2001:
-        return "Csp.noProvider2001";
+        return (
+          <div>
+            {localize("Csp.noProvider2001", locale)}
+          </div>
+        );
       case ERROR_CHECK_CSP_PARAMS:
-        return "Csp.cspErr";
+        return (
+          <div>
+            {localize("Problems.problem_4", locale)}
+          </div>
+        );
       case NO_CRYPTOARM_LICENSE:
-        return "Problems.problem_3";
+        return (
+          <div>
+            {localize("Problems.problem_3", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          </div>
+        );
       case NO_CORRECT_CRYPTOARM_LICENSE:
-        return "Problems.problem_3";
+        return (
+          <div>
+            {localize("Problems.problem_3", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          </div>
+        );
 
       default:
-        return "License.jwtErrorCode";
+        return (
+          <div>
+            {localize("Problems.resolve_1_1", locale)}
+            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          </div>
+        );
     }
   }
 
@@ -38,16 +82,12 @@ class Resolve extends React.Component<any, any> {
     const { activeError } = this.props;
     const { localize, locale } = this.context;
 
-    if (!activeError) {
-      return null;
-    }
-
     return (
       <div className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Diagnostic.resolve_header", locale)} />
         <div className="row">
           <span className="card-infos sub">
-            <p>{localize(this.getResolveMessageByType(activeError), locale)}</p>
+            {this.getResolveByType(activeError)}
           </span>
         </div>
       </div>

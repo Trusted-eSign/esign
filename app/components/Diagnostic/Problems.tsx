@@ -45,12 +45,18 @@ class Problems extends React.Component<any, any> {
     }
   }
 
+  isOpen = (type: string) => {
+    const { activeError } = this.props;
+
+    return (type === activeError) ? "active" : "";
+  }
+
   render() {
     const { certificate, errors, handleBackView, onClick } = this.props;
     const { localize, locale } = this.context;
 
-    const elements = errors.map((error: any) => <li key={Math.random()}>
-      <div className={"add-cert-collection collection "}>
+    const elements = errors.map((error: any) => <div key={Math.random()}>
+      <div className={"add-cert-collection collection " + this.isOpen(error.type)}>
         <div className="row certificate-list-item" onClick={() => onClick(error.type)}>
           <div className={"collection-item avatar certs-collection "}>
             <div className="col s12">
@@ -59,7 +65,7 @@ class Problems extends React.Component<any, any> {
           </div>
         </div>
       </div>
-    </li>);
+    </div>);
 
     return (
       <div>
