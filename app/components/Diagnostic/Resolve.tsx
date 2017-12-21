@@ -59,7 +59,7 @@ class Resolve extends React.Component<any, any> {
     const { localize, locale } = this.context;
 
     return (
-      <div>
+      <div className="problem-contaner">
         {this.getResolve()}
       </div>
     );

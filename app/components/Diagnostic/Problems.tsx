@@ -62,7 +62,7 @@ class Problems extends React.Component<any, any> {
     </li>);
 
     return (
-      <div>
+      <div className="problem-contaner">
         <div className="content-wrapper z-depth-1">
           <HeaderWorkspaceBlock text={localize("Diagnostic.problem_header", locale)} />
           {elements}

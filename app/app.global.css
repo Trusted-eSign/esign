@@ -2800,3 +2800,11 @@ i.material-icons.left.line {
     left: 83%;
     top: 7px;
 }
+
+.problem-contaner {
+    height: 400px;
+}
+
+.col.s6.m5.l6.problem-contaner {
+    height: 400px;
+}
