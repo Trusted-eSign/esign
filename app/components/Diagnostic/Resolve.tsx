@@ -70,10 +70,7 @@ class Resolve extends React.Component<any, any> {
 
       default:
         return (
-          <div>
-            {localize("Problems.resolve_1_1", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
-          </div>
+          null
         );
     }
   }

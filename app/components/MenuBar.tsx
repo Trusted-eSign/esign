@@ -200,6 +200,8 @@ class MenuBar extends React.Component<any, any> {
 
     if (!errors.length) {
       return null;
+    } else if (!this.state.activeError) {
+      this.setState({activeError: errors[0].type});
     }
 
     return (
