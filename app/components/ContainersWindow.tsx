@@ -49,6 +49,23 @@ class ContainersWindow extends React.Component<any, any> {
     Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
   }
 
+  getInstallButton() {
+    const { container } = this.props;
+    const { localize, locale } = this.context;
+
+    if (!container) {
+      return (
+        null
+      );
+    }
+
+    return (
+    <div className={"choose-cert"}>
+        <a className="waves-effect waves-light btn-large choose-btn " onClick={this.handleInstallCertificate}>{localize("Containers.installCertificate", locale)}</a>
+    </div>);
+  }
+
+
   getCertificateInfoBody() {
     const { container, getCertificateFromContainer } = this.props;
     const { localize, locale } = this.context;
@@ -68,11 +85,8 @@ class ContainersWindow extends React.Component<any, any> {
     }
 
     return (
-      <div>
+      <div className="add-certs">
         <CertificateInfo certificate={container.certificateItem} />
-        <div className={"choose-cert"}>
-          <a className="waves-effect waves-light btn-large choose-btn " onClick={this.handleInstallCertificate}>{localize("Containers.installCertificate", locale)}</a>
-        </div>
       </div>
     );
   }
@@ -117,6 +131,7 @@ class ContainersWindow extends React.Component<any, any> {
                   </ul>
                 </nav>
                 {this.getCertificateInfoBody()}
+                {this.getInstallButton()}
               </div>
             </div>
           </div>
