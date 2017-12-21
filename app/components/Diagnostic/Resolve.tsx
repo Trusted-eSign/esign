@@ -1,5 +1,9 @@
 import PropTypes from "prop-types";
 import * as React from "react";
+import {
+  ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
+  ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE, NO_GOST_2001, NOT_INSTALLED_CSP
+} from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
 class Resolve extends React.Component<any, any> {
@@ -8,72 +12,44 @@ class Resolve extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
-    super(props);
-    this.state = ({
-      certForInfo: props.certificate,
-    });
-  }
+  getResolveMessageByType = (error: string): string => {
+    switch (error) {
+      case ERROR_LOAD_TRUSTED_CRYPTO:
+        return "Problems.problem_1";
+      case NOT_INSTALLED_CSP:
+        return "Problems.problem_1";
+      case ERROR_CHECK_CSP_LICENSE:
+        return "Problems.problem_2";
+      case NO_GOST_2001:
+        return "Csp.noProvider2001";
+      case ERROR_CHECK_CSP_PARAMS:
+        return "Csp.cspErr";
+      case NO_CRYPTOARM_LICENSE:
+        return "Problems.problem_3";
+      case NO_CORRECT_CRYPTOARM_LICENSE:
+        return "Problems.problem_3";
 
-  handleClick = (certificate: any) => {
-    this.setState({ certForInfo: certificate });
-  }
-
-
-  Resolvers = {
-    problem_1: function() {
-      //Решение проблемы отсутствия КриптоПро CSP
-      const { localize, locale } = this.context;
-      return (
-        <div>
-
-        </div>
-      );
-    },
-
-    problem_2: function() {
-      //Решение проблемы отсутствия лицензии на КриптоПро CSP
-      const { localize, locale } = this.context;
-      return (
-        <div>
-
-        </div>
-      );
-    },
-
-    problem_3: function() {
-      //Решение проблемы отсутствия лицензии на приложение
-      const { localize, locale } = this.context;
-      return (
-        <div>
-
-        </div>
-      );
-    },
-
-    problem_4: function() {
-      //Решение проблемы отсутствия сертификатов
-      const { localize, locale } = this.context;
-      return (
-        <div>
-
-        </div>
-      );
+      default:
+        return "License.jwtErrorCode";
     }
   }
 
   getResolve() {
-    const { certForInfo } = this.state;
+    const { activeError } = this.props;
     const { localize, locale } = this.context;
+
+    if (!activeError) {
+      return null;
+    }
 
     return (
       <div className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Diagnostic.resolve_header", locale)} />
-        <div className="add-problems">
-          <div className="add-problems-item">
-            {this.Resolvers[0]}
-          </div>
-        </div>;
+        <div className="row">
+          <span className="card-infos sub">
+            <p>{localize(this.getResolveMessageByType(activeError), locale)}</p>
+          </span>
+        </div>
       </div>
     );
   }
@@ -84,7 +60,7 @@ class Resolve extends React.Component<any, any> {
 
     return (
       <div>
-          {this.getResolve()}
+        {this.getResolve()}
       </div>
     );
   }

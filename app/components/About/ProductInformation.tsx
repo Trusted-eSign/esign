@@ -36,7 +36,7 @@ class ProductInformation extends React.PureComponent {
                   <div className="h6 text-center"><a href="mailto:info@trusted.ru">{localize("About.info", locale)}</a></div>
                 </div>
             </div>
-            </div> 
+            </div>
             <div className="row">
               <span className="card-title sub">{localize("About.AppVersion", locale)}</span>
               <span className="card-infos sub">
@@ -45,13 +45,13 @@ class ProductInformation extends React.PureComponent {
               <span className="card-infos min">
                 <p>{localize("About.Compatible", locale)}</p>
               </span>
-            </div>   
+            </div>
             <div className="row">
               <span className="card-title sub">{localize("About.CspVersion", locale)}</span>
               <span className="card-infos sub">
                 <p>{localize("About.CSPVersion", locale)} 5.0.10702 KC1</p>
               </span>
-            </div>  
+            </div>
           </div>
         </div>
       </div>

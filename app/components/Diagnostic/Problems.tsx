@@ -1,5 +1,9 @@
 import PropTypes from "prop-types";
 import * as React from "react";
+import {
+  ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
+  ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE, NO_GOST_2001, NOT_INSTALLED_CSP
+} from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
 class Problems extends React.Component<any, any> {
@@ -19,29 +23,50 @@ class Problems extends React.Component<any, any> {
     this.setState({ certForInfo: certificate });
   }
 
-  getProblem() {
-    const { certForInfo } = this.state;
-    const { localize, locale } = this.context;
+  getErrorMessageByType = (error: string): string => {
+    switch (error) {
+      case ERROR_LOAD_TRUSTED_CRYPTO:
+        return "Problems.problem_1";
+      case NOT_INSTALLED_CSP:
+        return "Problems.problem_1";
+      case ERROR_CHECK_CSP_LICENSE:
+        return "Problems.problem_2";
+      case NO_GOST_2001:
+        return "Csp.noProvider2001";
+      case ERROR_CHECK_CSP_PARAMS:
+        return "Csp.cspErr";
+      case NO_CRYPTOARM_LICENSE:
+        return "Problems.problem_3";
+      case NO_CORRECT_CRYPTOARM_LICENSE:
+        return "Problems.problem_3";
 
-    return (
-      <div className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={localize("Diagnostic.problem_header", locale)} />
-        <div className="add-problems">
-          <div className="add-problems-item">
-            {/* <CertificateInfo certificate={certForInfo} /> */}
-          </div>
-        </div>;
-      </div>
-    );
+      default:
+        return "License.jwtErrorCode";
+    }
   }
 
   render() {
-    const { certificate, handleBackView } = this.props;
+    const { certificate, errors, handleBackView, onClick } = this.props;
     const { localize, locale } = this.context;
+
+    const elements = errors.map((error: any) => <li key={Math.random()}>
+      <div className={"add-cert-collection collection "}>
+        <div className="row certificate-list-item" onClick={() => onClick(error.type)}>
+          <div className={"collection-item avatar certs-collection "}>
+            <div className="col s12">
+              <div className="collection-title">{localize(this.getErrorMessageByType(error.type), locale)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>);
 
     return (
       <div>
-          {this.getProblem()}
+        <div className="content-wrapper z-depth-1">
+          <HeaderWorkspaceBlock text={localize("Diagnostic.problem_header", locale)} />
+          {elements}
+        </div>;
       </div>
     );
   }
