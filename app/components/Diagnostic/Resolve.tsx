@@ -22,55 +22,54 @@ class Resolve extends React.Component<any, any> {
     switch (error) {
       case ERROR_LOAD_TRUSTED_CRYPTO:
         return (
-          <div>
-            {localize("Problems.resolve_1_1", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+             </p>
           </div>
         );
       case NOT_INSTALLED_CSP:
         return (
-          <div>
-            {localize("Problems.resolve_1_1", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
+            </p>
           </div>
         );
       case ERROR_CHECK_CSP_LICENSE:
         return (
-          <div>
-            {localize("Problems.problem_2", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.problem_2", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
           </div>
         );
       case NO_GOST_2001:
         return (
-          <div>
-            {localize("Csp.noProvider2001", locale)}
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Csp.noProvider2001", locale)}</p>
           </div>
         );
       case ERROR_CHECK_CSP_PARAMS:
         return (
-          <div>
-            {localize("Problems.problem_4", locale)}
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.problem_4", locale)}</p>
           </div>
         );
       case NO_CRYPTOARM_LICENSE:
         return (
-          <div>
-            {localize("Problems.problem_3", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.problem_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
           </div>
         );
       case NO_CORRECT_CRYPTOARM_LICENSE:
         return (
-          <div>
-            {localize("Problems.problem_3", locale)}
-            <a className="card-infos" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.problem_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
           </div>
         );
 
       default:
         return (
-          null
+          <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
+          </div>
         );
     }
   }
