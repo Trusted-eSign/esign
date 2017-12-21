@@ -7,6 +7,8 @@ class ProductInformation extends React.PureComponent {
     localize: PropTypes.func,
   };
 
+  versions = {"Ядро приложения":"v1.2.0", "Electron":"v1.6.6", "Node.js":"v7.4.0", "OpenSSL":"v1.0.2k"};
+
   shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
@@ -20,21 +22,48 @@ class ProductInformation extends React.PureComponent {
           <div className="card-content white-text">
             <div className="row">
               <span className="card-title">{localize("About.product_NAME", locale)}</span>
-              <span className="card-infos">
-                <p>{localize("About.version", locale)}</p>
-              </span>
-            </div>
-            <div className="row">
-              <span className="card-title">{localize("About.Info", locale)}</span>
             </div>
             <div className="row">
               <div className="contact-icon"></div>
               <h6 className="contact-text">{localize("About.about_programm", locale)}</h6>
             </div>
             <div className="row">
+              <span className="card-title sub">{localize("About.developer", locale)}</span>
+              <span className="card-infos sub">
+                <p>{localize("About.company_name", locale)},  {localize("About.address", locale)}</p>
+              </span>
+              <div className="row">
+                <div className="mail-block">
+                  <div className="contact-icon"><i className="mail_contact_icon"></i></div>
+                  <div className="h6 text-center"><a href="mailto:info@trusted.ru">{localize("About.info", locale)}</a></div>
+                </div>
+            </div>
+            </div> 
+            <div className="row">
+              <span className="card-title sub">{localize("About.AppVersion", locale)}</span>
+              <span className="card-infos sub">
+                <p>{localize("About.AppCoreVersion", locale)}  {localize("About.version", locale)}</p>
+              </span>
+              <span className="card-infos min">
+                <p>{localize("About.Compatible", locale)}</p>
+              </span>
+            </div>   
+            <div className="row">
+              <span className="card-title sub">{localize("About.CspVersion", locale)}</span>
+              <span className="card-infos sub">
+                <p>{localize("About.CSPVersion", locale)} 5.0.10702 KC1</p>
+              </span>
+            </div>  
+            {/* <div className="row">
+              <span className="card-title sub">{localize("About.ModuleVersion", locale)}</span>
+            </div>               */}
+              {/* <span className="card-infos">
+                <p>{localize("About.version", locale)}</p>
+              </span> */}
+            {/* <div className="row">
               <div className="contact-icon"><i className="mail_contact_icon"></i></div>
               <h6 className="contact-title">{localize("About.info", locale)}</h6>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

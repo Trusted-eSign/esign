@@ -550,15 +550,25 @@ i.material-icons.left.help{
   margin-top: 10px;
 }
 
-i.material-icons.left.license{
+i.material-icons.left.keystore{
   display: block;
   text-indent: -9999px;
   width: 24px;
   height: 24px;
-  background: url(./resources/image/license_menu_icon.svg);
+  background: url(./resources/image/key_store_menu_icon.svg);
   background-size: 24px 24px;
   margin-top: 10px;
 }
+
+i.material-icons.left.license{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/license_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 10px;
+  }
 /*-------------------------------Стили списка файлов------------------*/
 .add-file-item {
     color: lightgray;
@@ -1321,7 +1331,7 @@ display: inline-block;
 }
 
 .card.contact {
-  height: 314px;
+  height: 447px;
 }
 
 span.card-title {
@@ -1332,6 +1342,14 @@ span.card-title {
 .card .card-title {
   font-size: 20px;
   font-weight: 300;
+}
+
+span.card-title.sub {
+    font-size: 16px;
+  }
+
+.mail-block {
+    height: 38px;
 }
 
 .card-action {
@@ -1349,6 +1367,14 @@ span.card-title {
 .card-infos{
   color: slategray;
   font-size: 16px;
+}
+
+span.card-infos.sub{
+    font-size: 14px;
+}
+
+span.card-infos.min{
+    font-size: 12px;
 }
 
 form.col.s12 {
@@ -1384,6 +1410,14 @@ h6.contact-text {
   font-size: 1.0rem;
   line-height: 110%;
   color: #898989;
+}
+
+.h6.text-center {
+    position: relative;
+    width: 8px;
+    top: -29px;
+    left: 37px;
+    font-size:14px;
 }
 
 
@@ -1587,6 +1621,7 @@ textarea#message {
 
 a {
   cursor: pointer;
+  color: #b64729;
 }
 
 .add-cert-collection.collection {
@@ -2598,4 +2633,133 @@ i.material-icons.left.line {
     overflow: auto;
     border-top: 2px solid #ffffff;
     z-index: 2;
+}
+
+.Help{
+    font-size: 14px;
+    width: 100%;
+    margin-left: 10px;
+    padding-right: 10px;
+    margin-bottom: 0px;
+    border-top-width: 0px;
+    margin-top: 0px;
+    height: 550px;
+    position: relative;
+    overflow: auto;
+    border-top: 0px solid #ffffff;
+    z-index: 2;
+}
+.help_header{
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+.help_paragraf{
+    font-size: 14px;
+    text-align: justify;
+    text-indent: 20px;
+}
+.help_user_guide_img{
+    height: 300px;
+    width: 210px;
+    background: url(./resources/image/help/user_guide.png);
+    background-size: 210px 300px;
+}
+
+.help_main_window_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/main_window.png);
+    background-size: 380px 285px;
+}
+
+.help_main_window_menu_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/main_window_menu.png);
+    background-size: 380px 285px;
+}
+
+.help_license_window_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/license_window.png);
+    background-size: 380px 285px;
+}
+
+.help_license_window_modal_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/license_window_modal.png);
+    background-size: 380px 285px;
+}
+
+.help_sign_window_clear_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/sign_window_clear.png);
+    background-size: 380px 285px;
+}
+
+.help_sign_window_choose_cert_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/sign_window_choose_cert.png);
+    background-size: 380px 285px;
+}
+
+.help_sign_window_filling_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/sign_window_filling.png);
+    background-size: 380px 285px;
+}
+
+.help_sign_window_verify_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/sign_window_verify.png);
+    background-size: 380px 285px;
+}
+
+.help_encrypt_window_clear_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/encrypt_window_clear.png);
+    background-size: 380px 285px;
+}
+
+.help_encrypt_window_choose_cert_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/encrypt_window_choose_cert.png);
+    background-size: 380px 285px;
+}
+
+.help_encrypt_window_choose_files_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/encrypt_window_choose_files.png);
+    background-size: 380px 285px;
+}
+
+.help_decrypt_window_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/decrypt_window.png);
+    background-size: 380px 285px;
+}
+
+.help_cert_windows_using_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/cert_windows_using.png);
+    background-size: 380px 285px;
+}
+
+.help_cert_windows_chain_img{
+    height: 285px;
+    width: 380px;
+    background: url(./resources/image/help/cert_windows_chain.png);
+    background-size: 380px 285px;
 }
