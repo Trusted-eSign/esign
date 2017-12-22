@@ -26,6 +26,8 @@ export default {
     import_key: "Импортировать ключ",
     priv_key: "Закрытый ключ",
     issuer_name: "Издатель",
+    signature_digest_algorithm: "Хэш-алгоритм подписи",
+    public_key_algorithm: "Алгоритм открытого ключа",
     present: "Присутствует",
     absent: "Отсутствует",
     cert_status_true: "действителен",

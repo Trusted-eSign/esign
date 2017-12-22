@@ -97,6 +97,8 @@ export interface IX509Certificate {
     organizationName: string;
     status: boolean;
     signatureAlgorithm: string;
+    signatureDigestAlgorithm: string;
+   publicKeyAlgorithm: string;
     privateKey: boolean;
     active: boolean;
     key: string;

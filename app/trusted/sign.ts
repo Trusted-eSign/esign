@@ -343,6 +343,8 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
           issuerName: cert.issuerName,
           notAfter: cert.notAfter,
           signatureAlgorithm: cert.signatureAlgorithm,
+          signatureDigestAlgorithm: cert.signatureDigestAlgorithm,
+          publicKeyAlgorithm: cert.publicKeyAlgorithm,
           hash: cert.thumbprint,
           key: false,
           object: cert,
@@ -361,6 +363,8 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             issuerFriendlyName: it.issuerFriendlyName,
             notAfter: it.notAfter,
             signatureAlgorithm: it.signatureAlgorithm,
+            signatureDigestAlgorithm: cert.signatureDigestAlgorithm,
+            publicKeyAlgorithm: cert.publicKeyAlgorithm,
             hash: it.thumbprint,
             key: false,
             status: certSignStatus,
@@ -372,7 +376,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
       curRes = {
         alg: cert.signatureAlgorithm,
         certs: certSign,
-        digestAlgorithm: cert.signatureDigest,
+        digestAlgorithm: cert.signatureDigestAlgorithm,
         status_verify: false,
         subject: cert.subjectFriendlyName,
       };

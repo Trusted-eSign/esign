@@ -26,6 +26,8 @@ export default {
     import_key: "Import the key",
     priv_key: "Private key",
     issuer_name: "Issuer",
+    signature_digest_algorithm: "Signature digest algorithm",
+    public_key_algorithm: "Public key algorithm",
     present: "Private key is present",
     absent: "Private key is absent",
     cert_status_true: "valid",

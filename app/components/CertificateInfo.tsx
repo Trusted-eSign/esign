@@ -50,6 +50,14 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
           <div className={"collection-title "}>{certificate.signatureAlgorithm}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.signature_digest_algorithm", locale)}</div>
+          <div className={"collection-title "}>{certificate.signatureDigestAlgorithm}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.public_key_algorithm", locale)}</div>
+          <div className={"collection-title "}>{certificate.publicKeyAlgorithm}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.thumbprint", locale)}</div>
           <div className={"collection-title "}>{certificate.hash}</div>
         </div>
