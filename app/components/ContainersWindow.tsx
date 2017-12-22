@@ -3,7 +3,7 @@ import * as os from "os";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates } from "../AC";
+import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllContainers, removeAllCertificates } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import { filteredContainersSelector } from "../selectors";
 import { fileCoding } from "../utils";
@@ -49,6 +49,16 @@ class ContainersWindow extends React.Component<any, any> {
     Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
   }
 
+  handleReloadContainers = () => {
+    const { isLoading, loadAllContainers, removeAllContainers } = this.props;
+
+    removeAllContainers();
+
+    if (!isLoading) {
+      loadAllContainers();
+    }
+  }
+
   getInstallButton() {
     const { container } = this.props;
     const { localize, locale } = this.context;
@@ -64,7 +74,6 @@ class ContainersWindow extends React.Component<any, any> {
         <a className="waves-effect waves-light btn-large choose-btn " onClick={this.handleInstallCertificate}>{localize("Containers.installCertificate", locale)}</a>
     </div>);
   }
-
 
   getCertificateInfoBody() {
     const { container, getCertificateFromContainer } = this.props;
@@ -110,7 +119,7 @@ class ContainersWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="containers" />
+                <ToolBarWithSearch rightBtnAction={this.handleReloadContainers} operation="containers" />
                 <div className="add-certs">
                   <BlockNotElements name={block} title={localize("Containers.containersNotFound", locale)} />
                   <div className={"add-cert-collection collection " + view}>
@@ -149,4 +158,4 @@ export default connect((state) => {
     isLoaded: state.containers.loaded,
     isLoading: state.containers.loading,
   };
-}, { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates })(ContainersWindow);
+}, { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllContainers, removeAllCertificates })(ContainersWindow);

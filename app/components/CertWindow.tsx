@@ -299,7 +299,7 @@ class CertWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" import={
+                <ToolBarWithSearch operation="certificate" disable="" rightBtnAction={
                   (event: any) => {
                     this.handleCertificateImport(event.target.files);
                   }
