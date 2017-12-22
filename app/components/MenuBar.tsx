@@ -189,14 +189,6 @@ class MenuBar extends React.Component<any, any> {
     }
   }
 
-  closeModal() {
-    this.setState({
-      active: "not-active",
-    });
-
-    $("#modal-window").closeModal();
-  }
-
   handleMaybeCloseApp = () => {
     const { criticalError } = this.state;
 

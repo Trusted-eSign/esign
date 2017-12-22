@@ -27,7 +27,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window").openModal();
+      $("#modal-window-diagnostic").openModal();
     }
   }
 
@@ -38,7 +38,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
       onClose();
     }
 
-    $("#modal-window").closeModal();
+    $("#modal-window-diagnostic").closeModal();
   }
 
   render() {
@@ -50,7 +50,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     }
 
     return (
-      <div id="modal-window" className="modal diagnostic-modal">
+      <div id="modal-window-diagnostic" className="modal diagnostic-modal">
         <div className="licence-modal-main">
           <HeaderWorkspaceBlock
             text={header}
