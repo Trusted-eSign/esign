@@ -41,6 +41,8 @@ export default {
     cert_export_failed: "The certificate export failed",
     cert_import_ok: "The certificate is successfully imported",
     cert_import_failed: "The certificate import failed",
+    cert_delete_ok: "The certificate is successfully deleted",
+    cert_delete_failed: "The certificate delete failed",
     cert_load_failed: "The certificate file cannot be read",
     cert_import: "Import the certificate",
     Select_Cert_Encrypt: "SELECT THE RECIPIENT'S CERTIFICATE",
@@ -368,6 +370,7 @@ export default {
     Back: "Back",
     error: "ERROR",
     update: "Update",
+    delete: "Delete",
   },
   Csp: {
     cspErr: "Error check CSP parameters",

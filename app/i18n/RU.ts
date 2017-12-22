@@ -42,6 +42,8 @@ export default {
     cert_import_ok: "Сертификат успешно импортирован",
     cert_import_failed: "Не удалось импортировать сертификат",
     cert_load_failed: "Не удалось прочитать сертификат",
+    cert_delete_ok: "Сертификат успешно удалён",
+    cert_delete_failed: "Не удалось удалить сертификат",
     cert_import: "Импортировать",
     Select_Cert_Encrypt: "ВЫБРАТЬ СЕРТИФИКАТ ПОЛУЧАТЕЛЯ",
     certs_encrypt: "Сертификаты шифрования",
@@ -367,6 +369,7 @@ export default {
     Back: "НАЗАД",
     error: "ОШИБКА",
     update: "Обновить",
+    delete: "Удалить",
   },
   Csp: {
     cspErr: "Ошибка при проверке параметров криптопровайдера",

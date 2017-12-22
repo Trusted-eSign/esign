@@ -226,6 +226,34 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
+  handleDeleteCertificate = () => {
+    const { isLoading, removeAllCertificates, loadAllCertificates } = this.props;
+    const { certificate } = this.state;
+    const { localize, locale } = this.context;
+
+    if (!certificate) {
+      return;
+    }
+
+    if (!window.PKISTORE.deleteCertificate(certificate)) {
+      $(".toast-cert_delete_failed").remove();
+      Materialize.toast(localize("Certificate.cert_delete_failed", locale), 2000, "toast-cert_delete_failed");
+
+      return;
+    }
+
+    this.setState({certificate: null});
+
+    removeAllCertificates();
+
+    if (!isLoading) {
+      loadAllCertificates();
+    }
+
+    $(".toast-cert_delete_ok").remove();
+    Materialize.toast(localize("Certificate.cert_delete_ok", locale), 2000, "toast-cert_delete_ok");
+  }
+
   getCertificateInfoBody() {
     const { activeTabIsCertInfo, certificate } = this.state;
     const { localize, locale } = this.context;
@@ -348,6 +376,7 @@ class CertWindow extends React.Component<any, any> {
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
                         <li><a onClick={this.exportDirectory}>{localize("Certificate.cert_export", locale)}</a></li>
+                        <li><a onClick={this.handleDeleteCertificate}>{localize("Common.delete", locale)}</a></li>
                       </ul>
                     </li>
                   </ul>
