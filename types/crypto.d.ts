@@ -110,7 +110,7 @@ declare namespace native {
             getCAIssuersUrls(): string[];
             isSelfSigned(): boolean;
             isCA(): boolean;
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
             export(dataFormat: trusted.DataFormat): Buffer;
@@ -176,7 +176,7 @@ declare namespace native {
         }
         class CertificationRequest {
             constructor(csrinfo?: PKI.CertificationRequestInfo);
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             sign(key: Key): void;
             verify(): boolean;
             getPEMString(): Buffer;
@@ -190,7 +190,7 @@ declare namespace native {
             constructor();
             setCryptoMethod(method: trusted.CryptoMethod): void;
             encrypt(filenameSource: string, filenameEnc: string, format: trusted.DataFormat): void;
-            decrypt(filenameEnc: string, filenameDec: string, format: trusted.DataFormat): void;
+            decrypt(filenameEnc: string, filenameDec: string, format?: trusted.DataFormat): void;
             addRecipientsCerts(certs: CertificateCollection): void;
             setPrivKey(rkey: Key): void;
             setRecipientCert(rcert: Certificate): void;
@@ -233,7 +233,7 @@ declare namespace native {
             setContent(v: Buffer): void;
             getFlags(): number;
             setFlags(v: number): void;
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
             export(dataFormat: trusted.DataFormat): Buffer;
@@ -449,6 +449,16 @@ declare namespace native {
             start(filename: string, level: trusted.LoggerLevel): void;
             stop(): void;
             clear(): void;
+        }
+        class Csp {
+            isGost2001CSPAvailable(): boolean;
+            isGost2012_256CSPAvailable(): boolean;
+            isGost2012_512CSPAvailable(): boolean;
+            checkCPCSPLicense(): boolean;
+            getCPCSPLicense(): string;
+            enumProviders(): object[];
+            enumContainers(type?: number): string[];
+            getCertifiacteFromContainer(contName: string, provType: number, provName?: string): PKI.Certificate;
         }
     }
     namespace COMMON {
@@ -763,6 +773,85 @@ declare namespace trusted.utils {
          * @memberOf Cerber
          */
         private rehash(dir, relative?);
+    }
+}
+declare namespace trusted.utils {
+    /**
+     * cryptographic service provider (CSP) helper
+     * Uses on WIN32 or with CPROCSP
+     *
+     * @export
+     * @class Csp
+     * @extends {BaseObject<native.UTILS.Csp>}
+     */
+    class Csp extends BaseObject<native.UTILS.Csp> {
+        /**
+         * Check available provaider for GOST 2001
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2001CSPAvailable(): boolean;
+        /**
+         * Check available provaider for GOST 2012-256
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2012_256CSPAvailable(): boolean;
+        /**
+         * Check available provaider for GOST 2012-512
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2012_512CSPAvailable(): boolean;
+        /**
+         * Verify license for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static checkCPCSPLicense(): boolean;
+        /**
+         * Return instaled correct license for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static getCPCSPLicense(): string;
+        /**
+         * Enumerate available CSP
+         *
+         * @static
+         * @returns {object[]} {type: nuber, name: string}
+         * @memberof Csp
+         */
+        static enumProviders(): object[];
+        /**
+         * Enumerate conainers
+         *
+         * @static
+         * @param {number} [type]
+         * @returns {string[]} Fully Qualified Container Name
+         * @memberof Csp
+         */
+        static enumContainers(type?: number): string[];
+        static getCertifiacteFromContainer(contName: string, provType: number, provName?: string): pki.Certificate;
+        /**
+         * Creates an instance of Csp.
+         *
+         *
+         * @memberOf Csp
+         */
+        constructor();
     }
 }
 declare namespace trusted.pki {
@@ -1133,7 +1222,7 @@ declare namespace trusted.pki {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          * @returns {Certificate}
          *
          * @memberOf Certificate
@@ -1351,7 +1440,7 @@ declare namespace trusted.pki {
          * Load certificate from file location
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT]
+         * @param {DataFormat} [format]
          *
          * @memberOf Certificate
          */
@@ -1458,8 +1547,7 @@ declare namespace trusted.pki {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
-         * @returns {CertificationRequest}
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf CertificationRequest
          */
@@ -1475,7 +1563,7 @@ declare namespace trusted.pki {
          * Load request from file
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf CertificationRequest
          */
@@ -2088,7 +2176,7 @@ declare namespace trusted.pki {
          *
          * @memberOf Cipher
          */
-        encrypt(filenameSource: string, filenameEnc: string, format?: DataFormat): void;
+        encrypt(filenameSource: string, filenameEnc: string, format: DataFormat): void;
         /**
          * Decrypt data
          *
@@ -2594,7 +2682,7 @@ declare namespace trusted.cms {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          * @returns {SignedData}
          *
          * @memberOf SignedData
@@ -2691,7 +2779,7 @@ declare namespace trusted.cms {
          * Load sign from file location
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf SignedData
          */

@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 import { mapToArr } from "../utils";
 
 export const certificatesGetter = (state) => state.certificates.entities;
+export const containersGetter = (state) => state.containers.entities;
 export const filtersGetter = (state) => state.filters;
 export const filesGetter = (state) => state.files.entities;
 export const idGetter = (state, props) => props.id;
@@ -56,5 +57,17 @@ export const filteredCertificatesSelector = createSelector(certificatesGetter, f
 export const activeFilesSelector = createSelector(filesGetter, activeGetter, (files, active) => {
   return mapToArr(files).filter((file) => {
     return file.active === active;
+  });
+});
+
+export const filteredContainersSelector = createSelector(containersGetter, filtersGetter, (containers, filters) => {
+  const { searchValue } = filters;
+  const search = searchValue.toLowerCase();
+  let containersArr = mapToArr(containers);
+
+  return containersArr.filter((container) => {
+    return (
+      container.name.toLowerCase().match(search)
+    );
   });
 });

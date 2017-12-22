@@ -48,7 +48,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 
   getInfoText(): string {
     const { localize, locale } = this.context;
-    const { license, status } = this.props;
+    const { data, license, loaded, status } = this.props;
 
     const dateExp = new Date(license.exp * 1000).getTime();
     const dateNow = new Date().getTime();
@@ -57,6 +57,10 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
     const unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
 
     let message;
+
+    if (loaded && !data) {
+      return localize("License.jwtErrorLoad", locale);
+    }
 
     switch (status) {
       case 0:

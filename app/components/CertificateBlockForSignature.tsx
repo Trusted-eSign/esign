@@ -153,7 +153,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
               <div className="col s6 m6 l6 content-item-height">
                 <div className="cert-content-item">
                   <div className="content-wrapper z-depth-1">
-                    <ToolBarWithSearch disable="disabled" import={(event: any) => { return; }} operation="sign" />
+                    <ToolBarWithSearch operation="sign" />
                     <div className="add-certs">
                       <div className="add-certs-item">
                         {this.getCertificateList()}

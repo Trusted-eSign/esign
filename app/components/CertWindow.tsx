@@ -12,8 +12,10 @@ import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
+import ContainersList from "./ContainersList";
 import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
+import Modal from "./Modal";
 import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
@@ -297,7 +299,7 @@ class CertWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" import={
+                <ToolBarWithSearch operation="certificate" disable="" rightBtnAction={
                   (event: any) => {
                     this.handleCertificateImport(event.target.files);
                   }

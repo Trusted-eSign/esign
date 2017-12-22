@@ -42,13 +42,9 @@
     "cms"
   ],
   "build": {
-    "win": {
-      "target": [
-        {
-          "target": "dir"
-        }
-      ]
-    },
+    "win": {"target": [{"target": "dir"}]},
+    "mac": {"target": [{"target": "dir"}]},
+    "linux": {"target": [{"target": "dir"}]},
     "asar": false
   },
   "homepage": "https://trustedplus.github.io/",

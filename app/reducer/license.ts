@@ -35,6 +35,11 @@ export default (license = new DefaultReducerState(), action) => {
         .set("loading", false)
         .set("loaded", true);
 
+    case LOAD_LICENSE + FAIL:
+        return license
+          .set("loading", false)
+          .set("loaded", true);
+
     case VERIFY_LICENSE:
       return license
         .set("status", payload.licenseStatus)

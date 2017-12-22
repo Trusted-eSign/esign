@@ -3,6 +3,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
 import { activeFilesSelector } from "../selectors";
+import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
@@ -58,8 +59,20 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   signed = () => {
-    const { files, settings, signer, deleteFile, selectFile } = this.props;
+    const { files, settings, signer, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
     const { localize, locale } = this.context;
+
+    if (licenseLoaded && !licenseToken) {
+      $(".toast-jwtErrorLoad").remove();
+      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+      return;
+    }
+
+    if (licenseVerified && licenseStatus !== 0) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(licenseStatus), locale), 5000, "toast-jwtErrorLicense");
+      return;
+    }
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -116,8 +129,20 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   resign = () => {
-    const { files, settings, signer, deleteFile, selectFile } = this.props;
+    const { files, settings, signer, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
     const { localize, locale } = this.context;
+
+    if (licenseLoaded && !licenseToken) {
+      $(".toast-jwtErrorLoad").remove();
+      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+      return;
+    }
+
+    if (licenseVerified && licenseStatus !== 0) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(licenseStatus), locale), 5000, "toast-jwtErrorLicense");
+      return;
+    }
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -309,6 +334,10 @@ export default connect((state) => {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
     files: activeFilesSelector(state, { active: true }),
+    licenseLoaded: state.license.loaded,
+    licenseStatus: state.license.status,
+    licenseToken: state.license.data,
+    licenseVerified: state.license.verified,
     settings: state.settings.sign,
     signatures,
     signer: state.certificates.getIn(["entities", state.signers.signer]),

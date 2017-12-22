@@ -1,5 +1,6 @@
 import {combineReducers} from "redux";
 import certificates from "./certificates";
+import containers from "./containers";
 import files from "./files";
 import filters from "./filters";
 import license from "./license";
@@ -10,6 +11,7 @@ import signers from "./signers";
 
 export default combineReducers({
   certificates,
+  containers,
   files,
   filters,
   license,

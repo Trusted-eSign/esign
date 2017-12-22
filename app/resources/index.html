@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title> ËÔÚÓ¿–Ã √Œ—“</title>
+  <title>–ö—Ä–∏–ø—Ç–æ–ê–†–ú –ì–û–°–¢</title>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
@@ -55,8 +55,16 @@
       window.framework_NW = true;
     }
     var crypto_module = require('crypto');
-    crypto_module.loadConfig("./config/openssl.cfg");
-    var trusted = require('trusted-crypto');
+    //crypto_module.loadConfig("./config/openssl.cfg");
+
+    var trusted;
+    try {
+      trusted = require('trusted-crypto');
+      //window.tcerr="capi";
+    } catch(err) {
+      window.tcerr = err;
+    }
+
     path = require('path');
     fs = require('fs');
     os = require('os');

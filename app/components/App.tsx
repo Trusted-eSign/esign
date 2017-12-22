@@ -6,8 +6,9 @@ import history from "../history";
 import localize from "../i18n/localize";
 import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
+import ContainersWindow from "./ContainersWindow";
 import EncryptWindow from "./EncryptWindow";
-import HelpWindow from "./HelpWindow";
+import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
@@ -39,6 +40,7 @@ class App extends React.Component<IAppProps, {}> {
           <Route path="/sign" component={SignatureWindow} />
           <Route path="/encrypt" component={EncryptWindow} />
           <Route path="/certificate" component={CertWindow} />
+          <Route path="/containers" component={ContainersWindow} />
           <Route path="/license" component={LicenseWindow} />
           <Route path="/about" component={AboutWindow} />
           <Route path="/help" component={HelpWindow} />
