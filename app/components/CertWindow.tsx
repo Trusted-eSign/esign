@@ -32,7 +32,7 @@ class CertWindow extends React.Component<any, any> {
     super(props);
 
     this.state = ({
-      activeTabIsCertInfo: true,
+      activeCertInfoTab: true,
       certificate: null,
       password: "",
     });
@@ -42,11 +42,9 @@ class CertWindow extends React.Component<any, any> {
     this.setState({ password });
   }
 
-  handleChangeActiveTab = (ev) => {
-    ev.preventDefault();
-
+  handleChangeActiveTab = (certInfoTab: boolean) => {
     this.setState({
-      activeTabIsCertInfo: !this.state.activeTabIsCertInfo,
+      activeCertInfoTab: certInfoTab,
     });
   }
 
@@ -255,7 +253,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   getCertificateInfoBody() {
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
 
     if (!certificate) {
@@ -266,7 +264,7 @@ class CertWindow extends React.Component<any, any> {
 
     let cert: any = null;
 
-    if (certificate && activeTabIsCertInfo) {
+    if (certificate && activeCertInfoTab) {
       cert = <CertificateInfo certificate={certificate} />;
     } else if (certificate) {
       cert = (
@@ -281,7 +279,7 @@ class CertWindow extends React.Component<any, any> {
 
     return (
       <div className="add-certs">
-        <CertificateInfoTabs onActiveTab={this.handleChangeActiveTab} />
+        <CertificateInfoTabs activeCertInfoTab={this.handleChangeActiveTab} />
         <div className="add-certs-item">
           {cert}
         </div>
