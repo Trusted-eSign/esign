@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { loadLicense, verifyLicense } from "../AC";
 import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
 import { ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
-   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,  NO_GOST_2001, NOT_INSTALLED_CSP} from "../errors";
+   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,  NO_GOST_2001, NOT_INSTALLED_CSP, WARNING, BUG} from "../errors";
 import * as jwt from "../trusted/jwt";
 import DiagnosticModal from "./Diagnostic/DiagnosticModal";
 import Problems from "./Diagnostic/Problems";
@@ -172,6 +172,7 @@ class MenuBar extends React.Component<any, any> {
 
       this.setState({ errors: [...this.state.errors, {
         type: NO_CRYPTOARM_LICENSE,
+        important: WARNING,
       }]});
     }
 
@@ -185,6 +186,7 @@ class MenuBar extends React.Component<any, any> {
 
       this.setState({ errors: [...this.state.errors, {
         type: NO_CORRECT_CRYPTOARM_LICENSE,
+        important: BUG,
       }]});
     }
   }
