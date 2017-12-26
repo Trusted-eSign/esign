@@ -373,6 +373,7 @@ export default {
     error: "ERROR",
     update: "Update",
     delete: "Delete",
+    exit: "EXIT",
   },
   Csp: {
     cspErr: "Error check CSP parameters",
