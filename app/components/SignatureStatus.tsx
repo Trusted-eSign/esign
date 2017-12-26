@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import * as React from "react";
+import { localizeAlgorithm } from "../i18n/localize";
 
 interface ISignatureStatusProps {
   signature: any;
@@ -41,10 +42,8 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
             <p className="collection-info cert-info">{localize("Sign.status", locale)}</p>
             <p className="collection-title">{signature.subject}</p>
             <p className="collection-info cert-info">{localize("Certificate.subject", locale)}</p>
-            <p className="collection-title">{signature.alg}</p>
+            <p className="collection-title">{localizeAlgorithm(signature.alg, locale)}</p>
             <p className="collection-info cert-info">{localize("Sign.alg", locale)}</p>
-            <p className="collection-title">{signature.digestAlgorithm}</p>
-            <p className="collection-info cert-info">{localize("Sign.digest_alg", locale)}</p>
           </div>
           <div className={icon} />
         </div>

@@ -61,3 +61,16 @@ export const TMP_DIR: string = window.TMP_DIR;
 export const LICENSE_PATH = window.LICENSE_PATH;
 export const SETTINGS_JSON = window.SETTINGS_JSON;
 export const TRUSTED_CRYPTO_LOG = window.TRUSTED_CRYPTO_LOG;
+
+export const SIGNWITHDIGEST_GOST3410_12_256 = "GOST R 34.10-2012 with 34.11-2012 256-bit";
+export const SIGNWITHDIGEST_GOST3410_12_512 = "GOST R 34.10-2012 with 34.11-2012 512-bit";
+export const GOSTR3411_94_WITH_GOSTR3410_2001 = "GOST R 34.11-94 with GOST R 34.10-2001";
+export const GOSR3411_94_WITH_GOSTR3410_94 = "GOST R 34.11-94 with GOST R 34.10-94";
+export const GOST3410_12_256 = "GOST R 34.10-2012 with 256-bit key";
+export const GOST3410_12_512 = "GOST R 34.10-2012 with 512-bit key";
+export const MD_GOST94 = "GOST R 34.11-94";
+export const MD_GOST12_256 = "GOST R 34.11-2012 256-bit length";
+export const MD_GOST12_512 = "GOST R 34.11-2012 512-bit length";
+export const GOST2001 = "GOST R 34.10-2001";
+export const GOST94 = "GOST R 34.10-94";
+export const GOST89 = "GOST 28147-89";

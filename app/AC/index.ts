@@ -206,13 +206,15 @@ export function getCertificateFromContainer(container: number) {
       const cont = containers.getIn(["entities", container]);
       const certificate = trusted.utils.Csp.getCertifiacteFromContainer(cont.name, 75);
       const certificateItem = {
-        hash: certificate.hash,
+        hash: certificate.thumbprint,
         issuerFriendlyName: certificate.issuerFriendlyName,
         key: "1",
         notAfter: certificate.notAfter,
         organizationName: certificate.organizationName,
+        publicKeyAlgorithm: certificate.publicKeyAlgorithm,
         serial: certificate.serialNumber,
         signatureAlgorithm: certificate.signatureAlgorithm,
+        signatureDigestAlgorithm: certificate.signatureDigestAlgorithm,
         subjectFriendlyName: certificate.subjectFriendlyName,
         subjectName: null,
       };
