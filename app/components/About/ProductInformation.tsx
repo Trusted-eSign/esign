@@ -11,6 +11,14 @@ class ProductInformation extends React.PureComponent {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
+  getCPCSPVersion = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPVersion() + " " + trusted.utils.Csp.getCPCSPSecurityLvl();
+    } catch (e) {
+      return "";
+    }
+  }
+
   render() {
     const { localize, locale } = this.context;
 
@@ -49,7 +57,7 @@ class ProductInformation extends React.PureComponent {
             <div className="row">
               <span className="card-title sub">{localize("About.CspVersion", locale)}</span>
               <span className="card-infos sub">
-                <p>{localize("About.CSPVersion", locale)} 5.0.10702 KC1</p>
+                <p>{localize("About.CSPVersion", locale)} {this.getCPCSPVersion()}</p>
               </span>
             </div>
           </div>
