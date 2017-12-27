@@ -64,7 +64,7 @@ class SideMenu extends React.PureComponent {
               </Link>
               <Link to="/" onClick={() => mainWindow.close()}>
                 {localize("Common.exit", locale)}
-                <i className="material-icons left ">exit_to_app</i>
+                <i className="material-icons left exit">exit_to_app</i>
               </Link>
             </div>
           </div>
