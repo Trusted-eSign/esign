@@ -2796,9 +2796,9 @@ i.material-icons.left.line {
     background-color: white;
 }
 .contain-btn{
-    position: relative;
-    left: 80%;
-    top: 2px;
+    left: 590px;
+    top: 461px;
+    position: absolute;
 }
 
 .problem-contaner {
