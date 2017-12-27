@@ -15,6 +15,8 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     localize: PropTypes.func,
   };
 
+ 
+
   componentWillReceiveProps(newProps: IDiagnosticModalProps) {
     const { isOpen } = newProps;
 
@@ -27,7 +29,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window-diagnostic").openModal();
+      $("#modal-window-diagnostic").openModal({dismissible: false});
     }
   }
 
