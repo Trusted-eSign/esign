@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import {
   ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
-  ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE, NO_GOST_2001, NOT_INSTALLED_CSP
+  ERROR_LOAD_TRUSTED_CRYPTO,
+  NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
+  NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP,
 } from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
@@ -39,6 +41,8 @@ class Problems extends React.Component<any, any> {
         return "Problems.problem_3";
       case NO_CORRECT_CRYPTOARM_LICENSE:
         return "Problems.problem_3";
+      case  NO_HAVE_CERTIFICATES_WITH_KEY:
+        return "Problems.problem_5";
 
       default:
         return "License.jwtErrorCode";
@@ -72,7 +76,7 @@ class Problems extends React.Component<any, any> {
         <div className="content-wrapper z-depth-1">
           <HeaderWorkspaceBlock text={localize("Diagnostic.problem_header", locale)} />
           {elements}
-        </div>;
+        </div>
       </div>
     );
   }

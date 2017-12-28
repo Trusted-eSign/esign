@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
-
 interface IDiagnosticModalProps {
   isOpen: boolean;
   header: string;
@@ -14,8 +13,6 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
-
- 
 
   componentWillReceiveProps(newProps: IDiagnosticModalProps) {
     const { isOpen } = newProps;

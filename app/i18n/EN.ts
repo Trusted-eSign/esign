@@ -374,6 +374,7 @@ export default {
     update: "Update",
     delete: "Delete",
     exit: "EXIT",
+    goOver: "Go over",
   },
   Csp: {
     cspErr: "Error check CSP parameters",
@@ -388,14 +389,14 @@ export default {
     resolve_header: "Solutions",
     close: "Close",
   },
-  Problems:{
+  Problems: {
     problem_1: "There is no crypto provider CryptoPro CSP",
     resolve_1_1: "The system does not have the cryptoPro CSP crypto provider installed. The further operation of the application is impossible and the application will be closed.",
     resolve_1_2: "To solve this problem, install CryptoPro CSP version 5.0 and run the application again.",
     resolve_1_3: "Distribution of the crypto provider CryptoPro CSP can be downloaded from the official CryptoPro website",
     resolve_1_4: "Detailed instructions for installing CryptoPRO CSP on various platforms can be found in the product documentation, which is available at the link",
     problem_2: "There is no license for CryptoPro CSP crypto provider",
-    resolve_2_1: "",
+    resolve_2_1: "To solve this problem, you can purchase a license for the product in the online store, accessible by reference",
     resolve_2_2: "",
     resolve_2_3: "",
     problem_3: "There is no license for CryptoARM GOST",
@@ -405,5 +406,7 @@ export default {
     resolve_3_4: "After purchasing a license, you can install it through the application interface",
     problem_4: "Could not verify the crypto service CryptoPro CSP",
     resolve_4_1: "",
+    problem_5: "No found certificates for sign",
+    resolve_5: "Connect device and go to Containers for install certificates",
   },
 };
