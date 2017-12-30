@@ -2792,13 +2792,30 @@ i.material-icons.left.line {
 }
 
 .add-problems {
-    width: 100%;
-    height: calc(100% - 48px);
-    position: relative;
-    overflow: auto;
-    border-top: 2px solid #ffffff;
-    z-index: 2;
+    margin-bottom: 4px;
+    margin-top: 4px;
 }
+
+.add-problems.collection {
+    width: 100%;
+    height: 100%;
+
+}
+
+.problems-list-item{
+    margin-bottom: 0px;
+}
+
+.collection-item.avatar.problems-collection{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    color: black;
+    min-height: 0;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 64px;
+} 
 
 .add-problems-item {
     position: relative;
@@ -2807,8 +2824,8 @@ i.material-icons.left.line {
     background-color: white;
 }
 .contain-btn{
-    left: 590px;
-    top: 461px;
+    left: 633px;
+    top: 467px;
     position: absolute;
 }
 
@@ -2833,3 +2850,37 @@ a.hlink {
     cursor: pointer;
     color: #b64729;
 }
+
+.multiline{
+    white-space: initial;
+    padding-top: 0px;
+    padding-left: 8px;
+    height: 60px;
+    width: 230px;
+}
+
+.problem_bug{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/bug.svg);
+    background-size: 24px 24px;
+    padding-top: 0px;
+    border-top-width: 0px;
+    margin-top: 18px;
+    margin-left: -5px;
+  }
+
+  .problem_warning{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/warning.svg);
+    background-size: 24px 24px;
+    padding-top: 0px;
+    border-top-width: 0px;
+    margin-top: 18px;
+    margin-left: -5px;
+  }

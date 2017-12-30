@@ -8,6 +8,8 @@ import {
 } from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
+
+
 class Problems extends React.Component<any, any> {
   static contextTypes = {
     locale: PropTypes.string,
@@ -17,13 +19,13 @@ class Problems extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = ({
-      certForInfo: props.certificate,
+      // certForInfo: props.certificate,
     });
   }
 
-  handleClick = (certificate: any) => {
-    this.setState({ certForInfo: certificate });
-  }
+  // handleClick = (certificate: any) => {
+  //   this.setState({ certForInfo: certificate });
+  // }
 
   getErrorMessageByType = (error: string): string => {
     switch (error) {
@@ -51,20 +53,26 @@ class Problems extends React.Component<any, any> {
 
   isOpen = (type: string) => {
     const { activeError } = this.props;
-
     return (type === activeError) ? "active" : "";
   }
+
+  isImportant = (important: string) =>{
+    return (important === "BUG") ? "problem_bug" : "problem_warning";
+  } 
 
   render() {
     const { certificate, errors, handleBackView, onClick } = this.props;
     const { localize, locale } = this.context;
 
     const elements = errors.map((error: any) => <div key={Math.random()}>
-      <div className={"add-cert-collection collection " + this.isOpen(error.type)}>
-        <div className="row certificate-list-item" onClick={() => onClick(error.type)}>
-          <div className={"collection-item avatar certs-collection "}>
-            <div className="col s12">
-              <div className="collection-title">{localize(this.getErrorMessageByType(error.type), locale)}</div>
+      <div className={"add-problems collection " }>
+        <div className="row problems-list-item" onClick={() => onClick(error.type)}>
+          <div className={"collection-item avatar problems-collection "+ this.isOpen(error.type)}>
+            <div className="col s1">
+              <div className={this.isImportant(error.important)}></div> 
+            </div>
+            <div className="col s11">
+              <div className="collection-title multiline">{localize(this.getErrorMessageByType(error.type), locale)}</div>         
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ class Diagnostic extends React.Component<any, any> {
           }],
         });
 
-        this.setState({ criticalError: true });
+        this.setState({ criticalError: true});
 
         return false;
       }
@@ -84,6 +84,7 @@ class Diagnostic extends React.Component<any, any> {
       this.setState({
         errors: [...this.state.errors, {
           type: ERROR_LOAD_TRUSTED_CRYPTO,
+          important: BUG,
         }],
       });
 
@@ -104,8 +105,8 @@ class Diagnostic extends React.Component<any, any> {
     if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
       this.setState({
         errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CRYPTOARM_LICENSE,
+          type: NO_CRYPTOARM_LICENSE,  
+          important: WARNING,    
         }],
       });
     }
@@ -117,8 +118,8 @@ class Diagnostic extends React.Component<any, any> {
     if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
       this.setState({
         errors: [...this.state.errors, {
-          important: BUG,
-          type: NO_CORRECT_CRYPTOARM_LICENSE,
+          type: NO_CORRECT_CRYPTOARM_LICENSE, 
+          important: WARNING,  
         }],
       });
     }
@@ -191,7 +192,7 @@ class Diagnostic extends React.Component<any, any> {
           <div className="row">
             <div className={"diagnostic-content-item"}>
               <div className="col s6 m5 l6 problem-contaner">
-                <Problems errors={errors} onClick={this.handleClickOnError} />
+                <Problems  errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
               </div>
               <div className="col s6 m7 l6 problem-contaner">
                 <Resolve errors={errors} activeError={this.state.activeError} />
