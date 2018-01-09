@@ -92,6 +92,21 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { localize, locale } = this.context;
 
     if (window.tcerr) {
+      if (window.tcerr.message) {
+        if (~window.tcerr.message.indexOf("libcapi")) {
+          this.setState({
+            errors: [...this.state.errors, {
+              important: BUG,
+              type: NOT_INSTALLED_CSP,
+            }],
+          });
+
+          this.setState({ criticalError: true });
+
+          return false;
+        }
+      }
+
       this.setState({
         errors: [...this.state.errors, {
           important: BUG,
