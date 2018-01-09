@@ -13,7 +13,18 @@ import DiagnosticModal from "../Diagnostic/DiagnosticModal";
 import Problems from "../Diagnostic/Problems";
 import Resolve from "../Diagnostic/Resolve";
 
-class Diagnostic extends React.Component<any, any> {
+interface IError {
+  important?: string;
+  type: string;
+}
+
+interface IDiagnosticState {
+  activeError: string;
+  criticalError: boolean;
+  errors: IError[];
+}
+
+class Diagnostic extends React.Component<any, IDiagnosticState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -22,7 +33,7 @@ class Diagnostic extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = ({
-      activeError: null,
+      activeError: "",
       criticalError: false,
       errors: [],
     });
@@ -42,7 +53,7 @@ class Diagnostic extends React.Component<any, any> {
           }],
         });
 
-        this.setState({ criticalError: true});
+        this.setState({ criticalError: true });
 
         return false;
       }
@@ -83,8 +94,8 @@ class Diagnostic extends React.Component<any, any> {
     if (window.tcerr) {
       this.setState({
         errors: [...this.state.errors, {
-          type: ERROR_LOAD_TRUSTED_CRYPTO,
           important: BUG,
+          type: ERROR_LOAD_TRUSTED_CRYPTO,
         }],
       });
 
@@ -105,8 +116,8 @@ class Diagnostic extends React.Component<any, any> {
     if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
       this.setState({
         errors: [...this.state.errors, {
-          type: NO_CRYPTOARM_LICENSE,  
-          important: WARNING,    
+          important: WARNING,
+          type: NO_CRYPTOARM_LICENSE,
         }],
       });
     }
@@ -118,8 +129,8 @@ class Diagnostic extends React.Component<any, any> {
     if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
       this.setState({
         errors: [...this.state.errors, {
-          type: NO_CORRECT_CRYPTOARM_LICENSE, 
-          important: WARNING,  
+          important: WARNING,
+          type: NO_CORRECT_CRYPTOARM_LICENSE,
         }],
       });
     }
@@ -178,7 +189,7 @@ class Diagnostic extends React.Component<any, any> {
     const { localize, locale } = this.context;
     const { errors } = this.state;
 
-    if (!errors.length) {
+    if (!errors || !errors.length) {
       return null;
     } else if (!this.state.activeError) {
       this.setState({ activeError: errors[0].type });
@@ -192,7 +203,7 @@ class Diagnostic extends React.Component<any, any> {
           <div className="row">
             <div className={"diagnostic-content-item"}>
               <div className="col s6 m5 l6 problem-contaner">
-                <Problems  errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
+                <Problems errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
               </div>
               <div className="col s6 m7 l6 problem-contaner">
                 <Resolve errors={errors} activeError={this.state.activeError} />

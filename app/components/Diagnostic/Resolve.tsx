@@ -7,7 +7,11 @@ import {
 } from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
-class Resolve extends React.Component<any, any> {
+interface IResolveProps {
+  activeError: string;
+}
+
+class Resolve extends React.Component<IResolveProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -107,7 +111,6 @@ class Resolve extends React.Component<any, any> {
   }
 
   render() {
-    const { certificate, handleBackView } = this.props;
     const { localize, locale } = this.context;
 
     return (

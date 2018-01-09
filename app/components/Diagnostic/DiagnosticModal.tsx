@@ -26,7 +26,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window-diagnostic").openModal({dismissible: false});
+      $("#modal-window-diagnostic").openModal({ dismissible: false });
     }
   }
 
