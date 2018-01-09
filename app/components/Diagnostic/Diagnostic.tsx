@@ -213,7 +213,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     return (
       <DiagnosticModal
         isOpen={true}
-        header={localize("Diagnostic.header", locale)}>
+        header={localize("Diagnostic.header", locale)}
+        onClose={this.handleMaybeCloseApp}>
         <div className="main">
           <div className="row">
             <div className={"diagnostic-content-item"}>
