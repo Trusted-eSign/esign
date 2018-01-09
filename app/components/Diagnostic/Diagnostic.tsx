@@ -50,11 +50,10 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         this.setState({
           errors: [...this.state.errors, {
             type: NO_GOST_2001,
+            important: BUG, 
           }],
         });
-
-        this.setState({ criticalError: true });
-
+        this.setState({ criticalError: true});
         return false;
       }
 
@@ -65,6 +64,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         this.setState({
           errors: [...this.state.errors, {
             type: ERROR_CHECK_CSP_LICENSE,
+            important: WARNING, 
           }],
         });
 
@@ -153,8 +153,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
       this.setState({
         errors: [...this.state.errors, {
-          important: WARNING,
           type: NO_HAVE_CERTIFICATES_WITH_KEY,
+          important: WARNING,          
         }],
       });
     }

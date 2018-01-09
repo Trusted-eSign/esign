@@ -28,7 +28,7 @@ class Problems extends React.Component<IProblemsProps, {}> {
   getErrorMessageByType = (error: string): string => {
     switch (error) {
       case ERROR_LOAD_TRUSTED_CRYPTO:
-        return "Problems.problem_1";
+        return "Problems.problem_6";
       case NOT_INSTALLED_CSP:
         return "Problems.problem_1";
       case ERROR_CHECK_CSP_LICENSE:

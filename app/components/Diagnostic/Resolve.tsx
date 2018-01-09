@@ -28,35 +28,43 @@ class Resolve extends React.Component<IResolveProps, {}> {
       case ERROR_LOAD_TRUSTED_CRYPTO:
         return (
           <div className="resolve-content">
+            <p className="help_paragraf">{localize("Problems.resolve_6_1", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_6_2", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_6_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
+          </div>
+        );
+      case NOT_INSTALLED_CSP:
+        return (
+          <div className="resolve-content">
             <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)}</p>
             <p className="help_paragraf">{localize("Problems.resolve_1_2", locale)}</p>
             <p className="help_paragraf">{localize("Problems.resolve_1_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a></p>
             <p className="help_paragraf">{localize("Problems.resolve_1_4", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
           </div>
         );
-      case NOT_INSTALLED_CSP:
-        return (
-          <div className="resolve-content">
-            <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a>
-            </p>
-          </div>
-        );
       case ERROR_CHECK_CSP_LICENSE:
         return (
           <div className="resolve-content">
-            <p className="help_paragraf">{localize("Problems.resolve_2_1", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
-          </div>
+            <p className="help_paragraf">{localize("Problems.resolve_2_1", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_2_2", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a></p>
+            <p className="help_paragraf">{localize("Problems.resolve_2_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
+         </div>
         );
       case NO_GOST_2001:
         return (
           <div className="resolve-content">
-            <p className="help_paragraf">{localize("Csp.noProvider2001", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_1_1", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_1_2", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_1_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://www.cryptopro.ru/")}> www.cryptopro.ru</a></p>
+            <p className="help_paragraf">{localize("Problems.resolve_1_4", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
           </div>
         );
       case ERROR_CHECK_CSP_PARAMS:
         return (
           <div className="resolve-content">
-            <p className="help_paragraf">{localize("Problems.problem_4", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_4_1", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_4_2", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_4_3", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
           </div>
         );
       case NO_CRYPTOARM_LICENSE:
@@ -81,7 +89,9 @@ class Resolve extends React.Component<IResolveProps, {}> {
       case NO_HAVE_CERTIFICATES_WITH_KEY:
         return (
           <div className="resolve-content">
-            <p className="help_paragraf">{localize("Problems.resolve_5", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_5_1", locale)}</p>
+            <p className="help_paragraf">{localize("Problems.resolve_5_2", locale)} <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>{localize("Help.link_user_guide_name", locale)}</a></p>
+            <p className="help_paragraf">{localize("Problems.resolve_5_3", locale)}</p>          
           </div>
         );
 
