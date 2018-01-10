@@ -55,12 +55,13 @@
       window.framework_NW = true;
     }
     var crypto_module = require('crypto');
-    //crypto_module.loadConfig("./config/openssl.cfg");
+    if (process.platform == 'win32') {
+      crypto_module.loadConfig("./config/openssl.cfg");
+    }
 
     var trusted;
     try {
       trusted = require('trusted-crypto');
-      //window.tcerr="capi";
     } catch(err) {
       window.tcerr = err;
     }
