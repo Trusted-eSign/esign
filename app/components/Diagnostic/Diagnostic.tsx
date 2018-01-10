@@ -49,8 +49,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
         this.setState({
           errors: [...this.state.errors, {
+            important: BUG,
             type: NO_GOST_2001,
-            important: BUG, 
           }],
         });
         this.setState({ criticalError: true});
@@ -63,8 +63,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
         this.setState({
           errors: [...this.state.errors, {
+            important: WARNING,
             type: ERROR_CHECK_CSP_LICENSE,
-            important: WARNING, 
           }],
         });
 
@@ -153,8 +153,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
       this.setState({
         errors: [...this.state.errors, {
+          important: WARNING,
           type: NO_HAVE_CERTIFICATES_WITH_KEY,
-          important: WARNING,          
         }],
       });
     }
@@ -222,7 +222,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
                 <Problems errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
               </div>
               <div className="col s6 m7 l6 problem-contaner">
-                <Resolve errors={errors} activeError={this.state.activeError} />
+                <Resolve activeError={this.state.activeError} />
               </div>
 
             </div>
