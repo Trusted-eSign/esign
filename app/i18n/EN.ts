@@ -413,8 +413,8 @@ export default {
     resolve_5_2: "To resolve this issue, install personal certificates in the steps described in the product documentation that is available by reference ",
     resolve_5_3: "To install available certificates, go to the Containers page.",
     problem_6: "Trusted Crypto module is not loaded",
-    resolve_6_1: "When you run CryptoARM GOST, the Trusted Crypto module is not loaded.",
-    resolve_6_2: "To solve this problem, create an application log and send it to the technical support.", 
-    resolve_6_3: "Detailed instructions for creating a log file under the required platform can be found in the product documentation, which is available at the link ", 
+    resolve_6_1: "When you run Crypto ARM GOST, the Trusted Crypto module is not loaded.",
+    resolve_6_2: "To solve this problem, open the application control panel and forward error messages displayed on the Console tab to the technical support.", 
+    resolve_6_3: "Detailed instructions on how to open the control panel under the required platform can be found in the product documentation that is available on the link ", 
   },
 };
