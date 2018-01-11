@@ -45,6 +45,10 @@ class CertWindow extends React.Component<any, any> {
     this.setState({ deleteContainer: !this.state.deleteContainer });
   }
 
+  toggleShowModal = () => {
+    this.setState({ showModalDeleteCertifiacte: !this.state.showModalDeleteCertifiacte });
+  }
+
   handleShowModalDeleteCertifiacte = () => {
     const { certificate } = this.state;
 
@@ -307,6 +311,8 @@ class CertWindow extends React.Component<any, any> {
 
     this.handleReloadCertificates();
 
+    this.setState({ showModalDeleteCertifiacte: false });
+
     $(".toast-cert_delete_ok").remove();
     Materialize.toast(localize("Certificate.cert_delete_ok", locale), 2000, "toast-cert_delete_ok");
   }
@@ -396,7 +402,8 @@ class CertWindow extends React.Component<any, any> {
     return (
       <Modal
         isOpen={showModalDeleteCertifiacte}
-        header={localize("Certificate.delete_certificate", locale)}>
+        header={localize("Certificate.delete_certificate", locale)}
+        onClose={this.toggleShowModal}>
         <div className="main">
           <div className="row">
             {body}
