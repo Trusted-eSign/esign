@@ -8,6 +8,8 @@ export default {
     FCertificates: "MANAGMENT",
     certificate: "A certificate",
     certs: "Certificates",
+    delete_certificate: "Delete certificate",
+    realy_delete_certificate: "You really want delete certificate?",
     key_import_ok: "The key is attached to the certificate",
     key_import_failed: "Key import failed",
     cert_info: "Certificate information",
@@ -60,8 +62,11 @@ export default {
   Containers: {
     containers: "CONTAINERS",
     containersNotFound: "Containers not found",
+    container_delete_ok: "The container is successfully deleted",
+    container_delete_failed: "The container delete failed",
     certificateInfo: "Certificate information",
     contNotSelected: "Container not selected",
+    delete_container: "delete container by certificate (not recomended)",
     installCertificate: "Install certificate",
   },
   CSR: {
@@ -414,7 +419,7 @@ export default {
     resolve_5_3: "To install available certificates, go to the Containers page.",
     problem_6: "Trusted Crypto module is not loaded",
     resolve_6_1: "When you run Crypto ARM GOST, the Trusted Crypto module is not loaded.",
-    resolve_6_2: "To solve this problem, open the application control panel and forward error messages displayed on the Console tab to the technical support.", 
-    resolve_6_3: "Detailed instructions on how to open the control panel under the required platform can be found in the product documentation that is available on the link ", 
+    resolve_6_2: "To solve this problem, open the application control panel and forward error messages displayed on the Console tab to the technical support.",
+    resolve_6_3: "Detailed instructions on how to open the control panel under the required platform can be found in the product documentation that is available on the link ",
   },
 };

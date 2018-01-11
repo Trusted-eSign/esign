@@ -3,7 +3,7 @@ import * as os from "os";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates, removeAllCertificates } from "../AC";
+import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
@@ -34,8 +34,32 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      container: null,
+      deleteContainer: false,
       password: "",
+      showModalDeleteCertifiacte: false,
     });
+  }
+
+  toggleDeleteContainer = () => {
+    this.setState({ deleteContainer: !this.state.deleteContainer });
+  }
+
+  handleShowModalDeleteCertifiacte = () => {
+    const { certificate } = this.state;
+
+    let container = "";
+
+    if (certificate.category === "MY" && certificate.key) {
+      try {
+        const x509 = window.PKISTORE.getPkiObject(certificate);
+        container = trusted.utils.Csp.getContainerNameByCertificate(x509);
+      } catch (e) {
+        console.log("error get container by certificate", e);
+      }
+    }
+
+    this.setState({ container, showModalDeleteCertifiacte: true });
   }
 
   handlePasswordChange = (password) => {
@@ -61,6 +85,21 @@ class CertWindow extends React.Component<any, any> {
 
     if (!isLoading) {
       loadAllCertificates();
+    }
+  }
+
+  handleReloadContainers = () => {
+    const { isLoading, loadAllContainers, removeAllContainers } = this.props;
+
+    this.setState({
+      container: null,
+      deleteContainer: false,
+    });
+
+    removeAllContainers();
+
+    if (!isLoading) {
+      loadAllContainers();
     }
   }
 
@@ -236,13 +275,27 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
-  handleDeleteCertificate = () => {
+  handleDeleteCertificateAndContainer = () => {
     const { isLoading, removeAllCertificates, loadAllCertificates } = this.props;
-    const { certificate } = this.state;
+    const { certificate, container, deleteContainer } = this.state;
     const { localize, locale } = this.context;
 
     if (!certificate) {
       return;
+    }
+
+    if (container && deleteContainer) {
+      try {
+        trusted.utils.Csp.deleteContainer(container, 75);
+
+        $(".toast-container_delete_ok").remove();
+        Materialize.toast(localize("Containers.container_delete_ok", locale), 2000, "toast-container_delete_ok");
+
+        this.handleReloadContainers();
+      } catch (e) {
+        $(".toast-container_delete_failed").remove();
+        Materialize.toast(localize("Containers.container_delete_failed", locale), 2000, "toast-container_delete_failed");
+      }
     }
 
     if (!window.PKISTORE.deleteCertificate(certificate)) {
@@ -252,13 +305,7 @@ class CertWindow extends React.Component<any, any> {
       return;
     }
 
-    this.setState({certificate: null});
-
-    removeAllCertificates();
-
-    if (!isLoading) {
-      loadAllCertificates();
-    }
+    this.handleReloadCertificates();
 
     $(".toast-cert_delete_ok").remove();
     Materialize.toast(localize("Certificate.cert_delete_ok", locale), 2000, "toast-cert_delete_ok");
@@ -315,6 +362,53 @@ class CertWindow extends React.Component<any, any> {
     }
 
     return title;
+  }
+
+  showModalDeleteCertificate = () => {
+    const { localize, locale } = this.context;
+    const { certificate, container, deleteContainer, showModalDeleteCertifiacte } = this.state;
+
+    if (!certificate || !showModalDeleteCertifiacte) {
+      return;
+    }
+
+    const body = container ?
+      (
+        <div className="input-field col s12">
+          <input
+            name="groupKeyGeneration"
+            className="with-gap" type="radio"
+            id="delCont"
+            checked={this.state.deleteContainer}
+            onClick={this.toggleDeleteContainer}
+          />
+          <label htmlFor="delCont">{localize("Containers.delete_container", locale)}</label>
+        </div>
+      ) :
+      (
+        <div className="col s12">
+          <span className="card-infos sub">
+            {localize("Certificate.realy_delete_certificate", locale)}
+          </span>
+        </div>
+      );
+
+    return (
+      <Modal
+        isOpen={showModalDeleteCertifiacte}
+        header={localize("Certificate.delete_certificate", locale)}>
+        <div className="main">
+          <div className="row">
+            {body}
+          </div>
+          <div className="row">
+            <div className="col s1 offset-s9">
+              <a className="waves-effect waves-light btn modal-close" onClick={this.handleDeleteCertificateAndContainer}>{localize("Common.delete", locale)}</a>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    );
   }
 
   render() {
@@ -386,12 +480,13 @@ class CertWindow extends React.Component<any, any> {
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
                         <li><a onClick={this.exportDirectory}>{localize("Certificate.cert_export", locale)}</a></li>
-                        <li><a onClick={this.handleDeleteCertificate}>{localize("Common.delete", locale)}</a></li>
+                        <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
                       </ul>
                     </li>
                   </ul>
                 </nav>
                 {this.getCertificateInfoBody()}
+                {this.showModalDeleteCertificate()}
               </div>
             </div>
           </div>
@@ -405,6 +500,7 @@ class CertWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
+    containersLoading: state.containers.loading,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates, removeAllCertificates })(CertWindow);
+}, { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers })(CertWindow);
