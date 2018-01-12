@@ -38,7 +38,7 @@ class HelpWindow extends React.PureComponent {
  
     return (
       <div>
-        <div className="main">
+        <div className="main1">
           <div className="content">
           <div className="Help">
             <div className="row">
