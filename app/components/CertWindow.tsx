@@ -404,7 +404,7 @@ class CertWindow extends React.Component<any, any> {
         isOpen={showModalDeleteCertifiacte}
         header={localize("Certificate.delete_certificate", locale)}
         onClose={this.toggleShowModal}>
-        <div className="main">
+        <div>
           <div className="row">
             {body}
           </div>
