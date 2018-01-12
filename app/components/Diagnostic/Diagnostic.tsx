@@ -185,7 +185,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
     if (!criticalError && activeError === NO_HAVE_CERTIFICATES_WITH_KEY) {
       return (
-        <Link to={"/containers"}>
+        <Link to={"/containers"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
           <div className="contain-btn">
             <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
           </div>
