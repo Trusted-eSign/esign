@@ -383,7 +383,7 @@ class CertWindow extends React.Component<any, any> {
         <div className="input-field col s12">
           <input
             name="groupKeyGeneration"
-            className="with-gap" type="radio"
+            type="checkbox"
             id="delCont"
             checked={this.state.deleteContainer}
             onClick={this.toggleDeleteContainer}
