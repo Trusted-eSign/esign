@@ -382,6 +382,8 @@ export default {
     goOver: "Go over",
   },
   Csp: {
+    cpcspPKZIVersion: "CryptoPro CSP product version",
+    cpcspSKZIVersion: "CryptoPro CSP SKZI version",
     cspErr: "Error check CSP parameters",
     libcapi: "Cannot find libcapi. Install CryptoPro CSP",
     noCPLicense: "Error check license for CryptoPro CSP",

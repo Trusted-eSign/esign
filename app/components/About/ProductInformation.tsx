@@ -11,9 +11,17 @@ class ProductInformation extends React.PureComponent {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
-  getCPCSPVersion = () => {
+  getCPCSPVersionPKZI = () => {
     try {
-      return trusted.utils.Csp.getCPCSPVersion() + " " + trusted.utils.Csp.getCPCSPSecurityLvl();
+      return trusted.utils.Csp.getCPCSPVersion() + "." + trusted.utils.Csp.getCPCSPVersionPKZI();
+    } catch (e) {
+      return "";
+    }
+  }
+
+  getCPCSPVersionSKZI = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPVersion() + "." + trusted.utils.Csp.getCPCSPVersionSKZI() + " " + trusted.utils.Csp.getCPCSPSecurityLvl();
     } catch (e) {
       return "";
     }
@@ -57,7 +65,8 @@ class ProductInformation extends React.PureComponent {
             <div className="row">
               <span className="card-title sub">{localize("About.CspVersion", locale)}</span>
               <span className="card-infos sub">
-                <p>{localize("About.CSPVersion", locale)} {this.getCPCSPVersion()}</p>
+                <p>{localize("Csp.cpcspPKZIVersion", locale)} {this.getCPCSPVersionPKZI()}</p>
+                <p>{localize("Csp.cpcspSKZIVersion", locale)} {this.getCPCSPVersionSKZI()}</p>
               </span>
             </div>
           </div>
