@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { loadAllCertificates, loadLicense, verifyLicense } from "../../AC";
 import {
   BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
@@ -249,7 +249,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
   render() {
     return (
-      <div className="main">
+      <div>
         {this.showModalWithError()}
       </div>
     );

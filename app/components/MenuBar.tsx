@@ -77,7 +77,7 @@ class MenuBar extends React.Component<any, any> {
 
   render() {
     return (
-      <div className="main">
+      <div>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">

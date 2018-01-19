@@ -111,7 +111,7 @@ class CSR extends React.Component<any, any> {
             <div className="col s12 m6">
               <div className="row">
                 <div className="input-field col s12">
-                  <select value={this.state.template} name="template" onChange={this.handleTemplateChange} ref="templateSelect">
+                  <select value={this.state.template} name="template" onChange={this.handleTemplateChange} >
                     <option value="default">{localize("CSR.template_default", locale)}</option>
                     <option value="kepIp">{localize("CSR.template_kep_ip", locale)}</option>
                     <option value="kepFiz">{localize("CSR.template_kep_fiz", locale)}</option>
@@ -122,7 +122,7 @@ class CSR extends React.Component<any, any> {
               </div>
               <div className="row">
                 <div className="input-field col s12">
-                  <select value={this.state.csp} name="csp" onChange={this.handleCSPChange} ref="cspSelect">
+                  <select value={this.state.csp} name="csp" onChange={this.handleCSPChange} >
                     <option value="openssl">{localize("CSR.csp_openssl", locale)}</option>
                     <option value="microsoftBase">{localize("CSR.csp_microsoft_base", locale)}</option>
                   </select>
@@ -166,7 +166,7 @@ class CSR extends React.Component<any, any> {
             <div className="col s12 m6">
               <div className="row">
                 <div className="input-field col s12">
-                  <select value={this.state.country} onChange={this.handleCountryChange} ref="countrySelect">>
+                  <select value={this.state.country} onChange={this.handleCountryChange} >>
                     <option value="RU">Российская Федерация (RU)</option>
                     <option value="AU">Австралия (AU)</option>
                   </select>

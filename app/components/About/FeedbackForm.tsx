@@ -129,7 +129,7 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
             <form onSubmit={this.validDatas} className="col s12">
               <div className="row form">
                 <div className="input-field col s12">
-                  <input ref="username" id="username" type="text" value={username.text} onChange={(evt) => this.setUserName(evt.target.value)}></input>
+                  <input id="username" type="text" value={username.text} onChange={(evt) => this.setUserName(evt.target.value)}></input>
                   <label htmlFor="username">{localize("About.username", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errUser}>
@@ -139,7 +139,7 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
               </div>
               <div className="row form">
                 <div className="input-field col s12">
-                  <input ref="email" id="email" type="email" className="validate" value={email.text} onChange={(evt) => this.setEmail(evt.target.value)}></input>
+                  <input id="email" type="email" className="validate" value={email.text} onChange={(evt) => this.setEmail(evt.target.value)}></input>
                   <label htmlFor="email" >{localize("About.email", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errEmail}>
@@ -149,7 +149,7 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
               </div>
               <div className="row form message">
                 <div className="input-field col s12 mes-textarea">
-                  <textarea ref="message" id="message" className="materialize-textarea" value={message.text} onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
+                  <textarea id="message" className="materialize-textarea" value={message.text} onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
                   <label htmlFor="message">{localize("About.message", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errMessage}>
