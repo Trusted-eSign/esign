@@ -2651,11 +2651,6 @@ i.material-icons.left.line {
 .Help{
     font-size: 14px;
     width: 100%;
-    margin-left: 10px;
-    padding-right: 10px;
-    margin-bottom: 0px;
-    border-top-width: 0px;
-    margin-top: 0px;
     height: 550px;
     position: relative;
     overflow: auto;
@@ -2817,7 +2812,7 @@ i.material-icons.left.line {
     min-height: 0;
     border-bottom: 1px solid #e0e0e0;
     min-height: 64px;
-} 
+}
 
 .add-problems-item {
     position: relative;
