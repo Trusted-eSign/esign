@@ -42,9 +42,27 @@
     "cms"
   ],
   "build": {
-    "win": {"target": [{"target": "dir"}]},
-    "mac": {"target": [{"target": "dir"}]},
-    "linux": {"target": [{"target": "dir"}]},
+    "win": {
+      "target": [
+        {
+          "target": "dir"
+        }
+      ]
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dir"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "dir"
+        }
+      ]
+    },
     "asar": false
   },
   "homepage": "https://trustedplus.github.io/",
@@ -86,8 +104,8 @@
     "@types/nouislider": "^9.0.1",
     "@types/orchestrator": "0.0.30",
     "@types/q": "1.0.0",
-    "@types/react": "^15.0.24",
-    "@types/react-dom": "^15.5.0",
+    "@types/react": "^16.0.34",
+    "@types/react-dom": "^16.0.3",
     "@types/react-hot-loader": "^3.0.1",
     "@types/react-redux": "^5.0.12",
     "@types/react-router": "^4.0.9",
@@ -164,6 +182,7 @@
   "dependencies": {
     "@types/archiver": "^2.0.1",
     "@types/prop-types": "^15.5.2",
+    "@types/react-scroll": "^1.5.2",
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
     "electron-debug": "^1.1.0",
@@ -173,14 +192,15 @@
     "immutable": "^3.8.1",
     "jquery": "^3.2.1",
     "prop-types": "^15.6.0",
-    "react": "15.6.1",
-    "react-dom": "15.6.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-hot-loader": "3.0.0-beta.6",
-    "react-redux": "^5.0.4",
-    "react-router": "2.3.0",
-    "react-router-dom": "^4.1.1",
-    "react-router-redux": "^5.0.0-alpha.6",
-    "redux": "^3.6.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "react-scroll": "^1.7.6",
+    "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
     "source-map-support": "^0.4.14"
