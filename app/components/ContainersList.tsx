@@ -64,13 +64,12 @@ class ContainersList extends React.Component<any, any> {
 
     containers.forEach((container: any) =>
       objContainers[container.reader].push(
-        <li key={container.id}>
-          <ContainerListItem
-            container={container}
-            isOpen={active === container.id}
-            activeContainer={() => activeContainer(container.id)}
-          />
-        </li>),
+        <ContainerListItem
+          key={container.id}
+          container={container}
+          isOpen={active === container.id}
+          activeContainer={() => activeContainer(container.id)}
+        />),
     );
 
     const elements = uniqueReaders.map((reader: any, id: number) => {
