@@ -32,7 +32,7 @@ class ProductInformation extends React.PureComponent {
 
     return (
       <div>
-        <div className="card contact">
+        <div className="card infoapp">
           <div className="card-content white-text">
             <div className="row">
               <span className="card-title">{localize("About.product_NAME", locale)}</span>
