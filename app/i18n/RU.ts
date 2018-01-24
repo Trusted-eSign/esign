@@ -307,7 +307,8 @@ export default {
   License: {
     license: "Лицензия",
     License: "ЛИЦЕНЗИЯ",
-    About_License: "СВЕДЕНИЯ О ЛИЦЕНЗИИ",
+    About_License: "СВЕДЕНИЯ О ЛИЦЕНЗИИ КРИПТОАРМ ГОСТ",
+    About_License_CSP: "СВЕДЕНИЯ О ЛИЦЕНЗИИ КРИПТОПРО CSP",
     license_key: "Лицензионный ключ",
     Enter_Key: "ВВЕСТИ КЛЮЧ",
     entered_the_key: "Выполните ввод ключа",
@@ -319,6 +320,7 @@ export default {
     key: "Ключ",
     Entered: "ВВЕСТИ",
     enter_key: "Ввод лицензиии",
+    License_request: "ПОЛУЧИТЬ ВРЕМЕННУЮ ЛИЦЕНЗИЮ",
     lic_file_not_found: "Файл лицензии не найден",
     lic_file_uncorrect: "Некорректный лицензинный файл",
     lic_key_uncorrect: "Некорректный лицензионный ключ",

@@ -1318,6 +1318,13 @@ display: inline-block;
     background: url(./resources/image/geo_gray.png);
 }
 
+.license_background{
+    margin-top: 1px;
+    width: 800px;
+    height: 600px;
+    background: url(./resources/image/geo_gray.png);
+}
+
 .geo-icon{
   display: block;
   text-indent: -9999px;
@@ -1373,7 +1380,7 @@ span.card-title.sub {
   margin-right: 20px;
   transition: color .3s ease;
   text-transform: uppercase;
-  margin-left: 236px;
+  margin-left: 114px;
 }
 
 .card-infos{
@@ -1627,7 +1634,7 @@ textarea#message {
   margin-top: 10px;
   padding-bottom: 1px;
   margin-bottom: 1px;
-  max-height: 152px;
+  max-height: 105px;
   padding-top: 0;
 }
 
@@ -1716,6 +1723,10 @@ a.menuheaderlink:hover {
 .bmark_desktoplic {
     text-align: center;
     padding: 10px 0;
+    color: #bf3817;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
 }
 
 h5.bmark_onlinelic{
@@ -2668,10 +2679,11 @@ i.material-icons.left.line {
     text-indent: 20px;
 }
 .help_user_guide_img{
-    height: 300px;
-    width: 210px;
+    height: 200px;
+    width: 140px;
     background: url(./resources/image/help/user_guide.png);
-    background-size: 210px 300px;
+    background-size: 140px 200px;
+    margin-left: 30px;
 }
 
 .help_main_window_img{
@@ -2881,3 +2893,39 @@ a.hlink {
     margin-top: 18px;
     margin-left: -5px;
   }
+
+  .row.card {
+    margin-top: 0px;
+    border-top-width: 10px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: 780px;
+    height: 530px;
+}
+
+.input-field.col.s12.noborder {
+    border-bottom: none;
+}
+
+a.help_paragraf {
+    padding-left: 10px;
+}
+
+.scroll_inside {
+    height: 382px;
+    overflow: scroll;
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.row.nobottom {
+    margin-bottom: 0px;
+}
+
+.col.s12.nopadding {
+    padding-left: 0px;
+    padding-right: 0px;
+}

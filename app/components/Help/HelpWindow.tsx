@@ -66,28 +66,10 @@ class HelpWindow extends React.Component {
     return (
       <div className="content">
         <div className="Help">
-          <div className="row">
-            <div className="col s12">
+          <div className="row nobottom">
+            <div className="row nobottom">
+              <div className="col s12 nopadding">
               <h4 className="help_header">{localize("Help.Header1", locale)}</h4>
-              <div className="col s8">
-                <p className="help_paragraf">{localize("Help.Paragraf_1_1", locale)}</p>
-                <p className="help_paragraf">
-                  {localize("Help.Paragraf_1_2a", locale)}
-                  <ExternalLink externalLink={localize("Help.link_user_guide", locale)} externalName={localize("Help.link_user_guide_name", locale)} />
-                </p>
-                <p className="help_paragraf">
-                  {localize("Help.Paragraf_1_3a", locale)}
-                  <ExternalLink externalLink={localize("Help.link_shop", locale)} externalName={localize("Help.link_shop_name", locale)} />
-                </p>
-              </div>
-              <div className="col s3">
-                <div className="help_user_guide_img"></div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col s12">
-                <h4 className="help_header">{localize("Help.Header2", locale)}</h4>
                 <p className="help_paragraf"></p>
 
                 <ul>
@@ -118,11 +100,31 @@ class HelpWindow extends React.Component {
                   </li>
                 </ul>
 
-                <Element name="container" id="containerElement" style={{
-                  height: "550px",
+                <Element className="scroll_inside" name="container" id="containerElement" /*style={{
+                  height: "382px",
                   overflow: "scroll",
                   position: "relative",
-                }}>
+                }}*/>
+
+                  <Element name="id0">
+                    <div className="col s12">
+                      {/* <h4 className="help_header">{localize("Help.Header1", locale)}</h4> */}
+                      <div className="col s9">
+                        <p className="help_paragraf">{localize("Help.Paragraf_1_1", locale)}</p>
+                        <p className="help_paragraf">
+                          {localize("Help.Paragraf_1_2a", locale)}
+                          <ExternalLink externalLink={localize("Help.link_user_guide", locale)} externalName={localize("Help.link_user_guide_name", locale)} />
+                        </p>
+                        <p className="help_paragraf">
+                          {localize("Help.Paragraf_1_3a", locale)}
+                          <ExternalLink externalLink={localize("Help.link_shop", locale)} externalName={localize("Help.link_shop_name", locale)} />
+                        </p>
+                      </div>
+                      <div className="col s3">
+                        <div className="help_user_guide_img"></div>
+                      </div>
+                    </div>
+                  </Element>
 
                   <Element name="id1">
                     <h4 className="help_header">{localize("Help.Header3", locale)}</h4>
