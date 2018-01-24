@@ -445,6 +445,12 @@ declare namespace native {
         }
     }
     namespace UTILS {
+        interface IContainerName {
+            container: string;
+            unique: string;
+            fqcnA: string;
+            fqcnW: string;
+        }
         class Jwt {
             checkLicense(data?: string): number;
         }
@@ -468,7 +474,7 @@ declare namespace native {
             getCPCSPVersionSKZI(): string;
             getCPCSPSecurityLvl(): string;
             enumProviders(): object[];
-            enumContainers(type?: number, provName?: string): string[];
+            enumContainers(type?: number, provName?: string): IContainerName[];
             getCertifiacteFromContainer(contName: string, provType: number, provName?: string): PKI.Certificate;
             getContainerNameByCertificate(cert: PKI.Certificate, category: string): string;
             installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
@@ -869,7 +875,7 @@ declare namespace trusted.utils {
          * @returns {string[]} Fully Qualified Container Name
          * @memberof Csp
          */
-        static enumContainers(type: null, provName?: string): string[];
+        static enumContainers(type: null, provName?: string): native.UTILS.IContainerName[];
         /**
          * Get certificate by container and provider props
          *

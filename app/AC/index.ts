@@ -160,7 +160,7 @@ export function loadAllContainers() {
       let enumedContainers;
 
       try {
-        enumedContainers = trusted.utils.Csp.enumContainers();
+        enumedContainers = trusted.utils.Csp.enumContainers(75);
       } catch (e) {
         dispatch({
           type: LOAD_ALL_CONTAINERS + FAIL,
@@ -170,12 +170,12 @@ export function loadAllContainers() {
       const filteredContainers = [];
 
       for (const cont of enumedContainers) {
-        if (cont.toLowerCase().indexOf("registry") <= 0 ) {
+        if (cont.fqcnA.toLowerCase().indexOf("registry") <= 0 ) {
           filteredContainers.push({
-            friendlyName: cont.substring(cont.lastIndexOf("\\") + 1),
+            friendlyName: cont.container,
             id: Math.random(),
-            name: cont,
-            reader: cont.substring(4, cont.lastIndexOf("\\")),
+            name: cont.unique,
+            reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
           });
         }
       }
