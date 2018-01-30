@@ -11,33 +11,38 @@ const FALSE_CERT_STATUS = {
   color: "red",
 };
 
-const getChain = (certItem: any) => {
+const buildChain = (certItem: any) => {
+  const certificate = certItem.object ? certItem.object : window.PKISTORE.getPkiObject(certItem);
+
   try {
-    const cert = certItem.object ? certItem.object : window.PKISTORE.getPkiObject(certItem);
-    const chain = new trusted.pki.Chain();
-    const chainForVerify = chain.buildChain(cert, window.TRUSTEDCERTIFICATECOLLECTION);
-    return chainForVerify;
+    if (certItem.provider && certItem.provider === "SYSTEM") {
+      const chain = new trusted.pki.Chain();
+      return chain.buildChain(certificate, window.TRUSTEDCERTIFICATECOLLECTION);
+    } else {
+      return trusted.utils.Csp.buildChain(certificate);
+    }
   } catch (e) {
     return null;
   }
 };
 
-const certVerify = (cert: trusted.pki.Certificate) => {
-  let chain: trusted.pki.Chain;
-  let chainForVerify: trusted.pki.CertificateCollection;
-
+const verifyCertificateChain = (cert: trusted.pki.Certificate, provider: string) => {
   try {
-    chain = new trusted.pki.Chain();
-    chainForVerify = chain.buildChain(cert, window.TRUSTEDCERTIFICATECOLLECTION);
-    return chain.verifyChain(chainForVerify, null);
+    if (provider === "SYSTEM") {
+      const chain = new trusted.pki.Chain();
+      const chainForVerify = chain.buildChain(cert, window.TRUSTEDCERTIFICATECOLLECTION);
+      return chain.verifyChain(chainForVerify, null);
+    } else {
+      return trusted.utils.Csp.verifyCertificateChain(cert);
+    }
   } catch (e) {
-    return false;
+    return null;
   }
 };
 
-function CertificateChainInfo({ certificate, onClick , style}, context) {
+function CertificateChainInfo({ certificate, onClick, style }, context) {
   const { localize, locale } = context;
-  const chain = getChain(certificate);
+  const chain = buildChain(certificate);
   const elements = [];
   let curKeyStyle = "";
   let curStatusStyle: string;
@@ -45,13 +50,13 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
   if (chain && chain.length) {
     for (let j: number = chain.length - 1; j >= 0; j--) {
       const element = chain.items(j);
-      const status = certVerify(element);
+      const status = verifyCertificateChain(element, certificate.provider);
       let circleStyle = "material-icons left chain_1";
       const vertlineStyle = {
         visibility: "hidden",
       };
 
-      if (j < 10)  {
+      if (j < 10) {
         circleStyle = "material-icons left chain_" + (j + 1);
       } else {
         circleStyle = "material-icons left chain_10";
@@ -97,7 +102,7 @@ function CertificateChainInfo({ certificate, onClick , style}, context) {
     curStatusStyle = "cert_status_error";
     let curKeyStyle = certificate.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
     elements.push(
-      <div className={"collection collection-item avatar certs-collection chain-text"}  key={certificate.serialNumber + "_" + certificate.thumbprint}>
+      <div className={"collection collection-item avatar certs-collection chain-text"} key={certificate.serialNumber + "_" + certificate.thumbprint}>
         <div className="row chain-item">
           <div className="col s1">
             <i className={circleStyle}></i>

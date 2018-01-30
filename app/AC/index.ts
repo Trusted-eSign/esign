@@ -14,7 +14,6 @@ import {
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
 import { DEFAULT_PATH } from "../constants";
-import { certVerify } from "../module/global_app";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
@@ -134,7 +133,22 @@ export function changeSearchValue(searchValue) {
 export function verifyCertificate(certificateId) {
   return (dispatch, getState) => {
     const { certificates } = getState();
-    const certificateStatus = certVerify(certificates.getIn(["entities", certificateId]), window.TRUSTEDCERTIFICATECOLLECTION);
+
+    const certItem = certificates.getIn(["entities", certificateId]);
+    const certificate =  window.PKISTORE.getPkiObject(certItem);
+    let certificateStatus = false;
+
+    try {
+      if (certItem.provider === "SYSTEM") {
+        const chain = new trusted.pki.Chain();
+        const chainForVerify = chain.buildChain(certificate, window.TRUSTEDCERTIFICATECOLLECTION);
+        certificateStatus = chain.verifyChain(chainForVerify, null);
+      } else {
+        certificateStatus = trusted.utils.Csp.verifyCertificateChain(certificate);
+      }
+    } catch (e) {
+      certificateStatus = false;
+    }
 
     dispatch({
       payload: { certificateId, certificateStatus },
@@ -288,8 +302,7 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-           id: Date.now() + Math.random(),
-           status_verify: signaruteStatus};
+           id: Date.now() + Math.random()};
       });
 
     } catch (error) {

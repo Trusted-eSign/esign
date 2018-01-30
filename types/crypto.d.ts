@@ -479,6 +479,8 @@ declare namespace native {
             getContainerNameByCertificate(cert: PKI.Certificate, category: string): string;
             installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
             deleteContainer(contName: string, provType: number, provName?: string): void;
+            buildChain(cert: PKI.Certificate): PKI.CertificateCollection;
+            verifyCertificateChain(cert: PKI.Certificate): boolean;
         }
     }
     namespace COMMON {
@@ -899,6 +901,8 @@ declare namespace trusted.utils {
          * @memberof Csp
          */
         static getContainerNameByCertificate(cert: pki.Certificate, category?: string): string;
+        static buildChain(cert: pki.Certificate): pki.CertificateCollection;
+        static verifyCertificateChain(cert: pki.Certificate): boolean;
         /**
          * Creates an instance of Csp.
          *
