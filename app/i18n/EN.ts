@@ -59,6 +59,16 @@ export default {
     certs_root: "Trusted Root Certificates",
     certs_token: "External token/card certificates",
   },
+  Export: {
+    export: "Export",
+    export_certificate: "Export certificate",
+    export_format: "Export file format",
+    export_format_pkcs12: "Personal information exchange PKCS#12 (PFX)",
+    export_format_der: "DER encoded binary X509 (.CER)",
+    export_format_base64: "Base-64 encoded X509 (.CER)",
+    export_private_key: "Export private key",
+    export_params: "Export parameters",
+  },
   Containers: {
     containers: "CONTAINERS",
     containersNotFound: "Containers not found",
@@ -178,6 +188,7 @@ export default {
     Digital: "DIGITAL",
     pass_enter: "Enter the password",
     password: "Password",
+    password_confirm: "Password confirm",
     wait: "Please wait",
   },
   Help: {

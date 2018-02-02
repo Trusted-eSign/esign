@@ -1,0 +1,281 @@
+import PropTypes from "prop-types";
+import * as React from "react";
+import { BASE64, DER } from "../../constants";
+import EncodingTypeSelector from "../EncodingTypeSelector";
+import PasswordDialog from "../PasswordDialog";
+
+interface ICertificateExportState {
+  exportPrivateKey: boolean;
+  encodingType: string;
+  isHaveExportablePrivateKey: boolean;
+  password: string;
+  passwordConfirm: string;
+}
+
+interface ICertificateExportProps {
+  certificate: any;
+  onSuccess?: () => void;
+  onFail?: () => void;
+  onCancel?: () => void;
+}
+
+const DIALOG = window.electron.remote.dialog;
+
+class CertificateExport extends React.Component<ICertificateExportProps, ICertificateExportState> {
+  static contextTypes = {
+    locale: PropTypes.string,
+    localize: PropTypes.func,
+  };
+
+  constructor(props: ICertificateExportProps) {
+    super(props);
+
+    this.state = ({
+      encodingType: BASE64,
+      exportPrivateKey: false,
+      isHaveExportablePrivateKey: false,
+      password: "",
+      passwordConfirm: "",
+    });
+  }
+
+  componentDidMount() {
+    const { certificate } = this.props;
+
+    if (certificate) {
+      const exportable = this.getStatusExportablePrivateKey(certificate);
+
+      this.setState({ isHaveExportablePrivateKey: exportable });
+    }
+  }
+
+  render() {
+    const { exportPrivateKey, password, passwordConfirm } = this.state;
+    const { localize, locale } = this.context;
+
+    let disabled = "";
+
+    if (exportPrivateKey && (!password || !passwordConfirm || (password !== passwordConfirm))) {
+      disabled = "disabled";
+    }
+
+    return (
+      <div >
+        <div className="row">
+          <div className="col s12">
+            <span className="card-infos sub">
+              {this.getMessage()}
+            </span>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s12">
+            <span className="card-title sub">
+              {localize("Export.export_params", locale)}:
+            </span>
+          </div>
+        </div>
+        {this.getBody()}
+        <div className="row">
+          <div className="col s1 offset-s9">
+            <a className={"waves-effect waves-light btn modal-close " + disabled} onClick={this.handleExport}>{localize("Export.export", locale)}</a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  getMessage = (): string => {
+    const { encodingType, exportPrivateKey, isHaveExportablePrivateKey } = this.state;
+    const { localize, locale } = this.context;
+
+    let message;
+
+    if (isHaveExportablePrivateKey && exportPrivateKey) {
+      message = localize("Export.export_format", locale) + ": " + localize("Export.export_format_pkcs12", locale);
+    } else if (isHaveExportablePrivateKey && !exportPrivateKey) {
+      message = localize("Export.export_format", locale) + ": "
+        + (encodingType === BASE64 ? localize("Export.export_format_base64", locale) : localize("Export.export_format_der", locale));
+    } else {
+      message = localize("Export.export_format", locale) + ": "
+        + (encodingType === BASE64 ? localize("Export.export_format_base64", locale) : localize("Export.export_format_der", locale));
+    }
+
+    return message;
+  }
+
+  getBody = () => {
+    const { encodingType, exportPrivateKey, isHaveExportablePrivateKey, password, passwordConfirm } = this.state;
+    const { certificate } = this.props;
+    const { localize, locale } = this.context;
+
+    let body;
+    let activePassword = "";
+    let activePasswordConfirm = "";
+
+    if (password && password.length > 0) {
+      activePassword = "active";
+    }
+
+    if (passwordConfirm && passwordConfirm.length > 0) {
+      activePasswordConfirm = "active";
+    }
+
+    if (isHaveExportablePrivateKey && exportPrivateKey) {
+      const valid = (password && passwordConfirm && (password === passwordConfirm)) ? "valid" : "invalid";
+
+      body = (
+        <div>
+          <div className="row">
+            <div className="input-field col s6">
+              <input
+                name="groupExportKey"
+                type="checkbox"
+                id="exportKey"
+                checked={exportPrivateKey}
+                onClick={this.toggleExportPrivateKey}
+              />
+              <label htmlFor="exportKey">{localize("Export.export_private_key", locale)}</label>
+            </div>
+          </div>
+          <div className="row">
+            <div className="input-field col s6 input-field-password">
+              <i className={"material-icons prefix key-prefix " + activePassword}></i>
+              <input className={valid} id="input_password" type="password" value={this.state.password} onChange={(ev) => this.handlePasswordChange(ev.target.value)} />
+              <label htmlFor="input_password" className={activePassword}>{localize("Settings.password", locale)}</label>
+            </div>
+            <div className="input-field col s6 input-field-password">
+              <i className={"material-icons prefix key-prefix " + activePasswordConfirm}></i>
+              <input className={valid} id="input_password_confirm" type="password" value={this.state.passwordConfirm} onChange={(ev) => this.handlePasswordConfirmChange(ev.target.value)} />
+              <label htmlFor="input_password_confirm" className={activePasswordConfirm}>{localize("Settings.password_confirm", locale)}</label>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (isHaveExportablePrivateKey && !exportPrivateKey) {
+      body = (
+        <div>
+          <div className="row">
+            <div className="input-field col s6">
+              <input
+                name="groupExportKey"
+                type="checkbox"
+                id="exportKey"
+                checked={exportPrivateKey}
+                onClick={this.toggleExportPrivateKey}
+              />
+              <label htmlFor="exportKey">{localize("Export.export_private_key", locale)}</label>
+            </div>
+            <div className="col s6 card-infos sub">
+              <EncodingTypeSelector EncodingValue={encodingType} handleChange={(encoding: string) => this.handleEncodingChange(encoding)} />
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      body = (
+        <div>
+          <div className="row">
+            <div className="col s6 card-infos sub">
+              <EncodingTypeSelector EncodingValue={encodingType} handleChange={(encoding: string) => this.handleEncodingChange(encoding)} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return body;
+  }
+
+  toggleExportPrivateKey = () => {
+    this.setState({ exportPrivateKey: !this.state.exportPrivateKey });
+  }
+
+  handlePasswordChange = (password: string) => {
+    this.setState({ password });
+  }
+
+  handlePasswordConfirmChange = (passwordConfirm: string) => {
+    this.setState({ passwordConfirm });
+  }
+
+  handleEncodingChange = (encoding: string) => {
+    this.setState({ encodingType: encoding });
+  }
+
+  getStatusExportablePrivateKey = (certificate: any): boolean => {
+    let exportable: boolean = false;
+
+    if (certificate) {
+      if (certificate.category === "MY" && certificate.key) {
+        try {
+          const x509 = window.PKISTORE.getPkiObject(certificate);
+          exportable = trusted.utils.Csp.isHaveExportablePrivateKey(x509);
+        } catch (e) {
+          console.log("error get container by certificate", e);
+        }
+      }
+    }
+
+    return exportable;
+  }
+
+  handleExport = () => {
+    const { encodingType, exportPrivateKey, isHaveExportablePrivateKey, password } = this.state;
+    const { certificate, onCancel, onSuccess } = this.props;
+    const { localize, locale } = this.context;
+
+    const CER = "CER";
+    const PKCS12 = "PKCS12";
+
+    let extension = "cer";
+    let outFormat = CER;
+
+    if (isHaveExportablePrivateKey && exportPrivateKey) {
+      extension = "pfx";
+      outFormat = PKCS12;
+    }
+
+    const outFilePAth = DIALOG.showSaveDialog({
+      defaultPath: "export." + extension,
+      filters: [{ name: localize("Certificate.certs", locale), extensions: [extension] }],
+      title: localize("Certificate.export_cert", locale),
+    });
+
+    const x509 = window.PKISTORE.getPkiObject(certificate);
+
+    if (outFilePAth && x509) {
+      try {
+        switch (outFormat) {
+          case CER:
+            const encoding = encodingType === BASE64 ? trusted.DataFormat.PEM : trusted.DataFormat.DER;
+            x509.save(outFilePAth, encoding);
+            break;
+          case PKCS12:
+            const p12 = trusted.utils.Csp.certToPkcs12(x509, true, password);
+            p12.save(outFilePAth);
+            break;
+        }
+      } catch (e) {
+        $(".toast-cert_export_failed").remove();
+        Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
+      }
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      $(".toast-cert_export_ok").remove();
+      Materialize.toast(localize("Certificate.cert_export_ok", locale), 2000, "toast-cert_export_ok");
+    } else {
+      if (onCancel) {
+        onCancel();
+      }
+
+      $(".toast-cert_export_cancel").remove();
+      Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
+    }
+  }
+}
+
+export default CertificateExport;

@@ -59,6 +59,16 @@ export default {
     certs_root: "Доверенные корневые сертификаты",
     certs_token: "Сертификаты внешних носителей",
   },
+  Export: {
+    export: "Экспорт",
+    export_certificate: "Экспорт сертификата",
+    export_format: "Формат экспортируемого файла",
+    export_format_pkcs12: "Файл обмена личной информацией PKCS#12 (PFX)",
+    export_format_der: "X509 (.CER) в кодировке DER",
+    export_format_base64: "X509 (.CER) в кодировке BASE64",
+    export_private_key: "Эскпортировать закрытый ключ",
+    export_params: "Параметры экспорта",
+  },
   Containers: {
     containers: "КОНТЕЙНЕРЫ",
     containersNotFound: "Контейнеры не найдены",
@@ -178,6 +188,7 @@ export default {
     Digital: "ЭЛЕКТРОННАЯ",
     pass_enter: "Ввод пароля",
     password: "Пароль",
+    password_confirm: "Подтверждение пароля",
     wait: "Пожалуйста, подождите...",
   },
   Help: {
