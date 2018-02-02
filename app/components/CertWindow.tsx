@@ -8,6 +8,8 @@ import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../cons
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
 import BlockNotElements from "./BlockNotElements";
+import CertificateDelete from "./Certificate/CertificateDelete";
+import CertificateExport from "./Certificate/CertificateExport";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
@@ -16,11 +18,8 @@ import ContainersList from "./ContainersList";
 import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import Modal from "./Modal";
-import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
-
-const DIALOG = window.electron.remote.dialog;
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -34,39 +33,28 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
-      container: null,
-      deleteContainer: false,
-      password: "",
       showModalDeleteCertifiacte: false,
+      showModalExportCertifiacte: false,
     });
   }
 
-  toggleDeleteContainer = () => {
-    this.setState({ deleteContainer: !this.state.deleteContainer });
-  }
-
-  toggleShowModal = () => {
-    this.setState({ showModalDeleteCertifiacte: !this.state.showModalDeleteCertifiacte });
+  handleCloseModalDeleteCertificate = () => {
+    this.setState({ showModalDeleteCertifiacte: false });
   }
 
   handleShowModalDeleteCertifiacte = () => {
-    const { certificate } = this.state;
-
-    let container = "";
-
-    if (certificate.category === "MY" && certificate.key) {
-      try {
-        const x509 = window.PKISTORE.getPkiObject(certificate);
-        container = trusted.utils.Csp.getContainerNameByCertificate(x509);
-      } catch (e) {
-        console.log("error get container by certificate", e);
-      }
-    }
-
-    this.setState({ container, showModalDeleteCertifiacte: true });
+    this.setState({ showModalDeleteCertifiacte: true });
   }
 
-  handlePasswordChange = (password) => {
+  handleCloseModalExportCertificate = () => {
+    this.setState({ showModalExportCertifiacte: false });
+  }
+
+  handleShowModalExportCertifiacte = () => {
+    this.setState({ showModalExportCertifiacte: true });
+  }
+
+  handlePasswordChange = (password: string) => {
     this.setState({ password });
   }
 
@@ -90,6 +78,8 @@ class CertWindow extends React.Component<any, any> {
     if (!isLoading) {
       loadAllCertificates();
     }
+
+    this.handleCloseModalDeleteCertificate();
   }
 
   handleReloadContainers = () => {
@@ -105,6 +95,8 @@ class CertWindow extends React.Component<any, any> {
     if (!isLoading) {
       loadAllContainers();
     }
+
+    this.handleCloseModalDeleteCertificate();
   }
 
   handleCertificateImport = (event: any) => {
@@ -227,96 +219,6 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
-  exportDirectory = () => {
-    const { localize, locale } = this.context;
-
-    if (window.framework_NW) {
-      const CLICK_EVENT = document.createEvent("MouseEvents");
-
-      CLICK_EVENT.initEvent("click", true, true);
-      document.querySelector("#choose-folder-export").dispatchEvent(CLICK_EVENT);
-    } else {
-      const FILE = DIALOG.showSaveDialog({
-        defaultPath: localize("Certificate.certificate", locale) + ".pfx",
-        filters: [{ name: localize("Certificate.certs", locale), extensions: ["pfx"] }],
-        title: localize("Certificate.export_cert", locale),
-      });
-      this.exportCert(FILE);
-    }
-  }
-
-  exportCert = (file: string) => {
-    const self = this;
-    const { certificate } = this.state;
-    const { localize, locale } = this.context;
-
-    let p12: trusted.pki.Pkcs12;
-
-    if (file) {
-      $("#get-password").openModal({
-        complete() {
-          const password = self.state.password;
-          const CERT_ITEM = certificate;
-          const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
-          const KEY = window.PKISTORE.findKey(CERT_ITEM);
-
-          if (!CERT || !KEY) {
-            $(".toast-cert_export_failed").remove();
-            Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
-          } else {
-            p12 = new trusted.pki.Pkcs12();
-            p12 = p12.create(CERT, KEY, null, password, CERT_ITEM.subjectFriendlyName);
-            p12.save(file);
-            $(".toast-cert_export_ok").remove();
-            Materialize.toast(localize("Certificate.cert_export_ok", locale), 2000, "toast-cert_export_ok");
-          }
-        },
-        dismissible: false,
-      });
-    } else {
-      $(".toast-cert_export_cancel").remove();
-      Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
-    }
-  }
-
-  handleDeleteCertificateAndContainer = () => {
-    const { isLoading, removeAllCertificates, loadAllCertificates } = this.props;
-    const { certificate, container, deleteContainer } = this.state;
-    const { localize, locale } = this.context;
-
-    if (!certificate) {
-      return;
-    }
-
-    if (container && deleteContainer) {
-      try {
-        trusted.utils.Csp.deleteContainer(container, 75);
-
-        $(".toast-container_delete_ok").remove();
-        Materialize.toast(localize("Containers.container_delete_ok", locale), 2000, "toast-container_delete_ok");
-
-        this.handleReloadContainers();
-      } catch (e) {
-        $(".toast-container_delete_failed").remove();
-        Materialize.toast(localize("Containers.container_delete_failed", locale), 2000, "toast-container_delete_failed");
-      }
-    }
-
-    if (!window.PKISTORE.deleteCertificate(certificate)) {
-      $(".toast-cert_delete_failed").remove();
-      Materialize.toast(localize("Certificate.cert_delete_failed", locale), 2000, "toast-cert_delete_failed");
-
-      return;
-    }
-
-    this.handleReloadCertificates();
-
-    this.setState({ showModalDeleteCertifiacte: false });
-
-    $(".toast-cert_delete_ok").remove();
-    Materialize.toast(localize("Certificate.cert_delete_ok", locale), 2000, "toast-cert_delete_ok");
-  }
-
   getCertificateInfoBody() {
     const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
@@ -337,7 +239,7 @@ class CertWindow extends React.Component<any, any> {
           <a className="collection-info chain-info-blue">{localize("Certificate.cert_chain_status", locale)}</a>
           <div className="collection-info chain-status">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
           <a className="collection-info cert-info-blue">{localize("Certificate.cert_chain_info", locale)}</a>
-          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} style="" onClick={() => { return; } } />
+          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} style="" onClick={() => { return; }} />
         </div>
       );
     }
@@ -378,42 +280,38 @@ class CertWindow extends React.Component<any, any> {
       return;
     }
 
-    const body = container ?
-      (
-        <div className="input-field col s12">
-          <input
-            name="groupKeyGeneration"
-            type="checkbox"
-            id="delCont"
-            checked={this.state.deleteContainer}
-            onClick={this.toggleDeleteContainer}
-          />
-          <label htmlFor="delCont">{localize("Containers.delete_container", locale)}</label>
-        </div>
-      ) :
-      (
-        <div className="col s12">
-          <span className="card-infos sub">
-            {localize("Certificate.realy_delete_certificate", locale)}
-          </span>
-        </div>
-      );
-
     return (
       <Modal
         isOpen={showModalDeleteCertifiacte}
         header={localize("Certificate.delete_certificate", locale)}
-        onClose={this.toggleShowModal}>
-        <div>
-          <div className="row">
-            {body}
-          </div>
-          <div className="row">
-            <div className="col s1 offset-s9">
-              <a className="waves-effect waves-light btn modal-close" onClick={this.handleDeleteCertificateAndContainer}>{localize("Common.delete", locale)}</a>
-            </div>
-          </div>
-        </div>
+        onClose={this.handleCloseModalDeleteCertificate}>
+
+        <CertificateDelete
+          certificate={certificate}
+          reloadCertificates={this.handleReloadCertificates}
+          reloadContainers={this.handleReloadContainers} />
+      </Modal>
+    );
+  }
+
+  showModalExportCertificate = () => {
+    const { localize, locale } = this.context;
+    const { certificate, showModalExportCertifiacte } = this.state;
+
+    if (!certificate || !showModalExportCertifiacte) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalExportCertifiacte}
+        header={localize("Export.export_certificate", locale)}
+        onClose={this.handleCloseModalExportCertificate}>
+
+        <CertificateExport
+          certificate={certificate}
+          onSuccess={this.handleCloseModalExportCertificate}
+          onCancel={this.handleCloseModalExportCertificate} />
       </Modal>
     );
   }
@@ -474,19 +372,13 @@ class CertWindow extends React.Component<any, any> {
                   <ul className="app-bar-items">
                     <li className="cert-bar-text">
                       {this.getTitle()}
-                      <input type="file" ref={(direct) => direct &&
-                        direct.setAttribute("nwsaveas", localize("Certificate.certificate", locale) + ".pfx")}
-                        accept=".pfx" value="" id="choose-folder-export"
-                        onChange={(event: any) => {
-                          this.exportCert(event.target.value);
-                        }} />
                     </li>
                     <li className="right">
                       <a className={"nav-small-btn waves-effect waves-light " + DISABLED} data-activates="dropdown-btn-for-cert">
                         <i className="nav-small-icon material-icons cert-settings">more_vert</i>
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.exportDirectory}>{localize("Certificate.cert_export", locale)}</a></li>
+                        <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
                         <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
                       </ul>
                     </li>
@@ -494,11 +386,11 @@ class CertWindow extends React.Component<any, any> {
                 </nav>
                 {this.getCertificateInfoBody()}
                 {this.showModalDeleteCertificate()}
+                {this.showModalExportCertificate()}
               </div>
             </div>
           </div>
         </div>
-        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
   }
