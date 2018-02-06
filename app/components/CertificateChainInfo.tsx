@@ -12,11 +12,13 @@ class CertificateChainInfo extends React.Component<any, any> {
     this.state = ({
       chain: [],
       isChainVerified: false,
+      openItemId: props.activeItem ? props.activeItem : null,
     });
   }
 
   componentDidMount() {
     const { certificate } = this.props;
+    const { activeItem } = this.props;
 
     const provider = certificate.provider;
     const chain = this.buildChain(certificate);
@@ -27,28 +29,41 @@ class CertificateChainInfo extends React.Component<any, any> {
         const item = chain.items(j);
         const status = this.verifyCertificateChain(chain.items(j), provider);
 
-        verifiedChain.push({certificate: item, status});
+        verifiedChain.push({ certificate: item, status });
       }
     }
 
     this.setState({
       chain: verifiedChain,
       isChainVerified: true,
+      openItemId: activeItem ? activeItem : null,
     });
   }
 
   render() {
-    const { certificate, onClick, style } = this.props;
+    const { certificate, onClick } = this.props;
 
     return (
-      <div className={style}>
+      <div className={"collection"}>
         {this.getElements()}
       </ div>
     );
   }
 
+  toggleOpenItem = (openItemId: any) => (ev: any) => {
+    if (ev && ev.preventDefault) {
+      ev.preventDefault();
+    }
+
+    this.setState({ openItemId });
+  }
+
+  isItemOpened = (id: number) => {
+    return id === this.state.openItemId;
+  }
+
   getElements() {
-    const { certificate, onClick, style } = this.props;
+    const { certificate, onClick } = this.props;
     const { chain, isChainVerified } = this.state;
 
     const elements = [];
@@ -84,9 +99,11 @@ class CertificateChainInfo extends React.Component<any, any> {
           curKeyStyle = certificate.key.length > 0 ? "key" : "";
         }
 
+        const active = this.isItemOpened(element.thumbprint) ? "active" : "";
+
         elements.push(
-          <div className={"collection collection-item avatar certs-collection chain-text"} key={element.serialNumber + "_" + element.thumbprint}>
-            <div className="row chain-item">
+          <div className={"collection-item avatar certs-collection " + active} key={element.serialNumber + "_" + element.thumbprint}>
+            <div className="row chain-item " onClick={this.toggleOpenItem(element.thumbprint)}>
               <div className="col s1">
                 <i className={circleStyle}></i>
                 <div className={"vert_line"} style={vertlineStyle}></div>

@@ -2644,6 +2644,7 @@ i.material-icons.left.line {
     margin-top: 47px;
     height: 34px;
     width: 2px;
+    z-index: 2;
 }
 
 .csr-window__workspace {
