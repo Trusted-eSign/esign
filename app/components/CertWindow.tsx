@@ -311,7 +311,8 @@ class CertWindow extends React.Component<any, any> {
         <CertificateExport
           certificate={certificate}
           onSuccess={this.handleCloseModalExportCertificate}
-          onCancel={this.handleCloseModalExportCertificate} />
+          onCancel={this.handleCloseModalExportCertificate}
+          onFail={this.handleCloseModalExportCertificate} />
       </Modal>
     );
   }

@@ -1,6 +1,8 @@
+import * as fs from "fs";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { BASE64, DER } from "../../constants";
+import { fileExists } from "../../utils";
 import EncodingTypeSelector from "../EncodingTypeSelector";
 import PasswordDialog from "../PasswordDialog";
 
@@ -225,7 +227,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
 
   handleExport = () => {
     const { encodingType, exportPrivateKey, isHaveExportablePrivateKey, password } = this.state;
-    const { certificate, onCancel, onSuccess } = this.props;
+    const { certificate, onCancel, onFail, onSuccess } = this.props;
     const { localize, locale } = this.context;
 
     const CER = "CER";
@@ -262,6 +264,16 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       } catch (e) {
         $(".toast-cert_export_failed").remove();
         Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
+
+        if (fileExists(outFilePAth)) {
+          fs.unlinkSync(outFilePAth);
+        }
+
+        if (onFail) {
+          onFail();
+        }
+
+        return;
       }
 
       if (onSuccess) {
