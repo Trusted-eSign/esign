@@ -69,7 +69,8 @@ export default {
     export_private_key: "Эскпортировать закрытый ключ",
     no_export_private_key: "Не эскпортировать закрытый ключ",
     export_private_key_with_certificate: "Эскпортировать закрытый ключ вместе с сертификатом",
-    export_params: "Параметры экспорта",
+    export_set_password: "Укажите пароль для защиты закрытого ключа",
+    export_set_encoding: "Выберите тип кодировки для применения в экспортируемом файле",
   },
   Containers: {
     containers: "КОНТЕЙНЕРЫ",
@@ -397,6 +398,7 @@ export default {
     delete: "Удалить",
     exit: "ВЫХОД",
     goOver: "Перейти",
+    cancel: "Отмена",
   },
   Csp: {
     cpcspPKZIVersion: "Версия КриптоПро CSP",

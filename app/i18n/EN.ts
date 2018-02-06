@@ -70,6 +70,8 @@ export default {
     no_export_private_key: "No export private key",
     export_private_key_with_certificate: "Export the private key with the certificate",
     export_params: "Export parameters",
+    export_set_password: "Protect the private key by using a password",
+    export_set_encoding: "Choose encoding for use in output file",
   },
   Containers: {
     containers: "CONTAINERS",
@@ -393,6 +395,7 @@ export default {
     delete: "Delete",
     exit: "EXIT",
     goOver: "Go over",
+    cancel: "Cancel",
   },
   Csp: {
     cpcspPKZIVersion: "CryptoPro CSP product version",

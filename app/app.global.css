@@ -986,6 +986,8 @@ nav .cert-seacrh label i {
     background-color: rgb(135, 134, 159);
 }*/
 
+.modal { max-height: 75% !important ; }
+
 .dropdown-content {
   min-width: 170px;
 }

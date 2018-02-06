@@ -68,6 +68,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
         <div className="row">
           <div className="col s12">
             <span className="card-infos sub">
+              <div className="row" />
               {this.getMessage()}
             </span>
           </div>
@@ -104,14 +105,17 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
         <div className="row">
           <div className="col s12">
             <span className="card-title sub">
-              {localize("Export.export_params", locale)}:
+              {exportPrivateKey ? localize("Export.export_set_password", locale) : localize("Export.export_set_encoding", locale)}:
             </span>
           </div>
         </div>
         {this.getBody()}
         <div className="row">
-          <div className="col s1 offset-s9">
+          <div className="col s2 offset-s6">
             <a className={"waves-effect waves-light btn modal-close " + disabled} onClick={this.handleExport}>{localize("Export.export", locale)}</a>
+          </div>
+          <div className="col s3  offset-s1">
+            <a className={"waves-effect waves-light btn modal-close "} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
           </div>
         </div>
       </div>
@@ -162,15 +166,13 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       }
 
       body = (
-        <div>
+        <div className="row">
           <div className="row">
-            <div className="input-field col s6 input-field-password">
-              <i className={"material-icons prefix key-prefix " + activePassword}></i>
-              <input className={valid} id="input_password" type="password" value={this.state.password} onChange={(ev) => this.handlePasswordChange(ev.target.value)} />
-              <label htmlFor="input_password" className={activePassword}>{localize("Settings.password", locale)}</label>
+            <div className="input-field col s6">
+              <input className={valid} id="input_password_first" type="password" value={this.state.password} onChange={(ev) => this.handlePasswordChange(ev.target.value)} />
+              <label htmlFor="input_password_first" className={activePassword}>{localize("Settings.password", locale)}</label>
             </div>
-            <div className="input-field col s6 input-field-password">
-              <i className={"material-icons prefix key-prefix " + activePasswordConfirm}></i>
+            <div className="input-field col s6">
               <input className={valid} id="input_password_confirm" type="password" value={this.state.passwordConfirm} onChange={(ev) => this.handlePasswordConfirmChange(ev.target.value)} />
               <label htmlFor="input_password_confirm" className={activePasswordConfirm} data-error="пароли не совпадают">{localize("Settings.password_confirm", locale)}</label>
             </div>
@@ -290,6 +292,18 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       $(".toast-cert_export_cancel").remove();
       Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
     }
+  }
+
+  handelCancel = () => {
+    const { onCancel } = this.props;
+    const { localize, locale } = this.context;
+
+    if (onCancel) {
+      onCancel();
+    }
+
+    $(".toast-cert_export_cancel").remove();
+    Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
   }
 }
 
