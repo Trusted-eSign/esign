@@ -2929,3 +2929,16 @@ a.help_paragraf {
     padding-left: 0px;
     padding-right: 0px;
 }
+
+.desctoplic_text{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: justify;
+    font-size: 13px;
+}
+
+a.waves-effect.waves-light.btn.add-licence-modal-btn.left {
+    left: 10px;
+}
