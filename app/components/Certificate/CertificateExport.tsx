@@ -50,7 +50,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
   }
 
   render() {
-    const { exportPrivateKey, password, passwordConfirm } = this.state;
+    const { exportPrivateKey, isHaveExportablePrivateKey, password, passwordConfirm } = this.state;
     const { localize, locale } = this.context;
 
     let disabled = "";
@@ -59,6 +59,8 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       disabled = "disabled";
     }
 
+    const disabledExportKey = isHaveExportablePrivateKey ? false : true;
+
     return (
       <div >
         <div className="row">
@@ -66,6 +68,35 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
             <span className="card-infos sub">
               {this.getMessage()}
             </span>
+          </div>
+        </div>
+        <div className="row nobottom">
+          <div className="col s12">
+            <span className="card-title sub">
+              {localize("Export.export_private_key_with_certificate", locale)}?
+            </span>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s12">
+            <form action="#">
+              <p>
+                <input name="exportKey" type="radio" id="isExportPrivateKey" disabled={disabledExportKey}
+                  checked={this.state.exportPrivateKey}
+                  onClick={() => this.handleExportPrivateKey(true)} />
+                <label htmlFor="isExportPrivateKey" >
+                  {localize("Export.export_private_key", locale)}
+                </label>
+              </p>
+              <p>
+                <input name="exportKey" type="radio" id="isNotExportPrivateKey"
+                  checked={!this.state.exportPrivateKey}
+                  onClick={() => this.handleExportPrivateKey(false)} />
+                <label htmlFor="isNotExportPrivateKey">
+                  {localize("Export.no_export_private_key", locale)}
+                </label>
+              </p>
+            </form>
           </div>
         </div>
         <div className="row">
@@ -122,22 +153,14 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
     }
 
     if (isHaveExportablePrivateKey && exportPrivateKey) {
-      const valid = (password && passwordConfirm && (password === passwordConfirm)) ? "valid" : "invalid";
+      let valid = "";
+
+      if (passwordConfirm) {
+        valid = (password === passwordConfirm) ? "valid" : "invalid";
+      }
 
       body = (
         <div>
-          <div className="row">
-            <div className="input-field col s6">
-              <input
-                name="groupExportKey"
-                type="checkbox"
-                id="exportKey"
-                checked={exportPrivateKey}
-                onClick={this.toggleExportPrivateKey}
-              />
-              <label htmlFor="exportKey">{localize("Export.export_private_key", locale)}</label>
-            </div>
-          </div>
           <div className="row">
             <div className="input-field col s6 input-field-password">
               <i className={"material-icons prefix key-prefix " + activePassword}></i>
@@ -147,27 +170,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
             <div className="input-field col s6 input-field-password">
               <i className={"material-icons prefix key-prefix " + activePasswordConfirm}></i>
               <input className={valid} id="input_password_confirm" type="password" value={this.state.passwordConfirm} onChange={(ev) => this.handlePasswordConfirmChange(ev.target.value)} />
-              <label htmlFor="input_password_confirm" className={activePasswordConfirm}>{localize("Settings.password_confirm", locale)}</label>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (isHaveExportablePrivateKey && !exportPrivateKey) {
-      body = (
-        <div>
-          <div className="row">
-            <div className="input-field col s6">
-              <input
-                name="groupExportKey"
-                type="checkbox"
-                id="exportKey"
-                checked={exportPrivateKey}
-                onClick={this.toggleExportPrivateKey}
-              />
-              <label htmlFor="exportKey">{localize("Export.export_private_key", locale)}</label>
-            </div>
-            <div className="col s6 card-infos sub">
-              <EncodingTypeSelector EncodingValue={encodingType} handleChange={(encoding: string) => this.handleEncodingChange(encoding)} />
+              <label htmlFor="input_password_confirm" className={activePasswordConfirm} data-error="пароли не совпадают">{localize("Settings.password_confirm", locale)}</label>
             </div>
           </div>
         </div>
@@ -187,8 +190,8 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
     return body;
   }
 
-  toggleExportPrivateKey = () => {
-    this.setState({ exportPrivateKey: !this.state.exportPrivateKey });
+  handleExportPrivateKey = (exportKey: boolean) => {
+    this.setState({ exportPrivateKey: exportKey });
   }
 
   handlePasswordChange = (password: string) => {

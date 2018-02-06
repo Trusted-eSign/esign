@@ -67,6 +67,8 @@ export default {
     export_format_der: "X509 (.CER) в кодировке DER",
     export_format_base64: "X509 (.CER) в кодировке BASE64",
     export_private_key: "Эскпортировать закрытый ключ",
+    no_export_private_key: "Не эскпортировать закрытый ключ",
+    export_private_key_with_certificate: "Эскпортировать закрытый ключ вместе с сертификатом",
     export_params: "Параметры экспорта",
   },
   Containers: {

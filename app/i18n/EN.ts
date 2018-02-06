@@ -67,6 +67,8 @@ export default {
     export_format_der: "DER encoded binary X509 (.CER)",
     export_format_base64: "Base-64 encoded X509 (.CER)",
     export_private_key: "Export private key",
+    no_export_private_key: "No export private key",
+    export_private_key_with_certificate: "Export the private key with the certificate",
     export_params: "Export parameters",
   },
   Containers: {
