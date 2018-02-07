@@ -27,8 +27,8 @@ class SignerCertificateInfo extends React.Component<any, any> {
     const { localize, locale } = this.context;
 
     const body = certForInfo ?
-      <CertificateInfo certificate={certForInfo} /> :
-      <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />
+      (<CertificateInfo certificate={certForInfo} />) :
+      (<BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />);
 
     return (
       <div className="content-wrapper z-depth-1">
