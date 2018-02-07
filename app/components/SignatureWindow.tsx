@@ -18,6 +18,15 @@ import SignatureSettings from "./SignatureSettings";
 const dialog = window.electron.remote.dialog;
 
 interface ISignatureWindowProps {
+  certificatesLoaded: boolean;
+  certificatesLoading: boolean;
+  deleteFile: (file: string) => void;
+  selectFile: (file: string) => void;
+  licenseLoaded: boolean;
+  licenseVerified: boolean;
+  licenseStatus: number;
+  licenseToken: string;
+  loadAllCertificates: () => void;
   files: Array<{
     id: string,
     filename: string,
@@ -27,6 +36,10 @@ interface ISignatureWindowProps {
     verified: boolean,
     active: boolean,
   }>;
+  verifySignature: (file: string) => void;
+  signatures: any;
+  signer: any;
+  settings: any;
 }
 
 class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
@@ -38,28 +51,88 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   constructor(props: ISignatureWindowProps) {
     super(props);
     this.state = ({
+      fileSignatures: null,
+      filename: null,
+      showSignatureInfo: true,
       signerCertificate: null,
     });
   }
 
-  handleActiveCert = (certificate: any) => {
-    this.setState({ signerCertificate: certificate });
-  }
-
-  handleBackView = () => {
-    this.setState({ signerCertificate: null });
-  }
-
   componentDidMount() {
-    const { certificatesLoaded, certificatesLoading, loadAllCertificates } = this.props;
+    const { certificatesLoaded, certificatesLoading } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { loadAllCertificates } = this.props;
 
     if (!certificatesLoading && !certificatesLoaded) {
       loadAllCertificates();
     }
   }
 
+  componentWillReceiveProps(nextProps: ISignatureWindowProps) {
+    const { files, signatures } = this.props;
+
+    if (nextProps.files && nextProps.files.length === 1 && nextProps.signatures && nextProps.signatures.length) {
+      const file = nextProps.files[0];
+
+      const fileSignatures = nextProps.signatures.filter((signature: any) => {
+        return signature.fileId === file.id;
+      });
+
+      this.setState({ fileSignatures, filename: file.filename, showSignatureInfo: true });
+    }
+
+    if (!nextProps.files || !nextProps.files.length || nextProps.files.length > 1) {
+      this.setState({ showSignatureInfo: false, signerCertificate: null });
+    }
+  }
+
+  render() {
+    const { localize, locale } = this.context;
+    const { certificatesLoading } = this.props;
+
+    if (certificatesLoading) {
+      return <ProgressBars />;
+    }
+
+    return (
+      <div className="main">
+        <Dialog />
+        <div className="content">
+          {this.getSignatureInfo()}
+          <div className="col s6 m6 l6 content-item-height">
+            <BtnsForOperation
+              btn_name_first={localize("Sign.sign", locale)}
+              btn_name_second={localize("Sign.verify", locale)}
+              btn_resign={localize("Sign.resign", locale)}
+              btn_unsign={localize("Sign.unsign", locale)}
+              operation_first={this.signed}
+              operation_second={this.verifySign}
+              operation_unsign={this.unSign}
+              operation_resign={this.resign}
+              operation="sign" />
+            <FileSelector operation="sign" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  handleActiveCert = (certificate: any) => {
+    this.setState({ signerCertificate: certificate });
+  }
+
+  handleNoShowSignatureInfo = () => {
+    this.setState({ showSignatureInfo: false, signerCertificate: null });
+  }
+
+  handleNoShowSignerCertificateInfo = () => {
+    this.setState({ signerCertificate: null });
+  }
+
   signed = () => {
-    const { files, settings, signer, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
+    const { files, settings, signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -129,7 +202,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   resign = () => {
-    const { files, settings, signer, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
+    const { files, settings, signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -195,7 +270,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   unSign = () => {
-    const { files, settings, deleteFile, selectFile } = this.props;
+    const { files, settings } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
@@ -223,7 +300,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   verifySign = () => {
-    const { files, verifySignature, signatures } = this.props;
+    const { files, signatures } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { verifySignature } = this.props;
     const { localize, locale } = this.context;
 
     let res = true;
@@ -232,7 +311,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       verifySignature(file.id);
     });
 
-    signatures.forEach((signature) => {
+    signatures.forEach((signature: any) => {
       for (const file of files) {
         if (file.id === signature.fileId && !signature.status_verify) {
           res = false;
@@ -240,6 +319,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         }
       }
     });
+
+    this.setState({ showSignatureInfo: true });
 
     if (res) {
       $(".toast-verify_sign_ok").remove();
@@ -251,29 +332,18 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   getSignatureInfo() {
-    const { signerCertificate } = this.state;
-    const { files, signatures } = this.props;
+    const { fileSignatures, filename, showSignatureInfo, signerCertificate } = this.state;
 
-    let file = null;
-    let fileSignatures = null;
-
-    if (files && files.length === 1 && signatures && signatures.length) {
-      file = files[0];
-
-      fileSignatures = signatures.filter((signature) => {
-        return signature.fileId === file.id;
-      });
-    }
-
-    if (fileSignatures && fileSignatures.length) {
+    if (showSignatureInfo && fileSignatures) {
       return (
         <div className="content-tem">
           <SignatureInfoBlock
             signerCertificate={signerCertificate}
             handleActiveCert={this.handleActiveCert}
-            handleBackView={this.handleBackView}
+            handleNoShowSignerCertificateInfo={this.handleNoShowSignerCertificateInfo}
+            handleNoShowSignatureInfo={this.handleNoShowSignatureInfo}
             signatures={fileSignatures}
-            filename={file.filename}
+            filename={filename}
           />
         </div>
       );
@@ -290,43 +360,12 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       );
     }
   }
-
-  render() {
-    const { localize, locale } = this.context;
-    const { certificatesLoading } = this.props;
-
-    if (certificatesLoading) {
-      return <ProgressBars />;
-    }
-
-    return (
-      <div className="main">
-        <Dialog />
-        <div className="content">
-          {this.getSignatureInfo()}
-          <div className="col s6 m6 l6 content-item-height">
-            <BtnsForOperation
-              btn_name_first={localize("Sign.sign", locale)}
-              btn_name_second={localize("Sign.verify", locale)}
-              btn_resign={localize("Sign.resign", locale)}
-              btn_unsign={localize("Sign.unsign", locale)}
-              operation_first={this.signed}
-              operation_second={this.verifySign}
-              operation_unsign={this.unSign}
-              operation_resign={this.resign}
-              operation="sign" />
-            <FileSelector operation="sign" />
-          </div>
-        </div>
-      </div>
-    );
-  }
 }
 
 export default connect((state) => {
   let signatures: object[] = [];
 
-  mapToArr(state.signatures.entities).forEach((element) => {
+  mapToArr(state.signatures.entities).forEach((element: any) => {
     signatures = signatures.concat(mapToArr(element));
   });
 
