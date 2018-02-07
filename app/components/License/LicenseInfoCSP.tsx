@@ -1,47 +1,60 @@
 import PropTypes from "prop-types";
 import * as React from "react";
-import { connect } from "react-redux";
 import LicenseInfoFiled from "./LicenseInfoField";
 
-
-interface ILicenseInfoCSPProps {
-  // loaded: boolean;
-  // loading: boolean;
-}
-
-class LicenseInfoCSP extends React.Component<ILicenseInfoCSPProps, {}> {
+class LicenseInfoCSP extends React.PureComponent {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  componentDidMount() {
-    // tslint:disable-next-line:no-shadowed-variable
+  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
+    return (this.context.locale !== nextContext.locale) ? true : false;
   }
- 
 
   render() {
     const { localize, locale } = this.context;
-    // const { licenseCSP } = this.props;
-    let licensePresent: string = '-';
-    let licenseValid: string = '-';
 
     return (
       <div>
-        <div className="bmark_desktoplic">{localize("License.About_License_CSP", locale)}</div>
+        <div className="bmark_desktoplic">
+          {localize("License.About_License_CSP", locale)}
+        </div>
         <div className="row leftshifter">
           <div className="col s6">
-            <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={licensePresent} />
+            <LicenseInfoFiled
+              title={localize("License.license", locale)}
+              info={this.getLicense()}
+            />
           </div>
           <div className="col s6">
-            <LicenseInfoFiled title={localize("Common.subject", locale)} info={licenseValid} />
+            <LicenseInfoFiled
+              title={localize("License.lic_status", locale)}
+              info={this.getLicenseStatus() ? localize("License.license_correct", locale) : localize("License.license_incorrect", locale)}
+            />
           </div>
         </div>
       </div>
     );
   }
+
+  getLicense = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPLicense();
+    } catch (e) {
+      return "-";
+    }
+  }
+
+  getLicenseStatus = () => {
+    const { localize, locale } = this.context;
+
+    try {
+      return trusted.utils.Csp.checkCPCSPLicense();
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
-export default connect((state) => {
-  return {  };
-}, {}, null, {pure: false})(LicenseInfoCSP);
+export default LicenseInfoCSP;

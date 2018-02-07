@@ -363,6 +363,8 @@ export default {
     jwtErrorStoreIsLocked: "Чтение лицензии заблокировано",
     jwtErrorCode: "Неизвестный код ошибки",
     jwtGetLicense: "Для приобретения лицензии перейдите на сайт:",
+    license_correct: "Действительна",
+    license_incorrect: "Недействительна",
   },
   Кegistration: {
     LoginAndPass: "АВТОРИЗАЦИЯ ПО ЛОГИНУ И ПАРОЛЮ",

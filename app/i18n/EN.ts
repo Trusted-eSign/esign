@@ -324,6 +324,7 @@ export default {
     license: "License",
     License: "LICENSE",
     About_License: "LICENSE INFORMATION",
+    About_License_CSP: "CRYPTOPRO CSP LICENSE INFORMATION",
     license_key: "The license key",
     Enter_Key: "ENTER THE KEY",
     entered_the_key: "Enter the key",
@@ -360,6 +361,9 @@ export default {
     jwtErrorStoreIsLocked: "Load license was loked",
     jwtErrorCode: "Unknown error code",
     jwtGetLicense: "For buy a license go to:",
+    license_status: "License status",
+    license_correct: "Correct",
+    license_incorrect: "Incorrect",
   },
   Kegistration: {
     LoginAndPass: "A USERNAME AND PASSWORD AUTHENTICATION",
