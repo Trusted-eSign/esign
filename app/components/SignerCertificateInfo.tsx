@@ -28,7 +28,7 @@ class SignerCertificateInfo extends React.Component<any, any> {
 
     const body = certForInfo ?
       <CertificateInfo certificate={certForInfo} /> :
-      <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />;
+      <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />
 
     return (
       <div className="content-wrapper z-depth-1">
@@ -53,8 +53,10 @@ class SignerCertificateInfo extends React.Component<any, any> {
     return (
       <div className={"content-tem sign-info "}>
         <div className="col s6 m6 l6 content-item">
-          <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={handleBackView} text={localize("Certificate.cert_chain", locale)} />
-          <CertificateChainInfo certificate={certificate} onClick={this.handleClick}/>
+          <div className="content-wrapper z-depth-1">
+            <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={handleBackView} text={localize("Certificate.cert_chain", locale)} />
+            <CertificateChainInfo certificate={certificate} onClick={this.handleClick} />
+          </div>
         </div>
         <div className="col s6 m6 l6 content-item">
           {this.getCertificateInfo()}
