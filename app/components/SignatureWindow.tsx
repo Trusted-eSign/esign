@@ -78,7 +78,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         return signature.fileId === file.id;
       });
 
-      this.setState({ fileSignatures, filename: file.filename, showSignatureInfo: true });
+      const showSignatureInfo = fileSignatures && fileSignatures.length > 0 ? true : false;
+
+      this.setState({ fileSignatures, filename: file.filename, showSignatureInfo });
     }
 
     if (!nextProps.files || !nextProps.files.length || nextProps.files.length > 1) {
