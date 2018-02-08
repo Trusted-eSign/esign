@@ -89,7 +89,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       }
     }
 
-    if (!nextProps.files || !nextProps.files.length || nextProps.files.length > 1) {
+    if (!files || !files.length || !nextProps.files || !nextProps.files.length || nextProps.files.length > 1 || files[0].id !== nextProps.files[0].id ) {
       this.setState({ showSignatureInfo: false, signerCertificate: null });
     }
   }
