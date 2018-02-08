@@ -41,6 +41,12 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     });
   }
 
+  componentWillReceiveProps(nextProps: any) {
+    if (this.props.recipients !== nextProps.recipients) {
+      this.setState({selectedRecipients: nextProps.recipients});
+    }
+  }
+
   handleAddRecipient = (cert: any) => {
     this.setState({
       selectedRecipients: [...this.state.selectedRecipients, cert],
@@ -67,6 +73,8 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     for (const recipient of selectedRecipients) {
       addRecipientCertificate(recipient.id);
     }
+
+    this.setState({ modalCertList: false });
 
     $("#add-cert").closeModal();
   }
@@ -174,7 +182,11 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
-        <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients} handleCleanRecipientsList={this.handleCleanRecipientsList} />
+        <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients}
+          handleCleanRecipientsList={() => {
+            this.handleCleanStateList();
+            this.handleCleanRecipientsList();
+          }} />
         <div className={"cert-contents " + NOT_ACTIVE}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
             this.setState({ modalCertList: true });
@@ -186,6 +198,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
             <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
+              this.setState({ modalCertList: false, selectedRecipients: recipients });
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
@@ -215,7 +228,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
                     <div className="add-certs">
                       <div className="add-certs-item">
                         <div className={"add-cert-collection choose-cert-collection " + CHOOSE}>
-                          <RecipientsList onActive={this.handleActiveCert} handleRemoveRecipient={this.handleRemoveRecipient} dialogType="modal" recipients={selectedRecipients}/>
+                          <RecipientsList onActive={this.handleActiveCert} handleRemoveRecipient={this.handleRemoveRecipient} dialogType="modal" recipients={selectedRecipients} />
                         </div>
                         {cert}
                         <BlockNotElements name={CHOOSE_VIEW} title={localize("Certificate.cert_not_select", locale)} />
