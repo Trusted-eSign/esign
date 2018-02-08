@@ -53,7 +53,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     this.state = ({
       fileSignatures: null,
       filename: null,
-      showSignatureInfo: true,
+      showSignatureInfo: false,
       signerCertificate: null,
     });
   }
@@ -69,18 +69,24 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   componentWillReceiveProps(nextProps: ISignatureWindowProps) {
-    const { files, signatures } = this.props;
+    const { certificatesLoaded, certificatesLoading, files, signatures } = this.props;
 
-    if (nextProps.files && nextProps.files.length === 1 && nextProps.signatures && nextProps.signatures.length) {
-      const file = nextProps.files[0];
+    if (files.length !== nextProps.files.length || signatures.length !== nextProps.signatures.length) {
+      if (nextProps.files && nextProps.files.length === 1) {
+        if (nextProps.signatures && nextProps.signatures.length) {
+          const file = nextProps.files[0];
 
-      const fileSignatures = nextProps.signatures.filter((signature: any) => {
-        return signature.fileId === file.id;
-      });
+          const fileSignatures = nextProps.signatures.filter((signature: any) => {
+            return signature.fileId === file.id;
+          });
 
-      const showSignatureInfo = fileSignatures && fileSignatures.length > 0 ? true : false;
+          const showSignatureInfo = fileSignatures && fileSignatures.length > 0 ? true : false;
 
-      this.setState({ fileSignatures, filename: file.filename, showSignatureInfo });
+          this.setState({ fileSignatures, filename: file.filename, showSignatureInfo });
+
+          return;
+        }
+      }
     }
 
     if (!nextProps.files || !nextProps.files.length || nextProps.files.length > 1) {
@@ -321,8 +327,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         }
       }
     });
-
-    this.setState({ showSignatureInfo: true });
 
     if (res) {
       $(".toast-verify_sign_ok").remove();
