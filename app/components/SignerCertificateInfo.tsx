@@ -55,7 +55,9 @@ class SignerCertificateInfo extends React.Component<any, any> {
         <div className="col s6 m6 l6 content-item">
           <div className="content-wrapper z-depth-1">
             <HeaderWorkspaceBlock icon="arrow_back" onСlickBtn={handleBackView} text={localize("Certificate.cert_chain", locale)} />
-            <CertificateChainInfo certificate={certificate} onClick={this.handleClick} />
+            <div className="add-certs">
+              <CertificateChainInfo certificate={certificate} onClick={this.handleClick} />
+            </div>
           </div>
         </div>
         <div className="col s6 m6 l6 content-item">
