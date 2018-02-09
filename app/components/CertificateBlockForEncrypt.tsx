@@ -42,9 +42,11 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
   }
 
   handleAddRecipient = (cert: any) => {
-    this.setState({
-      selectedRecipients: [...this.state.selectedRecipients, cert],
-    });
+    if (!this.state.selectedRecipients.includes(cert)) {
+      this.setState({
+        selectedRecipients: [...this.state.selectedRecipients, cert],
+      });
+    }
   }
 
   handleRemoveRecipient = (cert: any) => {
