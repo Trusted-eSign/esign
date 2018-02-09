@@ -41,12 +41,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     });
   }
 
-  componentWillReceiveProps(nextProps: any) {
-    if (this.props.recipients !== nextProps.recipients) {
-      this.setState({selectedRecipients: nextProps.recipients});
-    }
-  }
-
   handleAddRecipient = (cert: any) => {
     this.setState({
       selectedRecipients: [...this.state.selectedRecipients, cert],
