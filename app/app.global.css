@@ -2790,9 +2790,13 @@ i.material-icons.left.line {
 /*---------Diagnostic master-------*/
 .diagnostic-modal{
     width: 94%;
-    height: 85%;
-    max-height: 85%;
+    height: 100%;
+    max-height: 100%;
     overflow-y: hidden;
+}
+
+.modal.diagnostic-modal{
+  max-height: 85% !important ;
 }
 
 .diagnostic-content-item {
