@@ -86,120 +86,26 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     event.preventDefault();
   }
 
-  dropFiles(files: IFile[]) {
+  scanFiles = (item: any) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { selectFile } = this.props;
 
-    for (const file of files) {
-      selectFile(file.path);
-    }
-  }
+    if (item.isDirectory) {
+      const directoryReader = item.createReader();
 
-  checkFolder(event: any, cb: (items: any, files: IFile[], folder: boolean) => void) {
-    const files: IFile[] = [];
-    const fItems: IFile[] = [];
-    const items = event.dataTransfer.items;
-
-    let counter = 0;
-    let folder = false;
-
-    for (const item of items) {
-      counter++;
-      const entry = item.webkitGetAsEntry();
-      fItems.push(entry);
-      if (entry) {
-        if (entry.isFile) {
-          entry.file((dropfile: IFile) => {
-            counter--;
-            files.push(dropfile);
-            if (!counter) {
-              cb(fItems, files, folder);
-            }
-          });
-        } else if (entry.isDirectory) {
-          const dirReader = entry.createReader();
-
-          dirReader.readEntries((entries: any) => {
-            counter--;
-            for (const entrie of entries) {
-              counter++;
-
-              if (entrie.isFile) {
-                entrie.file((filesys: IFile) => {
-                  counter--;
-                  files.push(filesys);
-
-                  if (!counter) {
-                    cb(fItems, files, folder);
-                  }
-                });
-              } else {
-                counter--;
-                folder = true;
-                if (!counter) {
-                  cb(fItems, files, folder);
-                }
-              }
-            }
-            if (!counter) {
-              cb(fItems, files, folder);
-            }
-          });
-        }
-      }
-    }
-  }
-
-  dropFolderAndFiles(item: any, cb: (err: Error | null, files: IFile[]) => void) {
-    const self = this;
-    const files: IFile[] = [];
-    let counter = 0;
-    counter++;
-    if (item) {
-      if (item.isFile) {
-        item.file((dropfile: IFile) => {
-          counter--;
-          files.push(dropfile);
-          if (!counter) {
-            cb(null, files);
-          }
+      directoryReader.readEntries((entries: any) => {
+        entries.forEach((entry: any) => {
+          this.scanFiles(entry);
         });
-      } else if (item.isDirectory) {
-        const dirReader = item.createReader();
-
-        dirReader.readEntries((entries: any) => {
-          counter--;
-          for (const entrie of entries) {
-            counter++;
-            if (entrie.isFile) {
-              entrie.file((filesys: IFile) => {
-                counter--;
-                files.push(filesys);
-                if (!counter) {
-                  cb(null, files);
-                }
-              });
-            } else {
-              self.dropFolderAndFiles(entrie, (err, filesArr) => {
-                counter--;
-                for (const file of filesArr) {
-                  files.push(file);
-                }
-                if (!counter) {
-                  cb(null, filesArr);
-                }
-              });
-            }
-          }
-          if (!counter) {
-            cb(null, files);
-          }
-        });
-      }
+      });
+    } else {
+      item.file((dropfile: IFile) => {
+        selectFile(dropfile.path);
+      });
     }
   }
 
-  dropHandler(event: any) {
+  dropHandler = (event: any) => {
     const { localize, locale } = this.context;
 
     event.stopPropagation();
@@ -211,23 +117,15 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
       zone.classList.remove("droppableZone-active");
     }
 
-    this.checkFolder(event, (items, files, folder) => {
-      if (folder) {
-        dlg.ShowDialog(localize("Common.add_files", locale), localize("Common.add_all_files", locale), (code) => {
-          if (code) {
-            for (const item of items) {
-              this.dropFolderAndFiles(item, (err, filesArr) => {
-                this.dropFiles(filesArr);
-              });
-            }
-          } else {
-            this.dropFiles(files);
-          }
-        });
-      } else {
-        this.dropFiles(files);
+    const items = event.dataTransfer.items;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i].webkitGetAsEntry();
+
+      if (item) {
+        this.scanFiles(item);
       }
-    });
+    }
   }
 
   dropZoneActive() {
