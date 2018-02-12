@@ -253,7 +253,7 @@ export function selectFile(fullpath: string) {
   const file = {
     extension: extFile(fullpath),
     filename: path.basename(fullpath),
-    fullpath: fullpath,
+    fullpath,
     lastModifiedDate: stat.birthtime,
     size: stat.size,
   };

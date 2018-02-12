@@ -3,9 +3,18 @@ import * as React from "react";
 import { connect } from "react-redux";
 import SignatireStatusCicrcle from "./SignatureStatusCircle";
 
+interface IFileRedux {
+  active: boolean;
+  extension: string;
+  filename: string;
+  fullpath: string;
+  id: string;
+  lastModifiedDate: Date;
+}
+
 interface IFilelistItemProps {
-  file: any;
-  index: string;
+  file: IFileRedux;
+  index: number;
   operation: string;
   onClickBtn: (event: any) => void;
   removeFiles: (event: any) => void;
