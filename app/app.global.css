@@ -646,28 +646,10 @@ i.material-icons.choosefolder {
   margin-left: 12px;
   margin-top: 5px;
 }
-.RU {
-    display: block;
-    /*width: 30px;
-    height: 20px;*/
-    /*//background: url(./resources/image/Flag_of_Russia.png);*/
-    background-size: 100%;
-}
-.EN {
-    display: block;
-    /*width: 30px;
-    height: 20px;*/
-    /*//background: url(./resources/image/Flag_of_United_States.png);*/
-    background-size: 100%;
-}
-.RU:hover, .EN:hover {
-    opacity: 0.8;
-}
+
 .lang {
-    height: 49px;
-    display: flex;
-    align-items: center;
-    margin: 0 10px;
+  border-radius: 100%;
+  overflow: hidden;
 }
 
 .triangle-down {
