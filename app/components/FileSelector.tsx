@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
+import { List } from "react-virtualized";
 import { activeFile, deleteFile, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
 import { mapToArr } from "../utils";
@@ -184,6 +185,20 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     }
   }
 
+  rowRenderer = ({ index, key, style }) => {
+    return (
+      <FileListItem
+        removeFiles={() => this.removeFile(this.props.files[index].id)}
+        onClickBtn={() => this.toggleActive(this.props.files[index])}
+        file={this.props.files[index]}
+        operation={this.props.operation}
+        key={key}
+        index={index}
+        style={style}
+      />
+    );
+  }
+
   render() {
     // tslint:disable-next-line:no-shadowed-variable
     const { files, deleteFile } = this.props;
@@ -220,25 +235,36 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
               onDragOver={(event: any) => this.dragOverHandler(event)}
               onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
             </div>
-            <div className="add-files" onDragEnter={this.dropZoneActive.bind(this)}>
-              <div className={"add-file-item " + active} id="items-hidden">
-                <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
-                <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
-                <i className="material-icons large fullscreen">fullscreen</i>
-              </div>
-              <div className={"add-files-collection " + collection}>
-                {files.map((file: IFileRedux, i: number) => {
-                  return <FileListItem
-                    removeFiles={() => this.removeFile(file.id)}
-                    onClickBtn={() => this.toggleActive(file)}
-                    file={file}
-                    index={i}
-                    operation={self.props.operation}
-                    key={file.id}
-                  />;
-                })}
-              </div>
-            </div>
+
+            {files.length ?
+              (
+                <div className={"add-files-collection " + collection}>
+                  <List
+                    rowCount={this.props.files.length}
+                    height={427}
+                    width={377}
+                    overscanRowCount={5}
+                    rowHeight={64}
+                    rowRenderer={this.rowRenderer}
+                    files={files}
+                  />
+                </div>
+              ) :
+              <div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <div onDragEnter={this.dropZoneActive.bind(this)}>
+                  <div className={"add-file-item " + active} id="items-hidden">
+                    <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
+                    <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
+                    <i className="material-icons large fullscreen">fullscreen</i>
+                  </div>
+                </div>
+              </div>}
           </div>
         </div>
       </div>

@@ -14,10 +14,10 @@ interface IFileRedux {
 
 interface IFilelistItemProps {
   file: IFileRedux;
-  index: number;
   operation: string;
   onClickBtn: (event: any) => void;
   removeFiles: (event: any) => void;
+  index: string;
 }
 
 class FileListItem extends React.Component<IFilelistItemProps, {}> {
@@ -39,7 +39,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFilelistItemProps) {
-    return nextProps.file.active !== this.props.file.active;
+    return nextProps.file.active !== this.props.file.active || nextProps.file.id !== this.props.file.id;
   }
 
   stopEvent(event: any) {
@@ -64,13 +64,13 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
     }
 
     return (
-      <SignatireStatusCicrcle fileId={file.id}/>
+      <SignatireStatusCicrcle fileId={file.id} />
     );
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { file, operation } = this.props;
+    const { file, operation, style } = this.props;
 
     const self = this;
     let active = "";
@@ -80,27 +80,29 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
     }
 
     return (
-      <div className={"collection-item avatar files-collection " + active} id={"file-" + this.props.index} onClick={this.props.onClickBtn}>
-        <div className="r-iconbox-link">
-          <div className="r-iconbox-icon"><i className={file.extension} id="file-avatar"></i></div>
-          <p className="collection-title">{file.filename}</p>
-          <p className="collection-info">{file.lastModifiedDate.toLocaleDateString(locale, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          })}</p>
+      <div style={style}>
+        <div className={"collection-item avatar files-collection " + active} id={"file-" + this.props.index} onClick={this.props.onClickBtn}>
+          <div className="r-iconbox-link">
+            <div className="r-iconbox-icon"><i className={file.extension} id="file-avatar"></i></div>
+            <p className="collection-title">{file.filename}</p>
+            <p className="collection-info">{file.lastModifiedDate.toLocaleDateString(locale, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            })}</p>
+          </div>
+          {this.getSignatureStatusCicrcle()}
+          <i className="file-setting-item waves-effect material-icons secondary-content"
+            data-activates={"dropdown-btn-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
+          <ul id={"dropdown-btn-set-file-" + this.props.index} className="dropdown-content">
+            <li><a onClick={function (event: any) { self.openFile(event, file.fullpath); }}>{localize("Settings.open_file", locale)}</a></li>
+            <li><a onClick={function (event: any) { self.openFileFolder(event, file.fullpath); }}>{localize("Settings.go_to_file", locale)}</a></li>
+            <li><a onClick={this.props.removeFiles}>{localize("Settings.delete_file", locale)}</a></li>
+          </ul>
         </div>
-        {this.getSignatureStatusCicrcle()}
-        <i className="file-setting-item waves-effect material-icons secondary-content"
-          data-activates={"dropdown-btn-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
-        <ul id={"dropdown-btn-set-file-" + this.props.index} className="dropdown-content">
-          <li><a onClick={function(event: any) { self.openFile(event, file.fullpath); }}>{localize("Settings.open_file", locale)}</a></li>
-          <li><a onClick={function(event: any) { self.openFileFolder(event, file.fullpath); }}>{localize("Settings.go_to_file", locale)}</a></li>
-          <li><a onClick={this.props.removeFiles}>{localize("Settings.delete_file", locale)}</a></li>
-        </ul>
       </div>
     );
   }
