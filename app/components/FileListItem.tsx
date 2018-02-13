@@ -20,7 +20,7 @@ interface IFilelistItemProps {
   removeFiles: (event: any) => void;
 }
 
-class FileListItem extends React.Component<IFilelistItemProps, any> {
+class FileListItem extends React.Component<IFilelistItemProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -36,6 +36,10 @@ class FileListItem extends React.Component<IFilelistItemProps, any> {
       alignment: "left",
     },
     );
+  }
+
+  shouldComponentUpdate(nextProps: IFilelistItemProps) {
+    return nextProps.file.active !== this.props.file.active;
   }
 
   stopEvent(event: any) {
