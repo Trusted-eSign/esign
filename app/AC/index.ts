@@ -248,14 +248,20 @@ export function activeContainer(container: number) {
   };
 }
 
-export function selectFile(fullpath: string) {
-  const stat = fs.statSync(fullpath);
+export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) {
+  let stat;
+
+  if (!lastModifiedDate || !size) {
+   stat = fs.statSync(fullpath);
+  }
+
+  const extension = extFile(fullpath);
   const file = {
-    extension: extFile(fullpath),
-    filename: path.basename(fullpath),
+    extension,
+    filename: name ? name : path.basename(fullpath),
     fullpath,
-    lastModifiedDate: stat.birthtime,
-    size: stat.size,
+    lastModifiedDate: lastModifiedDate ? lastModifiedDate : stat.birthtime,
+    size: size ? size : stat.size,
   };
 
   return {

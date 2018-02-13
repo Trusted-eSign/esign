@@ -36,7 +36,7 @@ interface IFileSelectorProps {
   deleteFile: (fileId: string) => void;
   operation: string;
   files: IFileRedux[];
-  selectFile: (fullpath: string) => void;
+  selectFile: (fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) => void;
 }
 
 class FileSelector extends React.Component<IFileSelectorProps, {}> {
@@ -86,21 +86,29 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     event.preventDefault();
   }
 
+  directoryReader = (reader: any) => {
+    reader.readEntries((entries: any) => {
+      entries.forEach((entry: any) => {
+        this.scanFiles(entry);
+      });
+
+      if (entries.length === 100) {
+        this.directoryReader(reader);
+      }
+    });
+  }
+
   scanFiles = (item: any) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { selectFile } = this.props;
 
     if (item.isDirectory) {
-      const directoryReader = item.createReader();
+      const reader = item.createReader();
 
-      directoryReader.readEntries((entries: any) => {
-        entries.forEach((entry: any) => {
-          this.scanFiles(entry);
-        });
-      });
+      this.directoryReader(reader);
     } else {
       item.file((dropfile: IFile) => {
-        selectFile(dropfile.path);
+        selectFile(dropfile.path, dropfile.name, dropfile.lastModifiedDate, dropfile.size);
       });
     }
   }
@@ -119,11 +127,11 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
     const items = event.dataTransfer.items;
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i].webkitGetAsEntry();
+    for (const item of items) {
+      const entry = item.webkitGetAsEntry();
 
-      if (item) {
-        this.scanFiles(item);
+      if (entry) {
+        this.scanFiles(entry);
       }
     }
   }
