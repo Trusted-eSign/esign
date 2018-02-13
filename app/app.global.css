@@ -1756,6 +1756,14 @@ p.message_onlinelic{
   max-height: 80%;
 }
 
+#licence-temporary-modal {
+  top: 20% !important;
+  width: 70%;
+  overflow: hidden;
+  max-height: 80%;
+}
+
+
 .licence-modal-main {
     height: 100%;
 }
@@ -2928,6 +2936,30 @@ a.help_paragraf {
     font-size: 13px;
 }
 
-a.waves-effect.waves-light.btn.add-licence-modal-btn.left {
+a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
     left: 10px;
+}
+
+.alert_ok_icon {
+    display: block;
+    background: url(./resources/image/alert_ok_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.alert_warning_icon {
+    display: block;
+    background: url(./resources/image/alert_warning_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.alert_error_icon {
+    display: block;
+    background: url(./resources/image/alert_error_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
 }

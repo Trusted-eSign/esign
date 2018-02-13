@@ -52,13 +52,20 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  app.commandLine.appendSwitch('ignore-certificate-errors');  
+
   mainWindow = new BrowserWindow({
     width: 800, height: 600,
     resizable: false,
     frame: false,
     toolbar: false,
-    show: false
+    show: false,
+    // This handles disabling web security
+    webPreferences : {
+      webSecurity: false
+    }
   });
+
 
   preloader = new BrowserWindow({
     alwaysOnTop: true,
