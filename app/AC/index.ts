@@ -6,10 +6,11 @@ import {
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
+  CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
   FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
-  LOAD_LICENSE, REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
+  LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_ENCRYPT, PACKAGE_SIGN, PACKAGE_VERIFY,
+  REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
@@ -66,6 +67,50 @@ export function loadLicense() {
         : dispatch({
           type: LOAD_LICENSE + FAIL,
         });
+    }, 0);
+  };
+}
+
+interface IFile {
+  id: string;
+  filename: string;
+  lastModifiedDate: Date;
+  fullpath: string;
+  extension: string;
+  verified: boolean;
+  active: boolean;
+}
+
+export function packageSign(
+  files: IFile[],
+  cert: trusted.pki.Certificate,
+  key: trusted.pki.Key,
+  policies: string[],
+  format: trusted.DataFormat,
+  folderOut: string,
+) {
+  return (dispatch) => {
+    dispatch({
+      type: PACKAGE_SIGN + START,
+    });
+
+    let packageSignResult = true;
+
+    setTimeout(() => {
+      files.forEach((file) => {
+        const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
+        if (newPath) {
+          dispatch(deleteFile(file.id));
+          dispatch(selectFile(newPath));
+        } else {
+          packageSignResult = false;
+        }
+      });
+
+      dispatch({
+        payload: {packageSignResult},
+        type: PACKAGE_SIGN + SUCCESS,
+      });
     }, 0);
   };
 }

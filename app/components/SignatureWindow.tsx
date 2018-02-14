@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { deleteFile, loadAllCertificates, selectFile, verifySignature } from "../AC";
+import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature } from "../AC";
 import { activeFilesSelector } from "../selectors";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
@@ -16,6 +16,16 @@ import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 
 const dialog = window.electron.remote.dialog;
+
+interface IFile {
+  id: string;
+  filename: string;
+  lastModifiedDate: Date;
+  fullpath: string;
+  extension: string;
+  verified: boolean;
+  active: boolean;
+}
 
 interface ISignatureWindowProps {
   certificatesLoaded: boolean;
@@ -40,6 +50,11 @@ interface ISignatureWindowProps {
   signatures: any;
   signer: any;
   settings: any;
+  signedPackage: boolean;
+  signingPackage: boolean;
+  verifyingPackage: boolean;
+  packageSignResult: boolean;
+  packageSign: (files: IFile[], cert: trusted.pki.Certificate, key: trusted.pki.Key, policies: string[], format: trusted.DataFormat, folderOut: string) => void;
 }
 
 class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
@@ -69,6 +84,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   componentWillReceiveProps(nextProps: ISignatureWindowProps) {
+    const { localize, locale } = this.context;
     const { certificatesLoaded, certificatesLoading, files, signatures } = this.props;
 
     if (files.length !== nextProps.files.length || signatures.length !== nextProps.signatures.length) {
@@ -92,13 +108,23 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     if (!files || !files.length || !nextProps.files || !nextProps.files.length || nextProps.files.length > 1 || files[0].id !== nextProps.files[0].id ) {
       this.setState({ showSignatureInfo: false, signerCertificate: null });
     }
+
+    if (!this.props.signedPackage && nextProps.signedPackage) {
+      if (nextProps.packageSignResult) {
+        $(".toast-files_signed").remove();
+        Materialize.toast(localize("Sign.files_signed", locale), 2000, "toast-files_signed");
+      } else {
+        $(".toast-files_signed_failed").remove();
+        Materialize.toast(localize("Sign.files_signed_failed", locale), 2000, "toast-files_signed_failed");
+      }
+    }
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { certificatesLoading } = this.props;
+    const { certificatesLoading, signingPackage, verifyingPackage } = this.props;
 
-    if (certificatesLoading) {
+    if (certificatesLoading || signingPackage || verifyingPackage) {
       return <ProgressBars />;
     }
 
@@ -140,7 +166,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   signed = () => {
     const { files, settings, signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, selectFile } = this.props;
+    const { deleteFile, selectFile, packageSign } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -166,7 +192,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
       const folderOut = settings.outfolder;
-      let res = true;
       let format = trusted.DataFormat.PEM;
 
       if (folderOut.length > 0) {
@@ -189,30 +214,14 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         format = trusted.DataFormat.DER;
       }
 
-      files.forEach((file) => {
-        const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
-        if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath);
-        } else {
-          res = false;
-        }
-      });
-
-      if (res) {
-        $(".toast-files_signed").remove();
-        Materialize.toast(localize("Sign.files_signed", locale), 2000, "toast-files_signed");
-      } else {
-        $(".toast-files_signed_failed").remove();
-        Materialize.toast(localize("Sign.files_signed_failed", locale), 2000, "toast-files_signed_failed");
-      }
+      packageSign(files, cert, key, policies, format, folderOut);
     }
   }
 
   resign = () => {
     const { files, settings, signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, selectFile } = this.props;
+    const { deleteFile, selectFile, packageSign } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -257,23 +266,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         format = trusted.DataFormat.DER;
       }
 
-      files.forEach((file) => {
-        const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
-        if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath);
-        } else {
-          res = false;
-        }
-      });
-
-      if (res) {
-        $(".toast-files_resigned").remove();
-        Materialize.toast(localize("Sign.files_resigned", locale), 2000, "toast-files_resigned");
-      } else {
-        $(".toast-files_resigned_failed").remove();
-        Materialize.toast(localize("Sign.files_resigned_failed", locale), 2000, "toast-files_resigned_failed");
-      }
+      packageSign(files, cert, key, policies, format, folderOut);
     }
   }
 
@@ -383,8 +376,12 @@ export default connect((state) => {
     licenseStatus: state.license.status,
     licenseToken: state.license.data,
     licenseVerified: state.license.verified,
+    packageSignResult: state.signatures.packageSignResult,
     settings: state.settings.sign,
     signatures,
+    signedPackage: state.signatures.signedPackage,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
+    signingPackage: state.signatures.signingPackage,
+    verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, loadAllCertificates, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature })(SignatureWindow);
