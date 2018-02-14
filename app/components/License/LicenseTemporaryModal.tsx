@@ -3,6 +3,7 @@ import * as npath from "path";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
+import si from "systeminformation";
 import { loadLicense, verifyLicense } from "../../AC";
 import { LICENSE_PATH, PLATFORM } from "../../constants";
 import * as jwt from "../../trusted/jwt";
@@ -11,6 +12,13 @@ import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 // import ReCAPTCHA from "react-google-recaptcha";
 
 const dialog = window.electron.remote.dialog;
+let system_info = {
+  sys_manufacturer : "",
+  sys_uuid : "",
+  cpu_brand : "",
+  os_platform : "",
+  os_arch : "",
+};
 
 interface ILicenseTemporaryModalProps {
   closeWindow: () => void;
@@ -47,6 +55,8 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
       license_file: "",
       license_key: ""
     });
+
+    
   }
 
   setupLicense() {
@@ -117,9 +127,7 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
     }
 
     if (data && data.sub !== "-") {
-      //status = jwt.checkLicense(key); //Нужно убрать проверку на начало действия лицензии
-      status = 0;
-
+      status = jwt.checkLicense(key); 
       if (status === 0) {
         if (PLATFORM === "win32") {
           command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
@@ -154,23 +162,6 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
     this.props.closeWindow();
   }
 
-  // openLicenseFile() {
-  //   const { localize, locale } = this.context;
-
-  //   if (!window.framework_NW) {
-  //     const file = dialog.showOpenDialog({
-  //       filters: [
-  //         { name: localize("License.license", locale), extensions: ["lic"] },
-  //       ],
-  //       properties: ["openFile"],
-  //     });
-  //     if (file) {
-  //       $("#input_file").focus();
-  //       this.setState({ license_file: file[0], license_key: this.state.license_key });
-  //     }
-  //   }
-  // }
-
   cleanState = () => {
     this.setState(
       {
@@ -186,7 +177,7 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
   send = () => {
     const { localize, locale } = this.context;
     const self = this;
-  //   const sendReq: any = window.request.get({uri: "https://licensesvc.trusted.ru/license/jwt/getfree", rejectUnauthorized: false });
+     //   const sendReq: any = window.request.get({uri: "https://licensesvc.trusted.ru/license/jwt/getfree", rejectUnauthorized: false });
   //       sendReq.on("response", (response) => {
   //         switch (response.statusCode) {
   //           case 200:
@@ -211,6 +202,7 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
       data: {
         email: this.state.email.text,
         username: this.state.username.text,
+        sysinfo: JSON.stringify(system_info),
         sub: "CryptoARM GOST",
       },
       url: "https://licensesvc.trusted.ru/license/jwt/getfree",
@@ -289,6 +281,18 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
 
     //Запрос не отправлен
     if (request.status=='start') {
+      si.system(function(info: any) {
+        system_info.sys_manufacturer = info.manufacturer;
+        system_info.sys_uuid = info.uuid;  
+      /* console.log(info);*/});
+      si.osInfo(function(info: any) {
+        system_info.os_platform = info.platform;
+        system_info.os_arch = info.arch; 
+        /*console.log(info);*/});
+      si.cpu(function(info: any) {
+        system_info.cpu_brand = info.brand;
+        /*console.log(info);*/});
+      //console.log(system_info);
       return (
         <div className="licence-modal-content">
           <form onSubmit={this.validDatas}>
