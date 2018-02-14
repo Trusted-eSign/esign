@@ -1,3 +1,4 @@
+import {is} from "immutable";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -56,7 +57,25 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     });
   }
 
-  addFiles() {
+  shouldComponentUpdate(nextProps: IFileSelectorProps) {
+    const { files } = this.props;
+
+    if (nextProps.files.length !== this.props.files.length) {
+      return true;
+    }
+
+    for (let i = 0; i <= files.length; i++) {
+      if (is(files[i], nextProps.files[i])) {
+        continue;
+      } else {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+   addFiles() {
     // tslint:disable-next-line:no-shadowed-variable
     const { selectFile } = this.props;
 
