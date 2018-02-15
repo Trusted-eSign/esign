@@ -190,7 +190,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
-    "immutable": "^3.8.1",
+    "immutable": "^4.0.0-rc.2",
     "jquery": "^3.2.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
