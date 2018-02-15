@@ -1,5 +1,7 @@
 import { Map, OrderedMap, Record } from "immutable";
-import { ACTIVE_FILE, DELETE_FILE, SELECT_FILE, SUCCESS, VERIFY_SIGNATURE } from "../constants";
+import { ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, SELECT_FILE, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
+import { arrayToMap } from "../utils";
+import { filePackageDelete } from "../AC/index";
 
 const FileModel = Record({
   active: true,
@@ -12,12 +14,25 @@ const FileModel = Record({
 
 const DefaultReducerState = Record({
   entities: OrderedMap({}),
+  selectedFilesPackage: false,
+  selectingFilesPackage: false,
 });
 
 export default (files = new DefaultReducerState(), action) => {
   const { type, payload, randomId } = action;
 
   switch (type) {
+    case PACKAGE_SELECT_FILE + START:
+      return files
+        .set("selectedFilesPackage", false)
+        .set("selectingFilesPackage", true);
+
+    case PACKAGE_SELECT_FILE + SUCCESS:
+      return files
+        .update("entities", (entities) => arrayToMap(payload.filePackage, FileModel).merge(entities))
+        .set("selectedFilesPackage", true)
+        .set("selectingFilesPackage", false);
+
     case SELECT_FILE:
       return files.setIn(["entities", randomId], new FileModel({
         ...payload.file,
@@ -33,6 +48,12 @@ export default (files = new DefaultReducerState(), action) => {
 
     case DELETE_FILE:
       return files.deleteIn(["entities", payload.fileId]);
+
+    case PACKAGE_DELETE_FILE:
+      let newFiles = files;
+      payload.filePackage.forEach((id: number) => { newFiles = newFiles.deleteIn(["entities", id]); });
+
+      return newFiles;
   }
 
   return files;

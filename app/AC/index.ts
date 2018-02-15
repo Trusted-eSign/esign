@@ -9,7 +9,7 @@ import {
   CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
   FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
-  LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_ENCRYPT, PACKAGE_SIGN, PACKAGE_VERIFY,
+  LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_DELETE_FILE, PACKAGE_ENCRYPT, PACKAGE_SELECT_FILE, PACKAGE_SIGN, PACKAGE_VERIFY,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
@@ -72,12 +72,11 @@ export function loadLicense() {
 }
 
 interface IFile {
-  id: string;
+  id: number;
   filename: string;
   lastModifiedDate: Date;
   fullpath: string;
   extension: string;
-  verified: boolean;
   active: boolean;
 }
 
@@ -97,11 +96,14 @@ export function packageSign(
     let packageSignResult = true;
 
     setTimeout(() => {
+      const signedFilePackage: string[] = [];
+      const signedFileIdPackage: number[] = [];
+
       files.forEach((file) => {
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
-          dispatch(deleteFile(file.id));
-          dispatch(selectFile(newPath));
+          signedFileIdPackage.push(file.id);
+          signedFilePackage.push(newPath);
         } else {
           packageSignResult = false;
         }
@@ -111,7 +113,51 @@ export function packageSign(
         payload: {packageSignResult},
         type: PACKAGE_SIGN + SUCCESS,
       });
+
+      dispatch(filePackageSelect(signedFilePackage));
+      dispatch(filePackageDelete(signedFileIdPackage));
     }, 0);
+  };
+}
+
+export function filePackageSelect(files: string[]) {
+  return (dispatch) => {
+    dispatch({
+      type: PACKAGE_SELECT_FILE + START,
+    });
+
+    setTimeout(() => {
+      const filePackage: IFile[] = [];
+
+      files.forEach((file: string) => {
+        const stat = fs.statSync(file);
+        const extension = extFile(file);
+
+        const fileProps = {
+          active: true,
+          extension,
+          filename: path.basename(file),
+          fullpath: file,
+          id: Date.now() + Math.random(),
+          lastModifiedDate: stat.birthtime,
+          size: stat.size,
+        };
+
+        filePackage.push(fileProps);
+      });
+
+      dispatch({
+        payload: { filePackage },
+        type: PACKAGE_SELECT_FILE + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function filePackageDelete(filePackage: number[]) {
+  return {
+    payload: { filePackage },
+    type: PACKAGE_DELETE_FILE,
   };
 }
 
@@ -323,7 +369,7 @@ export function activeFile(fileId: string, isActive: boolean = true) {
   };
 }
 
-export function deleteFile(fileId: string) {
+export function deleteFile(fileId: number) {
   return {
     payload: { fileId },
     type: DELETE_FILE,

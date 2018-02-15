@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
-import { activeFile, deleteFile, selectFile } from "../AC";
+import { activeFile, deleteFile, filePackageSelect, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
 import { mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
+import ProgressBars from "./ProgressBars";
 
 const dialog = window.electron.remote.dialog;
 
@@ -39,6 +40,9 @@ interface IFileSelectorProps {
   operation: string;
   files: IFileRedux[];
   selectFile: (fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) => void;
+  selectedFilesPackage: boolean;
+  selectingFilesPackage: boolean;
+  filePackageSelect: (files: string[]) => void;
 }
 
 class FileSelector extends React.Component<IFileSelectorProps, {}> {
@@ -58,17 +62,27 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFileSelectorProps) {
-    const { files } = this.props;
+    const { files, selectedFilesPackage, selectingFilesPackage } = this.props;
 
-    if (nextProps.files.length !== this.props.files.length) {
+    if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
       return true;
     }
 
-    for (let i = 0; i <= files.length; i++) {
-      if (is(files[i], nextProps.files[i])) {
-        continue;
-      } else {
-        return true;
+    if (selectingFilesPackage || nextProps.selectingFilesPackage) {
+      return false;
+    }
+
+    if (!selectingFilesPackage && !nextProps.selectingFilesPackage && nextProps.files.length !== this.props.files.length) {
+      return true;
+    }
+
+    if (files.length ===  nextProps.files.length) {
+      for (let i = 0; i <= files.length; i++) {
+        if (is(files[i], nextProps.files[i])) {
+          continue;
+        } else {
+          return true;
+        }
       }
     }
 
@@ -77,13 +91,11 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
    addFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { selectFile } = this.props;
+    const { selectFile, filePackageSelect } = this.props;
 
     dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, (selectedFiles: string[]) => {
       if (selectedFiles) {
-        for (const file of selectedFiles) {
-          selectFile(file);
-        }
+        filePackageSelect(selectedFiles);
       }
     });
   }
@@ -220,8 +232,12 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   render() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { files, deleteFile } = this.props;
+    const { files, deleteFile, selectedFilesPackage, selectingFilesPackage } = this.props;
     const { localize, locale } = this.context;
+
+    if (selectingFilesPackage) {
+      return <ProgressBars />;
+    }
 
     const self = this;
     const active = files.length > 0 ? "active" : "not-active";
@@ -294,5 +310,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 export default connect((state) => {
   return {
     files: mapToArr(state.files.entities),
+    selectedFilesPackage: state.files.selectedFilesPackage,
+    selectingFilesPackage: state.files.selectingFilesPackage,
   };
-}, { activeFile, deleteFile, selectFile })(FileSelector);
+}, { activeFile, deleteFile, filePackageSelect, selectFile })(FileSelector);
