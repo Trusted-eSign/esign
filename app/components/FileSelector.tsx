@@ -232,77 +232,99 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   render() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { files, deleteFile, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files } = this.props;
+
+    const active = files.length > 0 ? "active" : "not-active";
+
+    return (
+      <div className={"file-content-height " + active}>
+        <div id="file-content" className="content-wrapper z-depth-1">
+          {this.getHeader()}
+          {this.getBody()}
+        </div>
+      </div>
+    );
+  }
+
+  getHeader() {
     const { localize, locale } = this.context;
+    const { files } = this.props;
+
+    const active = files.length > 0 ? "active" : "not-active";
+    const collection = files.length > 0 ? "collection" : "";
+    const disabled = files.length > 0 ? "" : "disabled";
+
+    return (
+      <nav className="app-bar-content">
+        <ul className="app-bar-items">
+          <li className="app-bar-item" style={appBarStyle}><span>{localize("Settings.add_files", locale)}</span></li>
+          <li className="right">
+            <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
+              <i className="material-icons nav-small-icon">add</i>
+            </a>
+            <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-set-add-files">
+              <i className="nav-small-icon material-icons">more_vert</i>
+            </a>
+            <ul id="dropdown-btn-set-add-files" className="dropdown-content">
+              <li><a onClick={this.selectedAll.bind(this)}>{localize("Settings.selected_all", locale)}</a></li>
+              <li><a onClick={this.removeSelectedAll.bind(this)}>{localize("Settings.remove_selected", locale)}</a></li>
+              <li><a onClick={this.removeAllFiles.bind(this)}>{localize("Settings.remove_all_files", locale)}</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+
+  getBody() {
+    const { localize, locale } = this.context;
+    const { files, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage) {
       return <ProgressBars />;
     }
 
-    const self = this;
     const active = files.length > 0 ? "active" : "not-active";
     const collection = files.length > 0 ? "collection" : "";
-    const disabled = files.length > 0 ? "" : "disabled";
-    return (
-      <div className={"file-content-height " + active}>
-        <div id="file-content" className="content-wrapper z-depth-1">
-          <nav className="app-bar-content">
-            <ul className="app-bar-items">
-              <li className="app-bar-item" style={appBarStyle}><span>{localize("Settings.add_files", locale)}</span></li>
-              <li className="right">
-                <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
-                  <i className="material-icons nav-small-icon">add</i>
-                </a>
-                <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-set-add-files">
-                  <i className="nav-small-icon material-icons">more_vert</i>
-                </a>
-                <ul id="dropdown-btn-set-add-files" className="dropdown-content">
-                  <li><a onClick={this.selectedAll.bind(this)}>{localize("Settings.selected_all", locale)}</a></li>
-                  <li><a onClick={this.removeSelectedAll.bind(this)}>{localize("Settings.remove_selected", locale)}</a></li>
-                  <li><a onClick={this.removeAllFiles.bind(this)}>{localize("Settings.remove_all_files", locale)}</a></li>
-                </ul>
-              </li>
-            </ul>
-          </nav>
-          <div className="add">
-            <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
-              onDrop={(event: any) => this.dropHandler(event)}
-              onDragOver={(event: any) => this.dragOverHandler(event)}
-              onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
-            </div>
 
-            {files.length ?
-              (
-                <div className={collection}>
-                  <List
-                    rowCount={this.props.files.length}
-                    height={427}
-                    width={377}
-                    overscanRowCount={5}
-                    rowHeight={64}
-                    rowRenderer={this.rowRenderer}
-                    files={files}
-                  />
-                </div>
-              ) :
-              <div>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <div onDragEnter={this.dropZoneActive.bind(this)}>
-                  <div className={"add-file-item " + active} id="items-hidden">
-                    <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
-                    <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
-                    <i className="material-icons large fullscreen">fullscreen</i>
-                  </div>
-                </div>
-              </div>}
-          </div>
-        </div>
+    return (
+      <div className="add">
+      <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
+        onDrop={(event: any) => this.dropHandler(event)}
+        onDragOver={(event: any) => this.dragOverHandler(event)}
+        onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
       </div>
+
+      {files.length ?
+        (
+          <div className={collection}>
+            <List
+              rowCount={this.props.files.length}
+              height={427}
+              width={377}
+              overscanRowCount={5}
+              rowHeight={64}
+              rowRenderer={this.rowRenderer}
+              files={files}
+            />
+          </div>
+        ) :
+        <div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <div onDragEnter={this.dropZoneActive.bind(this)}>
+            <div className={"add-file-item " + active} id="items-hidden">
+              <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
+              <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
+              <i className="material-icons large fullscreen">fullscreen</i>
+            </div>
+          </div>
+        </div>}
+    </div>
     );
   }
 }
