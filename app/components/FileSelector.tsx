@@ -273,7 +273,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
             {files.length ?
               (
-                <div className={"add-files-collection " + collection}>
+                <div className={collection}>
                   <List
                     rowCount={this.props.files.length}
                     height={427}

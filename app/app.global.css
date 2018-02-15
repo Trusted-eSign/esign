@@ -1556,8 +1556,10 @@ p.collection-title {
 }
 
 .collection-item.avatar.files-collection {
-  padding: 5px 80px 5px 10px;
+  padding: 5px 50px 5px 10px;
   color: black;
+  min-height: 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .status_cert_ok_icon{
