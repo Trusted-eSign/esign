@@ -14,6 +14,7 @@ class LicenseInfoCSP extends React.PureComponent {
 
   render() {
     const { localize, locale } = this.context;
+    const license = this.getLicense();
 
     return (
       <div>
@@ -24,7 +25,7 @@ class LicenseInfoCSP extends React.PureComponent {
           <div className="col s6">
             <LicenseInfoFiled
               title={localize("License.license", locale)}
-              info={this.getLicense()}
+              info={license.substring(0, license.length - 5)}
             />
           </div>
           <div className="col s6">
