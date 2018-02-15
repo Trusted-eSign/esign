@@ -8,7 +8,7 @@ interface IFileRedux {
   extension: string;
   filename: string;
   fullpath: string;
-  id: string;
+  id: number;
   lastModifiedDate: Date;
 }
 

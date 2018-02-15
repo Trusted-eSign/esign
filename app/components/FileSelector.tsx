@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
-import { activeFile, deleteFile, filePackageSelect, selectFile } from "../AC";
+import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
 import { mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
@@ -30,19 +30,20 @@ interface IFileRedux {
   extension: string;
   filename: string;
   fullpath: string;
-  id: string;
+  id: number;
   lastModifiedDate: Date;
 }
 
 interface IFileSelectorProps {
-  activeFile: (id: string, active?: boolean) => void;
-  deleteFile: (fileId: string) => void;
+  activeFile: (id: number, active?: boolean) => void;
+  deleteFile: (fileId: number) => void;
   operation: string;
   files: IFileRedux[];
   selectFile: (fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) => void;
   selectedFilesPackage: boolean;
   selectingFilesPackage: boolean;
   filePackageSelect: (files: string[]) => void;
+  filePackageDelete: (filesId: number[]) => void;
 }
 
 class FileSelector extends React.Component<IFileSelectorProps, {}> {
@@ -200,7 +201,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     }
   }
 
-  removeFile = (id: string) => {
+  removeFile = (id: number) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile } = this.props;
 
@@ -209,11 +210,15 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   removeAllFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { files, deleteFile } = this.props;
+    const { filePackageDelete, files, deleteFile } = this.props;
+
+    const filePackage: number[] = [];
 
     for (const file of files) {
-      deleteFile(file.id);
+      filePackage.push(file.id);
     }
+
+    filePackageDelete(filePackage);
   }
 
   rowRenderer = ({ index, key, style }) => {
@@ -335,4 +340,4 @@ export default connect((state) => {
     selectedFilesPackage: state.files.selectedFilesPackage,
     selectingFilesPackage: state.files.selectingFilesPackage,
   };
-}, { activeFile, deleteFile, filePackageSelect, selectFile })(FileSelector);
+}, { activeFile, deleteFile, filePackageSelect, filePackageDelete, selectFile })(FileSelector);
