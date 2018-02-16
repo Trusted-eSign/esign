@@ -1,4 +1,4 @@
-import {is} from "immutable";
+import { is } from "immutable";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -76,7 +76,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
       return true;
     }
 
-    if (files.length ===  nextProps.files.length) {
+    if (files.length === nextProps.files.length) {
       for (let i = 0; i <= files.length; i++) {
         if (is(files[i], nextProps.files[i])) {
           continue;
@@ -89,7 +89,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     return false;
   }
 
-   addFiles() {
+  addFiles() {
     // tslint:disable-next-line:no-shadowed-variable
     const { selectFile, filePackageSelect } = this.props;
 
@@ -265,34 +265,28 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
     return (
       <div className="add">
-      <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
-        onDrop={(event: any) => this.dropHandler(event)}
-        onDragOver={(event: any) => this.dragOverHandler(event)}
-        onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
-      </div>
-
-      {files.length ?
-        (
+        <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
+          onDrop={(event: any) => this.dropHandler(event)}
+          onDragOver={(event: any) => this.dragOverHandler(event)}
+          onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
+        </div>
+        <div onDragEnter={this.dropZoneActive.bind(this)}>
+          <div className={"add-file-item " + active} id="items-hidden">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
+            <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
+            <i className="material-icons large fullscreen">fullscreen</i>
+          </div>
           <div className={collection}>
-            <FileList operation={this.props.operation}/>
+            <FileList operation={this.props.operation} />
           </div>
-        ) :
-        <div>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <div onDragEnter={this.dropZoneActive.bind(this)}>
-            <div className={"add-file-item " + active} id="items-hidden">
-              <a className="add-file-but waves-effect waves-light btn-large" id="fileSelect" onClick={this.addFiles.bind(this)}>{localize("Settings.choose_files", locale)}</a>
-              <div className="add-file-item-text">{localize("Settings.drag_drop", locale)}</div>
-              <i className="material-icons large fullscreen">fullscreen</i>
-            </div>
-          </div>
-        </div>}
-    </div>
+        </div>
+      </div>
     );
   }
 }

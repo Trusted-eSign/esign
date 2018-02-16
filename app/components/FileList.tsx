@@ -31,7 +31,11 @@ class FileList extends React.Component<IFilelistProps, {}> {
   };
 
   componentDidMount() {
-    document.getElementsByClassName("ReactVirtualized__Grid__innerScrollContainer")[0].style.overflow = "";
+    const grid = document.getElementsByClassName("ReactVirtualized__Grid__innerScrollContainer")[0];
+
+    if (grid) {
+      grid.style.overflow = "";
+    }
   }
 
   render() {
@@ -53,6 +57,10 @@ class FileList extends React.Component<IFilelistProps, {}> {
 
   rowRenderer = ({ index, key, style }) => {
     const { files, operation } = this.props;
+
+    if (!files.length) {
+      return null;
+    }
 
     return (
       <FileListItem
