@@ -46,6 +46,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
         rowHeight={64}
         rowRenderer={this.rowRenderer}
         files={files}
+        style={{ outline: "none" }}
       />
     );
   }
