@@ -2,11 +2,10 @@ import {is} from "immutable";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { List } from "react-virtualized";
 import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
 import { mapToArr } from "../utils";
-import FileListItem from "./FileListItem";
+import FileList from "./FileList";
 import ProgressBars from "./ProgressBars";
 
 const dialog = window.electron.remote.dialog;
@@ -176,13 +175,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     }
   }
 
-  toggleActive(file: any) {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { activeFile } = this.props;
-
-    activeFile(file.id, !file.active);
-  }
-
   selectedAll() {
     // tslint:disable-next-line:no-shadowed-variable
     const { files, activeFile } = this.props;
@@ -201,13 +193,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     }
   }
 
-  removeFile = (id: number) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile } = this.props;
-
-    deleteFile(id);
-  }
-
   removeAllFiles() {
     // tslint:disable-next-line:no-shadowed-variable
     const { filePackageDelete, files, deleteFile } = this.props;
@@ -219,20 +204,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     }
 
     filePackageDelete(filePackage);
-  }
-
-  rowRenderer = ({ index, key, style }) => {
-    return (
-      <FileListItem
-        removeFiles={() => this.removeFile(this.props.files[index].id)}
-        onClickBtn={() => this.toggleActive(this.props.files[index])}
-        file={this.props.files[index]}
-        operation={this.props.operation}
-        key={key}
-        index={index}
-        style={style}
-      />
-    );
   }
 
   render() {
@@ -303,15 +274,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
       {files.length ?
         (
           <div className={collection}>
-            <List
-              rowCount={this.props.files.length}
-              height={427}
-              width={377}
-              overscanRowCount={5}
-              rowHeight={64}
-              rowRenderer={this.rowRenderer}
-              files={files}
-            />
+            <FileList operation={this.props.operation}/>
           </div>
         ) :
         <div>
