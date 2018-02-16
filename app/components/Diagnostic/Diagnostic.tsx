@@ -245,6 +245,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (criticalError) {
       mainWindow.close();
     }
+
+    $("#modal-window-diagnostic").closeModal();
   }
 
   render() {
