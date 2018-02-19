@@ -266,7 +266,23 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         format = trusted.DataFormat.DER;
       }
 
-      packageSign(files, cert, key, policies, format, folderOut);
+      files.forEach((file) => {
+        const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
+        if (newPath) {
+          deleteFile(file.id);
+          selectFile(newPath);
+        } else {
+          res = false;
+        }
+      });
+
+      if (res) {
+        $(".toast-files_resigned").remove();
+        Materialize.toast(localize("Sign.files_resigned", locale), 2000, "toast-files_resigned");
+      } else {
+        $(".toast-files_resigned_failed").remove();
+        Materialize.toast(localize("Sign.files_resigned_failed", locale), 2000, "toast-files_resigned_failed");
+      }
     }
   }
 
