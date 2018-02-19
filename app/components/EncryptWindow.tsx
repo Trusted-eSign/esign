@@ -152,6 +152,14 @@ class EncryptWindow extends React.Component<any, any> {
       const folderOut = settings.outfolder;
       let res = true;
 
+      if (folderOut.length > 0) {
+        if (!dirExists(folderOut)) {
+          $(".toast-failed_find_directory").remove();
+          Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
+          return;
+        }
+      }
+
       files.forEach((file) => {
         const newPath = encrypts.decryptFile(file.fullpath, folderOut);
         if (newPath) {
