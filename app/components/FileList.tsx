@@ -1,3 +1,4 @@
+import { is } from "immutable";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
@@ -21,6 +22,8 @@ interface IFilelistProps {
   deleteFile: (fileId: number) => void;
   files: IFileRedux[];
   operation: string;
+  selectedFilesPackage: boolean;
+  selectingFilesPackage: boolean;
   style: any;
 }
 
@@ -31,11 +34,39 @@ class FileList extends React.Component<IFilelistProps, {}> {
   };
 
   componentDidMount() {
-    const grid = document.getElementsByClassName("ReactVirtualized__Grid__innerScrollContainer")[0];
+    this.noGridOverflow();
+  }
 
-    if (grid) {
-      grid.style.overflow = "";
+  componentWillUpdate() {
+    this.noGridOverflow();
+  }
+
+  shouldComponentUpdate(nextProps: IFilelistProps) {
+    const { files, selectedFilesPackage, selectingFilesPackage } = this.props;
+
+    if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
+      return true;
     }
+
+    if (selectingFilesPackage || nextProps.selectingFilesPackage) {
+      return false;
+    }
+
+    if (!selectingFilesPackage && !nextProps.selectingFilesPackage && nextProps.files.length !== this.props.files.length) {
+      return true;
+    }
+
+    if (files.length === nextProps.files.length) {
+      for (let i = 0; i <= files.length; i++) {
+        if (is(files[i], nextProps.files[i])) {
+          continue;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
   render() {
@@ -75,6 +106,14 @@ class FileList extends React.Component<IFilelistProps, {}> {
     );
   }
 
+  noGridOverflow() {
+    const grid = document.getElementsByClassName("ReactVirtualized__Grid__innerScrollContainer")[0];
+
+    if (grid) {
+      grid.style.overflow = "";
+    }
+  }
+
   removeFile = (id: number) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile } = this.props;
@@ -93,5 +132,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
 export default connect((state) => {
   return {
     files: mapToArr(state.files.entities),
+    selectedFilesPackage: state.files.selectedFilesPackage,
+    selectingFilesPackage: state.files.selectingFilesPackage,
   };
 }, { activeFile, deleteFile })(FileList);
