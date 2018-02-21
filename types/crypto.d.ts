@@ -104,13 +104,14 @@ declare namespace native {
             getType(): number;
             getKeyUsage(): number;
             getSignatureAlgorithm(): string;
-            getSignatureDigest(): string;
+            getSignatureDigestAlgorithm(): string;
+            getPublicKeyAlgorithm(): string;
             getOrganizationName(): string;
             getOCSPUrls(): string[];
             getCAIssuersUrls(): string[];
             isSelfSigned(): boolean;
             isCA(): boolean;
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
             export(dataFormat: trusted.DataFormat): Buffer;
@@ -176,7 +177,7 @@ declare namespace native {
         }
         class CertificationRequest {
             constructor(csrinfo?: PKI.CertificationRequestInfo);
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             sign(key: Key): void;
             verify(): boolean;
             getPEMString(): Buffer;
@@ -190,7 +191,7 @@ declare namespace native {
             constructor();
             setCryptoMethod(method: trusted.CryptoMethod): void;
             encrypt(filenameSource: string, filenameEnc: string, format: trusted.DataFormat): void;
-            decrypt(filenameEnc: string, filenameDec: string, format: trusted.DataFormat): void;
+            decrypt(filenameEnc: string, filenameDec: string, format?: trusted.DataFormat): void;
             addRecipientsCerts(certs: CertificateCollection): void;
             setPrivKey(rkey: Key): void;
             setRecipientCert(rcert: Certificate): void;
@@ -233,7 +234,7 @@ declare namespace native {
             setContent(v: Buffer): void;
             getFlags(): number;
             setFlags(v: number): void;
-            load(filename: string, dataFormat: trusted.DataFormat): void;
+            load(filename: string, dataFormat?: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
             export(dataFormat: trusted.DataFormat): Buffer;
@@ -325,6 +326,8 @@ declare namespace native {
             key?: string;
             organizationName?: string;
             signatureAlgorithm?: string;
+            signatureDigestAlgorithm?: string;
+            publicKeyAlgorithm?: string;
         }
         interface IFilter {
             /**
@@ -392,6 +395,7 @@ declare namespace native {
             addCrl(provider: Provider, category: string, crl: PKI.CRL): string;
             addKey(provider: Provider, key: PKI.Key, password: string): string;
             addCsr(provider: Provider, category: string, csr: PKI.CertificationRequest): string;
+            deleteCert(provider: Provider, category: string, cert: PKI.Certificate): void;
         }
         class CashJson {
             filenName: string;
@@ -435,9 +439,18 @@ declare namespace native {
             setKeyEncrypted(enc: boolean): void;
             setOrganizationName(organizationName: string): void;
             setSignatureAlgorithm(signatureAlgorithm: string): void;
+            setSignatureAlgorithm(signatureAlgorithm: string): void;
+            setSignatureDigestAlgorithm(signatureDigestAlgorithm: string): void;
+            setPublicKeyAlgorithm(publicKeyAlgorithm: string): void;
         }
     }
     namespace UTILS {
+        interface IContainerName {
+            container: string;
+            unique: string;
+            fqcnA: string;
+            fqcnW: string;
+        }
         class Jwt {
             checkLicense(data?: string): number;
         }
@@ -449,6 +462,27 @@ declare namespace native {
             start(filename: string, level: trusted.LoggerLevel): void;
             stop(): void;
             clear(): void;
+        }
+        class Csp {
+            isGost2001CSPAvailable(): boolean;
+            isGost2012_256CSPAvailable(): boolean;
+            isGost2012_512CSPAvailable(): boolean;
+            checkCPCSPLicense(): boolean;
+            getCPCSPLicense(): string;
+            getCPCSPVersion(): string;
+            getCPCSPVersionPKZI(): string;
+            getCPCSPVersionSKZI(): string;
+            getCPCSPSecurityLvl(): string;
+            enumProviders(): object[];
+            enumContainers(type?: number, provName?: string): IContainerName[];
+            getCertifiacteFromContainer(contName: string, provType: number, provName?: string): PKI.Certificate;
+            getContainerNameByCertificate(cert: PKI.Certificate, category: string): string;
+            installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+            deleteContainer(contName: string, provType: number, provName?: string): void;
+            buildChain(cert: PKI.Certificate): PKI.CertificateCollection;
+            verifyCertificateChain(cert: PKI.Certificate): boolean;
+            isHaveExportablePrivateKey(cert: PKI.Certificate): boolean;
+            certToPkcs12(cert: PKI.Certificate, exportPrivateKey: boolean, password?: string): PKI.Pkcs12;
         }
     }
     namespace COMMON {
@@ -763,6 +797,142 @@ declare namespace trusted.utils {
          * @memberOf Cerber
          */
         private rehash(dir, relative?);
+    }
+}
+declare namespace trusted.utils {
+    /**
+     * cryptographic service provider (CSP) helper
+     * Uses on WIN32 or with CPROCSP
+     *
+     * @export
+     * @class Csp
+     * @extends {BaseObject<native.UTILS.Csp>}
+     */
+    class Csp extends BaseObject<native.UTILS.Csp> {
+        /**
+         * Check available provaider for GOST 2001
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2001CSPAvailable(): boolean;
+        /**
+         * Check available provaider for GOST 2012-256
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2012_256CSPAvailable(): boolean;
+        /**
+         * Check available provaider for GOST 2012-512
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isGost2012_512CSPAvailable(): boolean;
+        /**
+         * Verify license for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static checkCPCSPLicense(): boolean;
+        /**
+         * Return instaled correct license for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static getCPCSPLicense(): string;
+        /**
+         * Return instaled correct version for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static getCPCSPVersion(): string;
+        static getCPCSPVersionPKZI(): string;
+        static getCPCSPVersionSKZI(): string;
+        static getCPCSPSecurityLvl(): string;
+        /**
+         * Enumerate available CSP
+         *
+         * @static
+         * @returns {object[]} {type: nuber, name: string}
+         * @memberof Csp
+         */
+        static enumProviders(): object[];
+        /**
+         * Enumerate conainers
+         *
+         * @static
+         * @param {number} [type]
+         * @returns {string[]} Fully Qualified Container Name
+         * @memberof Csp
+         */
+        static enumContainers(type: null, provName?: string): native.UTILS.IContainerName[];
+        /**
+         * Get certificate by container and provider props
+         *
+         * @static
+         * @param {string} contName
+         * @param {number} provType
+         * @param {string} [provName=""]
+         * @returns {pki.Certificate}
+         * @memberof Csp
+         */
+        static getCertifiacteFromContainer(contName: string, provType: number, provName?: string): pki.Certificate;
+        static installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+        static deleteContainer(contName: string, provType: number, provName?: string): void;
+        /**
+         * Get container name by certificate
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @param {string} [category="MY"]
+         * @returns {string}
+         * @memberof Csp
+         */
+        static getContainerNameByCertificate(cert: pki.Certificate, category?: string): string;
+        static buildChain(cert: pki.Certificate): pki.CertificateCollection;
+        static verifyCertificateChain(cert: pki.Certificate): boolean;
+        /**
+         * Find certificate in MY store and check that private key exportable
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isHaveExportablePrivateKey(cert: pki.Certificate): boolean;
+        /**
+         * Create Pkcs by cert
+         * NOTE:  only for certificates with exportable key. Check it by isHaveExportablePrivateKey
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @param {boolean} exportPrivateKey
+         * @param {string} [password]
+         * @returns {pki.Pkcs12}
+         * @memberof Csp
+         */
+        static certToPkcs12(cert: pki.Certificate, exportPrivateKey: boolean, password?: string): pki.Pkcs12;
+        /**
+         * Creates an instance of Csp.
+         *
+         *
+         * @memberOf Csp
+         */
+        constructor();
     }
 }
 declare namespace trusted.pki {
@@ -1133,7 +1303,7 @@ declare namespace trusted.pki {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          * @returns {Certificate}
          *
          * @memberOf Certificate
@@ -1271,7 +1441,15 @@ declare namespace trusted.pki {
          * @type {string}
          * @memberOf Certificate
          */
-        readonly signatureDigest: string;
+        readonly signatureDigestAlgorithm: string;
+        /**
+         * Return public key algorithm
+         *
+         * @readonly
+         * @type {string}
+         * @memberOf Certificate
+         */
+        readonly publicKeyAlgorithm: string;
         /**
          * Return organization name
          *
@@ -1351,7 +1529,7 @@ declare namespace trusted.pki {
          * Load certificate from file location
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT]
+         * @param {DataFormat} [format]
          *
          * @memberOf Certificate
          */
@@ -1458,8 +1636,7 @@ declare namespace trusted.pki {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
-         * @returns {CertificationRequest}
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf CertificationRequest
          */
@@ -1475,7 +1652,7 @@ declare namespace trusted.pki {
          * Load request from file
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf CertificationRequest
          */
@@ -2088,7 +2265,7 @@ declare namespace trusted.pki {
          *
          * @memberOf Cipher
          */
-        encrypt(filenameSource: string, filenameEnc: string, format?: DataFormat): void;
+        encrypt(filenameSource: string, filenameEnc: string, format: DataFormat): void;
         /**
          * Decrypt data
          *
@@ -2594,7 +2771,7 @@ declare namespace trusted.cms {
          *
          * @static
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          * @returns {SignedData}
          *
          * @memberOf SignedData
@@ -2691,7 +2868,7 @@ declare namespace trusted.cms {
          * Load sign from file location
          *
          * @param {string} filename File location
-         * @param {DataFormat} [format=DEFAULT_DATA_FORMAT] PEM | DER (default)
+         * @param {DataFormat} [format] PEM | DER
          *
          * @memberOf SignedData
          */
@@ -2936,6 +3113,8 @@ declare namespace trusted.pkistore {
         keyEnc: boolean;
         organizationName: string;
         signatureAlgorithm: string;
+        signatureDigestAlgorithm: string;
+        publicKeyAlgorithm: string;
     }
     class PkiStore extends BaseObject<native.PKISTORE.PkiStore> {
         private cashJson;
@@ -3006,6 +3185,17 @@ declare namespace trusted.pkistore {
          * @memberOf PkiStore
          */
         addCsr(provider: native.PKISTORE.Provider, category: string, csr: pki.CertificationRequest): string;
+        /**
+         * Delete certificste from store
+         *
+         * @param {native.PKISTORE.Provider} provider SYSTEM, MICROSOFT, CRYPTOPRO
+         * @param {string} category MY, OTHERS, TRUST, CRL
+         * @param {Certificate} cert Certificate
+         * @returns
+         *
+         * @memberOf PkiStore
+         */
+        deleteCert(provider: native.PKISTORE.Provider, category: string, cert: pki.Certificate): void;
         /**
          * Find items in local store
          *

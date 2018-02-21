@@ -1,5 +1,5 @@
 import { Map, OrderedMap, Record } from "immutable";
-import { ADD_RECIPIENT_CERTIFICATE, DELETE_RECIPIENT_CERTIFICATE } from "../constants";
+import { ADD_RECIPIENT_CERTIFICATE, DELETE_RECIPIENT_CERTIFICATE, REMOVE_ALL_CERTIFICATES } from "../constants";
 
 const RecipientModel = Record({
   certId: null,
@@ -20,6 +20,9 @@ export default (recipients = new DefaultReducerState(), action) => {
 
     case DELETE_RECIPIENT_CERTIFICATE:
       return recipients.deleteIn(["entities", payload.recipient]);
+
+    case REMOVE_ALL_CERTIFICATES:
+      return recipients = new DefaultReducerState();
   }
 
   return recipients;

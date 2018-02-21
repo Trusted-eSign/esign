@@ -3,8 +3,9 @@ import * as React from "react";
 import SearchElement from "../Filters/SearchElement";
 
 interface IToolBarWithSearchProps {
-  disable: string;
-  import: (event: any) => void;
+  disable?: string;
+  rightBtnAction?: (event: any) => void;
+  reloadCertificates?: () => void;
   operation: string;
 }
 
@@ -33,13 +34,23 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
 
     if (this.props.operation === "certificate") {
       btn = <li className="right import-col">
-        <input type="file" className="input-file" id="choose-cert" value="" onChange={this.props.import} />
+        <input type="file" className="input-file" id="choose-cert" value="" onChange={this.props.rightBtnAction} />
         <a className={"nav-small-btn waves-effect waves-light " + this.props.disable} data-activates="dropdown-btn-import">
           <i className="nav-small-icon material-icons cert-settings">more_vert</i>
         </a>
         <ul id="dropdown-btn-import" className="dropdown-content">
           <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
-          {/* <li><a onClick={function() { $("#modal-createCertificateRequest").openModal(); }}>{"Create self signed certificate"}</a></li> */}
+          <li><a onClick={this.props.reloadCertificates}>{localize("Common.update", locale)}</a></li>
+        </ul>
+      </li>;
+    } else if (this.props.operation === "containers") {
+      btn = <li className="right import-col">
+        <input type="file" className="input-file" id="choose-cert" value="" />
+        <a className={"nav-small-btn waves-effect waves-light "} data-activates="dropdown-btn-import">
+          <i className="nav-small-icon material-icons cert-settings">more_vert</i>
+        </a>
+        <ul id="dropdown-btn-import" className="dropdown-content">
+          <li><a onClick={this.props.rightBtnAction}>{localize("Common.update", locale)}</a></li>
         </ul>
       </li>;
     } else {

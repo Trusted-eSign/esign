@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import * as React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 class SideMenu extends React.PureComponent {
   static contextTypes = {
@@ -41,6 +41,11 @@ class SideMenu extends React.PureComponent {
             {localize("Certificate.Certificate", locale)}
             <i className="material-icons left cert">library_books</i>
           </Link>
+
+          <Link to="/containers">
+            {localize("Containers.containers", locale)}
+            <i className="material-icons left keystore">library_books</i>
+          </Link>
         </div>
         <div className="row">
           <div className="menu-elements">
@@ -56,6 +61,10 @@ class SideMenu extends React.PureComponent {
               <Link to="/help">
                 {localize("Help.Help", locale)}
                 <i className="material-icons left help">help</i>
+              </Link>
+              <Link to="/" onClick={() => mainWindow.close()}>
+                {localize("Common.exit", locale)}
+                <i className="material-icons left exit">exit_to_app</i>
               </Link>
             </div>
           </div>

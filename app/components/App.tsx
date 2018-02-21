@@ -1,13 +1,14 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { hashHistory, IndexRoute, Route, Router } from "react-router";
+import { HashRouter as Router, Route } from "react-router-dom";
 import history from "../history";
 import localize from "../i18n/localize";
 import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
+import ContainersWindow from "./ContainersWindow";
 import EncryptWindow from "./EncryptWindow";
-import HelpWindow from "./HelpWindow";
+import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
@@ -33,16 +34,18 @@ class App extends React.Component<IAppProps, {}> {
 
   render() {
     return (
-      <Router history={hashHistory}>
-        <Route path="/" component={MenuBar}>
-          <IndexRoute component={MainWindow} />
+      <Router >
+        <div>
+          <Route path="/" component={MenuBar} />
+          <Route exact path="/" component={MainWindow} />
           <Route path="/sign" component={SignatureWindow} />
           <Route path="/encrypt" component={EncryptWindow} />
           <Route path="/certificate" component={CertWindow} />
+          <Route path="/containers" component={ContainersWindow} />
           <Route path="/license" component={LicenseWindow} />
           <Route path="/about" component={AboutWindow} />
           <Route path="/help" component={HelpWindow} />
-        </Route>
+        </div>
       </Router>
     );
   }

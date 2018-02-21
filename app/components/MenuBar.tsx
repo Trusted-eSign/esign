@@ -2,9 +2,10 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadLicense } from "../AC";
 import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
+import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
+import Modal from "./Modal";
 import SideMenu from "./SideMenu";
 
 const remote = window.electron.remote;
@@ -54,6 +55,8 @@ class MenuBar extends React.Component<any, any> {
       title = localize("Encrypt.encrypt_and_decrypt", locale);
     else if (pathname === "/certificate")
       title = localize("Certificate.certs", locale);
+      else if (pathname === "/containers")
+      title = localize("Containers.containers", locale);
     else if (pathname === "/about")
       title = localize("About.about", locale);
     else if (pathname === "/license")
@@ -67,12 +70,6 @@ class MenuBar extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    const { loadLicense, loadedLicense, loadingLicense } = this.props;
-
-    if (!loadedLicense && !loadingLicense) {
-      loadLicense();
-    }
-
     $(".menu-btn").sideNav({
       closeOnClick: true,
     });
@@ -80,7 +77,7 @@ class MenuBar extends React.Component<any, any> {
 
   render() {
     return (
-      <div className="main">
+      <div>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
@@ -114,6 +111,7 @@ class MenuBar extends React.Component<any, any> {
           </ul>
         </nav>
         {this.props.children}
+        <Diagnostic />
       </div>
     );
   }
@@ -122,8 +120,6 @@ class MenuBar extends React.Component<any, any> {
 export default connect((state) => {
   return {
     encSettings: state.settings.encrypt,
-    loadedLicense: state.license.loaded,
-    loadingLicense: state.license.loading,
     signSettings: state.settings.sign,
   };
-}, {loadLicense})(MenuBar);
+})(MenuBar);

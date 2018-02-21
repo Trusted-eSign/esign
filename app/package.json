@@ -1,8 +1,8 @@
 {
   "author": "Trusted Plus development team",
-  "name": "trusted-esign",
-  "productName": "trusted-esign",
-  "version": "1.2.0",
+  "name": "cryptoarm-gost",
+  "productName": "cryptoarm-gost",
+  "version": "1.2.11",
   "main": "./main.js",
   "license": "Apache-2.0",
   "dependencies": {
@@ -12,6 +12,10 @@
     "immutable": "^3.8.1",
     "request": "2.73.0",
     "reselect": "^3.0.1",
+    "socket.io": "^2.0.4",
     "sudo-prompt": "7.0.0"
+  },
+  "devDependencies": {
+    "@types/socket.io-client": "^1.4.32"
   }
 }

@@ -122,14 +122,14 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
 
     return (
       <div>
-        <div className="card infoapp">
+        <div className="infoapp">
           <div className="card-content gray-text">
             <span className="card-title">{localize("About.FeedBack", locale)}</span>
             <h6 className="contact-text">{localize("About.feedback_description", locale)}</h6>
             <form onSubmit={this.validDatas} className="col s12">
               <div className="row form">
-                <div className="input-field col s12">
-                  <input ref="username" id="username" type="text" value={username.text} onChange={(evt) => this.setUserName(evt.target.value)}></input>
+                <div className="input-field col s12 noborder">
+                  <input id="username" type="text" value={username.text} onChange={(evt) => this.setUserName(evt.target.value)}></input>
                   <label htmlFor="username">{localize("About.username", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errUser}>
@@ -138,8 +138,8 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
                 </div>
               </div>
               <div className="row form">
-                <div className="input-field col s12">
-                  <input ref="email" id="email" type="email" className="validate" value={email.text} onChange={(evt) => this.setEmail(evt.target.value)}></input>
+                <div className="input-field col s12 noborder">
+                  <input id="email" type="email" className="validate" value={email.text} onChange={(evt) => this.setEmail(evt.target.value)}></input>
                   <label htmlFor="email" >{localize("About.email", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errEmail}>
@@ -148,8 +148,8 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
                 </div>
               </div>
               <div className="row form message">
-                <div className="input-field col s12 mes-textarea">
-                  <textarea ref="message" id="message" className="materialize-textarea" value={message.text} onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
+                <div className="input-field col s12 noborder mes-textarea">
+                  <textarea id="message" className="materialize-textarea" value={message.text} onChange={(evt: any) => this.setMessage(evt.target.value)}></textarea>
                   <label htmlFor="message">{localize("About.message", locale)}</label>
                 </div>
                 <div className={"about-error-info " + errMessage}>

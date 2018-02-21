@@ -238,19 +238,10 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
 }
 
 export function verifySignerCert(cert: trusted.pki.Certificate): boolean {
-  let chain: trusted.pki.Chain;
-  let certs: trusted.pki.CertificateCollection;
-  let chainForVerify: trusted.pki.CertificateCollection;
-
-  chain = new trusted.pki.Chain();
-
-  certs = window.TRUSTEDCERTIFICATECOLLECTION;
-
   try {
-    chainForVerify = chain.buildChain(cert, certs);
-    return chain.verifyChain(chainForVerify, null);
+    return trusted.utils.Csp.verifyCertificateChain(cert);
   } catch (e) {
-    return undefined;
+    return false;
   }
 }
 
@@ -264,7 +255,6 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
     let certificates: trusted.pki.CertificateCollection;
     let ch: trusted.pki.CertificateCollection;
     let chain: trusted.pki.Chain;
-    let certsTmp: trusted.pki.CertificateCollection = window.TRUSTEDCERTIFICATECOLLECTION;
     let cert: trusted.pki.Certificate;
     let certificatesSignStatus: boolean;
     let certSignStatus: boolean;
@@ -316,7 +306,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
       cert = signer.certificate;
 
       try {
-        ch = chain.buildChain(cert, certsTmp);
+        ch = trusted.utils.Csp.buildChain(cert);
       } catch (e) {
         ch = undefined;
       }
@@ -343,14 +333,17 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
           issuerName: cert.issuerName,
           notAfter: cert.notAfter,
           signatureAlgorithm: cert.signatureAlgorithm,
+          signatureDigestAlgorithm: cert.signatureDigestAlgorithm,
+          publicKeyAlgorithm: cert.publicKeyAlgorithm,
           hash: cert.thumbprint,
           key: false,
           object: cert,
         });
       } else {
         for (let j: number = ch.length - 1; j >= 0; j--) {
-          let it: trusted.pki.Certificate = ch.items(j);
-          if (!(certSignStatus = verifySignerCert(it))) {
+          const it: trusted.pki.Certificate = ch.items(j);
+          certSignStatus = verifySignerCert(it);
+          if (!(certSignStatus)) {
             certificatesSignStatus = false;
           }
           certSign.push({
@@ -361,6 +354,8 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
             issuerFriendlyName: it.issuerFriendlyName,
             notAfter: it.notAfter,
             signatureAlgorithm: it.signatureAlgorithm,
+            signatureDigestAlgorithm: it.signatureDigestAlgorithm,
+            publicKeyAlgorithm: it.publicKeyAlgorithm,
             hash: it.thumbprint,
             key: false,
             status: certSignStatus,
@@ -372,7 +367,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
       curRes = {
         alg: cert.signatureAlgorithm,
         certs: certSign,
-        digestAlgorithm: cert.signatureDigest,
+        digestAlgorithm: cert.signatureDigestAlgorithm,
         status_verify: false,
         subject: cert.subjectFriendlyName,
       };

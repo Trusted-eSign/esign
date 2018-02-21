@@ -3,22 +3,23 @@ import * as os from "os";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates, removeAllCertificates } from "../AC";
+import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
 import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
 import BlockNotElements from "./BlockNotElements";
+import CertificateDelete from "./Certificate/CertificateDelete";
+import CertificateExport from "./Certificate/CertificateExport";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
+import ContainersList from "./ContainersList";
 import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import PasswordDialog from "./PasswordDialog";
+import Modal from "./Modal";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
-
-const DIALOG = window.electron.remote.dialog;
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -30,26 +31,72 @@ class CertWindow extends React.Component<any, any> {
     super(props);
 
     this.state = ({
-      activeTabIsCertInfo: true,
+      activeCertInfoTab: true,
       certificate: null,
-      password: "",
+      showModalDeleteCertifiacte: false,
+      showModalExportCertifiacte: false,
     });
   }
 
-  handlePasswordChange = (password) => {
+  handleCloseModalDeleteCertificate = () => {
+    this.setState({ showModalDeleteCertifiacte: false });
+  }
+
+  handleShowModalDeleteCertifiacte = () => {
+    this.setState({ showModalDeleteCertifiacte: true });
+  }
+
+  handleCloseModalExportCertificate = () => {
+    this.setState({ showModalExportCertifiacte: false });
+  }
+
+  handleShowModalExportCertifiacte = () => {
+    this.setState({ showModalExportCertifiacte: true });
+  }
+
+  handlePasswordChange = (password: string) => {
     this.setState({ password });
   }
 
-  handleChangeActiveTab = (ev) => {
-    ev.preventDefault();
-
+  handleChangeActiveTab = (certInfoTab: boolean) => {
     this.setState({
-      activeTabIsCertInfo: !this.state.activeTabIsCertInfo,
+      activeCertInfoTab: certInfoTab,
     });
   }
 
   handleActiveCert = (certificate: any) => {
     this.setState({ certificate });
+  }
+
+  handleReloadCertificates = () => {
+    const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
+
+    this.setState({ certificate: null });
+
+    removeAllCertificates();
+
+    if (!isLoading) {
+      loadAllCertificates();
+    }
+
+    this.handleCloseModalDeleteCertificate();
+  }
+
+  handleReloadContainers = () => {
+    const { isLoading, loadAllContainers, removeAllContainers } = this.props;
+
+    this.setState({
+      container: null,
+      deleteContainer: false,
+    });
+
+    removeAllContainers();
+
+    if (!isLoading) {
+      loadAllContainers();
+    }
+
+    this.handleCloseModalDeleteCertificate();
   }
 
   handleCertificateImport = (event: any) => {
@@ -172,60 +219,8 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
-  exportDirectory = () => {
-    const { localize, locale } = this.context;
-
-    if (window.framework_NW) {
-      const CLICK_EVENT = document.createEvent("MouseEvents");
-
-      CLICK_EVENT.initEvent("click", true, true);
-      document.querySelector("#choose-folder-export").dispatchEvent(CLICK_EVENT);
-    } else {
-      const FILE = DIALOG.showSaveDialog({
-        defaultPath: localize("Certificate.certificate", locale) + ".pfx",
-        filters: [{ name: localize("Certificate.certs", locale), extensions: ["pfx"] }],
-        title: localize("Certificate.export_cert", locale),
-      });
-      this.exportCert(FILE);
-    }
-  }
-
-  exportCert = (file: string) => {
-    const self = this;
-    const { certificate } = this.state;
-    const { localize, locale } = this.context;
-
-    let p12: trusted.pki.Pkcs12;
-
-    if (file) {
-      $("#get-password").openModal({
-        complete() {
-          const password = self.state.password;
-          const CERT_ITEM = certificate;
-          const CERT = window.PKISTORE.getPkiObject(CERT_ITEM);
-          const KEY = window.PKISTORE.findKey(CERT_ITEM);
-
-          if (!CERT || !KEY) {
-            $(".toast-cert_export_failed").remove();
-            Materialize.toast(localize("Certificate.cert_export_failed", locale), 2000, "toast-cert_export_failed");
-          } else {
-            p12 = new trusted.pki.Pkcs12();
-            p12 = p12.create(CERT, KEY, null, password, CERT_ITEM.subjectFriendlyName);
-            p12.save(file);
-            $(".toast-cert_export_ok").remove();
-            Materialize.toast(localize("Certificate.cert_export_ok", locale), 2000, "toast-cert_export_ok");
-          }
-        },
-        dismissible: false,
-      });
-    } else {
-      $(".toast-cert_export_cancel").remove();
-      Materialize.toast(localize("Certificate.cert_export_cancel", locale), 2000, "toast-cert_export_cancel");
-    }
-  }
-
   getCertificateInfoBody() {
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
 
     if (!certificate) {
@@ -236,7 +231,7 @@ class CertWindow extends React.Component<any, any> {
 
     let cert: any = null;
 
-    if (certificate && activeTabIsCertInfo) {
+    if (certificate && activeCertInfoTab) {
       cert = <CertificateInfo certificate={certificate} />;
     } else if (certificate) {
       cert = (
@@ -244,14 +239,14 @@ class CertWindow extends React.Component<any, any> {
           <a className="collection-info chain-info-blue">{localize("Certificate.cert_chain_status", locale)}</a>
           <div className="collection-info chain-status">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
           <a className="collection-info cert-info-blue">{localize("Certificate.cert_chain_info", locale)}</a>
-          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} style="" onClick={() => { return; } } />
+          <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} style="" onClick={() => { return; }} />
         </div>
       );
     }
 
     return (
       <div className="add-certs">
-        <CertificateInfoTabs onActiveTab={this.handleChangeActiveTab} />
+        <CertificateInfoTabs activeCertInfoTab={this.handleChangeActiveTab} />
         <div className="add-certs-item">
           {cert}
         </div>
@@ -277,6 +272,51 @@ class CertWindow extends React.Component<any, any> {
     return title;
   }
 
+  showModalDeleteCertificate = () => {
+    const { localize, locale } = this.context;
+    const { certificate, container, deleteContainer, showModalDeleteCertifiacte } = this.state;
+
+    if (!certificate || !showModalDeleteCertifiacte) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalDeleteCertifiacte}
+        header={localize("Certificate.delete_certificate", locale)}
+        onClose={this.handleCloseModalDeleteCertificate}>
+
+        <CertificateDelete
+          certificate={certificate}
+          reloadCertificates={this.handleReloadCertificates}
+          reloadContainers={this.handleReloadContainers} />
+      </Modal>
+    );
+  }
+
+  showModalExportCertificate = () => {
+    const { localize, locale } = this.context;
+    const { certificate, showModalExportCertifiacte } = this.state;
+
+    if (!certificate || !showModalExportCertifiacte) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalExportCertifiacte}
+        header={localize("Export.export_certificate", locale)}
+        onClose={this.handleCloseModalExportCertificate}>
+
+        <CertificateExport
+          certificate={certificate}
+          onSuccess={this.handleCloseModalExportCertificate}
+          onCancel={this.handleCloseModalExportCertificate}
+          onFail={this.handleCloseModalExportCertificate} />
+      </Modal>
+    );
+  }
+
   render() {
     const { certificates, isLoading } = this.props;
     const { activeTabIsCertInfo, certificate } = this.state;
@@ -297,7 +337,7 @@ class CertWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" import={
+                <ToolBarWithSearch operation="certificate" disable="" reloadCertificates={this.handleReloadCertificates} rightBtnAction={
                   (event: any) => {
                     this.handleCertificateImport(event.target.files);
                   }
@@ -333,29 +373,25 @@ class CertWindow extends React.Component<any, any> {
                   <ul className="app-bar-items">
                     <li className="cert-bar-text">
                       {this.getTitle()}
-                      <input type="file" ref={(direct) => direct &&
-                        direct.setAttribute("nwsaveas", localize("Certificate.certificate", locale) + ".pfx")}
-                        accept=".pfx" value="" id="choose-folder-export"
-                        onChange={(event: any) => {
-                          this.exportCert(event.target.value);
-                        }} />
                     </li>
                     <li className="right">
                       <a className={"nav-small-btn waves-effect waves-light " + DISABLED} data-activates="dropdown-btn-for-cert">
                         <i className="nav-small-icon material-icons cert-settings">more_vert</i>
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.exportDirectory}>{localize("Certificate.cert_export", locale)}</a></li>
+                        <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
+                        <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
                       </ul>
                     </li>
                   </ul>
                 </nav>
                 {this.getCertificateInfoBody()}
+                {this.showModalDeleteCertificate()}
+                {this.showModalExportCertificate()}
               </div>
             </div>
           </div>
         </div>
-        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
   }
@@ -364,6 +400,7 @@ class CertWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
+    containersLoading: state.containers.loading,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates, removeAllCertificates })(CertWindow);
+}, { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers })(CertWindow);

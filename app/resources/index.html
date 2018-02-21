@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>TrustedeSign</title>
+  <title>КриптоАРМ ГОСТ</title>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script>
@@ -49,12 +49,24 @@
           mainWindow.show()
         }, 1000);
       });
-      window.mainWindow.isMaximized = false;
+      window.mainWindow.resizable = false;
       window.shell = gui.Shell;
       window.RESOURCES_PATH = process.cwd();
       window.framework_NW = true;
     }
-    var trusted = require('trusted-crypto');
+    var crypto_module = require('crypto');
+    if (process.platform == 'win32') {
+      crypto_module.loadConfig("./config/openssl.cfg");
+    }
+
+    var trusted;
+    try {
+      trusted = require('trusted-crypto');
+    } catch(err) {
+      window.tcerr = err;
+    }
+
+    window.request = require('request'); 
     path = require('path');
     fs = require('fs');
     os = require('os');
@@ -69,18 +81,18 @@
 
     window.HOME_DIR = os.homedir();
     window.TMP_DIR = os.tmpdir();
-    window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
+    window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CertStore');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
-    window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
-    window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
-    window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "trusted-crypto.log");
+    window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/CryptoARM GOST/license.lic");
+    window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "CryptoARM GOST", "settings.json");
+    window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "cryptoarm_gost.log");
 
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted'), { mode: 0o700 });
     }
-    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'))) {
-      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'), { mode: 0o700 });
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST'), { mode: 0o700 });
     }
 
     document.ondragover = function (evt) {

@@ -1,18 +1,20 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE, CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
+  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE,
+  CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
-  FAIL, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_LICENSE,
-  REMOVE_ALL_CERTIFICATES, SELECT_FILE,
+  CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE,
+  FAIL,
+  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
+  LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_DELETE_FILE, PACKAGE_ENCRYPT, PACKAGE_SELECT_FILE, PACKAGE_SIGN, PACKAGE_VERIFY,
+  REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
 import { DEFAULT_PATH } from "../constants";
-import { certVerify } from "../module/global_app";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
@@ -66,6 +68,96 @@ export function loadLicense() {
           type: LOAD_LICENSE + FAIL,
         });
     }, 0);
+  };
+}
+
+interface IFile {
+  id: number;
+  filename: string;
+  lastModifiedDate: Date;
+  fullpath: string;
+  extension: string;
+  active: boolean;
+}
+
+export function packageSign(
+  files: IFile[],
+  cert: trusted.pki.Certificate,
+  key: trusted.pki.Key,
+  policies: string[],
+  format: trusted.DataFormat,
+  folderOut: string,
+) {
+  return (dispatch) => {
+    dispatch({
+      type: PACKAGE_SIGN + START,
+    });
+
+    let packageSignResult = true;
+
+    setTimeout(() => {
+      const signedFilePackage: string[] = [];
+      const signedFileIdPackage: number[] = [];
+
+      files.forEach((file) => {
+        const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
+        if (newPath) {
+          signedFileIdPackage.push(file.id);
+          signedFilePackage.push(newPath);
+        } else {
+          packageSignResult = false;
+        }
+      });
+
+      dispatch({
+        payload: {packageSignResult},
+        type: PACKAGE_SIGN + SUCCESS,
+      });
+
+      dispatch(filePackageSelect(signedFilePackage));
+      dispatch(filePackageDelete(signedFileIdPackage));
+    }, 0);
+  };
+}
+
+export function filePackageSelect(files: string[]) {
+  return (dispatch) => {
+    dispatch({
+      type: PACKAGE_SELECT_FILE + START,
+    });
+
+    setTimeout(() => {
+      const filePackage: IFile[] = [];
+
+      files.forEach((file: string) => {
+        const stat = fs.statSync(file);
+        const extension = extFile(file);
+
+        const fileProps = {
+          active: true,
+          extension,
+          filename: path.basename(file),
+          fullpath: file,
+          id: Date.now() + Math.random(),
+          lastModifiedDate: stat.birthtime,
+          size: stat.size,
+        };
+
+        filePackage.push(fileProps);
+      });
+
+      dispatch({
+        payload: { filePackage },
+        type: PACKAGE_SELECT_FILE + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function filePackageDelete(filePackage: number[]) {
+  return {
+    payload: { filePackage },
+    type: PACKAGE_DELETE_FILE,
   };
 }
 
@@ -132,7 +224,22 @@ export function changeSearchValue(searchValue) {
 export function verifyCertificate(certificateId) {
   return (dispatch, getState) => {
     const { certificates } = getState();
-    const certificateStatus = certVerify(certificates.getIn(["entities", certificateId]), window.TRUSTEDCERTIFICATECOLLECTION);
+
+    const certItem = certificates.getIn(["entities", certificateId]);
+    const certificate =  window.PKISTORE.getPkiObject(certItem);
+    let certificateStatus = false;
+
+    try {
+      if (certItem.provider === "SYSTEM") {
+        const chain = new trusted.pki.Chain();
+        const chainForVerify = chain.buildChain(certificate, window.TRUSTEDCERTIFICATECOLLECTION);
+        certificateStatus = chain.verifyChain(chainForVerify, null);
+      } else {
+        certificateStatus = trusted.utils.Csp.verifyCertificateChain(certificate);
+      }
+    } catch (e) {
+      certificateStatus = false;
+    }
 
     dispatch({
       payload: { certificateId, certificateStatus },
@@ -148,14 +255,104 @@ export function selectSignerCertificate(selected) {
   };
 }
 
-export function selectFile(fullpath: string) {
-  const stat = fs.statSync(fullpath);
+export function loadAllContainers() {
+  return (dispatch) => {
+    dispatch({
+      type: LOAD_ALL_CONTAINERS + START,
+    });
+
+    setTimeout(() => {
+      let enumedContainers;
+
+      try {
+        enumedContainers = trusted.utils.Csp.enumContainers(75);
+      } catch (e) {
+        dispatch({
+          type: LOAD_ALL_CONTAINERS + FAIL,
+        });
+      }
+
+      const filteredContainers = [];
+
+      for (const cont of enumedContainers) {
+        if (cont.fqcnA.toLowerCase().indexOf("registry") <= 0 ) {
+          filteredContainers.push({
+            friendlyName: cont.container,
+            id: Math.random(),
+            name: cont.unique,
+            reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
+          });
+        }
+      }
+
+      dispatch({
+        containers: filteredContainers,
+        type: LOAD_ALL_CONTAINERS + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function removeAllContainers() {
+  return {
+    type: REMOVE_ALL_CONTAINERS,
+  };
+}
+
+export function getCertificateFromContainer(container: number) {
+  return (dispatch, getState) => {
+    dispatch({
+      payload: { container },
+      type: GET_CERTIFICATE_FROM_CONTAINER + START,
+    });
+
+    setTimeout(() => {
+      const { containers } = getState();
+      const cont = containers.getIn(["entities", container]);
+      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(cont.name, 75);
+      const certificateItem = {
+        hash: certificate.thumbprint,
+        issuerFriendlyName: certificate.issuerFriendlyName,
+        key: "1",
+        notAfter: certificate.notAfter,
+        organizationName: certificate.organizationName,
+        publicKeyAlgorithm: certificate.publicKeyAlgorithm,
+        serial: certificate.serialNumber,
+        signatureAlgorithm: certificate.signatureAlgorithm,
+        signatureDigestAlgorithm: certificate.signatureDigestAlgorithm,
+        subjectFriendlyName: certificate.subjectFriendlyName,
+        subjectName: null,
+      };
+
+      dispatch({
+        payload: { container, certificate, certificateItem },
+        type: GET_CERTIFICATE_FROM_CONTAINER + SUCCESS,
+      });
+    }, 0);
+  };
+}
+
+export function activeContainer(container: number) {
+  return {
+    payload: { container },
+    type: ACTIVE_CONTAINER,
+  };
+}
+
+export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) {
+  let stat;
+
+  if (!lastModifiedDate || !size) {
+   stat = fs.statSync(fullpath);
+  }
+
+  const extension = extFile(fullpath);
   const file = {
-    extension: extFile(fullpath),
-    filename: path.basename(fullpath),
-    fullpath: fullpath,
-    lastModifiedDate: stat.birthtime,
-    size: stat.size,
+    extension,
+    filename: name ? name : path.basename(fullpath),
+    fullpath,
+    lastModifiedDate: lastModifiedDate ? lastModifiedDate : stat.birthtime,
+    size: size ? size : stat.size,
   };
 
   return {
@@ -172,7 +369,7 @@ export function activeFile(fileId: string, isActive: boolean = true) {
   };
 }
 
-export function deleteFile(fileId: string) {
+export function deleteFile(fileId: number) {
   return {
     payload: { fileId },
     type: DELETE_FILE,
@@ -202,8 +399,7 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-           id: Date.now() + Math.random(),
-           status_verify: signaruteStatus};
+           id: Date.now() + Math.random()};
       });
 
     } catch (error) {

@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import * as React from "react";
+import { localizeAlgorithm } from "../i18n/localize";
 import { IX509Certificate } from "../module/global_app";
 
 interface ICertificateInfoProps {
@@ -47,7 +48,15 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Sign.alg", locale)}</div>
-          <div className={"collection-title "}>{certificate.signatureAlgorithm}</div>
+          <div className={"collection-title "}>{localizeAlgorithm(certificate.signatureAlgorithm, locale)}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.signature_digest_algorithm", locale)}</div>
+          <div className={"collection-title "}>{localizeAlgorithm(certificate.signatureDigestAlgorithm, locale)}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.public_key_algorithm", locale)}</div>
+          <div className={"collection-title "}>{localizeAlgorithm(certificate.publicKeyAlgorithm, locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.thumbprint", locale)}</div>

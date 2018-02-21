@@ -5177,7 +5177,7 @@ button.btn-floating {
   -webkit-tap-highlight-color: transparent;
   vertical-align: middle;
   z-index: 1;
-  will-change: opacity, transform;
+  /*will-change: opacity, transform;*/
   transition: all .3s ease-out;
 }
 

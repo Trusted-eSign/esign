@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import ReactDOM from "react-dom";
+import { BASE64, DER } from "../constants";
 
 interface IEncodingTypeSelectorProps {
   EncodingValue: string;
@@ -17,15 +18,18 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {
    * https://github.com/facebook/react/issues/3667
    */
   componentDidMount() {
+    const self = this;
     $(document).ready(() => {
       $("select").material_select();
+      $("select").on("change", function () {
+        self.changeEncoding($(this)[0].value);
+      });
     });
     $(ReactDOM.findDOMNode(this.refs.select)).on("change", this.handleChange);
   }
 
-  handleChange = (event: any) => {
-    event.preventDefault();
-    this.props.handleChange(event.target.value);
+  changeEncoding = (encoding: string) => {
+    this.props.handleChange(encoding);
   }
 
   render() {
@@ -35,7 +39,7 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {
       <div className="row settings-item">
         <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
         <div className="col input-field">
-          <select ref="select" id="encoding" defaultValue={this.props.EncodingValue} onChange={this.handleChange}>
+          <select id="encoding" defaultValue={this.props.EncodingValue}>
             <option value={localize("Settings.BASE", locale)}>{localize("Settings.BASE", locale)}</option>
             <option value={localize("Settings.DER", locale)}>{localize("Settings.DER", locale)}</option>
           </select>

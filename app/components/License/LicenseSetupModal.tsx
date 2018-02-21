@@ -57,7 +57,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 
     const path = npath.dirname(LICENSE_PATH);
     const options = {
-      name: "Trusted eSign",
+      name: "CryptoARM GOST",
     };
 
     let command = "";

@@ -8,6 +8,7 @@ import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
 import { activeFilesSelector } from "../selectors";
 import * as encrypts from "../trusted/encrypt";
+import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
@@ -132,12 +133,32 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { files, settings, deleteFile, selectFile } = this.props;
+    const { files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
     const { localize, locale } = this.context;
+
+    if (licenseLoaded && !licenseToken) {
+      $(".toast-jwtErrorLoad").remove();
+      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+      return;
+    }
+
+    if (licenseVerified && licenseStatus !== 0) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(licenseStatus), locale), 5000, "toast-jwtErrorLicense");
+      return;
+    }
 
     if (files.length > 0) {
       const folderOut = settings.outfolder;
       let res = true;
+
+      if (folderOut.length > 0) {
+        if (!dirExists(folderOut)) {
+          $(".toast-failed_find_directory").remove();
+          Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
+          return;
+        }
+      }
 
       files.forEach((file) => {
         const newPath = encrypts.decryptFile(file.fullpath, folderOut);
@@ -199,6 +220,10 @@ export default connect((state) => {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
     files: activeFilesSelector(state, { active: true }),
+    licenseLoaded: state.license.loaded,
+    licenseStatus: state.license.status,
+    licenseToken: state.license.data,
+    licenseVerified: state.license.verified,
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };
