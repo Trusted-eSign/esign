@@ -191,7 +191,15 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           </div>
         </Link>
       );
-    } else {
+    }else if(!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE){
+      return (
+        <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
+          <div className="contain-btn">
+            <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
+          </div>
+        </Link>
+      );
+    }else {
       return (
         <div className="contain-btn">
           <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
