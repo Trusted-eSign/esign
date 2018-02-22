@@ -70,6 +70,35 @@
     path = require('path');
     fs = require('fs');
     os = require('os');
+
+    
+    var crypto_server = require('crypto-server');
+    //console.log(crypto_server);
+
+    var serverRPC = crypto_server.Server.$create({
+      'websocket': true, // is true by default 
+      'headers': { // allow custom headers is empty by default 
+          'Access-Control-Allow-Origin': '*'
+      }
+    });
+    function sign(args, opt, callback) {
+      var token = args.token; //token authorization
+      var files = args.files; //array files
+      var cancel_handler = args.cancel; //handler of chancel
+      var error_handler = args.error;  //handler of error  
+      var uploader_handler = args.uploader; //handler uploader
+      var file = files[0].name;
+      callback(null, file);
+    }
+    serverRPC.expose('sign', sign);
+
+    function view(args, opt, callback) {
+      callback(null, args[1]);
+    }
+    serverRPC.expose('view', view);
+    serverRPC.listen(8000, 'localhost');
+
+
     window.archiver = require('archiver');
     window.sudo = require('sudo-prompt');
 
