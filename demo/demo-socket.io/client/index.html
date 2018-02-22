@@ -1,0 +1,36 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Socket.io</title>
+</head>
+
+<body>
+	<h1>Демо-приложение</h1>
+	<h3>Выберите файл для подписи</h3>
+
+	<form id="form">
+		<input type="file" id="file" />
+		<input type="submit" value="Upload" />
+	</form>
+
+	<h3>Выберите файл для шифрования</h3>
+
+	<form id="formencrypt">
+		<input type="file" id="fileencrypt" />
+		<input type="submit" value="Upload" />
+	</form>
+
+
+	<h3>BITRIX</h3>
+
+	<form id="formbitrix">
+		<input type="submit" value="send" />
+	</form>
+
+	<script src="socket.io.js"></script>
+	<script src="socket.io-stream.js"></script>
+	<script src="app.js"></script>
+</body>
+
+</html>
