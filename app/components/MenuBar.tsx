@@ -8,6 +8,9 @@ import LocaleSelect from "./LocaleSelect";
 import Modal from "./Modal";
 import SideMenu from "./SideMenu";
 
+// tslint:disable-next-line:no-var-requires
+require("../server/socketManager");
+
 const remote = window.electron.remote;
 if (remote.getGlobal("sharedObject").logcrypto) {
   window.logger = trusted.utils.Logger.start(TRUSTED_CRYPTO_LOG);
