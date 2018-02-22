@@ -1,0 +1,104 @@
+<html lang="en-US">
+ 
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+ 
+<title>
+docs-test-page
+</title>
+ 
+<style>
+</style>
+ 
+</head>
+ 
+<body>
+ 
+<button type="button" onclick="sign(url, signRequest)">Sign</button>
+<button type="button" onclick="view(url, viewRequest)">View</button>
+ 
+</body>
+ 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+ 
+<script>
+ 
+var url = 'http://localhost:8000/';
+ 
+var file1 = {};
+file1.name = 'filename1.txt';
+file1.sys_name = 'filename1.txt';
+file1.url = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=content&id=1&token=beb2026d-9bc9-4bd7-afbd-d7826d32f03d'
+file1.id = 1;
+ 
+var file2 = {};
+file2.name = 'filename2.txt';
+file2.sys_name = 'filename2.txt.p7s';
+file2.url = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=content&id=2&token=beb2026d-9bc9-4bd7-afbd-d7826d32f03d'
+file2.id = 2;
+ 
+var file3 = {};
+file3.name = 'filename3.txt';
+file3.sys_name = 'filename3.txt';
+file3.url = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=content&id=3&token=beb2026d-9bc9-4bd7-afbd-d7826d32f03d'
+file3.id = 3;
+ 
+var signRequest = {};
+signRequest.jsonrpc = '2.0';
+signRequest.method = 'sign';
+signRequest.params = {};
+signRequest.params.token = '';
+signRequest.params.files = [file1, file2, file3];
+// ���������������� �� �������
+signRequest.params.extra = {};
+signRequest.params.uploader = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=upload';
+signRequest.params.cancel = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=updateStatus&status=2';
+signRequest.params.error = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=updateStatus&status=3';
+// �������
+// 0 - �������� ��������
+// 1 - �������� �� �������
+// 2 - ������� ��������
+// 3 - ������ �������
+signRequest.id = "1";
+ 
+var viewRequest = {};
+viewRequest.jsonrpc = '2.0';
+viewRequest.method = 'view';
+viewRequest.params = {};
+viewRequest.params.token = '';
+viewRequest.params.files = [file1, file2, file3];
+viewRequest.id = "2";
+ 
+function displayResponse(response) {
+    if (response.result)
+        alert('Success: ' + response.result);
+    else if (response.error)
+        alert("Error: " + response.error.message);
+};
+ 
+function sign(url, request) {
+    $.post(
+        url,
+        JSON.stringify(signRequest),
+        function (data) {
+            displayResponse(data);
+        },
+        "json"
+    );
+}
+ 
+function view(url, request) {
+    $.post(
+        url,
+        JSON.stringify(viewRequest),
+        function (data) {
+            displayResponse(data);
+        },
+        "json"
+    );
+}
+ 
+</script>
+ 
+</html>

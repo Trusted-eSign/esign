@@ -1,8 +1,23 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Tray, Menu } from 'electron';
 import MenuBuilder from './menu';
 
 let mainWindow = null;
 let preloader = null;
+global.globalObj = {
+  id: 123,
+  launch: null,
+  closeFunc: function(){
+    if (this.launch == true){
+      if(mainWindow) mainWindow.hide();
+    }else{ 
+      mainWindow = null;
+      if (process.platform === 'darwin') {
+        app.quit();
+      }
+    }
+  }
+};
+
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -16,6 +31,7 @@ if (options.indexOf('logcrypto') !== -1) {
 } else {
   global.sharedObject = {logcrypto: false};
 }
+
 
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
@@ -84,9 +100,73 @@ app.on('ready', async () => {
     mainWindow.webContents.openDevTools();
   }
 
+  var platform = require('os').platform();
+  var trayIcon;
+  if (platform == 'win32') {  
+    trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
+  }else{  
+    trayIcon = new Tray(__dirname + '/resources/image/tray.png');
+  }
+
+  const trayMenuTemplate = [
+    {
+      label: 'Open Application',
+      click: function () { mainWindow.show(); }
+    },
+    {
+        label: 'Empty Application',
+        enabled: false
+    },
+    {
+        label: 'Settings',
+        click: function () { console.log("Clicked on settings"); }
+    },
+    {
+        label: 'Help',
+        click: function () { console.log("Clicked on Help"); }
+    },
+    {
+      label: 'Close',
+      click: function () { 
+        mainWindow.close();
+        mainWindow = null;
+        if (process.platform === 'darwin') {
+          app.quit();
+        } 
+      }
+    }
+    ];
+  var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
+  trayIcon.setContextMenu(trayMenu);
+
+
+  var startMinimized = (process.argv || []).indexOf('--service') !== -1;
+
+  startMinimized = true; //Временно
+
+  if (startMinimized == true){
+      //console.log('App is started by AutoLaunch');
+      globalObj.launch = true;
+      if(mainWindow) mainWindow.hide();
+  }else {
+      globalObj.launch = false;
+      //console.log('App is started by User');
+  }
+
+  function appClose (){ //Можно убрать 
+    if (startMinimized == true){
+      //if(mainWindow) mainWindow.hide();
+    }else{
+      mainWindow = null;
+      if (process.platform === 'darwin') {
+        app.quit();
+      }
+    }
+ }
+
   preloader.webContents.on("did-finish-load", () => {
-    preloader.show();
-    preloader.focus();
+      preloader.show();
+      preloader.focus();
   });
 
   preloader.on("close", function() {
@@ -100,15 +180,14 @@ app.on('ready', async () => {
       throw new Error('"mainWindow" is not defined');
     }
     preloader.close();
-    mainWindow.show();
-    mainWindow.focus();
+    if(!startMinimized){ 
+      mainWindow.show();
+      mainWindow.focus();
+    }
   });
 
-  mainWindow.on('closed', function() {
-    mainWindow = null;
-    if (process.platform === 'darwin') {
-      app.quit();
-    }
+  mainWindow.on('closed', function() {  //Можно убрать 
+    //appClose();
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
