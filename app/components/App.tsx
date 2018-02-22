@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { HashRouter as Router, Route } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
+import {ConnectedRouter as Router, push} from "react-router-redux";
 import history from "../history";
 import localize from "../i18n/localize";
+import store from "../store/index";
 import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import ContainersWindow from "./ContainersWindow";
@@ -32,9 +34,13 @@ class App extends React.Component<IAppProps, {}> {
     };
   }
 
+  componentDidMount() {
+    store.dispatch(push("/"));
+  }
+
   render() {
     return (
-      <Router >
+      <Router history={history}>
         <div>
           <Route path="/" component={MenuBar} />
           <Route exact path="/" component={MainWindow} />

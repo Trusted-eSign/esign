@@ -1,13 +1,12 @@
-import { createBrowserHistory } from "history";
-import { push, routerMiddleware } from "react-router-redux";
+import { routerMiddleware } from "react-router-redux";
 import { applyMiddleware, compose, createStore } from "redux";
 import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
+import history from "../history";
 import randomId from "../middlewares/randomId";
 import reducer from "../reducer/index";
 import preloadedState from "./preloadedState";
 
-const history = createBrowserHistory();
 const router = routerMiddleware(history);
 
 const composeEnhancers =
