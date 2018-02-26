@@ -195,9 +195,9 @@
         "info_about_sign": "Операции с электронной подписью для любых типов документов и произвольного контента",
         "info_about_encrypt": "Защита пакетов документов и произвольного контента с помощью шифрования в адрес одного или нескольких получателей",
         "info_about_certificate": "Централизованное управление локальными и облачными хранилищами сертификатов",
-        "link_facebook": "https://www.facebook.com/cryptoarm/",
-        "link_vk": "http://vk.com/cryptoarm",
-        "link_twitter": "https://twitter.com/cryptoarm",
+        "link_facebook": "https://www.facebook.com/esign/",
+        "link_vk": "http://vk.com/esign",
+        "link_twitter": "https://twitter.com/esign",
         "link_trusred": "http://www.trusted.ru/"
     },
     "License": {

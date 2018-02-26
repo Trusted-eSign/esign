@@ -389,7 +389,7 @@ div::-webkit-scrollbar-thumb {
     padding-top: 5px;
     height: 60px;
     width: 60px;
-    background: url(./resources/image/cryptoarm-gost.png);
+    background: url(./resources/image/trusted-esign.png);
     background-size: 60px 60px;
 
 }
@@ -1086,7 +1086,7 @@ i.material-icons.left.token {
   text-indent: -9999px;
   width: 100px;
   height: 100px;
-  background: url(./resources/image/cryptoarm-gost.svg);
+  background: url(./resources/image/trusted-esign.svg);
   background-size: 100px 100px;
   margin-top: 30px;
   margin-left: 55px;

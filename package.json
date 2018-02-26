@@ -1,5 +1,5 @@
 {
-  "name": "cryptoarm-gost",
+  "name": "trusted-esign",
   "version": "1.2.11",
   "license": "Apache-2.0",
   "main": "main.js",

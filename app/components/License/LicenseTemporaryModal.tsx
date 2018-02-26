@@ -67,7 +67,7 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
 
     const path = npath.dirname(LICENSE_PATH);
     const options = {
-      name: "CryptoARM GOST",
+      name: "Trusted eSign",
     };
 
     let command = "";
@@ -203,7 +203,7 @@ class LicenseTemporaryModal extends React.Component<ILicenseTemporaryModalProps,
         email: this.state.email.text,
         username: this.state.username.text,
         sysinfo: JSON.stringify(system_info),
-        sub: "CryptoARM GOST",
+        sub: "Trusted eSign",
       },
       url: "https://licensesvc.trusted.ru/license/jwt/getfree",
       success: function(response){ 

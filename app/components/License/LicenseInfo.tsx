@@ -73,7 +73,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
       notBefore = this.getLocaleDate(license.iat * 1000);
     }
 
-    if (license.sub === "CryptoARM GOST") {
+    if (license.sub === "Trusted eSign") {
       productName = localize("About.product_name", locale);
     } else {
       productName = "-";
