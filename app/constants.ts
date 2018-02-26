@@ -80,3 +80,8 @@ export const MD_GOST12_512 = "GOST R 34.11-2012 512-bit length";
 export const GOST2001 = "GOST R 34.10-2001";
 export const GOST94 = "GOST R 34.10-94";
 export const GOST89 = "GOST 28147-89";
+
+export const ADD_CONNECTION = "ADD_CONNECTION";
+export const REMOVE_CONNECTION = "REMOVE_CONNECTION";
+export const SET_CONNECTED = "SET_CONNECTED";
+export const SET_DISCONNECTED = "SET_DISCONNECTED";

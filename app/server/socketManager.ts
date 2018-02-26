@@ -16,8 +16,8 @@ const TMP_DIR = os.tmpdir();
 
 io.on("connection", function (socket) {
   // tslint:disable-next-line:no-console
-  store.dispatch({ type: "ADD_CONNECTION", id: socket.id });
-  store.dispatch({ type: "SET_CONNECTED", id: socket.id });
+  store.dispatch({ type: "ADD_CONNECTION", payload: {id: socket.id, socket }});
+  store.dispatch({ type: "SET_CONNECTED", payload: {id: socket.id }});
 
   socket.on("sign file", (file) => {
     store.dispatch(push("/sign"));
@@ -79,7 +79,7 @@ io.on("connection", function (socket) {
     // tslint:disable-next-line:no-console
     console.log("user disconnected");
 
-    store.dispatch({ type: "REMOVE_CONNECTION", id: socket.id });
+    store.dispatch({ type: "REMOVE_CONNECTION", payload: {id: socket.id, socket }});
   });
 });
 
