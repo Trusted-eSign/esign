@@ -24,6 +24,11 @@ interface IFile {
   webkitRelativePath: string;
 }
 
+interface IFilePath {
+  fullpath: string;
+  socket?: string;
+}
+
 interface IFileRedux {
   active: boolean;
   extension: string;
@@ -41,7 +46,7 @@ interface IFileSelectorProps {
   selectFile: (fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) => void;
   selectedFilesPackage: boolean;
   selectingFilesPackage: boolean;
-  filePackageSelect: (files: string[]) => void;
+  filePackageSelect: (files: IFilePath[]) => void;
   filePackageDelete: (filesId: number[]) => void;
 }
 
@@ -95,7 +100,13 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
     dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, (selectedFiles: string[]) => {
       if (selectedFiles) {
-        filePackageSelect(selectedFiles);
+        const pack: IFilePath[] = [];
+
+        selectedFiles.forEach((file) => {
+          pack.push({fullpath: file});
+        });
+
+        filePackageSelect(pack);
       }
     });
   }
