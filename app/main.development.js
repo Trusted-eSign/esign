@@ -6,10 +6,10 @@ let preloader = null;
 global.globalObj = {
   id: 123,
   launch: null,
-  closeFunc: function(){
-    if (this.launch == true){
-      if(mainWindow) mainWindow.hide();
-    }else{ 
+  closeFunc: function () {
+    if (this.launch == true) {
+      if (mainWindow) mainWindow.hide();
+    } else {
       mainWindow = null;
       if (process.platform === 'darwin') {
         app.quit();
@@ -27,9 +27,9 @@ if (process.env.NODE_ENV === 'production') {
 var options = process.argv;
 
 if (options.indexOf('logcrypto') !== -1) {
-  global.sharedObject = {logcrypto: true};
+  global.sharedObject = { logcrypto: true };
 } else {
-  global.sharedObject = {logcrypto: false};
+  global.sharedObject = { logcrypto: false };
 }
 
 
@@ -68,7 +68,7 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  app.commandLine.appendSwitch('ignore-certificate-errors');  
+  app.commandLine.appendSwitch('ignore-certificate-errors');
 
   mainWindow = new BrowserWindow({
     width: 800, height: 600,
@@ -77,7 +77,7 @@ app.on('ready', async () => {
     toolbar: false,
     show: false,
     // This handles disabling web security
-    webPreferences : {
+    webPreferences: {
       webSecurity: false
     }
   });
@@ -102,9 +102,9 @@ app.on('ready', async () => {
 
   var platform = require('os').platform();
   var trayIcon;
-  if (platform == 'win32') {  
+  if (platform == 'win32') {
     trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
-  }else{  
+  } else {
     trayIcon = new Tray(__dirname + '/resources/image/tray.png');
   }
 
@@ -114,62 +114,36 @@ app.on('ready', async () => {
       click: function () { mainWindow.show(); }
     },
     {
-        label: 'Empty Application',
-        enabled: false
-    },
-    {
-        label: 'Settings',
-        click: function () { console.log("Clicked on settings"); }
-    },
-    {
-        label: 'Help',
-        click: function () { console.log("Clicked on Help"); }
-    },
-    {
       label: 'Close',
-      click: function () { 
-        mainWindow.close();
-        mainWindow = null;
-        if (process.platform === 'darwin') {
-          app.quit();
-        } 
+      click: function () {
+        app.isQuiting = true;
+        app.quit();
       }
     }
-    ];
+  ];
   var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
   trayIcon.setContextMenu(trayMenu);
 
 
   var startMinimized = (process.argv || []).indexOf('--service') !== -1;
 
-  startMinimized = true; //Временно
+  startMinimized = false; //Временно
 
-  if (startMinimized == true){
-      //console.log('App is started by AutoLaunch');
-      globalObj.launch = true;
-      if(mainWindow) mainWindow.hide();
-  }else {
-      globalObj.launch = false;
-      //console.log('App is started by User');
+  if (startMinimized == true) {
+    //console.log('App is started by AutoLaunch');
+    globalObj.launch = true;
+    if (mainWindow) mainWindow.hide();
+  } else {
+    globalObj.launch = false;
+    //console.log('App is started by User');
   }
 
-  function appClose (){ //Можно убрать 
-    if (startMinimized == true){
-      //if(mainWindow) mainWindow.hide();
-    }else{
-      mainWindow = null;
-      if (process.platform === 'darwin') {
-        app.quit();
-      }
-    }
- }
-
   preloader.webContents.on("did-finish-load", () => {
-      preloader.show();
-      preloader.focus();
+    preloader.show();
+    preloader.focus();
   });
 
-  preloader.on("close", function() {
+  preloader.on("close", function () {
     preloader = null;
   });
 
@@ -180,14 +154,19 @@ app.on('ready', async () => {
       throw new Error('"mainWindow" is not defined');
     }
     preloader.close();
-    if(!startMinimized){ 
+    if (!startMinimized) {
       mainWindow.show();
       mainWindow.focus();
     }
   });
 
-  mainWindow.on('closed', function() {  //Можно убрать 
-    //appClose();
+  mainWindow.on('close', function (event) {
+    if (!app.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+
+    return false;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
