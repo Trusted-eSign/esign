@@ -78,6 +78,12 @@ interface IFile {
   fullpath: string;
   extension: string;
   active: boolean;
+  socket?: string;
+}
+
+interface IFilePath {
+  fullpath: string;
+  socket?: string;
 }
 
 export function packageSign(
@@ -88,7 +94,7 @@ export function packageSign(
   format: trusted.DataFormat,
   folderOut: string,
 ) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: PACKAGE_SIGN + START,
     });
@@ -96,14 +102,23 @@ export function packageSign(
     let packageSignResult = true;
 
     setTimeout(() => {
-      const signedFilePackage: string[] = [];
+      const signedFilePackage: IFilePath[] = [];
       const signedFileIdPackage: number[] = [];
+      const { connections } = getState();
 
       files.forEach((file) => {
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push(newPath);
+          signedFilePackage.push({fullpath: newPath, socket: file.socket});
+
+          if (file.socket) {
+            const connection = connections.getIn(["entities", file.socket]);
+            if (connection && connection.connected && connection.socket) {
+              connection.socket.emit("files signed", file.fullpath);
+            }
+          }
+
         } else {
           packageSignResult = false;
         }
@@ -120,7 +135,7 @@ export function packageSign(
   };
 }
 
-export function filePackageSelect(files: string[]) {
+export function filePackageSelect(files: IFilePath[]) {
   return (dispatch) => {
     dispatch({
       type: PACKAGE_SELECT_FILE + START,
@@ -129,18 +144,20 @@ export function filePackageSelect(files: string[]) {
     setTimeout(() => {
       const filePackage: IFile[] = [];
 
-      files.forEach((file: string) => {
-        const stat = fs.statSync(file);
-        const extension = extFile(file);
+      files.forEach((file: IFilePath) => {
+        const { fullpath, socket } = file;
+        const stat = fs.statSync(fullpath);
+        const extension = extFile(fullpath);
 
         const fileProps = {
           active: true,
           extension,
-          filename: path.basename(file),
-          fullpath: file,
+          filename: path.basename(fullpath),
+          fullpath,
           id: Date.now() + Math.random(),
           lastModifiedDate: stat.birthtime,
           size: stat.size,
+          socket,
         };
 
         filePackage.push(fileProps);
@@ -378,7 +395,7 @@ export function deleteFile(fileId: number) {
 
 export function verifySignature(fileId: string) {
   return (dispatch, getState) => {
-    const { files } = getState();
+    const { connections, files } = getState();
     const file = files.getIn(["entities", fileId]);
     let signaruteStatus = false;
     let signatureInfo;
@@ -395,6 +412,14 @@ export function verifySignature(fileId: string) {
 
       signaruteStatus = signs.verifySign(cms);
       signatureInfo = signs.getSignPropertys(cms);
+
+      if (file.socket) {
+        const connection = connections.getIn(["entities", file.socket]);
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit("signature verified", signatureInfo);
+        }
+      }
+
       signatureInfo = signatureInfo.map((info) => {
         return {
           fileId,

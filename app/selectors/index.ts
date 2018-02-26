@@ -5,6 +5,7 @@ export const certificatesGetter = (state) => state.certificates.entities;
 export const containersGetter = (state) => state.containers.entities;
 export const filtersGetter = (state) => state.filters;
 export const filesGetter = (state) => state.files.entities;
+export const connectionsGetter = (state) => state.files.connections;
 export const idGetter = (state, props) => props.id;
 export const operationGetter = (state, props) => props.operation;
 
@@ -70,4 +71,8 @@ export const filteredContainersSelector = createSelector(containersGetter, filte
       container.name.toLowerCase().match(search)
     );
   });
+});
+
+export const connectionSelector = () => createSelector(connectionsGetter, idGetter, (connections, id) => {
+  return connections.getIn(["entities", id]);
 });

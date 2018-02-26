@@ -10,6 +10,7 @@ const FileModel = Record({
   fullpath: null,
   id: null,
   lastModifiedDate: null,
+  socket: null,
 });
 
 const DefaultReducerState = Record({

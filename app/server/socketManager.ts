@@ -55,7 +55,7 @@ io.on("connection", function (socket) {
       } else {
         const file = getFileProperty(goodPath);
 
-        store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file } });
+        store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file: {...file, socket: socket.id } }});
       }
     });
   });
