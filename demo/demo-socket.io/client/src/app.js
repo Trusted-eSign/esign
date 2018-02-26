@@ -6,11 +6,15 @@ var formencrypt = document.getElementById('formencrypt');
 var formbitrix = document.getElementById('formbitrix');
 
 socket.on('files signed', function (data) {
-	console.log(data);
+	console.log('файл подписан', data);
 });
 
 socket.on('file saved', function () {
 	console.log("file saved");
+});
+
+socket.on('signature verified', function (data) {
+	console.log('информация о подписи', data);
 });
 
 form.onsubmit = function(ev) {
