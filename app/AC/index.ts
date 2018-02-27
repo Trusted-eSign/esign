@@ -78,12 +78,25 @@ interface IFile {
   fullpath: string;
   extension: string;
   active: boolean;
+  remoteId?: string;
   socket?: string;
 }
 
 interface IFilePath {
   fullpath: string;
+  remoteId?: string;
   socket?: string;
+}
+
+interface INormalizedSignInfo {
+  subjectFriendlyName: string;
+  issuerFriendlyName: string;
+  notBefore: number;
+  notAfter: number;
+  digestAlgorithm: string;
+  signingTime: number;
+  subjectName: string;
+  issuerName: string;
 }
 
 export function packageSign(
@@ -110,12 +123,57 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({fullpath: newPath, socket: file.socket});
+          signedFilePackage.push({fullpath: newPath, remoteId: file.remoteId, socket: file.socket});
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit("files signed", file.fullpath);
+
+              let cms = signs.loadSign(newPath);
+
+              if (cms.isDetached()) {
+                if (!(cms = signs.setDetachedContent(cms, newPath))) {
+                  throw ("err");
+                }
+              }
+
+              const signatureInfo = signs.getSignPropertys(cms);
+
+              const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
+
+              signatureInfo.forEach((info) => {
+                const subjectCert = info.certs[info.certs.length - 1];
+
+                normalyzeSignatureInfo.push({
+                  subjectFriendlyName: info.subject,
+                  issuerFriendlyName: subjectCert.issuerFriendlyName,
+                  notBefore: new Date(subjectCert.notBefore).getTime(),
+                  notAfter: new Date(subjectCert.notAfter).getTime(),
+                  digestAlgorithm: subjectCert.signatureDigestAlgorithm,
+                  signingTime: Date.now(),
+                  subjectName: subjectCert.subjectName,
+                  issuerName: subjectCert.issuerName,
+                });
+              });
+
+              console.log("normalyzeSignatureInfo", normalyzeSignatureInfo);
+
+              window.request.post({
+                formData: {
+                  file: fs.createReadStream(newPath),
+                  id: file.remoteId,
+                  signers: JSON.stringify(normalyzeSignatureInfo),
+                },
+                url: "https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.docs/ajax.php?command=upload",
+              }, (err, httpResponse, body) => {
+                if (err) {
+                  console.log("--- err", err);
+                } else {
+                  console.log("++++", body);
+                }
+               },
+              );
             }
           }
 
@@ -145,7 +203,7 @@ export function filePackageSelect(files: IFilePath[]) {
       const filePackage: IFile[] = [];
 
       files.forEach((file: IFilePath) => {
-        const { fullpath, socket } = file;
+        const { fullpath, remoteId, socket } = file;
         const stat = fs.statSync(fullpath);
         const extension = extFile(fullpath);
 
@@ -156,6 +214,7 @@ export function filePackageSelect(files: IFilePath[]) {
           fullpath,
           id: Date.now() + Math.random(),
           lastModifiedDate: stat.birthtime,
+          remoteId,
           size: stat.size,
           socket,
         };

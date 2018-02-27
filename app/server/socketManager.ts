@@ -52,7 +52,7 @@ io.on("connection", function(socket) {
         } else {
           const fileProps = getFileProperty(goodPath);
 
-          store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file: { ...fileProps, socket: socket.id } } });
+          store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file: { ...fileProps, remoteId: file.id, socket: socket.id } } });
         }
       });
     });
