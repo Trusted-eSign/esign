@@ -72,6 +72,7 @@
 
     window.archiver = require('archiver');
     window.sudo = require('sudo-prompt');
+    window.request = require('request');
 
     if (process.env.NODE_ENV === "development") {
       window.DEFAULT_PATH = `${__dirname}`;
