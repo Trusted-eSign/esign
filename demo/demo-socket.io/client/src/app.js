@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-var socket = io.connect('http://localhost:4040');
+var socket = io.connect('https://localhost:4040');
 var formsign = document.getElementById('sign');
 
 var file1 = {};
