@@ -44,7 +44,7 @@ io.on("connection", function(socket) {
     mainWindow.focus();
 
     files.forEach((file) => {
-      const pathForSave = path.join(TMP_DIR, file.name);
+      const pathForSave = path.join(TMP_DIR, file.sys_name);
 
       download(file.url, pathForSave, (err: Error, ss, goodPath) => {
         if (err) {
@@ -68,7 +68,7 @@ io.on("connection", function(socket) {
     mainWindow.focus();
 
     files.forEach((file) => {
-      const pathForSave = path.join(TMP_DIR, file.name);
+      const pathForSave = path.join(TMP_DIR, file.sys_name);
 
       download(file.url, pathForSave, (err: Error, ss, goodPath) => {
         if (err) {
