@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { push } from "react-router-redux";
+import { ADD_CONNECTION, REMOVE_CONNECTION, SELECT_FILE, SET_CONNECTED} from "../constants";
 import store from "../store/index";
 import { extFile, toBase64 } from "../utils";
 import io from "./socketIO";
@@ -31,8 +32,8 @@ interface ISignRequest {
 
 io.on("connection", function(socket) {
   // tslint:disable-next-line:no-console
-  store.dispatch({ type: "ADD_CONNECTION", payload: {id: socket.id, socket }});
-  store.dispatch({ type: "SET_CONNECTED", payload: {id: socket.id }});
+  store.dispatch({ type: ADD_CONNECTION, payload: {id: socket.id, socket }});
+  store.dispatch({ type: SET_CONNECTED, payload: {id: socket.id }});
 
   socket.on("sign", (data: ISignRequest) => {
     // tslint:disable-next-line:no-console
@@ -52,7 +53,7 @@ io.on("connection", function(socket) {
         } else {
           const fileProps = getFileProperty(goodPath);
 
-          store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file: { ...fileProps, remoteId: file.id, socket: socket.id } } });
+          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, remoteId: file.id, socket: socket.id } } });
         }
       });
     });
@@ -76,14 +77,14 @@ io.on("connection", function(socket) {
         } else {
           const fileProps = getFileProperty(goodPath);
 
-          store.dispatch({ generateId: true, type: "SELECT_FILE", payload: { file: { ...fileProps, socket: socket.id } } });
+          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, socket: socket.id } } });
         }
       });
     });
   });
 
   socket.on("disconnect", function() {
-    store.dispatch({ type: "REMOVE_CONNECTION", payload: {id: socket.id, socket }});
+    store.dispatch({ type: REMOVE_CONNECTION, payload: {id: socket.id, socket }});
   });
 });
 
