@@ -78,12 +78,14 @@ interface IFile {
   fullpath: string;
   extension: string;
   active: boolean;
+  extra: any;
   remoteId?: string;
   socket?: string;
 }
 
 interface IFilePath {
   fullpath: string;
+  extra: any;
   remoteId?: string;
   socket?: string;
 }
@@ -123,7 +125,7 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({fullpath: newPath, remoteId: file.remoteId, socket: file.socket});
+          signedFilePackage.push({fullpath: newPath, extra: file.extra, remoteId: file.remoteId, socket: file.socket});
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
@@ -157,10 +159,9 @@ export function packageSign(
                 });
               });
 
-              console.log("normalyzeSignatureInfo", normalyzeSignatureInfo);
-
               window.request.post({
                 formData: {
+                  extra: file.extra,
                   file: fs.createReadStream(newPath),
                   id: file.remoteId,
                   signers: JSON.stringify(normalyzeSignatureInfo),
@@ -203,13 +204,14 @@ export function filePackageSelect(files: IFilePath[]) {
       const filePackage: IFile[] = [];
 
       files.forEach((file: IFilePath) => {
-        const { fullpath, remoteId, socket } = file;
+        const { fullpath, extra, remoteId, socket } = file;
         const stat = fs.statSync(fullpath);
         const extension = extFile(fullpath);
 
         const fileProps = {
           active: true,
           extension,
+          extra,
           filename: path.basename(fullpath),
           fullpath,
           id: Date.now() + Math.random(),

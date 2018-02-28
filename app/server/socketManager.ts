@@ -14,7 +14,6 @@ const TMP_DIR = os.tmpdir();
 
 interface IFileProperty {
   name: string;
-  sys_name: string;
   url: string;
   id: string;
 }
@@ -26,6 +25,7 @@ interface ISignRequest {
     token: string;
     files: IFileProperty[];
     uploader: string;
+    extra: any;
   };
   controller: string;
 }
@@ -38,14 +38,14 @@ io.on("connection", function(socket) {
   socket.on("sign", (data: ISignRequest) => {
     // tslint:disable-next-line:no-console
     const { params } = data;
-    const { files } = params;
+    const { extra, files } = params;
 
     store.dispatch(push("/sign"));
     mainWindow.show();
     mainWindow.focus();
 
     files.forEach((file) => {
-      const pathForSave = path.join(TMP_DIR, file.sys_name);
+      const pathForSave = path.join(TMP_DIR, file.name);
 
       download(file.url, pathForSave, (err: Error, ss, goodPath) => {
         if (err) {
@@ -53,7 +53,7 @@ io.on("connection", function(socket) {
         } else {
           const fileProps = getFileProperty(goodPath);
 
-          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, remoteId: file.id, socket: socket.id } } });
+          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, extra, remoteId: file.id, socket: socket.id } } });
         }
       });
     });
@@ -69,7 +69,7 @@ io.on("connection", function(socket) {
     mainWindow.focus();
 
     files.forEach((file) => {
-      const pathForSave = path.join(TMP_DIR, file.sys_name);
+      const pathForSave = path.join(TMP_DIR, file.name);
 
       download(file.url, pathForSave, (err: Error, ss, goodPath) => {
         if (err) {
@@ -77,7 +77,7 @@ io.on("connection", function(socket) {
         } else {
           const fileProps = getFileProperty(goodPath);
 
-          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, socket: socket.id } } });
+          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, extra: file.extra, socket: socket.id } } });
         }
       });
     });

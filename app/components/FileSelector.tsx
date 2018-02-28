@@ -26,6 +26,7 @@ interface IFile {
 
 interface IFilePath {
   fullpath: string;
+  extra?: any;
   socket?: string;
 }
 

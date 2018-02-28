@@ -6,6 +6,7 @@ import { arrayToMap } from "../utils";
 const FileModel = Record({
   active: true,
   extension: null,
+  extra: null,
   filename: null,
   fullpath: null,
   id: null,
