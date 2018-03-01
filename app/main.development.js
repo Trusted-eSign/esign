@@ -104,7 +104,9 @@ app.on('ready', async () => {
   var trayIcon;
   if (platform == 'win32') {
     trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
-  } else {
+  } else if (platform == 'darwin'){
+    trayIcon = new Tray(__dirname + '/resources/image/tray_mac.png');
+  }else{
     trayIcon = new Tray(__dirname + '/resources/image/tray.png');
   }
 
