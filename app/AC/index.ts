@@ -131,8 +131,9 @@ export function packageSign(
             const connection = connections.getIn(["entities", file.socket]);
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit("files signed", file.fullpath);
+            }
 
-              let cms = signs.loadSign(newPath);
+            let cms = signs.loadSign(newPath);
 
               if (cms.isDetached()) {
                 if (!(cms = signs.setDetachedContent(cms, newPath))) {
@@ -161,7 +162,7 @@ export function packageSign(
 
               window.request.post({
                 formData: {
-                  extra: file.extra,
+                  extra: JSON.stringify(file.extra),
                   file: fs.createReadStream(newPath),
                   id: file.remoteId,
                   signers: JSON.stringify(normalyzeSignatureInfo),
@@ -175,7 +176,6 @@ export function packageSign(
                 }
                },
               );
-            }
           }
 
         } else {
