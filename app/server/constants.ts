@@ -11,3 +11,5 @@ export const SIGNED = "signed";
 export const VERIFYED = "verifyed";
 export const ENCRYPTED = "encrypted";
 export const DECRYPTED = "decrypted";
+
+export const UNAVAILABLE = "UNAVAILABLE";
