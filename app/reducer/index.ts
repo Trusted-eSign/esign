@@ -7,6 +7,7 @@ import files from "./files";
 import filters from "./filters";
 import license from "./license";
 import recipients from "./recipients";
+import remoteFiles from "./remoteFiles";
 import settings from "./settings";
 import signatures from "./signatures";
 import signers from "./signers";
@@ -20,6 +21,7 @@ export default combineReducers({
   filters,
   license,
   recipients,
+  remoteFiles,
   settings,
   signatures,
   signers,
