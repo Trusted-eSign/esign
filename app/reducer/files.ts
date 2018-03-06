@@ -1,6 +1,6 @@
 import { Map, OrderedMap, Record } from "immutable";
 import { filePackageDelete } from "../AC/index";
-import { ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, SELECT_FILE, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
+import { ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, SELECT_FILE, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
 import { arrayToMap } from "../utils";
 
 const FileModel = Record({
@@ -57,6 +57,9 @@ export default (files = new DefaultReducerState(), action) => {
       payload.filePackage.forEach((id: number) => { newFiles = newFiles.deleteIn(["entities", id]); });
 
       return newFiles;
+
+    case REMOVE_ALL_FILES:
+      return files = new DefaultReducerState();
   }
 
   return files;

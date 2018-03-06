@@ -32,6 +32,7 @@ export const PACKAGE_DELETE_FILE = "PACKAGE_DELETE_FILE";
 export const SELECT_FILE = "SELECT_FILE";
 export const ACTIVE_FILE = "ACTIVE_FILE";
 export const DELETE_FILE = "DELETE_FILE";
+export const REMOVE_ALL_FILES = "REMOVE_ALL_FILES";
 
 export const LOAD_LICENSE = "LOAD_LICENSE";
 export const VERIFY_LICENSE = "VERIFY_LICENSE";
