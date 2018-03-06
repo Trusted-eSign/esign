@@ -135,47 +135,47 @@ export function packageSign(
 
             let cms = signs.loadSign(newPath);
 
-              if (cms.isDetached()) {
-                if (!(cms = signs.setDetachedContent(cms, newPath))) {
-                  throw ("err");
-                }
+            if (cms.isDetached()) {
+              if (!(cms = signs.setDetachedContent(cms, newPath))) {
+                throw ("err");
               }
+            }
 
-              const signatureInfo = signs.getSignPropertys(cms);
+            const signatureInfo = signs.getSignPropertys(cms);
 
-              const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
+            const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
 
-              signatureInfo.forEach((info) => {
-                const subjectCert = info.certs[info.certs.length - 1];
+            signatureInfo.forEach((info) => {
+              const subjectCert = info.certs[info.certs.length - 1];
 
-                normalyzeSignatureInfo.push({
-                  subjectFriendlyName: info.subject,
-                  issuerFriendlyName: subjectCert.issuerFriendlyName,
-                  notBefore: new Date(subjectCert.notBefore).getTime(),
-                  notAfter: new Date(subjectCert.notAfter).getTime(),
-                  digestAlgorithm: subjectCert.signatureDigestAlgorithm,
-                  signingTime: Date.now(),
-                  subjectName: subjectCert.subjectName,
-                  issuerName: subjectCert.issuerName,
-                });
+              normalyzeSignatureInfo.push({
+                subjectFriendlyName: info.subject,
+                issuerFriendlyName: subjectCert.issuerFriendlyName,
+                notBefore: new Date(subjectCert.notBefore).getTime(),
+                notAfter: new Date(subjectCert.notAfter).getTime(),
+                digestAlgorithm: subjectCert.signatureDigestAlgorithm,
+                signingTime: Date.now(),
+                subjectName: subjectCert.subjectName,
+                issuerName: subjectCert.issuerName,
               });
+            });
 
-              window.request.post({
-                formData: {
-                  extra: JSON.stringify(file.extra),
-                  file: fs.createReadStream(newPath),
-                  id: file.remoteId,
-                  signers: JSON.stringify(normalyzeSignatureInfo),
-                },
-                url: "https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.docs/ajax.php?command=upload",
-              }, (err, httpResponse, body) => {
-                if (err) {
-                  console.log("--- err", err);
-                } else {
-                  console.log("++++", body);
-                }
-               },
-              );
+            window.request.post({
+              formData: {
+                extra: JSON.stringify(file.extra),
+                file: fs.createReadStream(newPath),
+                id: file.remoteId,
+                signers: JSON.stringify(normalyzeSignatureInfo),
+              },
+              url: "https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.docs/ajax.php?command=upload",
+            }, (err, httpResponse, body) => {
+              if (err) {
+                console.log("--- err", err);
+              } else {
+                console.log("++++", body);
+              }
+            },
+            );
           }
 
         } else {
