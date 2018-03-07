@@ -5,11 +5,13 @@ export const certificatesGetter = (state) => state.certificates.entities;
 export const containersGetter = (state) => state.containers.entities;
 export const filtersGetter = (state) => state.filters;
 export const filesGetter = (state) => state.files.entities;
+export const remoteFilesGetter = (state) => state.remoteFiles.entities;
 export const connectionsGetter = (state) => state.files.connections;
 export const idGetter = (state, props) => props.id;
 export const operationGetter = (state, props) => props.operation;
 
 const activeGetter = (state, props) => props.active;
+const loadingGetter = (state, props) => props.loading;
 
 export const filteredCertificatesSelector = createSelector(certificatesGetter, filtersGetter, operationGetter, (certificates, filters, operation) => {
   const { searchValue } = filters;
@@ -75,4 +77,12 @@ export const filteredContainersSelector = createSelector(containersGetter, filte
 
 export const connectionSelector = () => createSelector(connectionsGetter, idGetter, (connections, id) => {
   return connections.getIn(["entities", id]);
+});
+
+export const loadingRemoteFilesSelector = createSelector(remoteFilesGetter, loadingGetter, (files, loading) => {
+  console.log("files", files);
+  return mapToArr(files).filter((file) => {
+    console.log("file", file);
+    return file.loading === loading;
+  });
 });

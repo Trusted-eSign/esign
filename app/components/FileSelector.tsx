@@ -4,6 +4,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
 import { dlg } from "../module/global_app";
+import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileList from "./FileList";
 import ProgressBars from "./ProgressBars";
@@ -68,9 +69,13 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFileSelectorProps) {
-    const { files, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files, loadingFiles, selectedFilesPackage, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
+      return true;
+    }
+
+    if (loadingFiles.length !== nextProps.loadingFiles.length) {
       return true;
     }
 
@@ -266,14 +271,14 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   getBody() {
     const { localize, locale } = this.context;
-    const { files, selectingFilesPackage } = this.props;
+    const { loadingFiles, files, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage) {
       return <ProgressBars />;
     }
 
-    const active = files.length > 0 ? "active" : "not-active";
-    const collection = files.length > 0 ? "collection" : "";
+    const active = files.length > 0 || loadingFiles.length > 0 ? "active" : "not-active";
+    const collection = files.length > 0 || loadingFiles.length > 0 ? "collection" : "";
 
     return (
       <div className="add">
@@ -306,6 +311,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 export default connect((state) => {
   return {
     files: mapToArr(state.files.entities),
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     selectedFilesPackage: state.files.selectedFilesPackage,
     selectingFilesPackage: state.files.selectingFilesPackage,
   };

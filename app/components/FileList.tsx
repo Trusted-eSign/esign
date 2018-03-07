@@ -4,8 +4,10 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
 import { activeFile, deleteFile} from "../AC";
+import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
+import RemoteFileListItem from "./RemoteFileListItem";
 import SignatireStatusCicrcle from "./SignatureStatusCircle";
 
 interface IFileRedux {
@@ -42,9 +44,13 @@ class FileList extends React.Component<IFilelistProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFilelistProps) {
-    const { files, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files, loadingFiles, selectedFilesPackage, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
+      return true;
+    }
+
+    if (loadingFiles.length !== nextProps.loadingFiles.length) {
       return true;
     }
 
@@ -70,40 +76,61 @@ class FileList extends React.Component<IFilelistProps, {}> {
   }
 
   render() {
-    const { files } = this.props;
+    const { files, loadingFiles } = this.props;
 
     return (
       <List
-        rowCount={files.length}
+        rowCount={files.length + loadingFiles.length}
         height={427}
         width={377}
         overscanRowCount={5}
         rowHeight={64}
         rowRenderer={this.rowRenderer}
-        files={files}
+        files={loadingFiles.concat(files)}
         style={{ outline: "none" }}
       />
     );
   }
 
   rowRenderer = ({ index, key, style }) => {
-    const { files, operation } = this.props;
+    const { files, operation, loadingFiles } = this.props;
 
-    if (!files.length) {
+    if (!files.length && !loadingFiles.length) {
       return null;
     }
 
-    return (
-      <FileListItem
-        removeFiles={() => this.removeFile(files[index].id)}
-        onClickBtn={() => this.toggleActive(files[index])}
-        file={files[index]}
-        operation={operation}
-        key={key}
-        index={index}
-        style={style}
-      />
-    );
+    console.log("index", index);
+
+    if (index > files.length - 1 && loadingFiles.length) {
+      const realIndex = index - files.length;
+
+      console.log("realIndex", realIndex);
+      console.log("loadingFiles", loadingFiles);
+
+      return (
+        <RemoteFileListItem
+          removeFiles={() => this.removeFile(loadingFiles[realIndex].id)}
+          onClickBtn={() => this.toggleActive(loadingFiles[realIndex])}
+          file={loadingFiles[realIndex]}
+          operation={operation}
+          key={key}
+          index={realIndex.toString()}
+          style={style}
+        />
+      );
+    } else if (index < files.length) {
+      return (
+        <FileListItem
+          removeFiles={() => this.removeFile(files[index].id)}
+          onClickBtn={() => this.toggleActive(files[index])}
+          file={files[index]}
+          operation={operation}
+          key={key}
+          index={index}
+          style={style}
+        />
+      );
+    }
   }
 
   noGridOverflow() {
@@ -132,6 +159,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
 export default connect((state) => {
   return {
     files: mapToArr(state.files.entities),
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     selectedFilesPackage: state.files.selectedFilesPackage,
     selectingFilesPackage: state.files.selectingFilesPackage,
   };
