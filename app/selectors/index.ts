@@ -80,9 +80,7 @@ export const connectionSelector = () => createSelector(connectionsGetter, idGett
 });
 
 export const loadingRemoteFilesSelector = createSelector(remoteFilesGetter, loadingGetter, (files, loading) => {
-  console.log("files", files);
   return mapToArr(files).filter((file) => {
-    console.log("file", file);
     return file.loading === loading;
   });
 });

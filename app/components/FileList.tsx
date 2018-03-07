@@ -111,13 +111,8 @@ class FileList extends React.Component<IFilelistProps, {}> {
       return null;
     }
 
-    console.log("index", index);
-
     if (index > files.length - 1 && loadingFiles.length) {
       const realIndex = index - files.length;
-
-      console.log("realIndex", realIndex);
-      console.log("loadingFiles", loadingFiles);
 
       return (
         <RemoteFileListItem
