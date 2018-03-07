@@ -48,12 +48,17 @@ file6.name = 'filename6.txt';
 file6.url = 'http://localhost:3000/resources/fileUnavailable'
 file6.id = 6;
 
+var file7 = {};
+file7.name = 'filename7.pdf';
+file7.url = 'http://localhost:3000/resources/file7.pdf'
+file7.id = 7;
+
 var signRequest = {};
 signRequest.jsonrpc = '2.0';
 signRequest.method = 'sign';
 signRequest.params = {};
 signRequest.params.token = '';
-signRequest.params.files = [file1, file2, file3];
+signRequest.params.files = [file1, file2, file3, file7];
 signRequest.params.extra = {};
 signRequest.params.uploader = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=upload';
 signRequest.params.cancel = 'https://bitrix.tsumo.org/bitrix/components/trustednet/trustednet.sign/ajax.php?command=updateStatus&status=2';

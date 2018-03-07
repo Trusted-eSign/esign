@@ -44,7 +44,7 @@ app.get("/resources/file2.txt", (req, res, next) => {
 });
 
 app.get("/resources/file3.txt", (req, res, next) => {
-  return res.sendFile(__dirname + "/resources/file2.txt");
+  return res.sendFile(__dirname + "/resources/file3.txt");
 });
 
 app.get("/resources/file4.sig", (req, res, next) => {
@@ -53,6 +53,10 @@ app.get("/resources/file4.sig", (req, res, next) => {
 
 app.get("/resources/file5.enc", (req, res, next) => {
   return res.sendFile(__dirname + "/resources/file5.enc");
+});
+
+app.get("/resources/file7.pdf", (req, res, next) => {
+  return res.sendFile(__dirname + "/resources/file7.pdf");
 });
 
 httpServer.listen(3000, () => {
