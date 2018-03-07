@@ -19,9 +19,21 @@ interface IFileRedux {
   lastModifiedDate: Date;
 }
 
+export interface IRemoteFile {
+  extra: any;
+  id: number;
+  loaded: boolean;
+  loading: boolean;
+  name: string;
+  socketId: string;
+  totalSize: number;
+  url: string;
+}
+
 interface IFilelistProps {
   activeFile: (id: number, active?: boolean) => void;
   deleteFile: (fileId: number) => void;
+  loadingFiles: IRemoteFile[];
   files: IFileRedux[];
   operation: string;
   selectedFilesPackage: boolean;
