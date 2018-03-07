@@ -174,6 +174,9 @@ const cleanFileLists = () => {
 };
 
 const openWindow = (operation: string) => {
+  mainWindow.show();
+  mainWindow.focus();
+
   switch (operation) {
     case SIGN:
     case VERIFY:
@@ -188,7 +191,4 @@ const openWindow = (operation: string) => {
     default:
       return;
   }
-
-  mainWindow.show();
-  mainWindow.focus();
 };
