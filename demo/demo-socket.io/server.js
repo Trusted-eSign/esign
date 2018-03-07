@@ -47,6 +47,10 @@ app.get("/resources/file3.txt", (req, res, next) => {
   return res.sendFile(__dirname + "/resources/file2.txt");
 });
 
+app.get("/resources/file4.sig", (req, res, next) => {
+  return res.sendFile(__dirname + "/resources/file4.sig");
+});
+
 httpServer.listen(3000, () => {
   console.log("Server listening on port 3000");
 });
