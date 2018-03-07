@@ -128,16 +128,12 @@ function download(file: IFileProperty, pathname: string, done: (err: Error, url?
   sendReq.on("response", (response) => {
     switch (response.statusCode) {
       case 200:
-        // const len = parseInt(response.headers["content-length"], 10);
-        // let cur = 0;
-        // const total = len / 1048576;
-        store.dispatch({ type: DOWNLOAD_REMOTE_FILE + START, payload: { id: file.id } });
+        const totalSize = parseInt(response.headers["content-length"], 10);
+        store.dispatch({ type: DOWNLOAD_REMOTE_FILE + START, payload: { id: file.id, totalSize } });
 
         const stream = fs.createWriteStream(pathname);
 
         response.on("data", (chunk) => {
-          // cur += chunk.length;
-          // console.log("Downloading " + (100.0 * cur / len).toFixed(2) + "% " + (cur / 1048576).toFixed(2) + " mb\r" + ".<br/> Total size: " + total.toFixed(2) + " mb");
           stream.write(chunk);
         }).on("end", () => {
           stream.on("close", () => {

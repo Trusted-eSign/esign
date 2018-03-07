@@ -10,6 +10,7 @@ export interface IRemoteFile {
   loading: boolean;
   name: string;
   socketId: string;
+  totalSize: number;
   url: string;
 }
 
@@ -20,6 +21,7 @@ const FileModel = Record({
   loading: false,
   name: null,
   socketId: null,
+  totalSize: null,
   url: null,
 });
 
@@ -47,7 +49,9 @@ export default (files = new DefaultReducerState(), action) => {
         .set("uploader", payload.uploader);
 
     case DOWNLOAD_REMOTE_FILE + START:
-      return files.setIn(["entities", payload.id, "loading"], true);
+      return files
+        .setIn(["entities", payload.id, "totalSize"], payload.totalSize)
+        .setIn(["entities", payload.id, "loading"], true);
 
     case DOWNLOAD_REMOTE_FILE + SUCCESS:
       return files
