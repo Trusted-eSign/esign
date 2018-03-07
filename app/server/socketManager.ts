@@ -131,11 +131,11 @@ function download(file: IFileProperty, pathname: string, done: (err: Error, url?
         // const len = parseInt(response.headers["content-length"], 10);
         // let cur = 0;
         // const total = len / 1048576;
+        store.dispatch({ type: DOWNLOAD_REMOTE_FILE + START, payload: { id: file.id } });
 
         const stream = fs.createWriteStream(pathname);
 
         response.on("data", (chunk) => {
-          store.dispatch({ type: DOWNLOAD_REMOTE_FILE + START, payload: { id: file.id } });
           // cur += chunk.length;
           // console.log("Downloading " + (100.0 * cur / len).toFixed(2) + "% " + (cur / 1048576).toFixed(2) + " mb\r" + ".<br/> Total size: " + total.toFixed(2) + " mb");
           stream.write(chunk);
