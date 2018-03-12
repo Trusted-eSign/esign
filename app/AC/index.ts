@@ -14,6 +14,7 @@ import {
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
+import { connectedSelector } from "../selectors";
 import { SIGNED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
@@ -119,7 +120,8 @@ export function packageSign(
     setTimeout(() => {
       const signedFilePackage: IFilePath[] = [];
       const signedFileIdPackage: number[] = [];
-      const { connections, remoteFiles } = getState();
+      const state = getState();
+      const { connections, remoteFiles } = state;
 
       files.forEach((file) => {
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
@@ -129,8 +131,14 @@ export function packageSign(
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
+            const connectedList = connectedSelector(state, { connected: true });
+
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit(SIGNED, {id: file.remoteId});
+            }
+
+            if (connectedList.length) {
+              connectedList[0].socket.broadcast.emit(SIGNED, {id: file.remoteId});
             }
 
             if (remoteFiles.uploader) {
@@ -172,8 +180,6 @@ export function packageSign(
               }, (err, httpResponse, body) => {
                 if (err) {
                   console.log("--- err", err);
-                } else {
-                  console.log("++++", body);
                 }
               },
               );
@@ -458,7 +464,8 @@ export function deleteFile(fileId: number) {
 
 export function verifySignature(fileId: string) {
   return (dispatch, getState) => {
-    const { connections, files } = getState();
+    const state = getState();
+    const { connections, files } = state();
     const file = files.getIn(["entities", fileId]);
     let signaruteStatus = false;
     let signatureInfo;
@@ -477,9 +484,15 @@ export function verifySignature(fileId: string) {
       signatureInfo = signs.getSignPropertys(cms);
 
       if (file.socket) {
+        const connectedList = connectedSelector(state, { connected: true });
         const connection = connections.getIn(["entities", file.socket]);
+
         if (connection && connection.connected && connection.socket) {
           connection.socket.emit(VERIFIED, signatureInfo);
+        }
+
+        if (connectedList.length) {
+          connectedList[0].socket.broadcast.emit(VERIFIED, signatureInfo);
         }
       }
 

@@ -109,6 +109,7 @@ const downloadFiles = (data: ISignRequest | IEncryptRequest, socket: SocketIO.So
     download(file, pathForSave, (err: Error, ss, goodPath) => {
       if (err) {
         socket.emit(UNAVAILABLE, { id: file.id });
+        socket.broadcast.emit(UNAVAILABLE, { id: file.id });
       } else {
         if (goodPath) {
           store.dispatch({ type: DOWNLOAD_REMOTE_FILE + SUCCESS, payload: { id: file.id } });

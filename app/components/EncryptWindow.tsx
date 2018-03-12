@@ -6,7 +6,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
-import { activeFilesSelector } from "../selectors";
+import { activeFilesSelector, connectedSelector } from "../selectors";
 import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
 import * as jwt from "../trusted/jwt";
@@ -33,7 +33,7 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   encrypt = () => {
-    const { connections, files, settings, deleteFile, selectFile, recipients } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, recipients } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
@@ -89,6 +89,10 @@ class EncryptWindow extends React.Component<any, any> {
                 if (connection && connection.connected && connection.socket) {
                   connection.socket.emit(ENCRYPTED, {id: file.remoteId});
                 }
+
+                if (connectedList.length) {
+                  connectedList[0].socket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                }
               }
             });
             selectFile(newPath);
@@ -129,6 +133,10 @@ class EncryptWindow extends React.Component<any, any> {
               if (connection && connection.connected && connection.socket) {
                 connection.socket.emit(ENCRYPTED, {id: file.remoteId});
               }
+
+              if (connectedList.length) {
+                connectedList[0].socket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+              }
             }
           } else {
             res = false;
@@ -147,7 +155,7 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { connections, files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -184,6 +192,10 @@ class EncryptWindow extends React.Component<any, any> {
             const connection = connections.getIn(["entities", file.socket]);
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit(DECRYPTED, {id: file.remoteId});
+            }
+
+            if (connectedList.length) {
+              connectedList[0].socket.broadcast.emit(DECRYPTED, {id: file.remoteId});
             }
           }
         } else {
@@ -240,6 +252,7 @@ export default connect((state) => {
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
+    connectedList: connectedSelector(state, { connected: true }),
     connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
     licenseLoaded: state.license.loaded,
