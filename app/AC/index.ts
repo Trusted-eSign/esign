@@ -465,7 +465,7 @@ export function deleteFile(fileId: number) {
 export function verifySignature(fileId: string) {
   return (dispatch, getState) => {
     const state = getState();
-    const { connections, files } = state();
+    const { connections, files } = state;
     const file = files.getIn(["entities", fileId]);
     let signaruteStatus = false;
     let signatureInfo;
