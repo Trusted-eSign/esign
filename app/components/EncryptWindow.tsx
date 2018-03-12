@@ -88,10 +88,11 @@ class EncryptWindow extends React.Component<any, any> {
                 const connection = connections.getIn(["entities", file.socket]);
                 if (connection && connection.connected && connection.socket) {
                   connection.socket.emit(ENCRYPTED, {id: file.remoteId});
-                }
+                } else if (connectedList.length) {
+                  const connectedSocket = connectedList[0].socket;
 
-                if (connectedList.length) {
-                  connectedList[0].socket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                  connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
+                  connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
                 }
               }
             });
@@ -132,10 +133,11 @@ class EncryptWindow extends React.Component<any, any> {
               const connection = connections.getIn(["entities", file.socket]);
               if (connection && connection.connected && connection.socket) {
                 connection.socket.emit(ENCRYPTED, {id: file.remoteId});
-              }
+              } else if (connectedList.length) {
+                const connectedSocket = connectedList[0].socket;
 
-              if (connectedList.length) {
-                connectedList[0].socket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
+                connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
               }
             }
           } else {
@@ -192,10 +194,11 @@ class EncryptWindow extends React.Component<any, any> {
             const connection = connections.getIn(["entities", file.socket]);
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit(DECRYPTED, {id: file.remoteId});
-            }
+            } else if (connectedList.length) {
+              const connectedSocket = connectedList[0].socket;
 
-            if (connectedList.length) {
-              connectedList[0].socket.broadcast.emit(DECRYPTED, {id: file.remoteId});
+              connectedSocket.emit(DECRYPTED, {id: file.remoteId});
+              connectedSocket.broadcast.emit(DECRYPTED, {id: file.remoteId});
             }
           }
         } else {

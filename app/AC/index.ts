@@ -135,10 +135,11 @@ export function packageSign(
 
             if (connection && connection.connected && connection.socket) {
               connection.socket.emit(SIGNED, {id: file.remoteId});
-            }
+            } else if (connectedList.length) {
+              const connectedSocket = connectedList[0].socket;
 
-            if (connectedList.length) {
-              connectedList[0].socket.broadcast.emit(SIGNED, {id: file.remoteId});
+              connectedSocket.emit(SIGNED, {id: file.remoteId});
+              connectedSocket.broadcast.emit(SIGNED, {id: file.remoteId});
             }
 
             if (remoteFiles.uploader) {
@@ -489,10 +490,11 @@ export function verifySignature(fileId: string) {
 
         if (connection && connection.connected && connection.socket) {
           connection.socket.emit(VERIFIED, signatureInfo);
-        }
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
 
-        if (connectedList.length) {
-          connectedList[0].socket.broadcast.emit(VERIFIED, signatureInfo);
+          connectedSocket.emit(VERIFIED, signatureInfo);
+          connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
         }
       }
 
