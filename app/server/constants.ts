@@ -8,7 +8,7 @@ export const ENCRYPT = "encrypt";
 export const DECRYPT = "decrypt";
 
 export const SIGNED = "signed";
-export const VERIFYED = "verifyed";
+export const VERIFIED = "verified";
 export const ENCRYPTED = "encrypted";
 export const DECRYPTED = "decrypted";
 

@@ -134,7 +134,7 @@ interface signed {
 }
 ```
 
-#### verifyed
+#### verified
 
 Подпись проверена
 
@@ -153,7 +153,7 @@ interface certificate {
   status: boolean; // результат проверки
 }
 
-interface verifyed {
+interface verified {
   id: number;
   signatureAlgorithm: string,
   certs: certificate[],

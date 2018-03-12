@@ -14,7 +14,7 @@ import {
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
-import { SIGNED } from "../server/constants";
+import { SIGNED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
@@ -479,7 +479,7 @@ export function verifySignature(fileId: string) {
       if (file.socket) {
         const connection = connections.getIn(["entities", file.socket]);
         if (connection && connection.connected && connection.socket) {
-          connection.socket.emit("verified", signatureInfo);
+          connection.socket.emit(VERIFIED, signatureInfo);
         }
       }
 
