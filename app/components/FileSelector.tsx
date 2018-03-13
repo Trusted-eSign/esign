@@ -23,6 +23,8 @@ interface IFile {
   size: number;
   type: string;
   webkitRelativePath: string;
+  remoteId?: string;
+  socket?: string;
 }
 
 interface IFilePath {
@@ -38,6 +40,8 @@ interface IFileRedux {
   fullpath: string;
   id: number;
   lastModifiedDate: Date;
+  remoteId: string;
+  socket: string;
 }
 
 export interface IRemoteFile {
@@ -258,13 +262,14 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     const active = files.length > 0 ? "active" : "not-active";
     const collection = files.length > 0 ? "collection" : "";
     const disabled = files.length > 0 ? "" : "disabled";
+    const classDisabled = this.getDisabled() ? "disabled" : "";
 
     return (
       <nav className="app-bar-content">
         <ul className="app-bar-items">
           <li className="app-bar-item" style={appBarStyle}><span>{localize("Settings.add_files", locale)}</span></li>
           <li className="right">
-            <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
+            <a className={"nav-small-btn waves-effect waves-light " + active + " " + classDisabled} onClick={this.addFiles.bind(this)}>
               <i className="material-icons nav-small-icon">add</i>
             </a>
             <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-set-add-files">
@@ -291,14 +296,20 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
     const active = files.length > 0 || loadingFiles.length > 0 ? "active" : "not-active";
     const collection = files.length > 0 || loadingFiles.length > 0 ? "collection" : "";
+    const  disabled = this.getDisabled();
 
     return (
       <div className="add">
-        <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
-          onDrop={(event: any) => this.dropHandler(event)}
-          onDragOver={(event: any) => this.dragOverHandler(event)}
-          onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
-        </div>
+        {
+          disabled ?
+            null
+            :
+            <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
+              onDrop={(event: any) => this.dropHandler(event)}
+              onDragOver={(event: any) => this.dragOverHandler(event)}
+              onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
+            </div>
+        }
         <div onDragEnter={this.dropZoneActive.bind(this)}>
           <div className={"add-file-item " + active} id="items-hidden">
             <br />
@@ -317,6 +328,24 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
         </div>
       </div>
     );
+  }
+
+  getDisabled = () => {
+    const { files, loadingFiles } = this.props;
+
+    if (loadingFiles.length) {
+      return true;
+    }
+
+    if (files.length) {
+      for (const file of files) {
+        if (file.socket) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
 
