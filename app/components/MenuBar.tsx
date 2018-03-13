@@ -2,7 +2,10 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
+import {
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT,
+  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN, SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
+} from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
@@ -53,25 +56,32 @@ class MenuBar extends React.Component<any, any> {
   getTitle() {
     const { localize, locale } = this.context;
     const pathname = this.props.location.pathname;
-    let title: string;
-    if (pathname === "/sign")
-      title = localize("Sign.sign_and_verify", locale);
-    else if (pathname === "/encrypt")
-      title = localize("Encrypt.encrypt_and_decrypt", locale);
-    else if (pathname === "/certificate")
-      title = localize("Certificate.certs", locale);
-      else if (pathname === "/containers")
-      title = localize("Containers.containers", locale);
-    else if (pathname === "/about")
-      title = localize("About.about", locale);
-    else if (pathname === "/license")
-      title = localize("License.license", locale);
-    else if (pathname === "/help")
-      title = localize("Help.help", locale);
-    else
-      title = localize("About.product_NAME", locale);
 
-    return title;
+    switch (pathname) {
+      case LOCATION_ABOUT:
+        return localize("About.about", locale);
+
+      case LOCATION_CERTIFICATES:
+        return localize("Certificate.certs", locale);
+
+      case LOCATION_CONTAINERS:
+        return localize("Containers.containers", locale);
+
+      case LOCATION_ENCRYPT:
+        return localize("Encrypt.encrypt_and_decrypt", locale);
+
+      case LOCATION_HELP:
+        return localize("Help.help", locale);
+
+      case LOCATION_LICENSE:
+        return localize("License.license", locale);
+
+      case LOCATION_SIGN:
+        return localize("Sign.sign_and_verify", locale);
+
+      default:
+        return localize("About.product_NAME", locale);
+    }
   }
 
   componentDidMount() {
@@ -144,11 +154,12 @@ class MenuBar extends React.Component<any, any> {
   }
 }
 
-export default connect((state) => {
+export default connect((state, ownProps) => {
   return {
     encSettings: state.settings.encrypt,
     files: mapToArr(state.files.entities),
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
+    location: ownProps.location,
     signSettings: state.settings.sign,
   };
 })(MenuBar);

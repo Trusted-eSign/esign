@@ -4,7 +4,8 @@ import * as os from "os";
 import * as path from "path";
 import { push } from "react-router-redux";
 import {
-  ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, DOWNLOAD_REMOTE_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
+  ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, DOWNLOAD_REMOTE_FILE,
+  LOCATION_ENCRYPT, LOCATION_SIGN, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
   REMOVE_CONNECTION, SELECT_FILE, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS,
 } from "../constants";
 import store from "../store/index";
@@ -185,12 +186,12 @@ const openWindow = (operation: string) => {
   switch (operation) {
     case SIGN:
     case VERIFY:
-      store.dispatch(push("/sign"));
+      store.dispatch(push(LOCATION_SIGN));
       return;
 
     case ENCRYPT:
     case DECRYPT:
-      store.dispatch(push("/encrypt"));
+      store.dispatch(push(LOCATION_ENCRYPT));
       return;
 
     default:

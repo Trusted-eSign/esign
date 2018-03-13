@@ -92,3 +92,11 @@ export const ADD_CONNECTION = "ADD_CONNECTION";
 export const REMOVE_CONNECTION = "REMOVE_CONNECTION";
 export const SET_CONNECTED = "SET_CONNECTED";
 export const SET_DISCONNECTED = "SET_DISCONNECTED";
+
+export const LOCATION_SIGN = "/sign";
+export const LOCATION_ENCRYPT = "/encrypt";
+export const LOCATION_CERTIFICATES = "/certificate";
+export const LOCATION_CONTAINERS = "/containers";
+export const LOCATION_ABOUT = "/about";
+export const LOCATION_LICENSE = "/license";
+export const LOCATION_HELP = "/help";
