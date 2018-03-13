@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
+import { loadingRemoteFilesSelector } from "../selectors";
+import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
 import Modal from "./Modal";
@@ -79,13 +81,17 @@ class MenuBar extends React.Component<any, any> {
   }
 
   render() {
+    const disabledNavigate = this.getDisabled();
+    const dataActivates = disabledNavigate ? "" : "slide-out";
+    const classDisabled = disabledNavigate ? "disabled" : "";
+
     return (
       <div>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
               <li>
-                <a data-activates="slide-out" className="menu-btn waves-effect waves-light">
+                <a data-activates={dataActivates} className={"menu-btn waves-effect waves-light " + classDisabled}>
                   <i className="material-icons">menu</i>
                 </a>
               </li>
@@ -118,11 +124,31 @@ class MenuBar extends React.Component<any, any> {
       </div>
     );
   }
+
+  getDisabled = () => {
+    const { files, loadingFiles } = this.props;
+
+    if (loadingFiles.length) {
+      return true;
+    }
+
+    if (files.length) {
+      for (const file of files) {
+        if (file.socket) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }
 
 export default connect((state) => {
   return {
     encSettings: state.settings.encrypt,
+    files: mapToArr(state.files.entities),
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     signSettings: state.settings.sign,
   };
 })(MenuBar);
