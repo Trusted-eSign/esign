@@ -107,7 +107,7 @@ formencrypt.onsubmit = function(ev) {
 }
 
 socket.on('encrypted', function (data) {
-	console.log('--- encrypted: ', data);
+  console.log('--- encrypted: ', data);
 });
 
 var decryptRequest = {};

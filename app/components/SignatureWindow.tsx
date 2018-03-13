@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature } from "../AC";
-import { activeFilesSelector } from "../selectors";
+import { activeFilesSelector, connectedSelector } from "../selectors";
+import { ERROR, SIGNED, UPLOADED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
@@ -25,11 +26,21 @@ interface IFile {
   extension: string;
   verified: boolean;
   active: boolean;
+  remoteId?: string;
+  socket?: string;
+}
+
+interface IConnection {
+  connected: boolean;
+  id: string;
+  socket: SocketIO.Socket;
 }
 
 interface ISignatureWindowProps {
   certificatesLoaded: boolean;
   certificatesLoading: boolean;
+  connections: any;
+  connectedList: IConnection[];
   deleteFile: (file: string) => void;
   selectFile: (file: string) => void;
   licenseLoaded: boolean;
@@ -45,6 +56,8 @@ interface ISignatureWindowProps {
     extension: string,
     verified: boolean,
     active: boolean,
+    remoteId?: string;
+    socket?: string;
   }>;
   verifySignature: (file: string) => void;
   signatures: any;
@@ -55,6 +68,7 @@ interface ISignatureWindowProps {
   verifyingPackage: boolean;
   packageSignResult: boolean;
   packageSign: (files: IFile[], cert: trusted.pki.Certificate, key: trusted.pki.Key, policies: string[], format: trusted.DataFormat, folderOut: string) => void;
+  uploader: string;
 }
 
 class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
@@ -105,7 +119,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       }
     }
 
-    if (!files || !files.length || !nextProps.files || !nextProps.files.length || nextProps.files.length > 1 || files[0].id !== nextProps.files[0].id ) {
+    if (!files || !files.length || !nextProps.files || !nextProps.files.length || nextProps.files.length > 1 || files[0].id !== nextProps.files[0].id) {
       this.setState({ showSignatureInfo: false, signerCertificate: null });
     }
 
@@ -219,7 +233,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   resign = () => {
-    const { files, settings, signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded } = this.props;
+    const { connections, connectedList, files, settings,
+      signer, licenseVerified, licenseStatus, licenseToken, licenseLoaded, uploader } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile, selectFile, packageSign } = this.props;
     const { localize, locale } = this.context;
@@ -271,6 +286,79 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         if (newPath) {
           deleteFile(file.id);
           selectFile(newPath);
+
+          if (file.socket) {
+            const connection = connections.getIn(["entities", file.socket]);
+
+            if (connection && connection.connected && connection.socket) {
+              connection.socket.emit(SIGNED, { id: file.remoteId });
+            } else if (connectedList.length) {
+              const connectedSocket = connectedList[0].socket;
+
+              connectedSocket.emit(SIGNED, { id: file.remoteId });
+              connectedSocket.broadcast.emit(SIGNED, { id: file.remoteId });
+            }
+
+            if (uploader) {
+              let cms = signs.loadSign(newPath);
+
+              if (cms.isDetached()) {
+                if (!(cms = signs.setDetachedContent(cms, newPath))) {
+                  throw ("err");
+                }
+              }
+
+              const signatureInfo = signs.getSignPropertys(cms);
+
+              const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
+
+              signatureInfo.forEach((info) => {
+                const subjectCert = info.certs[info.certs.length - 1];
+
+                normalyzeSignatureInfo.push({
+                  subjectFriendlyName: info.subject,
+                  issuerFriendlyName: subjectCert.issuerFriendlyName,
+                  notBefore: new Date(subjectCert.notBefore).getTime(),
+                  notAfter: new Date(subjectCert.notAfter).getTime(),
+                  digestAlgorithm: subjectCert.signatureDigestAlgorithm,
+                  signingTime: Date.now(),
+                  subjectName: subjectCert.subjectName,
+                  issuerName: subjectCert.issuerName,
+                });
+              });
+
+              window.request.post({
+                formData: {
+                  extra: JSON.stringify(file.extra),
+                  file: fs.createReadStream(newPath),
+                  id: file.remoteId,
+                  signers: JSON.stringify(normalyzeSignatureInfo),
+                },
+                url: uploader,
+              }, (err, httpResponse, body) => {
+                if (err) {
+                  if (connection && connection.connected && connection.socket) {
+                    connection.socket.emit(ERROR, { id: file.remoteId, error: err });
+                  } else if (connectedList.length) {
+                    const connectedSocket = connectedList[0].socket;
+
+                    connectedSocket.emit(ERROR, { id: file.remoteId, error: err });
+                    connectedSocket.broadcast.emit(ERROR, { id: file.remoteId, error: err });
+                  }
+                } else {
+                  if (connection && connection.connected && connection.socket) {
+                    connection.socket.emit(UPLOADED, { id: file.remoteId });
+                  } else if (connectedList.length) {
+                    const connectedSocket = connectedList[0].socket;
+
+                    connectedSocket.emit(UPLOADED, { id: file.remoteId });
+                    connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
+                  }
+                }
+              },
+              );
+            }
+          }
         } else {
           res = false;
         }
@@ -387,6 +475,8 @@ export default connect((state) => {
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
+    connectedList: connectedSelector(state, { connected: true }),
+    connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,
@@ -398,6 +488,7 @@ export default connect((state) => {
     signedPackage: state.signatures.signedPackage,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
     signingPackage: state.signatures.signingPackage,
+    uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
 }, { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature })(SignatureWindow);
