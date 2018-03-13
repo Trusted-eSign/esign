@@ -15,7 +15,7 @@ import {
   VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
-import { SIGNED, VERIFIED } from "../server/constants";
+import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
@@ -180,7 +180,23 @@ export function packageSign(
                 url: remoteFiles.uploader,
               }, (err, httpResponse, body) => {
                 if (err) {
-                  console.log("--- err", err);
+                  if (connection && connection.connected && connection.socket) {
+                    connection.socket.emit(ERROR, {id: file.remoteId, error: err});
+                  } else if (connectedList.length) {
+                    const connectedSocket = connectedList[0].socket;
+
+                    connectedSocket.emit(ERROR, {id: file.remoteId, error: err});
+                    connectedSocket.broadcast.emit(ERROR, {id: file.remoteId, error: err});
+                  }
+                } else {
+                  if (connection && connection.connected && connection.socket) {
+                    connection.socket.emit(UPLOADED, {id: file.remoteId});
+                  } else if (connectedList.length) {
+                    const connectedSocket = connectedList[0].socket;
+
+                    connectedSocket.emit(UPLOADED, {id: file.remoteId});
+                    connectedSocket.broadcast.emit(UPLOADED, {id: file.remoteId});
+                  }
                 }
               },
               );
