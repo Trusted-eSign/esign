@@ -12,4 +12,7 @@ export const VERIFIED = "verified";
 export const ENCRYPTED = "encrypted";
 export const DECRYPTED = "decrypted";
 
+export const UPLOADED = "uploaded";
+
 export const UNAVAILABLE = "unavailable";
+export const ERROR = "error";
