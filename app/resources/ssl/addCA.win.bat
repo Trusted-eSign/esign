@@ -3,7 +3,7 @@
 setlocal
 
 @echo Installing "CryptoARM Local CA" certificate
-certutil -addstore -user root %~dp0\root.pem
+certutil -addstore -user root "%~dp0\root.pem"
 
 REM ####Current user
 setlocal ENABLEDELAYEDEXPANSION
