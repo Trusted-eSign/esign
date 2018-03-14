@@ -1,21 +1,21 @@
 
 # Add certificate to system key chain
 
-certPath=./root.pem
+CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+certPath=${CUR_DIR}/root.pem
 certificateName="CryptoARM Local CA"
 
 echo -e "certificateName: ${certificateName}"
 echo -e "certPath: ${certPath}"
 
 # Firefox
-firefoxProfileDir=${userDir}/Library/Application\ Support/Firefox/Profiles
+firefoxProfileDir=${HOME}/Library/Application\ Support/Firefox/Profiles
 firefoxProfiles=$( find "$firefoxProfileDir" -name "*.default*" )
 firefoxDefaultProfile="${firefoxProfiles[0]}"
 
 if [ ! -z "${firefoxDefaultProfile}" ]
 then
     echo "Firfox was found"
-    CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     echo -e "Delete old cert"
     # Delete old cert
     # /usr/local/Cellar/nss/3.31/bin/certutil -D -n "${certificateName}" -d "${firefoxDefaultProfile}"
