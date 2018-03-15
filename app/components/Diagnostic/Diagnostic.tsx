@@ -24,6 +24,8 @@ interface IDiagnosticState {
   errors: IError[];
 }
 
+const remote = window.electron.remote;
+
 class Diagnostic extends React.Component<any, IDiagnosticState> {
   static contextTypes = {
     locale: PropTypes.string,
@@ -251,7 +253,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { criticalError } = this.state;
 
     if (criticalError) {
-      mainWindow.close();
+      remote.getCurrentWindow().close();
     }
 
     $("#modal-window-diagnostic").closeModal();

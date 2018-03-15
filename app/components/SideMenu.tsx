@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import { Link } from "react-router-dom";
 
+const remote = window.electron.remote;
+
 class SideMenu extends React.PureComponent {
   static contextTypes = {
     locale: PropTypes.string,
@@ -62,7 +64,7 @@ class SideMenu extends React.PureComponent {
                 {localize("Help.Help", locale)}
                 <i className="material-icons left help">help</i>
               </Link>
-              <Link to="/" onClick={() => mainWindow.close()}>
+              <Link to="/" onClick={() => remote.getCurrentWindow().close()}>
                 {localize("Common.exit", locale)}
                 <i className="material-icons left exit">exit_to_app</i>
               </Link>

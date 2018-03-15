@@ -28,7 +28,7 @@ class MenuBar extends React.Component<any, any> {
   };
 
   minimizeWindow() {
-    mainWindow.minimize();
+    remote.getCurrentWindow().minimize();
   }
 
   closeWindow() {
@@ -49,7 +49,7 @@ class MenuBar extends React.Component<any, any> {
         console.log(localize("Settings.write_file_failed", locale));
       }
       console.log(localize("Settings.write_file_ok", locale));
-      mainWindow.close();
+      remote.getCurrentWindow().close();
     });
   }
 

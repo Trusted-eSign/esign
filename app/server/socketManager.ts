@@ -17,6 +17,7 @@ import io from "./socketIO";
 // tslint:disable-next-line:no-var-requires
 const request = require("request");
 const TMP_DIR = os.tmpdir();
+const remote = window.electron.remote;
 
 interface IFileProperty {
   name: string;
@@ -185,8 +186,8 @@ const cleanFileLists = () => {
 };
 
 const openWindow = (operation: string) => {
-  mainWindow.show();
-  mainWindow.focus();
+  remote.getCurrentWindow().show();
+  remote.getCurrentWindow().focus();
 
   switch (operation) {
     case SIGN:
