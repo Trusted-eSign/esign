@@ -372,6 +372,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
         alg: cert.signatureAlgorithm,
         certs: certSign,
         digestAlgorithm: cert.signatureDigestAlgorithm,
+        signingTime: signer.signingTime,
         status_verify: false,
         subject: cert.subjectFriendlyName,
       };
@@ -386,7 +387,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
 
       curRes.status_verify = certificatesSignStatus && signerStatus,
 
-        result.push(curRes);
+      result.push(curRes);
     }
 
     return result;

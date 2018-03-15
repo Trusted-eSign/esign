@@ -322,7 +322,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
                   notBefore: new Date(subjectCert.notBefore).getTime(),
                   notAfter: new Date(subjectCert.notAfter).getTime(),
                   digestAlgorithm: subjectCert.signatureDigestAlgorithm,
-                  signingTime: Date.now(),
+                  signingTime: info.signingTime,
                   subjectName: subjectCert.subjectName,
                   issuerName: subjectCert.issuerName,
                 });
