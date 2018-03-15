@@ -442,7 +442,7 @@ export function activeContainer(container: number) {
   };
 }
 
-export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) {
+export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) {
   let stat;
 
   if (!lastModifiedDate || !size) {
@@ -455,7 +455,9 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
     filename: name ? name : path.basename(fullpath),
     fullpath,
     lastModifiedDate: lastModifiedDate ? lastModifiedDate : stat.birthtime,
+    remoteId,
     size: size ? size : stat.size,
+    socket,
   };
 
   return {

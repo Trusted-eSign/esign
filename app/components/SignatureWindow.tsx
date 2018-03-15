@@ -43,7 +43,7 @@ interface ISignatureWindowProps {
   connections: any;
   connectedList: IConnection[];
   deleteFile: (file: string) => void;
-  selectFile: (file: string) => void;
+  selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
   licenseLoaded: boolean;
   licenseVerified: boolean;
   licenseStatus: number;
@@ -286,7 +286,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           deleteFile(file.id);
-          selectFile(newPath);
+          selectFile(newPath, undefined, undefined, undefined, file.remoteId, file.socket);
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
