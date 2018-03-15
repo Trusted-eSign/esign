@@ -4,7 +4,8 @@ import * as os from "os";
 import * as path from "path";
 import { push } from "react-router-redux";
 import {
-  ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, DOWNLOAD_REMOTE_FILE,
+  ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
+  CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE,
   LOCATION_ENCRYPT, LOCATION_SIGN, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
   REMOVE_CONNECTION, SELECT_FILE, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS,
 } from "../constants";
@@ -57,6 +58,8 @@ io.on(CONNECTION, (socket) => {
     downloadFiles(data, socket);
 
     store.dispatch({ type: CHANGE_SIGNATURE_DETACHED, payload: { detached: false } });
+    store.dispatch({ type: CHANGE_SIGNATURE_TIMESTAMP, payload: { timestamp: true } });
+    store.dispatch({ type: CHANGE_SIGNATURE_OUTFOLDER, payload: { outfolder: "" } });
   });
 
   socket.on(VERIFY, (data: ISignRequest) => {
@@ -65,6 +68,8 @@ io.on(CONNECTION, (socket) => {
     downloadFiles(data, socket);
 
     store.dispatch({ type: CHANGE_SIGNATURE_DETACHED, payload: { detached: false } });
+    store.dispatch({ type: CHANGE_SIGNATURE_TIMESTAMP, payload: { timestamp: true } });
+    store.dispatch({ type: CHANGE_SIGNATURE_OUTFOLDER, payload: { outfolder: "" } });
   });
 
   socket.on(ENCRYPT, (data: IEncryptRequest) => {
