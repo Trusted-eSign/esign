@@ -57,10 +57,25 @@ class RemoteFileListItem extends React.Component<IRemoteFileListItemProps, {}> {
 
     return (
       <div style={style}>
-        <div className={"collection-item avatar files-collection active"} id={"file-" + this.props.index} onClick={this.props.onClickBtn}>
-          <div className="r-iconbox-link">
-            <p className="collection-title">{file.name}</p>
-            <p className="collection-info">{file.totalSize + " байт"}</p>
+        <div className={"collection-item files-collection active"} id={"file-" + this.props.index} onClick={this.props.onClickBtn}>
+          <div className="row nobottom">
+            <div className="col s2">
+              <div className="preloader-wrapper small active">
+                <div className="spinner-layer spinner-blue-only">
+                  <div className="circle-clipper left">
+                    <div className="circle"></div>
+                  </div>
+                  <div className="gap-patch">
+                    <div className="circle" />
+                  </div>
+                  <div className="circle-clipper right">
+                    <div className="circle" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="collection-title">{file.name}</div>
+            <div className="collection-info">{file.totalSize + " байт"}</div>
           </div>
         </div>
       </div>

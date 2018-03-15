@@ -1555,6 +1555,13 @@ p.collection-title {
   padding-top: 6px;
 }
 
+.collection-item.files-collection {
+  padding: 5px 50px 5px 10px;
+  color: black;
+  height: 64px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
 .collection-item.avatar.files-collection {
   padding: 5px 50px 5px 10px;
   color: black;
