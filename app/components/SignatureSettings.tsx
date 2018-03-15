@@ -115,10 +115,14 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
             elementId="detached-sign"
             title={localize("Sign.sign_detached", locale)} />
           <CheckBoxWithLabel onClickCheckBox={this.handleTimestampClick}
+            disabled={this.getDisabled()}
             isChecked={settings.timestamp}
             elementId="sign-time"
             title={localize("Sign.sign_time", locale)} />
-          <SelectFolder directory={settings.outfolder} viewDirect={this.handleOutfolderChange}
+          <SelectFolder
+            disabled={this.getDisabled()}
+            directory={settings.outfolder}
+            viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
         </div>
       </div>
