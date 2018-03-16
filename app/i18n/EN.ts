@@ -159,6 +159,7 @@ export default {
     sign_error: "The signature is not valid",
     key_not_found: "The key is not found",
     signercert_not_found: "Error: signer cert not found",
+    signingTime: "Signing time",
     status: "The status",
     alg: "Signature algorithm",
     digest_alg: "Hash algorithm",

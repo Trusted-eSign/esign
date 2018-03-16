@@ -8,6 +8,7 @@ const SignatureModel = Record({
   digestAlgorithm: null,
   fileId: null,
   id: null,
+  signingTime: null,
   status_verify: null,
   subject: null,
 });

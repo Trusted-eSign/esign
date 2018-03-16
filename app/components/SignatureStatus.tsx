@@ -42,6 +42,14 @@ class SignatureStatus extends React.Component<ISignatureStatusProps, any> {
           <div className="col s11">
             <p className="collection-title">{status}</p>
             <p className="collection-info cert-info">{localize("Sign.status", locale)}</p>
+            <p className="collection-title">{signature.signingTime ? (new Date(signature.signingTime)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "long",
+              year: "numeric",
+            }) : "-"}</p>
+            <p className="collection-info cert-info">{localize("Sign.signingTime", locale)}</p>
             <p className="collection-title">{localizeAlgorithm(signature.alg, locale)}</p>
             <p className="collection-info cert-info">{localize("Sign.alg", locale)}</p>
             <p className="collection-title">{signerCert.subjectFriendlyName}</p>

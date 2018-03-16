@@ -159,6 +159,7 @@ export default {
     sign_error: "Подпись недействительна",
     key_not_found: "Не удалось найти ключ",
     signercert_not_found: "Не удалось найти сертификат подписчика",
+    signingTime: "Время подписи",
     status: "Статус",
     alg: "Алгоритм подписи",
     digest_alg: "Алгоритм хэширования",
