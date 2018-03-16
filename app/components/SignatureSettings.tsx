@@ -103,24 +103,26 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
     const { settings } = this.props;
     const { localize, locale } = this.context;
 
+    const disabled = this.getDisabled();
+
     return (
       <div id="sign-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Sign.sign_setting", locale)} />
         <div className="settings-content">
           <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange} />
           <CheckBoxWithLabel
-            disabled={this.getDisabled()}
+            disabled={disabled}
             onClickCheckBox={this.handleDetachedClick}
             isChecked={settings.detached}
             elementId="detached-sign"
             title={localize("Sign.sign_detached", locale)} />
           <CheckBoxWithLabel onClickCheckBox={this.handleTimestampClick}
-            disabled={this.getDisabled()}
+            disabled={disabled}
             isChecked={settings.timestamp}
             elementId="sign-time"
             title={localize("Sign.sign_time", locale)} />
           <SelectFolder
-            disabled={this.getDisabled()}
+            disabled={disabled}
             directory={settings.outfolder}
             viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
