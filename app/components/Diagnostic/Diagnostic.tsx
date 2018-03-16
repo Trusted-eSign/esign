@@ -216,8 +216,25 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
     if (!errors || !errors.length) {
       return null;
-    } else if (!this.state.activeError) {
-      this.setState({ activeError: errors[0].type });
+    }
+
+    const cspErrors: IError[] = [];
+
+    for (const error of errors) {
+      if (error.type === NO_GOST_2001 ||
+        error.type === ERROR_CHECK_CSP_PARAMS) {
+        cspErrors.push(error);
+      }
+    }
+
+    if (cspErrors.length) {
+      if (!this.state.activeError) {
+        this.setState({ activeError: cspErrors[0].type });
+      }
+    } else {
+      if (!this.state.activeError) {
+        this.setState({ activeError: errors[0].type });
+      }
     }
 
     return (
@@ -229,7 +246,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           <div className="row">
             <div className={"diagnostic-content-item"}>
               <div className="col s6 m5 l6 problem-contaner">
-                <Problems errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
+                <Problems errors={cspErrors.length ? cspErrors : errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
               </div>
               <div className="col s6 m7 l6 problem-contaner">
                 <Resolve activeError={this.state.activeError} />
