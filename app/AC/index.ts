@@ -97,7 +97,7 @@ interface INormalizedSignInfo {
   notBefore: number;
   notAfter: number;
   digestAlgorithm: string;
-  signingTime: number;
+  signingTime: number | undefined;
   subjectName: string;
   issuerName: string;
 }
@@ -164,7 +164,7 @@ export function packageSign(
                   notBefore: new Date(subjectCert.notBefore).getTime(),
                   notAfter: new Date(subjectCert.notAfter).getTime(),
                   digestAlgorithm: subjectCert.signatureDigestAlgorithm,
-                  signingTime: info.signingTime,
+                  signingTime: info.signingTime ? new Date(info.signingTime).getTime() : undefined,
                   subjectName: subjectCert.subjectName,
                   issuerName: subjectCert.issuerName,
                 });
