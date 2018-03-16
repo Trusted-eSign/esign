@@ -32,6 +32,8 @@ if (options.indexOf('logcrypto') !== -1) {
   global.sharedObject = { logcrypto: false };
 }
 
+global.sharedObject.isQuiting = false;
+
 
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
@@ -118,7 +120,7 @@ app.on('ready', async () => {
     {
       label: 'Close',
       click: function () {
-        app.isQuiting = true;
+        global.sharedObject.isQuiting = true;
         app.quit();
       }
     }
@@ -163,7 +165,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.on('close', function (event) {
-    if (!app.isQuiting) {
+    if (!global.sharedObject.isQuiting) {
       event.preventDefault();
       mainWindow.hide();
     }

@@ -270,6 +270,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { criticalError } = this.state;
 
     if (criticalError) {
+      remote.getGlobal("sharedObject").isQuiting = true;
       remote.getCurrentWindow().close();
     }
 
