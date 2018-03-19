@@ -59,7 +59,14 @@ export function decryptFile(uri: string, folderOut: string): string {
   let item: trusted.pkistore.PkiItem;
   let certWithKey: trusted.pki.Certificate;
   let key: trusted.pki.Key;
-  let outURI: string = uri.substring(0, uri.lastIndexOf("."));
+  let outURI: string;
+
+  if (folderOut.length > 0) {
+    outURI = path.join(folderOut, path.basename(uri));
+    outURI = outURI.substring(0, outURI.lastIndexOf("."));
+  } else {
+    outURI = uri.substring(0, uri.lastIndexOf("."));
+  }
 
   let indexFile: number = 1;
   let newOutUri: string = outURI;

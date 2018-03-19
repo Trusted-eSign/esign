@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 
-
 interface IDiagnosticModalProps {
   isOpen: boolean;
   header: string;
@@ -27,7 +26,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window").openModal();
+      $("#modal-window-diagnostic").openModal({ dismissible: false });
     }
   }
 
@@ -38,7 +37,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
       onClose();
     }
 
-    $("#modal-window").closeModal();
+    $("#modal-window-diagnostic").closeModal();
   }
 
   render() {
@@ -50,7 +49,7 @@ class DiagnosticModal extends React.Component<IDiagnosticModalProps, {}> {
     }
 
     return (
-      <div id="modal-window" className="modal diagnostic-modal">
+      <div id="modal-window-diagnostic" className="modal diagnostic-modal">
         <div className="licence-modal-main">
           <HeaderWorkspaceBlock
             text={header}

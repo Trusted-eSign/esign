@@ -104,7 +104,8 @@ declare namespace native {
             getType(): number;
             getKeyUsage(): number;
             getSignatureAlgorithm(): string;
-            getSignatureDigest(): string;
+            getSignatureDigestAlgorithm(): string;
+            getPublicKeyAlgorithm(): string;
             getOrganizationName(): string;
             getOCSPUrls(): string[];
             getCAIssuersUrls(): string[];
@@ -258,6 +259,7 @@ declare namespace native {
             getSignerId(): SignerId;
             getSignedAttributes(): SignerAttributeCollection;
             getUnsignedAttributes(): SignerAttributeCollection;
+            getSigningTime(): string;
             verify(): boolean;
             verifyContent(v: Buffer): boolean;
         }
@@ -325,6 +327,8 @@ declare namespace native {
             key?: string;
             organizationName?: string;
             signatureAlgorithm?: string;
+            signatureDigestAlgorithm?: string;
+            publicKeyAlgorithm?: string;
         }
         interface IFilter {
             /**
@@ -392,6 +396,7 @@ declare namespace native {
             addCrl(provider: Provider, category: string, crl: PKI.CRL): string;
             addKey(provider: Provider, key: PKI.Key, password: string): string;
             addCsr(provider: Provider, category: string, csr: PKI.CertificationRequest): string;
+            deleteCert(provider: Provider, category: string, cert: PKI.Certificate): void;
         }
         class CashJson {
             filenName: string;
@@ -435,9 +440,18 @@ declare namespace native {
             setKeyEncrypted(enc: boolean): void;
             setOrganizationName(organizationName: string): void;
             setSignatureAlgorithm(signatureAlgorithm: string): void;
+            setSignatureAlgorithm(signatureAlgorithm: string): void;
+            setSignatureDigestAlgorithm(signatureDigestAlgorithm: string): void;
+            setPublicKeyAlgorithm(publicKeyAlgorithm: string): void;
         }
     }
     namespace UTILS {
+        interface IContainerName {
+            container: string;
+            unique: string;
+            fqcnA: string;
+            fqcnW: string;
+        }
         class Jwt {
             checkLicense(data?: string): number;
         }
@@ -456,9 +470,20 @@ declare namespace native {
             isGost2012_512CSPAvailable(): boolean;
             checkCPCSPLicense(): boolean;
             getCPCSPLicense(): string;
+            getCPCSPVersion(): string;
+            getCPCSPVersionPKZI(): string;
+            getCPCSPVersionSKZI(): string;
+            getCPCSPSecurityLvl(): string;
             enumProviders(): object[];
-            enumContainers(type?: number): string[];
+            enumContainers(type?: number, provName?: string): IContainerName[];
             getCertifiacteFromContainer(contName: string, provType: number, provName?: string): PKI.Certificate;
+            getContainerNameByCertificate(cert: PKI.Certificate, category: string): string;
+            installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+            deleteContainer(contName: string, provType: number, provName?: string): void;
+            buildChain(cert: PKI.Certificate): PKI.CertificateCollection;
+            verifyCertificateChain(cert: PKI.Certificate): boolean;
+            isHaveExportablePrivateKey(cert: PKI.Certificate): boolean;
+            certToPkcs12(cert: PKI.Certificate, exportPrivateKey: boolean, password?: string): PKI.Pkcs12;
         }
     }
     namespace COMMON {
@@ -828,6 +853,18 @@ declare namespace trusted.utils {
          */
         static getCPCSPLicense(): string;
         /**
+         * Return instaled correct version for CryptoPro CSP
+         * Throw exception if provaider not available
+         *
+         * @static
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static getCPCSPVersion(): string;
+        static getCPCSPVersionPKZI(): string;
+        static getCPCSPVersionSKZI(): string;
+        static getCPCSPSecurityLvl(): string;
+        /**
          * Enumerate available CSP
          *
          * @static
@@ -843,8 +880,53 @@ declare namespace trusted.utils {
          * @returns {string[]} Fully Qualified Container Name
          * @memberof Csp
          */
-        static enumContainers(type?: number): string[];
+        static enumContainers(type: null, provName?: string): native.UTILS.IContainerName[];
+        /**
+         * Get certificate by container and provider props
+         *
+         * @static
+         * @param {string} contName
+         * @param {number} provType
+         * @param {string} [provName=""]
+         * @returns {pki.Certificate}
+         * @memberof Csp
+         */
         static getCertifiacteFromContainer(contName: string, provType: number, provName?: string): pki.Certificate;
+        static installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+        static deleteContainer(contName: string, provType: number, provName?: string): void;
+        /**
+         * Get container name by certificate
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @param {string} [category="MY"]
+         * @returns {string}
+         * @memberof Csp
+         */
+        static getContainerNameByCertificate(cert: pki.Certificate, category?: string): string;
+        static buildChain(cert: pki.Certificate): pki.CertificateCollection;
+        static verifyCertificateChain(cert: pki.Certificate): boolean;
+        /**
+         * Find certificate in MY store and check that private key exportable
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @returns {boolean}
+         * @memberof Csp
+         */
+        static isHaveExportablePrivateKey(cert: pki.Certificate): boolean;
+        /**
+         * Create Pkcs by cert
+         * NOTE:  only for certificates with exportable key. Check it by isHaveExportablePrivateKey
+         *
+         * @static
+         * @param {pki.Certificate} cert
+         * @param {boolean} exportPrivateKey
+         * @param {string} [password]
+         * @returns {pki.Pkcs12}
+         * @memberof Csp
+         */
+        static certToPkcs12(cert: pki.Certificate, exportPrivateKey: boolean, password?: string): pki.Pkcs12;
         /**
          * Creates an instance of Csp.
          *
@@ -1360,7 +1442,15 @@ declare namespace trusted.pki {
          * @type {string}
          * @memberOf Certificate
          */
-        readonly signatureDigest: string;
+        readonly signatureDigestAlgorithm: string;
+        /**
+         * Return public key algorithm
+         *
+         * @readonly
+         * @type {string}
+         * @memberOf Certificate
+         */
+        readonly publicKeyAlgorithm: string;
         /**
          * Return organization name
          *
@@ -2511,6 +2601,14 @@ declare namespace trusted.cms {
          */
         readonly signerId: SignerId;
         /**
+         * Return signing time from signed attributes
+         *
+         * @readonly
+         * @type {string}
+         * @memberof Signer
+         */
+        readonly signingTime: string;
+        /**
          * Verify signer content
          *
          * @param {ISignedDataContent} v
@@ -3024,6 +3122,8 @@ declare namespace trusted.pkistore {
         keyEnc: boolean;
         organizationName: string;
         signatureAlgorithm: string;
+        signatureDigestAlgorithm: string;
+        publicKeyAlgorithm: string;
     }
     class PkiStore extends BaseObject<native.PKISTORE.PkiStore> {
         private cashJson;
@@ -3094,6 +3194,17 @@ declare namespace trusted.pkistore {
          * @memberOf PkiStore
          */
         addCsr(provider: native.PKISTORE.Provider, category: string, csr: pki.CertificationRequest): string;
+        /**
+         * Delete certificste from store
+         *
+         * @param {native.PKISTORE.Provider} provider SYSTEM, MICROSOFT, CRYPTOPRO
+         * @param {string} category MY, OTHERS, TRUST, CRL
+         * @param {Certificate} cert Certificate
+         * @returns
+         *
+         * @memberOf PkiStore
+         */
+        deleteCert(provider: native.PKISTORE.Provider, category: string, cert: pki.Certificate): void;
         /**
          * Find items in local store
          *

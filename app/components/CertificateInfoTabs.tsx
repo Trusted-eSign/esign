@@ -6,7 +6,7 @@ const tabHeaderStyle = {
 };
 
 interface ICertificateInfoTabsProps {
-  onActiveTab: (ev: any) => void;
+  activeCertInfoTab: (active: boolean) => void;
 }
 
 class CertificateInfoTabs extends React.Component<ICertificateInfoTabsProps, any> {
@@ -27,18 +27,18 @@ class CertificateInfoTabs extends React.Component<ICertificateInfoTabsProps, any
 
   render() {
     const { localize, locale } = this.context;
-    const { onActiveTab } = this.props;
+    const { activeCertInfoTab } = this.props;
 
     return (
       <div className="row">
         <ul id="tabs-swipe-demo" className="tabs">
           <li className="tab col s6">
-            <a className="cert-info active" onClick={onActiveTab} style={tabHeaderStyle}>
+            <a className="cert-info active" onClick={() => activeCertInfoTab(true)} style={tabHeaderStyle}>
               {localize("Certificate.cert_info", locale)}
             </a>
           </li>
           <li className="tab col s6">
-            <a className="cert-info" onClick={onActiveTab} style={tabHeaderStyle}>
+            <a className="cert-info" onClick={() => activeCertInfoTab(false)} style={tabHeaderStyle}>
               {localize("Certificate.cert_chain", locale)}
             </a>
           </li>

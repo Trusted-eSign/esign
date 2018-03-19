@@ -157,7 +157,8 @@ body {
     min-width: 800px;
 }
 #container, .main {
-    height: 100%;
+    /* height: 100%; */
+    height: 530px;
 }
 .settings-content {
     overflow: auto;
@@ -291,7 +292,7 @@ body {
 }
 
 .small_cert_collection {
-    font-size: 70%;
+    font-size: 13px;
 }
 
 .collection-info {
@@ -569,6 +570,17 @@ i.material-icons.left.license{
     background-size: 24px 24px;
     margin-top: 10px;
   }
+
+  i.material-icons.left.exit{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/exit_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 10px;
+  }
+
 /*-------------------------------Стили списка файлов------------------*/
 .add-file-item {
     color: lightgray;
@@ -634,28 +646,10 @@ i.material-icons.choosefolder {
   margin-left: 12px;
   margin-top: 5px;
 }
-.RU {
-    display: block;
-    /*width: 30px;
-    height: 20px;*/
-    /*//background: url(./resources/image/Flag_of_Russia.png);*/
-    background-size: 100%;
-}
-.EN {
-    display: block;
-    /*width: 30px;
-    height: 20px;*/
-    /*//background: url(./resources/image/Flag_of_United_States.png);*/
-    background-size: 100%;
-}
-.RU:hover, .EN:hover {
-    opacity: 0.8;
-}
+
 .lang {
-    height: 49px;
-    display: flex;
-    align-items: center;
-    margin: 0 10px;
+  border-radius: 100%;
+  overflow: hidden;
 }
 
 .triangle-down {
@@ -973,6 +967,8 @@ nav .cert-seacrh label i {
 .add-modal-cert-btn:hover {
     background-color: rgb(135, 134, 159);
 }*/
+
+.modal { max-height: 75% !important ; }
 
 .dropdown-content {
   min-width: 170px;
@@ -1306,6 +1302,13 @@ display: inline-block;
     background: url(./resources/image/geo_gray.png);
 }
 
+.license_background{
+    margin-top: 1px;
+    width: 800px;
+    height: 600px;
+    background: url(./resources/image/geo_gray.png);
+}
+
 .geo-icon{
   display: block;
   text-indent: -9999px;
@@ -1361,7 +1364,7 @@ span.card-title.sub {
   margin-right: 20px;
   transition: color .3s ease;
   text-transform: uppercase;
-  margin-left: 236px;
+  margin-left: 114px;
 }
 
 .card-infos{
@@ -1552,9 +1555,18 @@ p.collection-title {
   padding-top: 6px;
 }
 
-.collection-item.avatar.files-collection {
-  padding: 5px 80px 5px 10px;
+.collection-item.files-collection {
+  padding: 5px 50px 5px 10px;
   color: black;
+  height: 64px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.collection-item.avatar.files-collection {
+  padding: 5px 50px 5px 10px;
+  color: black;
+  min-height: 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .status_cert_ok_icon{
@@ -1615,7 +1627,7 @@ textarea#message {
   margin-top: 10px;
   padding-bottom: 1px;
   margin-bottom: 1px;
-  max-height: 152px;
+  max-height: 105px;
   padding-top: 0;
 }
 
@@ -1704,6 +1716,10 @@ a.menuheaderlink:hover {
 .bmark_desktoplic {
     text-align: center;
     padding: 10px 0;
+    color: #bf3817;
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
 }
 
 h5.bmark_onlinelic{
@@ -1748,6 +1764,14 @@ p.message_onlinelic{
   overflow: hidden;
   max-height: 80%;
 }
+
+#licence-temporary-modal {
+  top: 20% !important;
+  width: 70%;
+  overflow: hidden;
+  max-height: 80%;
+}
+
 
 .licence-modal-main {
     height: 100%;
@@ -1949,7 +1973,8 @@ a.cert-back-btn.waves-effect.waves-light {
     position: relative;
 }
 .main-window {
-    height: 100%;
+    /* height: 100%; */
+    height: 600px;
 }
 .slider .indicators .indicator-item {
   width: 12px;
@@ -2620,6 +2645,7 @@ i.material-icons.left.line {
     margin-top: 47px;
     height: 34px;
     width: 2px;
+    z-index: 2;
 }
 
 .csr-window__workspace {
@@ -2638,11 +2664,6 @@ i.material-icons.left.line {
 .Help{
     font-size: 14px;
     width: 100%;
-    margin-left: 10px;
-    padding-right: 10px;
-    margin-bottom: 0px;
-    border-top-width: 0px;
-    margin-top: 0px;
     height: 550px;
     position: relative;
     overflow: auto;
@@ -2660,10 +2681,11 @@ i.material-icons.left.line {
     text-indent: 20px;
 }
 .help_user_guide_img{
-    height: 300px;
-    width: 210px;
+    height: 200px;
+    width: 140px;
     background: url(./resources/image/help/user_guide.png);
-    background-size: 210px 300px;
+    background-size: 140px 200px;
+    margin-left: 30px;
 }
 
 .help_main_window_img{
@@ -2767,9 +2789,13 @@ i.material-icons.left.line {
 /*---------Diagnostic master-------*/
 .diagnostic-modal{
     width: 94%;
-    height: 85%;
-    max-height: 85%;
+    height: 100%;
+    max-height: 100%;
     overflow-y: hidden;
+}
+
+.modal.diagnostic-modal{
+  max-height: 85% !important ;
 }
 
 .diagnostic-content-item {
@@ -2781,12 +2807,29 @@ i.material-icons.left.line {
 }
 
 .add-problems {
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+.add-problems.collection {
     width: 100%;
-    height: calc(100% - 48px);
-    position: relative;
-    overflow: auto;
-    border-top: 2px solid #ffffff;
-    z-index: 2;
+    height: 100%;
+
+}
+
+.problems-list-item{
+    margin-bottom: 0px;
+}
+
+.collection-item.avatar.problems-collection{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    color: black;
+    min-height: 0;
+    border-bottom: 1px solid #e0e0e0;
+    min-height: 64px;
 }
 
 .add-problems-item {
@@ -2796,9 +2839,9 @@ i.material-icons.left.line {
     background-color: white;
 }
 .contain-btn{
-    position: relative;
-    left: 80%;
-    top: 2px;
+    left: 633px;
+    top: 467px;
+    position: absolute;
 }
 
 .problem-contaner {
@@ -2821,4 +2864,111 @@ i.material-icons.left.line {
 a.hlink {
     cursor: pointer;
     color: #b64729;
+}
+
+.multiline{
+    white-space: initial;
+    padding-top: 0px;
+    padding-left: 8px;
+    height: 60px;
+    width: 230px;
+}
+
+.problem_bug{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/bug.svg);
+    background-size: 24px 24px;
+    padding-top: 0px;
+    border-top-width: 0px;
+    margin-top: 18px;
+    margin-left: -5px;
+  }
+
+  .problem_warning{
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/warning.svg);
+    background-size: 24px 24px;
+    padding-top: 0px;
+    border-top-width: 0px;
+    margin-top: 18px;
+    margin-left: -5px;
+  }
+
+  .row.card {
+    margin-top: 0px;
+    border-top-width: 10px;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: 780px;
+    height: 530px;
+}
+
+.input-field.col.s12.noborder {
+    border-bottom: none;
+}
+
+a.help_paragraf {
+    padding-left: 10px;
+}
+
+.scroll_inside {
+    height: 382px;
+    overflow: scroll;
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.row.nobottom {
+    margin-bottom: 0px;
+}
+
+.col.s12.nopadding {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.desctoplic_text{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: justify;
+    font-size: 13px;
+}
+
+a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
+    left: 10px;
+}
+
+.alert_ok_icon {
+    display: block;
+    background: url(./resources/image/alert_ok_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.alert_warning_icon {
+    display: block;
+    background: url(./resources/image/alert_warning_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
+}
+
+.alert_error_icon {
+    display: block;
+    background: url(./resources/image/alert_error_icon.svg);
+    background-size: 100%;
+    width: 50px;
+    height: 50px;
 }

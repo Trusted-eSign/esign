@@ -122,7 +122,10 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
     if (signer) {
       icon = "add";
-      itemBar = <HeaderWorkspaceBlock text={signer.subjectFriendlyName} second_text={signer.issuerFriendlyName} />;
+    }
+
+    if (selectedSigner) {
+      itemBar = <HeaderWorkspaceBlock text={selectedSigner.subjectFriendlyName} second_text={selectedSigner.issuerFriendlyName} />;
     } else {
       itemBar = <HeaderWorkspaceBlock text={localize("Certificate.cert_info", locale)} />;
     }

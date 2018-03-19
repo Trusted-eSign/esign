@@ -6,7 +6,8 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
-import { activeFilesSelector } from "../selectors";
+import { activeFilesSelector, connectedSelector } from "../selectors";
+import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
 import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
@@ -32,7 +33,7 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   encrypt = () => {
-    const { files, settings, deleteFile, selectFile, recipients } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, recipients } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
@@ -83,6 +84,17 @@ class EncryptWindow extends React.Component<any, any> {
           if (newPath) {
             files.forEach((file) => {
               deleteFile(file.id);
+              if (file.socket) {
+                const connection = connections.getIn(["entities", file.socket]);
+                if (connection && connection.connected && connection.socket) {
+                  connection.socket.emit(ENCRYPTED, {id: file.remoteId});
+                } else if (connectedList.length) {
+                  const connectedSocket = connectedList[0].socket;
+
+                  connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
+                  connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                }
+              }
             });
             selectFile(newPath);
           } else {
@@ -116,6 +128,18 @@ class EncryptWindow extends React.Component<any, any> {
           if (newPath) {
             deleteFile(file.id);
             selectFile(newPath);
+
+            if (file.socket) {
+              const connection = connections.getIn(["entities", file.socket]);
+              if (connection && connection.connected && connection.socket) {
+                connection.socket.emit(ENCRYPTED, {id: file.remoteId});
+              } else if (connectedList.length) {
+                const connectedSocket = connectedList[0].socket;
+
+                connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
+                connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+              }
+            }
           } else {
             res = false;
           }
@@ -133,7 +157,7 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseLoaded && !licenseToken) {
@@ -152,11 +176,31 @@ class EncryptWindow extends React.Component<any, any> {
       const folderOut = settings.outfolder;
       let res = true;
 
+      if (folderOut.length > 0) {
+        if (!dirExists(folderOut)) {
+          $(".toast-failed_find_directory").remove();
+          Materialize.toast(localize("Settings.failed_find_directory", locale), 2000, "toast-failed_find_directory");
+          return;
+        }
+      }
+
       files.forEach((file) => {
         const newPath = encrypts.decryptFile(file.fullpath, folderOut);
         if (newPath) {
           deleteFile(file.id);
           selectFile(newPath);
+
+          if (file.socket) {
+            const connection = connections.getIn(["entities", file.socket]);
+            if (connection && connection.connected && connection.socket) {
+              connection.socket.emit(DECRYPTED, {id: file.remoteId});
+            } else if (connectedList.length) {
+              const connectedSocket = connectedList[0].socket;
+
+              connectedSocket.emit(DECRYPTED, {id: file.remoteId});
+              connectedSocket.broadcast.emit(DECRYPTED, {id: file.remoteId});
+            }
+          }
         } else {
           res = false;
         }
@@ -211,6 +255,8 @@ export default connect((state) => {
   return {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
+    connectedList: connectedSelector(state, { connected: true }),
+    connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,

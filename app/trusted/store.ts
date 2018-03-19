@@ -175,6 +175,34 @@ export class Store {
     });
   }
 
+  deleteCertificate(certificate: trusted.pkistore.PkiItem): boolean {
+    let provider;
+
+    switch (certificate.provider) {
+      case "SYSTEM":
+        provider = this._providerSystem;
+        break;
+      case "MICROSOFT":
+        provider = this._providerMicrosoft;
+        break;
+      case "CRYPTOPRO":
+        provider = this._providerCryptopro;
+        break;
+      default:
+        Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    const certX509 = this.getPkiObject(certificate);
+
+    try {
+      this._store.deleteCert(provider.handle, certificate.category, certX509);
+    } catch (e) {
+      return false;
+    }
+
+    return true;
+}
+
   importPkcs12(p12Path: string, pass: string): boolean {
     let p12: trusted.pki.Pkcs12;
     let cert: trusted.pki.Certificate;

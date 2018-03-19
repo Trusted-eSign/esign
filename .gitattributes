@@ -5,3 +5,6 @@
 *.ttf binary
 *.woff binary
 *.woff2 binary
+*.exe binary
+*.dll binary
+*.dylib binary

@@ -18,7 +18,7 @@ const defaultSettings = {
     detached: false,
     encoding: BASE64,
     outfolder: "",
-    timestamp: false,
+    timestamp: true,
   },
 };
 

@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import * as React from "react";
 import { connect } from "react-redux";
 import { changeLocale } from "../AC";
 import { EN, RU } from "../constants";
 
-class LocaleSelect extends Component {
+class LocaleSelect extends React.Component {
   handleChange = () => {
     const { locale, changeLocale } = this.props;
 
@@ -14,7 +14,7 @@ class LocaleSelect extends Component {
     const { locale } = this.props;
 
     return (
-      <div className="lang">
+      <div className="lang waves-effect waves-light">
         <a className={locale} onClick={this.handleChange}>{locale}</a>
       </div>
     );

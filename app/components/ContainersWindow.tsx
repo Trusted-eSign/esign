@@ -9,7 +9,6 @@ import { filteredContainersSelector } from "../selectors";
 import { fileCoding } from "../utils";
 import { mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
-import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";

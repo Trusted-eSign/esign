@@ -9,7 +9,7 @@ class AboutWindow extends React.PureComponent {
       <div>
         <div className="main">
           <div className="about">
-            <div className="row">
+            <div className="row card">
               <div className="col s6">
                 <ProductInformation />
               </div>

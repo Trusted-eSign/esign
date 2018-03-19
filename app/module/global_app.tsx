@@ -2,47 +2,6 @@ import { EventEmitter } from "events";
 import * as fs from "fs";
 import { HOME_DIR, RESOURCES_PATH, SETTINGS_JSON } from "../constants";
 
-export let certVerify = function (certItem: IX509Certificate, certCollection: trusted.pki.CertificateCollection): boolean {
-    let chain: trusted.pki.Chain;
-    let chainForVerify: trusted.pki.CertificateCollection;
-
-    // if (certItem.status !== undefined) {
-    //      return certItem.status;
-    // }
-
-    let cert = window.PKISTORE.getPkiObject(certItem);
-
-    try {
-        chain = new trusted.pki.Chain();
-        chainForVerify = chain.buildChain(cert, certCollection);
-       // certItem.status = chain.verifyChain(chainForVerify, null);
-        return  chain.verifyChain(chainForVerify, null);
-    } catch (e) {
-        return false;
-    }
-
-    // let crl = STORE.getCrlLocal(cert);
-    // if (crl && CRLS.checkCrlTime(crl)) {
-    //     crls.push(crl);
-    //     return CHAIN.verifyChain(chainForVerify, crls);
-    // } else {
-    //     STORE.downloadCRL(cert, function cb(err: any, res: any) {
-    //         if (err) {
-    //             console.log(err);
-    //         } else {
-    //             crl = res;
-    //             if (crl && CRLS.checkCrlTime(crl)) {
-    //                 crls.push(crl);
-    //                 return CHAIN.verifyChain(chainForVerify, crls);
-    //             } else {
-    //                 return 0;
-    //             }
-    //         }
-    //     });
-    // }
-
-    //return certItem.status;
-};
 export function get_settings_from_json(operation: string, settings_name: string) {
     try {
         let data = fs.readFileSync(SETTINGS_JSON, "utf8");
@@ -97,6 +56,8 @@ export interface IX509Certificate {
     organizationName: string;
     status: boolean;
     signatureAlgorithm: string;
+    signatureDigestAlgorithm: string;
+   publicKeyAlgorithm: string;
     privateKey: boolean;
     active: boolean;
     key: string;

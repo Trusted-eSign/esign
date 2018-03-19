@@ -49,18 +49,19 @@
           mainWindow.show()
         }, 1000);
       });
-      window.mainWindow.isMaximized = false;
+      window.mainWindow.resizable = false;
       window.shell = gui.Shell;
       window.RESOURCES_PATH = process.cwd();
       window.framework_NW = true;
     }
     var crypto_module = require('crypto');
-    //crypto_module.loadConfig("./config/openssl.cfg");
+    if (process.platform == 'win32') {
+      crypto_module.loadConfig("./config/openssl.cfg");
+    }
 
     var trusted;
     try {
       trusted = require('trusted-crypto');
-      //window.tcerr="capi";
     } catch(err) {
       window.tcerr = err;
     }
@@ -68,8 +69,10 @@
     path = require('path');
     fs = require('fs');
     os = require('os');
+
     window.archiver = require('archiver');
     window.sudo = require('sudo-prompt');
+    window.request = require('request');
 
     if (process.env.NODE_ENV === "development") {
       window.DEFAULT_PATH = `${__dirname}`;

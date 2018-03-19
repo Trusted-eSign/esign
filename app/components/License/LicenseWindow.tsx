@@ -1,10 +1,15 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import LicenseInfo from "./LicenseInfo";
+import LicenseInfoCSP from "./LicenseInfoCSP";
 import LicenseInfoField from "./LicenseInfoField";
 import LicenseSetupModal from "./LicenseSetupModal";
+import LicenseTemporaryModal from "./LicenseTemporaryModal";
 import LicenseStatus from "./LicenseStatus";
 
+
+
+// tslint:disable-next-line:max-classes-per-file
 class LicenseWindow extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
@@ -24,23 +29,22 @@ class LicenseWindow extends React.Component<{}, {}> {
 
     return (
       <div className="main">
-        <div className="desktoplic_area">
-          <LicenseInfo />
-          <div className="row">
-            <div className="col s6">
-              <LicenseStatus />
+        <div className="license_background">
+          <div className="row card">
+            <LicenseInfo />
+            <div className="row nobottom">
+                <LicenseStatus />
             </div>
-            <div className="col s2">
-              <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                {localize("License.Enter_Key", locale)}
-              </a>
-            </div>
+            <LicenseInfoCSP />
           </div>
         </div>
         <div className="onlinelic_area">
         </div>
-        <LicenseSetupModal text_info={localize("License.entered_the_key", locale)} closeWindow={function() {
+        <LicenseSetupModal text_info={localize("License.entered_the_key", locale)} closeWindow={function () {
           $("#add-licence-key").closeModal();
+        }} icon="" />
+        <LicenseTemporaryModal text_info={localize("License.license_request", locale)} closeWindow={function () {
+          $("#licence-temporary-modal").closeModal();
         }} icon="" />
       </div>
     );

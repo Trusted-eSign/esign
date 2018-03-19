@@ -26,7 +26,7 @@ class Modal extends React.Component<IModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window").openModal();
+      $("#modal-window").openModal({dismissible: false});
     }
   }
 
