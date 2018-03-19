@@ -87,6 +87,8 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     };
     sd.sign();
     sd.save(outURI, format);
+
+    sd.freeContent();
   } catch (err) {
     //  let jwtRes: number = jwt.checkLicense();
     //  if (jwtRes) {
