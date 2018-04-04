@@ -76,7 +76,8 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
     const dateNow = new Date().getTime();
     const dateDif = dateExp - dateNow;
     const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
-    const unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
+    let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
+    if(license.exp == 0) unlimited = true;
 
     let message;
 

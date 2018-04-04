@@ -32,27 +32,45 @@ export function loadLicense() {
       let parsedLicense;
       let buffer;
       let lic;
+      let old_license = false;
 
       if (fs.existsSync(LICENSE_PATH)) {
         data = fs.readFileSync(LICENSE_PATH, "utf8");
       }
 
       if (data && data.length) {
-        const splitLicense = data.split(".");
+        //validation of old format license
+        let result = data.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
+        if(result != null){
+          //validate
+          old_license = true;
+          lic = {
+            aud : '-',
+            sub : 'CryptoARM GOST',
+            core: 65535,
+            iss : 'ООО "Цифровые технологии"',
+            exp : 0,
+            iat : '',
+            jti : '',
+            desc : 'CryptoARM GOST'
+          }      
+        }else{
+          const splitLicense = data.split(".");
 
-        if (splitLicense[1]) {
-          try {
-            buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-            parsedLicense = JSON.parse(buffer);
+          if (splitLicense[1]) {
+            try {
+              buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+              parsedLicense = JSON.parse(buffer);
 
-            if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-              && parsedLicense.jti && parsedLicense.sub) {
-              lic = parsedLicense;
+              if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+                && parsedLicense.jti && parsedLicense.sub) {
+                lic = parsedLicense;
+              }
+            } catch (e) {
+              dispatch({
+                type: LOAD_LICENSE + FAIL,
+              });
             }
-          } catch (e) {
-            dispatch({
-              type: LOAD_LICENSE + FAIL,
-            });
           }
         }
       }
@@ -269,7 +287,6 @@ export function filePackageDelete(filePackage: number[]) {
 export function verifyLicense(key: string) {
   return (dispatch) => {
     const licenseStatus = jwt.checkLicense(key);
-
     dispatch({
       payload: { licenseStatus },
       type: VERIFY_LICENSE,

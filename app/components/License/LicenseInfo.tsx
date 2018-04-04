@@ -59,12 +59,11 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
     let notBefore: string;
     let productName: string;
 
-    if (!license.exp) {
+    if (!license.exp && license.exp != 0) {
       notAfter = "-";
     } else {
       const exp = new Date(license.exp * 1000);
-
-      notAfter = exp.getFullYear() === 2038 ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+      notAfter = ((exp.getFullYear() === 2038)||(license.exp == 0)) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
     }
 
     if (!license.iat) {

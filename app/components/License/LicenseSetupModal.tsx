@@ -74,6 +74,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 
     let data = null;
     let key;
+    let old_license = false;
 
     if (license_key) {
       key = license_key;
@@ -97,27 +98,41 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     } else {
       let parsedLicense;
       let buffer;
+      //validation of old format license
+      let result = key.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
+      if(result != null){
+        //validate
+        old_license = true;
+        data = {
+            aud : '-',
+            sub : 'CryptoARM GOST',
+            core: 65535,
+            iss : 'ООО "Цифровые технологии"',
+            exp : 0,
+            iat : '',
+            jti : '',
+            desc : 'CryptoARM GOST'
+        } 
+      }else{
+        const splitLicense = key.split(".");
+        if (splitLicense[1]) {
+          try {
+            buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+            parsedLicense = JSON.parse(buffer);
 
-      const splitLicense = key.split(".");
-
-      if (splitLicense[1]) {
-        try {
-          buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-          parsedLicense = JSON.parse(buffer);
-
-          if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-            && parsedLicense.jti && parsedLicense.sub) {
-            data = parsedLicense;
+            if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+              && parsedLicense.jti && parsedLicense.sub) {
+              data = parsedLicense;
+            }
+          } catch (e) {
+            data = null;
           }
-        } catch (e) {
-          data = null;
         }
-      }
+      } 
     }
 
     if (data && data.sub !== "-") {
       status = jwt.checkLicense(key);
-
       if (status === 0) {
         if (PLATFORM === "win32") {
           command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
