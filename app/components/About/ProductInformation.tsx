@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 
-class ProductInformation extends React.PureComponent {
+class ProductInformation extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,

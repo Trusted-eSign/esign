@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const remote = window.electron.remote;
 
-class SideMenu extends React.PureComponent {
+class SideMenu extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,

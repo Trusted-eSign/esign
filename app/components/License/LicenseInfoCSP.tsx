@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import * as React from "react";
 import LicenseInfoFiled from "./LicenseInfoField";
 
-class LicenseInfoCSP extends React.PureComponent {
+class LicenseInfoCSP extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
