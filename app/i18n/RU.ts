@@ -84,6 +84,7 @@ export default {
     installCertificate: "Установить сертификат",
   },
   CSR: {
+    algorithm: "Алгоритм",
     create_selfSigned: "Создание самоподписанного сертификата",
     template_label: "Шаблон сертификата",
     template_default: "Шаблон по умолчанию",
@@ -98,6 +99,8 @@ export default {
     key_length: "Длина ключа",
     country: "Страна",
     common_name: "CN",
+    inn: "ИНН",
+    snils: "СНИЛС",
     organization_name: "Организация",
     locality_name: "Город",
     province_name: "Область",

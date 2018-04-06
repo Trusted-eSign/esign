@@ -1400,6 +1400,10 @@ form.col.s12 {
   color: #666 !important;
 }
 
+.select {
+  font-size: 1rem;
+}
+
 .select-wrapper input.select-dropdown {
   border-bottom: 1px solid #fff;
 }

@@ -84,6 +84,7 @@ export default {
     installCertificate: "Install certificate",
   },
   CSR: {
+    algorithm: "Algorithm",
     create_selfSigned: "Create self-signed certificate",
     template_label: "Certificate template",
     template_default: "Default template",
@@ -98,6 +99,8 @@ export default {
     key_length: "Key length",
     country: "Country",
     common_name: "CN",
+    inn: "INN",
+    snils: "SNILS",
     organization_name: "Organization Name (eg, company)",
     locality_name: "Locality Name (eg, city)",
     province_name: "State or Province Name (full name)",
