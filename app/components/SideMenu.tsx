@@ -45,7 +45,7 @@ class SideMenu extends React.Component<{}, {}> {
           </Link>
 
           <Link to="/containers">
-            {localize("Containers.containers", locale)}
+            {localize("Containers.Containers", locale)}
             <i className="material-icons left keystore">library_books</i>
           </Link>
         </div>
