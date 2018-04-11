@@ -30,6 +30,10 @@ class Modal extends React.Component<IModalProps, {}> {
     }
   }
 
+  componentWillUnmount() {
+    $("#modal-window").closeModal();
+  }
+
   handleCloseModal = () => {
     const { onClose } = this.props;
 
@@ -49,16 +53,16 @@ class Modal extends React.Component<IModalProps, {}> {
     }
 
     return (
-      <div id="modal-window" className="modal licence-modal">
-        <div className="licence-modal-main">
-          <HeaderWorkspaceBlock
-            text={header}
-            new_class="modal-bar"
-            icon="close"
-            onСlickBtn={() => {
-              this.handleCloseModal();
-            }}
-          />
+      <div id="modal-window" className="modal nooverflow">
+        <HeaderWorkspaceBlock
+          text={header}
+          new_class="modal-bar"
+          icon="close"
+          onСlickBtn={() => {
+            this.handleCloseModal();
+          }}
+        />
+        <div>
           {this.props.children}
         </div>
       </div>

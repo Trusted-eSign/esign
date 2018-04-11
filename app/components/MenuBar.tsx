@@ -10,7 +10,6 @@ import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
-import Modal from "./Modal";
 import SideMenu from "./SideMenu";
 
 // tslint:disable-next-line:no-var-requires
