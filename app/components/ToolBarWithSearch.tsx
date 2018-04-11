@@ -6,6 +6,7 @@ interface IToolBarWithSearchProps {
   disable?: string;
   rightBtnAction?: (event: any) => void;
   reloadCertificates?: () => void;
+  handleShowModalCertificateRequest?: () => void;
   operation: string;
 }
 
@@ -41,6 +42,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
         <ul id="dropdown-btn-import" className="dropdown-content">
           <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
           <li><a onClick={this.props.reloadCertificates}>{localize("Common.update", locale)}</a></li>
+          <li><a onClick={this.props.handleShowModalCertificateRequest}>{localize("CSR.create_selfSigned", locale)}</a></li>
         </ul>
       </li>;
     } else if (this.props.operation === "containers") {

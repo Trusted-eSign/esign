@@ -13,9 +13,7 @@ import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
 import ContainersList from "./ContainersList";
-import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import Modal from "./Modal";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 

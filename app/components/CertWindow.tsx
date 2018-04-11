@@ -19,6 +19,7 @@ import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import Modal from "./Modal";
 import ProgressBars from "./ProgressBars";
+import CertificateRequest from "./Request/CertificateRequest";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class CertWindow extends React.Component<any, any> {
@@ -33,6 +34,7 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      showModalCertificateRequest: false,
       showModalDeleteCertifiacte: false,
       showModalExportCertifiacte: false,
     });
@@ -52,6 +54,14 @@ class CertWindow extends React.Component<any, any> {
 
   handleShowModalExportCertifiacte = () => {
     this.setState({ showModalExportCertifiacte: true });
+  }
+
+  handleCloseModalCertificateRequest = () => {
+    this.setState({ showModalCertificateRequest: false });
+  }
+
+  handleShowModalCertificateRequest = () => {
+    this.setState({ showModalCertificateRequest: true });
   }
 
   handlePasswordChange = (password: string) => {
@@ -317,6 +327,25 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
+  showModalCertificateRequest = () => {
+    const { localize, locale } = this.context;
+    const { showModalCertificateRequest } = this.state;
+
+    if (!showModalCertificateRequest) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalCertificateRequest}
+        header={localize("CSR.create_selfSigned", locale)}
+        onClose={this.handleCloseModalCertificateRequest}>
+
+        <CertificateRequest onCancel={this.handleCloseModalCertificateRequest} />
+      </Modal>
+    );
+  }
+
   render() {
     const { certificates, isLoading } = this.props;
     const { activeTabIsCertInfo, certificate } = this.state;
@@ -337,19 +366,14 @@ class CertWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" reloadCertificates={this.handleReloadCertificates} rightBtnAction={
-                  (event: any) => {
-                    this.handleCertificateImport(event.target.files);
-                  }
-                } />
-                <div id="modal-createCertificateRequest" className="modal cert-window">
-                  <div className="add-cert-content">
-                    <HeaderWorkspaceBlock text={localize("CSR.create_selfSigned", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
-                      $("#modal-createCertificateRequest").closeModal();
-                    }} />
-                    <CSR />
-                  </div>
-                </div>
+                <ToolBarWithSearch operation="certificate" disable=""
+                  reloadCertificates={this.handleReloadCertificates}
+                  handleShowModalCertificateRequest={this.handleShowModalCertificateRequest}
+                  rightBtnAction={
+                    (event: any) => {
+                      this.handleCertificateImport(event.target.files);
+                    }
+                  } />
                 <div className="add-certs">
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
@@ -388,6 +412,7 @@ class CertWindow extends React.Component<any, any> {
                 {this.getCertificateInfoBody()}
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
+                {this.showModalCertificateRequest()}
               </div>
             </div>
           </div>

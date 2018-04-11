@@ -78,8 +78,10 @@ nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
 }
 
 .input-field {
-    height: 54px;
-    border-bottom: 1px solid #ffffff;
+  margin-top: 0;
+  width: 110px;
+  height: 46px;
+  line-height: 15px;
 }
 
 .closer {
@@ -180,12 +182,6 @@ body {
 .sign-set-encoding {
     line-height: 36px;
     width: calc(100% - 110px);
-}
-.input-field {
-    margin-top: 0;
-    width: 110px;
-    height: 46px;
-    line-height: 15px;
 }
 
 .bordered--top{
@@ -968,7 +964,21 @@ nav .cert-seacrh label i {
     background-color: rgb(135, 134, 159);
 }*/
 
-.modal { max-height: 75% !important ; }
+.modal {
+  max-height: 75% !important ;
+}
+
+.nooverflow {
+  overflow-y: hidden;
+}
+
+.modal-body {
+  height: 400px;
+}
+
+.overflow {
+  overflow-y: auto;
+}
 
 .dropdown-content {
   min-width: 170px;
@@ -1404,10 +1414,6 @@ form.col.s12 {
   font-size: 1rem;
 }
 
-.select-wrapper input.select-dropdown {
-  border-bottom: 1px solid #fff;
-}
-
 .contact-icon {
   float: left;
 }
@@ -1557,6 +1563,11 @@ h6.contact-title {
 
 p.collection-title {
   padding-top: 6px;
+}
+
+p.label {
+  font-size: 0.8rem;
+  color: #9e9e9e;
 }
 
 .collection-item.files-collection {

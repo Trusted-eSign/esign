@@ -1,0 +1,198 @@
+import PropTypes from "prop-types";
+import React from "react";
+import ReactDOM from "react-dom";
+import { connect } from "react-redux";
+import { loadAllContainers, removeAllContainers } from "../../AC";
+import { filteredContainersSelector } from "../../selectors";
+import BlockNotElements from "../BlockNotElements";
+import ContainersList from "../ContainersList";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import ProgressBars from "../ProgressBars";
+import { ToolBarWithSearch } from "../ToolBarWithSearch";
+
+interface ISubjectNameInfoProps {
+  template: string;
+  cn: string;
+  email: string;
+  organization: string;
+  locality: string;
+  province: string;
+  country: string;
+  inn?: string;
+  snils?: string;
+  handleCountryChange: (ev: any) => void;
+  handleTemplateChange: (ev: any) => void;
+  handleInputChange: (ev: any) => void;
+}
+
+class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
+  static contextTypes = {
+    locale: PropTypes.string,
+    localize: PropTypes.func,
+  };
+
+  componentDidMount() {
+    /* https://github.com/facebook/react/issues/3667
+    * fix onChange for < select >
+    */
+    $(document).ready(() => {
+      $("select").material_select();
+    });
+
+    $(ReactDOM.findDOMNode(this.refs.templateSelect)).on("change", this.props.handleTemplateChange);
+    $(ReactDOM.findDOMNode(this.refs.countrySelect)).on("change", this.props.handleCountryChange);
+
+    Materialize.updateTextFields();
+  }
+
+  render() {
+    const { localize, locale } = this.context;
+    const { cn, email, organization, locality, province, country, template, handleCountryChange, handleInputChange, handleTemplateChange } = this.props;
+
+    return (
+      <div className="row">
+        <div className="col s6 m6 l6 content-item-height">
+          <div className="cert-content-item">
+            <div className="content-wrapper z-depth-1">
+              <br />
+              <div className="row">
+                <div className="input-field col s12">
+                  <select className="select" ref="templateSelect" value={template} name="template" onChange={handleTemplateChange} >
+                    <option value="default">{localize("CSR.template_default", locale)}</option>
+                    <option value="kepIp">{localize("CSR.template_kep_ip", locale)}</option>
+                    <option value="kepFiz">{localize("CSR.template_kep_fiz", locale)}</option>
+                    <option value="additional">{localize("CSR.template_additional_fields", locale)}</option>
+                  </select>
+                  <label>{localize("CSR.template_label", locale)}</label>
+                </div>
+              </div>
+              {this.getAditionalField()}
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    id="commonName"
+                    type="text"
+                    className="validate"
+                    name="cn"
+                    value={cn}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="commonName">{localize("CSR.common_name", locale)}</label>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    id="emailAddress"
+                    type="email"
+                    className="validate"
+                    name="email"
+                    value={email}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="emailAddress">{localize("CSR.email_address", locale)}</label>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    id="organizationName"
+                    type="text"
+                    className="validate"
+                    name="organization"
+                    value={organization}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="organizationName">{localize("CSR.organization_name", locale)}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col s6 m6 l6 content-item-height">
+          <div className={"file-content-height active"}>
+            <div className="content-wrapper z-depth-1">
+              <br />
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    id="localityName"
+                    type="text"
+                    className="validate"
+                    name="locality"
+                    value={locality}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="localityName">{localize("CSR.locality_name", locale)}</label>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field col s12">
+                  <input
+                    id="stateOrProvinceName"
+                    type="text"
+                    className="validate"
+                    name="province"
+                    value={province}
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="stateOrProvinceName">{localize("CSR.province_name", locale)}</label>
+                </div>
+              </div>
+              <br />
+              <div className="row">
+                <div className="input-field col s12">
+                  <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >>
+                      <option value="RU">Российская Федерация (RU)</option>
+                    <option value="AU">Австралия (AU)</option>
+                  </select>
+                  <label>{localize("CSR.country", locale)}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  getAditionalField = () => {
+    const { template, handleInputChange, inn, snils } = this.props;
+    const { localize, locale } = this.context;
+
+    if (template === "kepFiz") {
+      return (
+        <div>
+          <div className="row">
+            <div className="input-field col s12">
+              <input
+                id="snils"
+                type="text"
+                className="validate"
+                name="snils"
+                value={snils}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="snils">{localize("CSR.snils", locale)}</label>
+            </div>
+          </div>
+          <div className="row">
+            <div className="input-field col s12">
+              <input
+                id="inn"
+                type="text"
+                className="validate"
+                name="inn"
+                value={inn}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="snils">{localize("CSR.inn", locale)}</label>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  }
+}
+
+export default CertificateRequest;
