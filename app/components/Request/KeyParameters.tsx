@@ -11,14 +11,23 @@ import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
+interface IKeyUsage {
+  dataEncipherment: boolean;
+  digitalSignature: boolean;
+  keyAgreement: boolean;
+  nonRepudiation: boolean;
+}
+
 interface IKeyParametersProps {
   algorithm: string;
   containerName: string;
   generateNewKey: boolean;
   keyLength: number;
+  keyUsage: IKeyUsage;
   handleAlgorithmChange: (ev: any) => void;
   handleGenerateNewKeyChange: (ev: any) => void;
   handleInputChange: (ev: any) => void;
+  handleKeyUsageChange: (ev: any) => void;
 }
 
 class KeyParameters extends React.Component<IKeyParametersProps, {}> {
@@ -33,6 +42,10 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
     */
     $(document).ready(() => {
       $("select").material_select();
+    });
+
+    $(document).ready(function(){
+      $(".tooltipped").tooltip();
     });
 
     $(ReactDOM.findDOMNode(this.refs.algorithmSelect)).on("change", this.props.handleAlgorithmChange);
@@ -67,9 +80,14 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
     }
   }
 
+  componentDidUpdate() {
+    Materialize.updateTextFields();
+  }
+
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, generateNewKey, keyLength, handleAlgorithmChange, handleGenerateNewKeyChange, handleInputChange } = this.props;
+    const { algorithm, containerName, generateNewKey, keyLength, keyUsage,
+      handleAlgorithmChange, handleGenerateNewKeyChange, handleInputChange, handleKeyUsageChange } = this.props;
 
     return (
       <div className="row">
@@ -98,29 +116,83 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <label htmlFor="newKey">{localize("CSR.generate_new_key", locale)}</label>
           </div>
         </div>
-        <div className="row">
-          <div className="input-field col s12">
-            <input
-              id="containerName"
-              type="text"
-              className="validate"
-              name="containerName"
-              value={containerName}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col s12">
-            <p className="label">{localize("CSR.key_length", locale)}</p>
-          </div>
+        {generateNewKey ?
           <div className="row">
+            <div className="input-field col s12">
+              <input
+                id="containerName"
+                type="text"
+                className="validate"
+                name="containerName"
+                value={containerName}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
+            </div>
+          </div>
+          : null}
+        {generateNewKey && algorithm === "RSA" ?
+          <div className="row">
+            <div className="col s12">
+              <p className="label">{localize("CSR.key_length", locale)}</p>
+            </div>
             <div className="col s9">
               <div id="key-length-slider"></div>
             </div>
             <div className="col s3">
               <div id="key-length-value">{keyLength}</div>
+            </div>
+          </div>
+          : null}
+
+        <div className="row">
+          <div className="col s12">
+            <p className="label">Использование ключа</p>
+          </div>
+          <div className="col s6">
+            <div className="input-field">
+              <input
+                name="dataEncipherment"
+                type="checkbox"
+                id="dataEncipherment"
+                checked={keyUsage.dataEncipherment}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="dataEncipherment">Шифрование</label>
+            </div>
+            <div className="input-field">
+              <input
+                name="keyAgreement"
+                type="checkbox"
+                id="keyAgreement"
+                checked={keyUsage.keyAgreement}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="keyAgreement">Согласование</label>
+            </div>
+          </div>
+          <div className="col s6">
+            <div className="input-field">
+              <input
+                name="digitalSignature"
+                type="checkbox"
+                id="digitalSignature"
+                checked={keyUsage.digitalSignature}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="digitalSignature">Подпись</label>
+            </div>
+            <div className="input-field">
+              <input
+                name="nonRepudiation"
+                type="checkbox"
+                id="nonRepudiation"
+                checked={keyUsage.nonRepudiation}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="nonRepudiation" className="label tooltipped" data-position="right" data-tooltip="Неотрекаемость">
+                Неотрекаемость
+              </label>
             </div>
           </div>
         </div>

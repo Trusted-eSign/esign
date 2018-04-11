@@ -7,6 +7,14 @@ import { uuid } from "../../utils";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
 
+interface IKeyUsage {
+  dataEncipherment: boolean;
+  digitalSignature: boolean;
+  keyAgreement: boolean;
+  nonRepudiation: boolean;
+  [key: string]: boolean;
+}
+
 interface ICertificateRequestState {
   algorithm: string;
   cn: string;
@@ -16,6 +24,7 @@ interface ICertificateRequestState {
   generateNewKey: boolean;
   inn?: string;
   keyLength: number;
+  keyUsage: IKeyUsage;
   locality: string;
   organization: string;
   province: string;
@@ -46,6 +55,12 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       generateNewKey: true,
       inn: "",
       keyLength: 1024,
+      keyUsage: {
+        dataEncipherment: true,
+        digitalSignature: true,
+        keyAgreement: true,
+        nonRepudiation: true,
+      },
       locality: "",
       organization: "",
       province: "",
@@ -88,7 +103,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   render() {
     const { localize, locale } = this.context;
     const { algorithm, cn, containerName, country, email, inn, generateNewKey, keyLength,
-      locality, organization, province, snils, step, template } = this.state;
+      keyUsage, locality, organization, province, snils, step, template } = this.state;
 
     return (
       <div>
@@ -104,9 +119,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                       containerName={containerName}
                       generateNewKey={generateNewKey}
                       keyLength={keyLength}
+                      keyUsage={keyUsage}
                       handleAlgorithmChange={this.handleAlgorithmChange}
                       handleGenerateNewKeyChange={this.handleGenerateNewKeyChange}
                       handleInputChange={this.handleInputChange}
+                      handleKeyUsageChange={this.handleKeyUsageChange}
                     />
                   </div>
                 </div>
@@ -114,7 +131,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
                 </div>
                 <div className="col s2">
-                <a className={"waves-effect waves-light btn"} onClick={this.handleNextStep}>{localize("Common.next", locale)}</a>
+                  <a className={"waves-effect waves-light btn"} onClick={this.handleNextStep}>{localize("Common.next", locale)}</a>
                 </div>
               </div>
             </div>
@@ -191,6 +208,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   handleCountryChange = (ev: any) => {
     ev.preventDefault();
     this.setState({ country: ev.target.value });
+  }
+
+  handleKeyUsageChange = (ev: any) => {
+    const target = ev.target;
+    const name = target.name;
+
+    this.setState({
+      keyUsage: {
+        ...this.state.keyUsage,
+        [name]: !this.state.keyUsage[name],
+      },
+    });
   }
 }
 

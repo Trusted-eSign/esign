@@ -427,6 +427,12 @@ div::-webkit-scrollbar-thumb {
     line-height: 48px;
 }
 
+.label {
+  display: block !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 /*-------------------------------Стили кнопок------------------*/
 
 .btn, .add-cert-btn, .operation-btn, .choose-btn {
