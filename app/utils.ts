@@ -1,3 +1,4 @@
+import * as crypto from "crypto";
 import * as fs from "fs";
 import { Map, OrderedMap } from "immutable";
 
@@ -122,3 +123,9 @@ export function dirExists(dirPath: string): boolean {
     return false;
   }
 }
+
+export const uuid = () => {
+  const rnb = crypto.randomBytes(16).toString("hex");
+
+  return rnb.substring(0, 8) + "-" + rnb.substring(8, 12) + "-" + rnb.substring(12, 16)  + "-" + rnb.substring(16, 20) + "-" + rnb.substring(20);
+};
