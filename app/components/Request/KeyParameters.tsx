@@ -149,14 +149,16 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           : null}
         {generateNewKey && algorithm === "RSA" ?
           <div className="row">
-            <div className="col s12">
+          <div className="valign-wrapper">
+            <div className="col s4">
               <p className="label">{localize("CSR.key_length", locale)}</p>
             </div>
-            <div className="col s9">
+            <div className="col s5">
               <div id="key-length-slider"></div>
             </div>
             <div className="col s3">
               <div id="key-length-value">{keyLength}</div>
+            </div>
             </div>
           </div>
           : null}
