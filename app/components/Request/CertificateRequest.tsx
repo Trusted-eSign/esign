@@ -34,6 +34,7 @@ interface ICertificateRequestState {
   containerName: string;
   country: string;
   email: string;
+  exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
   generateNewKey: boolean;
   inn?: string;
@@ -65,6 +66,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       containerName: uuid(),
       country: "RU",
       email: "",
+      exportableKey: false,
       extKeyUsage: {
         "1.3.6.1.5.5.7.3.1": false,
         "1.3.6.1.5.5.7.3.2": true,
@@ -125,7 +127,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, cn, containerName, country, email, extKeyUsage, inn, generateNewKey, keyLength,
+    const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, generateNewKey, keyLength,
       keyUsage, locality, organization, province, snils, template } = this.state;
 
     return (
@@ -138,6 +140,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                 <KeyParameters
                   algorithm={algorithm}
                   containerName={containerName}
+                  exportableKey={exportableKey}
                   extKeyUsage={extKeyUsage}
                   generateNewKey={generateNewKey}
                   keyLength={keyLength}
@@ -147,6 +150,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   handleInputChange={this.handleInputChange}
                   handleKeyUsageChange={this.handleKeyUsageChange}
                   handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
+                  toggleExportableKey={this.toggleExportableKey}
                 />
               </div>
             </div>
@@ -190,8 +194,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
   }
 
-  handleBackStep = () => {
-    this.setState({ step: this.state.step - 1 });
+  toggleExportableKey = () => {
+    this.setState({ exportableKey: !this.state.exportableKey });
   }
 
   handleGenerateNewKeyChange = () => {

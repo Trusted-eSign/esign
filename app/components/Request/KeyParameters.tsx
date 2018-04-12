@@ -35,15 +35,17 @@ interface IExtendedKeyUsage {
 interface IKeyParametersProps {
   algorithm: string;
   containerName: string;
+  exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
   generateNewKey: boolean;
   keyLength: number;
   keyUsage: IKeyUsage;
   handleAlgorithmChange: (ev: any) => void;
-  handleGenerateNewKeyChange: (ev: any) => void;
+  handleGenerateNewKeyChange: () => void;
   handleInputChange: (ev: any) => void;
   handleKeyUsageChange: (ev: any) => void;
   handleExtendedKeyUsageChange: (ev: any) => void;
+  toggleExportableKey: () => void;
 }
 
 class KeyParameters extends React.Component<IKeyParametersProps, {}> {
@@ -106,8 +108,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, extKeyUsage, generateNewKey, keyLength, keyUsage,
-      handleAlgorithmChange, handleExtendedKeyUsageChange, handleGenerateNewKeyChange, handleInputChange, handleKeyUsageChange } = this.props;
+    const { algorithm, containerName, exportableKey, extKeyUsage, generateNewKey, keyLength, keyUsage,
+      handleAlgorithmChange, handleExtendedKeyUsageChange, handleGenerateNewKeyChange,
+      handleInputChange, handleKeyUsageChange, toggleExportableKey } = this.props;
 
     return (
       <div className="row">
@@ -153,16 +156,16 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           : null}
         {generateNewKey && algorithm === "RSA" ?
           <div className="row">
-          <div className="valign-wrapper">
-            <div className="col s4">
-              <p className="label">{localize("CSR.key_length", locale)}</p>
-            </div>
-            <div className="col s5">
-              <div id="key-length-slider"></div>
-            </div>
-            <div className="col s3">
-              <div id="key-length-value">{keyLength}</div>
-            </div>
+            <div className="valign-wrapper">
+              <div className="col s4">
+                <p className="label">{localize("CSR.key_length", locale)}</p>
+              </div>
+              <div className="col s5">
+                <div id="key-length-slider"></div>
+              </div>
+              <div className="col s3">
+                <div id="key-length-value">{keyLength}</div>
+              </div>
             </div>
           </div>
           : null}
@@ -330,6 +333,18 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 {localize("CSR.eku_emailProtection", locale)}
               </label>
             </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col s11">
+            <input
+              name="exportableKey"
+              className="with-gap" type="radio"
+              id="exportableKey"
+              checked={exportableKey}
+              onClick={toggleExportableKey}
+            />
+            <label htmlFor="exportableKey" className="label">{localize("CSR.exportable_key", locale)}</label>
           </div>
         </div>
       </div>

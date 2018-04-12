@@ -98,6 +98,7 @@ export default {
     csp_microsoft_base: "Microsoft Base Cryptografic Provaider v1.0",
     not_after: "Valid not after",
     generate_new_key: "Create new key pair",
+    exportable_key: "Mark private keys as exportable",
     key_length: "Key length",
     keys_params: "Key parameters",
     subject_params: "Subject parameters",

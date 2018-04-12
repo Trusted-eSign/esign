@@ -98,6 +98,7 @@ export default {
     csp_microsoft_base: "Microsoft Base Cryptografic Provaider v1.0",
     not_after: "Действителен до",
     generate_new_key: "Создать новый ключевой набор",
+    exportable_key: "Пометить ключи как экспортируемые",
     key_length: "Длина ключа",
     keys_params: "Параметры ключа",
     subject_params: "Параметры субъекта",
