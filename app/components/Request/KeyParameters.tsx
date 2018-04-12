@@ -12,10 +12,16 @@ import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
 interface IKeyUsage {
+  cRLSign: boolean;
   dataEncipherment: boolean;
+  decipherOnly: boolean;
   digitalSignature: boolean;
+  encipherOnly: boolean;
   keyAgreement: boolean;
+  keyEncipherment: boolean;
+  keyCertSign: boolean;
   nonRepudiation: boolean;
+  [key: string]: boolean;
 }
 
 interface IKeyParametersProps {
@@ -44,7 +50,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
       $("select").material_select();
     });
 
-    $(document).ready(function(){
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
 
@@ -150,7 +156,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <p className="label">Использование ключа</p>
           </div>
           <div className="col s6">
-            <div className="input-field">
+            <div className="input-checkbox">
               <input
                 name="dataEncipherment"
                 type="checkbox"
@@ -158,9 +164,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.dataEncipherment}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="dataEncipherment">Шифрование</label>
+              <label htmlFor="dataEncipherment" className="label">Шифрование</label>
             </div>
-            <div className="input-field">
+            <div className="input-checkbox">
               <input
                 name="keyAgreement"
                 type="checkbox"
@@ -168,11 +174,31 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.keyAgreement}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="keyAgreement">Согласование</label>
+              <label htmlFor="keyAgreement" className="label">Согласование</label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="keyCertSign"
+                type="checkbox"
+                id="keyCertSign"
+                checked={keyUsage.keyCertSign}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="keyCertSign" className="label tooltipped" data-position="right" data-tooltip="Подпись сертификатов">Подпись сертификатов</label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="decipherOnly"
+                type="checkbox"
+                id="decipherOnly"
+                checked={keyUsage.decipherOnly}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="decipherOnly" className="label tooltipped" data-position="right" data-tooltip="Только расшифрование">Только расшифрование</label>
             </div>
           </div>
           <div className="col s6">
-            <div className="input-field">
+            <div className="input-checkbox">
               <input
                 name="digitalSignature"
                 type="checkbox"
@@ -180,9 +206,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.digitalSignature}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="digitalSignature">Подпись</label>
+              <label htmlFor="digitalSignature" className="label">Подпись</label>
             </div>
-            <div className="input-field">
+            <div className="input-checkbox">
               <input
                 name="nonRepudiation"
                 type="checkbox"
@@ -192,6 +218,30 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
               />
               <label htmlFor="nonRepudiation" className="label tooltipped" data-position="right" data-tooltip="Неотрекаемость">
                 Неотрекаемость
+              </label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="cRLSign"
+                type="checkbox"
+                id="cRLSign"
+                checked={keyUsage.cRLSign}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="cRLSign" className="label tooltipped" data-position="right" data-tooltip="Автономное подписание списка отзыва (CRL)">
+                Автономное подписание списка отзыва (CRL)
+              </label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="keyEncipherment"
+                type="checkbox"
+                id="keyEncipherment"
+                checked={keyUsage.keyEncipherment}
+                onClick={handleKeyUsageChange}
+              />
+              <label htmlFor="keyEncipherment" className="label tooltipped" data-position="right" data-tooltip="Шифрование ключа">
+                Шифрование ключа
               </label>
             </div>
           </div>

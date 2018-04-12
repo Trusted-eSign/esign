@@ -431,6 +431,7 @@ div::-webkit-scrollbar-thumb {
   display: block !important;
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 /*-------------------------------Стили кнопок------------------*/
@@ -1804,7 +1805,7 @@ p.message_onlinelic{
     border: 2px solid #bf3817;
     border-top: none;
 }
-.input-field-licence {
+.input-field-licence, .input-checkbox {
     width: 100%;
     display: flex;
     align-items: center;

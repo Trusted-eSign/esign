@@ -8,9 +8,14 @@ import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
 
 interface IKeyUsage {
+  cRLSign: boolean;
   dataEncipherment: boolean;
+  decipherOnly: boolean;
   digitalSignature: boolean;
+  encipherOnly: boolean;
   keyAgreement: boolean;
+  keyEncipherment: boolean;
+  keyCertSign: boolean;
   nonRepudiation: boolean;
   [key: string]: boolean;
 }
@@ -29,7 +34,6 @@ interface ICertificateRequestState {
   organization: string;
   province: string;
   snils?: string;
-  step: number;
   template: string;
 }
 
@@ -56,16 +60,20 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       inn: "",
       keyLength: 1024,
       keyUsage: {
+        cRLSign: false,
         dataEncipherment: true,
+        decipherOnly: false,
         digitalSignature: true,
+        encipherOnly: false,
         keyAgreement: true,
+        keyCertSign: false,
+        keyEncipherment: false,
         nonRepudiation: true,
       },
       locality: "",
       organization: "",
       province: "",
       snils: "",
-      step: 1,
       template: "default",
     };
   }
@@ -107,41 +115,26 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     return (
       <div>
-        {
-          (step === 1) ?
-            <div className="modal-body overflow">
-              <br />
-              <div className="row">
-                <div className="col s6 m6 l6 content-item-height">
-                  <div className="content-wrapper z-depth-1">
-                    <KeyParameters
-                      algorithm={algorithm}
-                      containerName={containerName}
-                      generateNewKey={generateNewKey}
-                      keyLength={keyLength}
-                      keyUsage={keyUsage}
-                      handleAlgorithmChange={this.handleAlgorithmChange}
-                      handleGenerateNewKeyChange={this.handleGenerateNewKeyChange}
-                      handleInputChange={this.handleInputChange}
-                      handleKeyUsageChange={this.handleKeyUsageChange}
-                    />
-                  </div>
-                </div>
-                <div className="col s2 offset-s7">
-                  <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
-                </div>
-                <div className="col s2">
-                  <a className={"waves-effect waves-light btn"} onClick={this.handleNextStep}>{localize("Common.next", locale)}</a>
-                </div>
+        <div className="modal-body overflow">
+          <div className="row" />
+          <div className="row">
+            <div className="col s6 m6 l6 content-item-height">
+              <div className="content-wrapper z-depth-1">
+                <KeyParameters
+                  algorithm={algorithm}
+                  containerName={containerName}
+                  generateNewKey={generateNewKey}
+                  keyLength={keyLength}
+                  keyUsage={keyUsage}
+                  handleAlgorithmChange={this.handleAlgorithmChange}
+                  handleGenerateNewKeyChange={this.handleGenerateNewKeyChange}
+                  handleInputChange={this.handleInputChange}
+                  handleKeyUsageChange={this.handleKeyUsageChange}
+                />
               </div>
             </div>
-            : null
-        }
-        {
-          (step === 2) ?
-            <div className="modal-body overflow">
-              <br />
-              <div className="row">
+            <div className="col s6 m6 l6 content-item-height">
+              <div className="content-wrapper z-depth-1">
                 <SubjectNameInfo
                   template={template}
                   cn={cn}
@@ -156,16 +149,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   handleTemplateChange={this.handleTemplateChange}
                   handleInputChange={this.handleInputChange}
                 />
-                <div className="col s2 offset-s7">
-                  <a className={"waves-effect waves-light btn "} onClick={this.handleBackStep}>{localize("Common.back", locale)}</a>
-                </div>
-                <div className="col s2">
-                  <a className={"waves-effect waves-light btn "} onClick={this.handleBackStep}>{localize("Common.back", locale)}</a>
-                </div>
               </div>
             </div>
-            : null
-        }
+          </div>
+          <div className="row">
+            <div className="col s2 offset-s7">
+              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+            </div>
+            <div className="col s2">
+              <a className={"waves-effect waves-light btn"} onClick={this.handelCancel}>{localize("Common.next", locale)}</a>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -176,10 +171,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     if (onCancel) {
       onCancel();
     }
-  }
-
-  handleNextStep = () => {
-    this.setState({ step: this.state.step + 1 });
   }
 
   handleBackStep = () => {

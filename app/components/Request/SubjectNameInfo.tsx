@@ -51,105 +51,93 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
 
     return (
       <div className="row">
-        <div className="col s6 m6 l6 content-item-height">
-          <div className="cert-content-item">
-            <div className="content-wrapper z-depth-1">
-              <br />
-              <div className="row">
-                <div className="input-field col s12">
-                  <select className="select" ref="templateSelect" value={template} name="template" onChange={handleTemplateChange} >
-                    <option value="default">{localize("CSR.template_default", locale)}</option>
-                    <option value="kepIp">{localize("CSR.template_kep_ip", locale)}</option>
-                    <option value="kepFiz">{localize("CSR.template_kep_fiz", locale)}</option>
-                    <option value="additional">{localize("CSR.template_additional_fields", locale)}</option>
-                  </select>
-                  <label>{localize("CSR.template_label", locale)}</label>
-                </div>
-              </div>
-              {this.getAditionalField()}
-              <div className="row">
-                <div className="input-field col s12">
-                  <input
-                    id="commonName"
-                    type="text"
-                    className="validate"
-                    name="cn"
-                    value={cn}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="commonName">{localize("CSR.common_name", locale)}</label>
-                </div>
-              </div>
-              <div className="row">
-                <div className="input-field col s12">
-                  <input
-                    id="emailAddress"
-                    type="email"
-                    className="validate"
-                    name="email"
-                    value={email}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="emailAddress">{localize("CSR.email_address", locale)}</label>
-                </div>
-              </div>
-              <div className="row">
-                <div className="input-field col s12">
-                  <input
-                    id="organizationName"
-                    type="text"
-                    className="validate"
-                    name="organization"
-                    value={organization}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="organizationName">{localize("CSR.organization_name", locale)}</label>
-                </div>
-              </div>
-            </div>
+         <HeaderWorkspaceBlock text={localize("CSR.subject_params", locale)} />
+        <br />
+        <div className="row">
+          <div className="input-field col s12">
+            <select className="select" ref="templateSelect" value={template} name="template" onChange={handleTemplateChange} >
+              <option value="default">{localize("CSR.template_default", locale)}</option>
+              <option value="kepIp">{localize("CSR.template_kep_ip", locale)}</option>
+              <option value="kepFiz">{localize("CSR.template_kep_fiz", locale)}</option>
+              <option value="additional">{localize("CSR.template_additional_fields", locale)}</option>
+            </select>
+            <label>{localize("CSR.template_label", locale)}</label>
           </div>
         </div>
-        <div className="col s6 m6 l6 content-item-height">
-          <div className={"file-content-height active"}>
-            <div className="content-wrapper z-depth-1">
-              <br />
-              <div className="row">
-                <div className="input-field col s12">
-                  <input
-                    id="localityName"
-                    type="text"
-                    className="validate"
-                    name="locality"
-                    value={locality}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="localityName">{localize("CSR.locality_name", locale)}</label>
-                </div>
-              </div>
-              <div className="row">
-                <div className="input-field col s12">
-                  <input
-                    id="stateOrProvinceName"
-                    type="text"
-                    className="validate"
-                    name="province"
-                    value={province}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="stateOrProvinceName">{localize("CSR.province_name", locale)}</label>
-                </div>
-              </div>
-              <br />
-              <div className="row">
-                <div className="input-field col s12">
-                  <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >>
+        {this.getAditionalField()}
+        <div className="row">
+          <div className="input-field col s12">
+            <input
+              id="commonName"
+              type="text"
+              className="validate"
+              name="cn"
+              value={cn}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="commonName">{localize("CSR.common_name", locale)}</label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="input-field col s12">
+            <input
+              id="emailAddress"
+              type="email"
+              className="validate"
+              name="email"
+              value={email}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="emailAddress">{localize("CSR.email_address", locale)}</label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="input-field col s12">
+            <input
+              id="organizationName"
+              type="text"
+              className="validate"
+              name="organization"
+              value={organization}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="organizationName">{localize("CSR.organization_name", locale)}</label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="input-field col s12">
+            <input
+              id="localityName"
+              type="text"
+              className="validate"
+              name="locality"
+              value={locality}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="localityName">{localize("CSR.locality_name", locale)}</label>
+          </div>
+        </div>
+        <div className="row">
+          <div className="input-field col s12">
+            <input
+              id="stateOrProvinceName"
+              type="text"
+              className="validate"
+              name="province"
+              value={province}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="stateOrProvinceName">{localize("CSR.province_name", locale)}</label>
+          </div>
+        </div>
+        <br />
+        <div className="row">
+          <div className="input-field col s12">
+            <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >>
                       <option value="RU">Российская Федерация (RU)</option>
-                    <option value="AU">Австралия (AU)</option>
-                  </select>
-                  <label>{localize("CSR.country", locale)}</label>
-                </div>
-              </div>
-            </div>
+              <option value="AU">Австралия (AU)</option>
+            </select>
+            <label>{localize("CSR.country", locale)}</label>
           </div>
         </div>
       </div>

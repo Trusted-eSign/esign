@@ -100,6 +100,7 @@ export default {
     generate_new_key: "Create new key pair",
     key_length: "Key length",
     keys_params: "Key parameters",
+    subject_params: "Subject parameters",
     country: "Country",
     common_name: "CN",
     inn: "INN",

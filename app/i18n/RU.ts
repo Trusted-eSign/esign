@@ -100,6 +100,7 @@ export default {
     generate_new_key: "Создать новый ключевой набор",
     key_length: "Длина ключа",
     keys_params: "Параметры ключа",
+    subject_params: "Параметры субъекта",
     country: "Страна",
     common_name: "CN",
     inn: "ИНН",
