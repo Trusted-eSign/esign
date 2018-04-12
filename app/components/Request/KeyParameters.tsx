@@ -100,6 +100,10 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
     Materialize.updateTextFields();
   }
 
+  componentWillUnmount() {
+    $(".tooltipped").tooltip("remove");
+  }
+
   render() {
     const { localize, locale } = this.context;
     const { algorithm, containerName, extKeyUsage, generateNewKey, keyLength, keyUsage,
