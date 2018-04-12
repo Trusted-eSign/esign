@@ -24,9 +24,18 @@ interface IKeyUsage {
   [key: string]: boolean;
 }
 
+interface IExtendedKeyUsage {
+  "1.3.6.1.5.5.7.3.1": boolean;
+  "1.3.6.1.5.5.7.3.2": boolean;
+  "1.3.6.1.5.5.7.3.3": boolean;
+  "1.3.6.1.5.5.7.3.4": boolean;
+  [key: string]: boolean;
+}
+
 interface IKeyParametersProps {
   algorithm: string;
   containerName: string;
+  extKeyUsage: IExtendedKeyUsage;
   generateNewKey: boolean;
   keyLength: number;
   keyUsage: IKeyUsage;
@@ -34,6 +43,7 @@ interface IKeyParametersProps {
   handleGenerateNewKeyChange: (ev: any) => void;
   handleInputChange: (ev: any) => void;
   handleKeyUsageChange: (ev: any) => void;
+  handleExtendedKeyUsageChange: (ev: any) => void;
 }
 
 class KeyParameters extends React.Component<IKeyParametersProps, {}> {
@@ -92,8 +102,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, generateNewKey, keyLength, keyUsage,
-      handleAlgorithmChange, handleGenerateNewKeyChange, handleInputChange, handleKeyUsageChange } = this.props;
+    const { algorithm, containerName, extKeyUsage, generateNewKey, keyLength, keyUsage,
+      handleAlgorithmChange, handleExtendedKeyUsageChange, handleGenerateNewKeyChange, handleInputChange, handleKeyUsageChange } = this.props;
 
     return (
       <div className="row">
@@ -254,6 +264,64 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
               />
               <label htmlFor="keyEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyEncipherment", locale)}>
                 {localize("CSR.key_usage_keyEncipherment", locale)}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col s12">
+            <p className="label">
+              {localize("CSR.extKeyUsage", locale)}
+            </p>
+          </div>
+          <div className="col s12">
+            <div className="input-checkbox">
+              <input
+                name="1.3.6.1.5.5.7.3.1"
+                type="checkbox"
+                id="1.3.6.1.5.5.7.3.1"
+                checked={extKeyUsage["1.3.6.1.5.5.7.3.1"]}
+                onClick={handleExtendedKeyUsageChange}
+              />
+              <label htmlFor="1.3.6.1.5.5.7.3.1" className="truncate tooltipped" data-position="right" data-tooltip="1.3.6.1.5.5.7.3.1">
+                {localize("CSR.eku_serverAuth", locale)}
+              </label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="1.3.6.1.5.5.7.3.2"
+                type="checkbox"
+                id="1.3.6.1.5.5.7.3.2"
+                checked={extKeyUsage["1.3.6.1.5.5.7.3.2"]}
+                onClick={handleExtendedKeyUsageChange}
+              />
+              <label htmlFor="1.3.6.1.5.5.7.3.2" className="truncate tooltipped" data-position="right" data-tooltip="1.3.6.1.5.5.7.3.2">
+                {localize("CSR.eku_clientAuth", locale)}
+              </label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="1.3.6.1.5.5.7.3.3"
+                type="checkbox"
+                id="1.3.6.1.5.5.7.3.3"
+                checked={extKeyUsage["1.3.6.1.5.5.7.3.3"]}
+                onClick={handleExtendedKeyUsageChange}
+              />
+              <label htmlFor="1.3.6.1.5.5.7.3.3" className="truncate tooltipped" data-position="right" data-tooltip="1.3.6.1.5.5.7.3.3">
+                {localize("CSR.eku_codeSigning", locale)}
+              </label>
+            </div>
+            <div className="input-checkbox">
+              <input
+                name="1.3.6.1.5.5.7.3.4"
+                type="checkbox"
+                id="1.3.6.1.5.5.7.3.4"
+                checked={extKeyUsage["1.3.6.1.5.5.7.3.4"]}
+                onClick={handleExtendedKeyUsageChange}
+              />
+              <label htmlFor="1.3.6.1.5.5.7.3.4" className="truncate tooltipped" data-position="right" data-tooltip="1.3.6.1.5.5.7.3.4">
+                {localize("CSR.eku_emailProtection", locale)}
               </label>
             </div>
           </div>

@@ -118,6 +118,11 @@ export default {
     key_usage_nonRepudiation: "Неотрекаемость",
     key_usage_cRLSign: "Автономное подписание списка отзыва (CRL)",
     key_usage_keyEncipherment: "Шифрование ключа",
+    extKeyUsage: "Назначение сертификата (EKU)",
+    eku_serverAuth: "Проверка подлинности сервера",
+    eku_clientAuth: "Проверка подлинности клиента",
+    eku_emailProtection: "Защита электронной почты",
+    eku_codeSigning: "Подпись кода",
   },
   Key: {
     key_load_failed: "Не удалось прочитать ключ",

@@ -118,6 +118,11 @@ export default {
     key_usage_nonRepudiation: "Nonrepudiation",
     key_usage_cRLSign: "CRL sign",
     key_usage_keyEncipherment: "Key encipherment",
+    extKeyUsage: "Extended key usage",
+    eku_serverAuth: "Server authentication",
+    eku_clientAuth: "Client authentication",
+    eku_emailProtection: "Email protection",
+    eku_codeSigning: "Code signing",
   },
   Key: {
     key_load_failed: "Error load key",

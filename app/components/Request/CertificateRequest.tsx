@@ -20,12 +20,21 @@ interface IKeyUsage {
   [key: string]: boolean;
 }
 
+interface IExtendedKeyUsage {
+  "1.3.6.1.5.5.7.3.1": boolean;
+  "1.3.6.1.5.5.7.3.2": boolean;
+  "1.3.6.1.5.5.7.3.3": boolean;
+  "1.3.6.1.5.5.7.3.4": boolean;
+  [key: string]: boolean;
+}
+
 interface ICertificateRequestState {
   algorithm: string;
   cn: string;
   containerName: string;
   country: string;
   email: string;
+  extKeyUsage: IExtendedKeyUsage;
   generateNewKey: boolean;
   inn?: string;
   keyLength: number;
@@ -56,6 +65,12 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       containerName: uuid(),
       country: "RU",
       email: "",
+      extKeyUsage: {
+        "1.3.6.1.5.5.7.3.1": false,
+        "1.3.6.1.5.5.7.3.2": true,
+        "1.3.6.1.5.5.7.3.3": false,
+        "1.3.6.1.5.5.7.3.4": true,
+      },
       generateNewKey: true,
       inn: "",
       keyLength: 1024,
@@ -110,8 +125,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, cn, containerName, country, email, inn, generateNewKey, keyLength,
-      keyUsage, locality, organization, province, snils, step, template } = this.state;
+    const { algorithm, cn, containerName, country, email, extKeyUsage, inn, generateNewKey, keyLength,
+      keyUsage, locality, organization, province, snils, template } = this.state;
 
     return (
       <div>
@@ -123,6 +138,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                 <KeyParameters
                   algorithm={algorithm}
                   containerName={containerName}
+                  extKeyUsage={extKeyUsage}
                   generateNewKey={generateNewKey}
                   keyLength={keyLength}
                   keyUsage={keyUsage}
@@ -130,6 +146,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   handleGenerateNewKeyChange={this.handleGenerateNewKeyChange}
                   handleInputChange={this.handleInputChange}
                   handleKeyUsageChange={this.handleKeyUsageChange}
+                  handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
                 />
               </div>
             </div>
@@ -209,6 +226,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       keyUsage: {
         ...this.state.keyUsage,
         [name]: !this.state.keyUsage[name],
+      },
+    });
+  }
+
+  handleExtendedKeyUsageChange = (ev: any) => {
+    const target = ev.target;
+    const name = target.name;
+
+    this.setState({
+      extKeyUsage: {
+        ...this.state.extKeyUsage,
+        [name]: !this.state.extKeyUsage[name],
       },
     });
   }
