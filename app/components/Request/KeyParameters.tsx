@@ -153,7 +153,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
         <div className="row">
           <div className="col s12">
-            <p className="label">Использование ключа</p>
+            <p className="label">
+              {localize("CSR.key_usage", locale)}
+            </p>
           </div>
           <div className="col s6">
             <div className="input-checkbox">
@@ -164,7 +166,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.dataEncipherment}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="dataEncipherment" className="truncate">Шифрование</label>
+              <label htmlFor="dataEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_dataEncipherment", locale)}>
+                {localize("CSR.key_usage_dataEncipherment", locale)}
+              </label>
             </div>
             <div className="input-checkbox">
               <input
@@ -174,7 +178,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.keyAgreement}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="keyAgreement" className="truncate">Согласование</label>
+              <label htmlFor="keyAgreement" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyAgreement", locale)}>
+                {localize("CSR.key_usage_keyAgreement", locale)}
+              </label>
             </div>
             <div className="input-checkbox">
               <input
@@ -184,7 +190,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.keyCertSign}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="keyCertSign" className="truncate tooltipped" data-position="right" data-tooltip="Подпись сертификатов">Подпись сертификатов</label>
+              <label htmlFor="keyCertSign" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyCertSign", locale)}>
+                {localize("CSR.key_usage_keyCertSign", locale)}
+              </label>
             </div>
             <div className="input-checkbox">
               <input
@@ -194,7 +202,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.decipherOnly}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="decipherOnly" className="truncate tooltipped" data-position="right" data-tooltip="Только расшифрование">Только расшифрование</label>
+              <label htmlFor="decipherOnly" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_decipherOnly", locale)}>
+                {localize("CSR.key_usage_decipherOnly", locale)}
+              </label>
             </div>
           </div>
           <div className="col s6">
@@ -206,7 +216,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.digitalSignature}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="digitalSignature" className="truncate">Подпись</label>
+              <label htmlFor="digitalSignature" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_digitalSignature", locale)}>
+                {localize("CSR.key_usage_digitalSignature", locale)}
+              </label>
             </div>
             <div className="input-checkbox">
               <input
@@ -216,8 +228,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.nonRepudiation}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="nonRepudiation" className="truncate tooltipped" data-position="right" data-tooltip="Неотрекаемость">
-                Неотрекаемость
+              <label htmlFor="nonRepudiation" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_nonRepudiation", locale)}>
+                {localize("CSR.key_usage_nonRepudiation", locale)}
               </label>
             </div>
             <div className="input-checkbox">
@@ -228,8 +240,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.cRLSign}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="cRLSign" className="truncate tooltipped" data-position="right" data-tooltip="Автономное подписание списка отзыва (CRL)">
-                Автономное подписание списка отзыва (CRL)
+              <label htmlFor="cRLSign" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_cRLSign", locale)}>
+                {localize("CSR.key_usage_cRLSign", locale)}
               </label>
             </div>
             <div className="input-checkbox">
@@ -240,8 +252,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 checked={keyUsage.keyEncipherment}
                 onClick={handleKeyUsageChange}
               />
-              <label htmlFor="keyEncipherment" className="truncate tooltipped" data-position="right" data-tooltip="Шифрование ключа">
-                Шифрование ключа
+              <label htmlFor="keyEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyEncipherment", locale)}>
+                {localize("CSR.key_usage_keyEncipherment", locale)}
               </label>
             </div>
           </div>
