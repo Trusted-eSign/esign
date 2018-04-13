@@ -37,11 +37,9 @@ interface IKeyParametersProps {
   containerName: string;
   exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
-  generateNewKey: boolean;
   keyLength: number;
   keyUsage: IKeyUsage;
   handleAlgorithmChange: (ev: any) => void;
-  handleGenerateNewKeyChange: () => void;
   handleInputChange: (ev: any) => void;
   handleKeyUsageChange: (ev: any) => void;
   handleExtendedKeyUsageChange: (ev: any) => void;
@@ -108,8 +106,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, exportableKey, extKeyUsage, generateNewKey, keyLength, keyUsage,
-      handleAlgorithmChange, handleExtendedKeyUsageChange, handleGenerateNewKeyChange,
+    const { algorithm, containerName, exportableKey, extKeyUsage, keyLength, keyUsage,
+      handleAlgorithmChange, handleExtendedKeyUsageChange,
       handleInputChange, handleKeyUsageChange, toggleExportableKey } = this.props;
 
     return (
@@ -128,34 +126,19 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
         </div>
         <div className="row">
-          <div className="col s12 input-radio">
+          <div className="input-field col s12">
             <input
-              name="groupKeyGeneration"
-              className="with-gap" type="radio"
-              id="newKey"
-              checked={generateNewKey}
-              onChange={handleGenerateNewKeyChange}
-              onClick={handleGenerateNewKeyChange}
+              id="containerName"
+              type="text"
+              className="validate"
+              name="containerName"
+              value={containerName}
+              onChange={handleInputChange}
             />
-            <label htmlFor="newKey">{localize("CSR.generate_new_key", locale)}</label>
+            <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
           </div>
         </div>
-        {generateNewKey ?
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                id="containerName"
-                type="text"
-                className="validate"
-                name="containerName"
-                value={containerName}
-                onChange={handleInputChange}
-              />
-              <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
-            </div>
-          </div>
-          : null}
-        {generateNewKey && algorithm === "RSA" ?
+        {algorithm === "RSA" ?
           <div className="row nobottom">
             <div className="valign-wrapper">
               <div className="col s5">

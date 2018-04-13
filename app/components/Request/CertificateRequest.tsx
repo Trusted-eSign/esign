@@ -36,7 +36,6 @@ interface ICertificateRequestState {
   email: string;
   exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
-  generateNewKey: boolean;
   inn?: string;
   keyLength: number;
   keyUsage: IKeyUsage;
@@ -73,7 +72,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         "1.3.6.1.5.5.7.3.3": false,
         "1.3.6.1.5.5.7.3.4": true,
       },
-      generateNewKey: true,
       inn: "",
       keyLength: 1024,
       keyUsage: {
@@ -142,11 +140,9 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   containerName={containerName}
                   exportableKey={exportableKey}
                   extKeyUsage={extKeyUsage}
-                  generateNewKey={generateNewKey}
                   keyLength={keyLength}
                   keyUsage={keyUsage}
                   handleAlgorithmChange={this.handleAlgorithmChange}
-                  handleGenerateNewKeyChange={this.handleGenerateNewKeyChange}
                   handleInputChange={this.handleInputChange}
                   handleKeyUsageChange={this.handleKeyUsageChange}
                   handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
@@ -196,10 +192,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   toggleExportableKey = () => {
     this.setState({ exportableKey: !this.state.exportableKey });
-  }
-
-  handleGenerateNewKeyChange = () => {
-    this.setState({ generateNewKey: !this.state.generateNewKey });
   }
 
   handleTemplateChange = (ev: any) => {
