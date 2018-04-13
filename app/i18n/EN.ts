@@ -361,6 +361,7 @@ export default {
     get_overtimes_license: "Obtaining a temporary license",
     Enter_license: "УСТАНОВИТЬ ЛИЦЕНЗИЮ",
     license_request: "Request for a temporary license",
+    License_overtimes: "INTERIM LICENSE",
     License_reques_send: "SEND REQUEST",
     License_request: "OBTAIN A TEMPORARY LICENSE",
     overtimes_license_confirm: "To send a request for a temporary license for the CryptoARM GOST product, for a period of 14 days, fill out the form floor. A temporary license is issued once per workplace to familiarize yourself with all the features of the software product.",

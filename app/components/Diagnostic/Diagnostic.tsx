@@ -127,30 +127,37 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   componentWillReceiveProps(nextProps: any) {
     const { localize, locale } = this.context;
     const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
+    const { lic_format } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { verifyLicense } = this.props;
 
-    if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
-      this.setState({
-        errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CRYPTOARM_LICENSE,
-        }],
-      });
+    if(nextProps.lic_format=='TRIAL'){
+        verifyLicense(nextProps.dataLicense);
+    }else{
+
+      if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
+        this.setState({
+          errors: [...this.state.errors, {
+            important: WARNING,
+            type: NO_CRYPTOARM_LICENSE,
+          }],
+        });
+      }
+
+      if (!verifiedLicense && !nextProps.verifiedLicense && nextProps.loadedLicense && nextProps.dataLicense) {
+        verifyLicense(nextProps.dataLicense);
+      }
+      
+      if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
+        this.setState({
+          errors: [...this.state.errors, {
+            important: WARNING,
+            type: NO_CORRECT_CRYPTOARM_LICENSE,
+          }],
+        });
+      }
     }
 
-    if (!verifiedLicense && !nextProps.verifiedLicense && nextProps.loadedLicense && nextProps.dataLicense) {
-      verifyLicense(nextProps.dataLicense);
-    }
-
-    if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
-      this.setState({
-        errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CORRECT_CRYPTOARM_LICENSE,
-        }],
-      });
-    }
 
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
       this.setState({
@@ -172,10 +179,14 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
       this.checkCPCSP();
     }
 
-    if (!loadedLicense && !loadingLicense) {
+    let status_trial =  trusted.utils.Jwt.checkTrialLicense();
+    if(status_trial == 1){
       loadLicense();
+    }else{
+      if (!loadedLicense && !loadingLicense) {
+        loadLicense();
+      }
     }
-
     if (!certificatesLoading) {
       loadAllCertificates();
     }
@@ -296,5 +307,6 @@ export default connect((state) => {
     loadingLicense: state.license.loading,
     statusLicense: state.license.status,
     verifiedLicense: state.license.verified,
+    lic_format: state.license.lic_format,
   };
 }, { loadAllCertificates, loadLicense, verifyLicense })(Diagnostic);

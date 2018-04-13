@@ -8,10 +8,10 @@ interface ILicenseInfoField {
 }
 
 export default function LicenseInfoField({ title, info, style, styleRow }: ILicenseInfoField) {
-  return (
-    <div style={styleRow}>
-      <div className="desktoplic_text_item topitem" style={style}>{info}</div>
-      <div className="desktoplic_text_item bottomitem">{title}</div>
-    </div>
-  );
+    return (
+      <div style={styleRow}>
+        <div className="desktoplic_text_item topitem" style={style}>{info}</div>
+        <div className="desktoplic_text_item bottomitem">{title}</div>
+      </div>
+    );
 }
