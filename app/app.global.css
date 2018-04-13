@@ -3012,40 +3012,40 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 
 .checkbox-red[type="checkbox"]:checked + label:before{
   border: 2px solid transparent;
-  border-bottom: 2px solid #bf3817;
-  border-right: 2px solid #bf3817;
+  border-bottom: 2px solid #334294;
+  border-right: 2px solid #334294;
   background: transparent;
 }
 
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:after {
-  background-color: #bf3817;
+  background-color: #334294;
 }
 
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:before, [type="radio"].with-gap:checked+label:after {
-  border: 2px solid #bf3817;
+  border: 2px solid #334294;
 }
 
 /* label focus color */
 .input-field input[type=text]:focus + label {
-  color: #bf3817;
+  color: #334294;
 }
 
 /* label focus color */
 .input-field input[type=email]:focus + label {
-  color: #bf3817;
+  color: #334294;
 }
 
 .input-field input[type=text]:focus {
-  border-bottom: 1px solid #bf3817;
-  box-shadow: 0 1px 0 0 #bf3817;
+  border-bottom: 1px solid #334294;
+  box-shadow: 0 1px 0 0 #334294;
 }
 
 .input-field input[type=email]:focus {
-  border-bottom: 1px solid #bf3817;
-  box-shadow: 0 1px 0 0 #bf3817;
+  border-bottom: 1px solid #334294;
+  box-shadow: 0 1px 0 0 #334294;
 }
 
 .noUi-handle {
-  background-color: #bf3817 !important;
+  background-color: #334294 !important;
 }
