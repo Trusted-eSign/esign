@@ -42,6 +42,7 @@ interface ILicenseStatusProps {
   loaded: boolean;
   loading: boolean;
   status: number;
+  lic_format: string;
   loadLicense: () => void;
   verifyLicense: (key: string) => void;
 }
@@ -59,47 +60,67 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
     const { loadLicense, verifyLicense } = this.props;
-    const { data, loaded, loading } = this.props;
-    $(".licence-temporary-modal-btn").leanModal();
-    if (!loaded && !loading) {
-      loadLicense();
+    const { data, loaded, loading, lic_format } = this.props;
+    if(lic_format == 'TRIAL'){
+            loadLicense();
+            verifyLicense(data);
+    }else{
+        //$(".licence-temporary-modal-btn").leanModal();
+        if (!loaded && !loading) {
+            loadLicense();
+        }
+         verifyLicense(data);
     }
-
-    verifyLicense(data);
   }
 
   getInfoText(): string {
     const { localize, locale } = this.context;
-    const { data, license, loaded, status } = this.props;
+    const { data, license, loaded, status, lic_format } = this.props;
 
     const dateExp = new Date(license.exp * 1000).getTime();
     const dateNow = new Date().getTime();
     const dateDif = dateExp - dateNow;
     const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
     let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
-    if(license.exp == 0) unlimited = true;
+    if((lic_format == 'MTX') && (license.exp == 0)) unlimited = true;
 
-    let message;
+    let message = '';
 
-    if (loaded && !data) {
-      return localize("License.jwtErrorLoad", locale);
+    if(lic_format == 'TRIAL'){
+      message =  localize("License.lic_key_correct", locale) + fullDays + ")";
+      return message;
+    }else{
+        if (loaded && !data) {
+          return localize("License.jwtErrorLoad", locale);
+        }
+
+        switch (status) {
+          case 0:
+            message =  localize("License.lic_key_correct", locale) + fullDays + ")";
+            break;
+
+          default:
+            message =  localize(jwt.getErrorMessage(status), locale);
+        }
+
+        return unlimited ? localize("License.lic_unlimited", locale) : message;
     }
 
-    switch (status) {
-      case 0:
-        message =  localize("License.lic_key_correct", locale) + fullDays + ")";
-        break;
+  }
 
-      default:
-        message =  localize(jwt.getErrorMessage(status), locale);
+  getTrialText():string{
+    const { localize, locale } = this.context;
+    const { status, lic_format } = this.props;
+    let message = '';
+    if((status ==0) && (lic_format == 'TRIAL')){
+      message = localize("License.License_overtimes", locale);
     }
-
-    return unlimited ? localize("License.lic_unlimited", locale) : message;
+    return message;
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { license, status } = this.props;
+    const { license, status, lic_format } = this.props;
 
     const settings = {
       draggable: false,
@@ -107,10 +128,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 
     let style: any;
     let styleRow: any;
-
-
-
-
+   
     if (status !== 0) {
       style = { color: "red" };
       styleRow = { border: "2px solid red", padding: "5px" };
@@ -133,7 +151,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
                 </div>
               </div>
           </div>
-          <div className="row">
+          {/* <div className="row">
               <div className="col s6">
                 <p className="desctoplic_text">{localize("License.overtimes_license", locale)}</p>
               </div>
@@ -142,7 +160,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
                   {localize("License.License_request", locale)}
                 </a>
               </div>
-          </div>
+          </div> */}
         </div>
       );
     } else {
@@ -152,7 +170,11 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         <div>
          <div className="row">
             <div className="col s6">
-              <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText()} style={style} styleRow={styleRow} />
+              
+              <div style={styleRow}>
+              <div className="desktoplic_text_item topitem" style={style}>{this.getTrialText()}</div>
+              <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText()} style={style}  />
+              </div>
             </div>
             <div className="col s6">
                 <div className="row">
@@ -182,5 +204,6 @@ export default connect((state) => {
     loaded: state.license.loaded,
     loading: state.license.loading,
     status: state.license.status,
+    lic_format: state.license.lic_format,
   };
 }, {loadLicense, verifyLicense}, null, {pure: false})(LicenseStatus);

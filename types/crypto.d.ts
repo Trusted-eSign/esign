@@ -91,16 +91,37 @@ declare namespace native {
             getShortName(): string;
             getValue(): string;
         }
+        class Extension {
+            constructor(oid?: OID, value?: string);
+            getTypeId(): OID;
+            setTypeId(oid: OID): void;
+            getCritical(): boolean;
+            setCritical(critical: boolean): void;
+        }
+        class ExtensionCollection {
+            items(index: number): Extension;
+            length(): number;
+            push(ext: Extension): void;
+            pop(): void;
+            removeAt(index: number): void;
+        }
         class Certificate {
+            constructor(param?: PKI.Certificate | PKI.CertificationRequest);
             getSubjectFriendlyName(): string;
             getIssuerFriendlyName(): string;
             getSubjectName(): string;
+            setSubjectName(x509name: string): void;
             getIssuerName(): string;
+            setIssuerName(x509name: string): void;
             getNotAfter(): string;
+            setNotAfter(offsetSec?: number): void;
             getNotBefore(): string;
+            setNotBefore(offsetSec?: number): void;
             getSerialNumber(): Buffer;
+            setSerialNumber(serial: string): void;
             getThumbprint(): Buffer;
             getVersion(): number;
+            setVersion(version: number): void;
             getType(): number;
             getKeyUsage(): number;
             getSignatureAlgorithm(): string;
@@ -109,8 +130,11 @@ declare namespace native {
             getOrganizationName(): string;
             getOCSPUrls(): string[];
             getCAIssuersUrls(): string[];
+            getExtensions(): ExtensionCollection;
+            setExtensions(exts: ExtensionCollection): void;
             isSelfSigned(): boolean;
             isCA(): boolean;
+            sign(key: Key, digest?: string): void;
             load(filename: string, dataFormat?: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
             save(filename: string, dataFormat: trusted.DataFormat): void;
@@ -171,16 +195,39 @@ declare namespace native {
             removeAt(index: number): void;
         }
         class CertificationRequestInfo {
+            getSubject(): string;
             setSubject(x509name: string): void;
-            setSubjectPublicKey(key: PKI.Key): void;
+            getPublicKey(): Key;
+            setPublicKey(key: Key): void;
+            getVersion(): number;
             setVersion(version: number): void;
+        }
+        interface INameField {
+            /**
+             * longName | shortName | nid
+             *
+             * @type {string}
+             * @memberof INameField
+             */
+            type: string;
+            value: string;
         }
         class CertificationRequest {
             constructor(csrinfo?: PKI.CertificationRequestInfo);
             load(filename: string, dataFormat?: trusted.DataFormat): void;
-            sign(key: Key): void;
+            save(filename: string, dataFormat?: trusted.DataFormat): void;
+            getSubject(): string;
+            setSubject(x509name: string | INameField[]): void;
+            getPublicKey(): Key;
+            setPublicKey(key: Key): void;
+            getVersion(): number;
+            setVersion(version: number): void;
+            getExtensions(): ExtensionCollection;
+            setExtensions(exts: ExtensionCollection): void;
+            sign(key: Key, digest?: string): void;
             verify(): boolean;
             getPEMString(): Buffer;
+            toCertificate(days: number, key: Key): Certificate;
         }
         class CSR {
             constructor(name: string, key: PKI.Key, digest: string);
@@ -455,6 +502,9 @@ declare namespace native {
         }
         class Jwt {
             checkLicense(data?: string): number;
+            checkTrialLicense(): number;
+            getExpirationTime(data?: string): number;
+            getTrialExpirationTime(): number;
         }
         class Cerber {
             sign(modulePath: string, cert: PKI.Certificate, key: PKI.Key): void;
@@ -625,6 +675,32 @@ declare namespace trusted.utils {
          */
         static checkLicense(data?: string): number;
         /**
+         * Verify jwt license file
+         * Return 0 if license correct
+         *
+         * @static
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        static checkTrialLicense(): number;
+        /**
+         * Get time Expiration
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        static getExpirationTime(data: string): number;
+        /**
+         * Get time Expiration
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        static getTrialExpirationTime(): number;
+        /**
          * Creates an instance of Jwt.
          *
          *
@@ -640,6 +716,31 @@ declare namespace trusted.utils {
          * @memberOf Jwt
          */
         checkLicense(data?: string): number;
+        /**
+         * Verify jwt license file
+         * Return 0 if license correct
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        checkTrialLicense(): number;
+        /**
+         * Get time Expiration
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        getExpirationTime(data: string): number;
+        /**
+         * Get time Expiration
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        getTrialExpirationTime(): number;
     }
 }
 declare namespace trusted.utils {
@@ -1293,6 +1394,103 @@ declare namespace trusted.pki {
 }
 declare namespace trusted.pki {
     /**
+     * Wrap X509_EXTENSION
+     *
+     * @export
+     * @class Extension
+     * @extends {BaseObject<native.PKI.Extension>}
+     */
+    class Extension extends BaseObject<native.PKI.Extension> {
+        /**
+         * Creates an instance of Extension.
+         * @param {native.PKI.OID} [oid]
+         * @param {string} [value]
+         * @memberof Extension
+         */
+        constructor(oid?: pki.Oid, value?: string);
+        /**
+         * Return extension oid
+         *
+         * @readonly
+         * @type {Oid}
+         * @memberof Extension
+         */
+        /**
+         * Set extension oid
+         *
+         * @memberof Extension
+         */
+        typeId: Oid;
+        /**
+         * Get critical
+         *
+         * @type {boolean}
+         * @memberof Extension
+         */
+        /**
+         * Set critical
+         *
+         * @memberof Extension
+         */
+        critical: boolean;
+    }
+}
+declare namespace trusted.pki {
+    /**
+     * Collection of Extension
+     *
+     * @export
+     * @class ExtensionCollection
+     * @extends {BaseObject<native.PKI.ExtensionCollection>}
+     * @implements {core.ICollectionWrite}
+     */
+    class ExtensionCollection extends BaseObject<native.PKI.ExtensionCollection> implements core.ICollectionWrite {
+        /**
+         * Creates an instance of ExtensionCollection.
+         * @param {native.PKI.ExtensionCollection} [param]
+         * @memberof ExtensionCollection
+         */
+        constructor(param?: native.PKI.ExtensionCollection);
+        /**
+         * Return element by index from collection
+         *
+         * @param {number} index
+         * @returns {Extension}
+         * @memberof ExtensionCollection
+         */
+        items(index: number): Extension;
+        /**
+         * Return collection length
+         *
+         * @readonly
+         * @type {number}
+         * @memberof ExtensionCollection
+         */
+        readonly length: number;
+        /**
+         * Add new element to collection
+         *
+         * @param {Extension} ext
+         * @memberof ExtensionCollection
+         */
+        push(ext: Extension): void;
+        /**
+         * Remove last element from collection
+         *
+         * @memberof ExtensionCollection
+         */
+        pop(): void;
+        /**
+         * Remove element by index from collection
+         *
+         * @param {number} index
+         * @memberof ExtensionCollection
+         */
+        removeAt(index: number): void;
+    }
+}
+declare namespace trusted.pki {
+    /**
      * Wrap X509
      *
      * @export
@@ -1339,7 +1537,7 @@ declare namespace trusted.pki {
          *
          * @memberOf Certificate
          */
-        constructor(param?: native.PKI.Certificate);
+        constructor(param?: native.PKI.Certificate | native.PKI.CertificationRequest);
         /**
          * Return version of certificate
          *
@@ -1347,7 +1545,14 @@ declare namespace trusted.pki {
          * @type {number}
          * @memberOf Certificate
          */
-        readonly version: number;
+        /**
+         * Set version certificate
+         *
+         * @param {number} version
+         *
+         * @memberof Certificate
+         */
+        version: number;
         /**
          * Return serial number of certificate
          *
@@ -1355,7 +1560,14 @@ declare namespace trusted.pki {
          * @type {string}
          * @memberOf Certificate
          */
-        readonly serialNumber: string;
+        /**
+         * Set serial number
+         *
+         * if serial empty generate random
+         *
+         * @memberof Certificate
+         */
+        serialNumber: string;
         /**
          * Return type of certificate
          *
@@ -1384,10 +1596,17 @@ declare namespace trusted.pki {
          * Return issuer name
          *
          * @readonly
-         * @type {string}
+         * @type {string | native.PKI.INameField[]}
          * @memberOf Certificate
          */
-        readonly issuerName: string;
+        /**
+         * Sets the issuer
+         *
+         * @param {string | native.PKI.INameField[]} x509name Example "/C=US/O=Test/CN=example.com"
+         *
+         * @memberof Certificate
+         */
+        issuerName: string | native.PKI.INameField[];
         /**
          * Return CN from subject name
          *
@@ -1400,10 +1619,17 @@ declare namespace trusted.pki {
          * Return subject name
          *
          * @readonly
-         * @type {string}
+         * @type {string | native.PKI.INameField[]}
          * @memberOf Certificate
          */
-        readonly subjectName: string;
+        /**
+         * Sets the subject
+         *
+         * @param {string | native.PKI.INameField[]} x509name Example "/C=US/O=Test/CN=example.com"
+         *
+         * @memberof Certificate
+         */
+        subjectName: string | native.PKI.INameField[];
         /**
          * Return Not Before date
          *
@@ -1411,7 +1637,12 @@ declare namespace trusted.pki {
          * @type {Date}
          * @memberOf Certificate
          */
-        readonly notBefore: Date;
+        /**
+         * Set not before. Use offset in sec
+         *
+         * @memberof Certificate
+         */
+        notBefore: Date;
         /**
          * Return Not After date
          *
@@ -1419,7 +1650,12 @@ declare namespace trusted.pki {
          * @type {Date}
          * @memberOf Certificate
          */
-        readonly notAfter: Date;
+        /**
+         * Set not before. Use offset in sec
+         *
+         * @memberof Certificate
+         */
+        notAfter: Date;
         /**
          * Return SHA-1 thumbprint
          *
@@ -1477,11 +1713,26 @@ declare namespace trusted.pki {
          */
         readonly CAIssuersUrls: string[];
         /**
+         * Rerutn extensions
+         *
+         * @readonly
+         * @type {ExtensionCollection}
+         * @memberof Certificate
+         */
+        /**
+         * Set extensions
+         *
+         * @param {ExtensionCollection} exts
+         *
+         * @memberof Certificate
+         */
+        extensions: pki.ExtensionCollection;
+        /**
          * Return true is a certificate is self signed
          *
          * @readonly
          * @type {boolean}
-         * @memberOf Certificate
+         * @memberof Certificate
          */
         readonly isSelfSigned: boolean;
         /**
@@ -1527,6 +1778,14 @@ declare namespace trusted.pki {
          * @memberOf Certificate
          */
         duplicate(): Certificate;
+        /**
+         * Signs certificate using the given private key
+         *
+         * @param {Key} key private key to sign
+         * @param {string} [digest] message digest to use (if not set, use default for key)
+         * @memberof Certificate
+         */
+        sign(key: Key, digest?: string): void;
         /**
          * Load certificate from file location
          *
@@ -1660,13 +1919,82 @@ declare namespace trusted.pki {
          */
         load(filename: string, format?: DataFormat): void;
         /**
-         * Sign request
+         * Write request to file
          *
-         * @param {Key} key Private key
+         * @param {string} filename File path
+         * @param {DataFormat} [dataFormat=DEFAULT_DATA_FORMAT]
          *
          * @memberOf CertificationRequest
          */
-        sign(key: Key): void;
+        save(filename: string, dataFormat?: DataFormat): void;
+        /**
+         * Rerutn subject name
+         *
+         * @readonly
+         * @type {string}
+         * @memberof CertificationRequest
+         */
+        /**
+         * Sets the subject of this certification request.
+         *
+         * @param {string | native.PKI.INameField[]} x509name Example "/C=US/O=Test/CN=example.com"
+         *
+         * @memberOf CertificationRequest
+         */
+        subject: string | native.PKI.INameField[];
+        /**
+         * Rerutn subject public key
+         *
+         * @readonly
+         * @type {Key}
+         * @memberof CertificationRequest
+         */
+        /**
+         *  Set public key
+         *
+         *  @param {Key} pubkey Public key
+         *
+         * @memberOf CertificationRequest
+         */
+        publicKey: Key;
+        /**
+         * Rerutn version
+         *
+         * @readonly
+         * @type {number}
+         * @memberof CertificationRequest
+         */
+        /**
+         * Set version certificate
+         *
+         * @param {number} version
+         *
+         * @memberOf CertificationRequest
+         */
+        version: number;
+        /**
+         * Rerutn extensions
+         *
+         * @readonly
+         * @type {ExtensionCollection}
+         * @memberof CertificationRequest
+         */
+        /**
+         * Set extensions
+         *
+         * @param {ExtensionCollection} exts
+         *
+         * @memberOf CertificationRequest
+         */
+        extensions: pki.ExtensionCollection;
+        /**
+         * Signs request using the given private key
+         *
+         * @param {Key} key private key to sign
+         * @param {string} [digest] message digest to use (if not set, use default for key)
+         * @memberof CertificationRequest
+         */
+        sign(key: Key, digest?: string): void;
         /**
          * Verify request
          *
@@ -1683,6 +2011,15 @@ declare namespace trusted.pki {
          * @memberOf CertificationRequest
          */
         readonly PEMString: Buffer;
+        /**
+         * Create X509 certificate from request
+         *
+         * @param {number} days
+         * @param {Key} key
+         * @returns {Certificate}
+         * @memberof CertificationRequest
+         */
+        toCertificate(days: number, key: Key): Certificate;
     }
 }
 declare namespace trusted.pki {
@@ -1702,7 +2039,14 @@ declare namespace trusted.pki {
          */
         constructor(param?: native.PKI.CertificationRequestInfo);
         /**
-         * Set subject name
+         * Rerutn subject name
+         *
+         * @readonly
+         * @type {string}
+         * @memberof CertificationRequestInfo
+         */
+        /**
+         * Sets the subject of this certification request.
          *
          * @param {string} x509name Example "/C=US/O=Test/CN=example.com"
          *
@@ -1710,13 +2054,27 @@ declare namespace trusted.pki {
          */
         subject: string;
         /**
+         * Rerutn subject public key
+         *
+         * @readonly
+         * @type {Key}
+         * @memberof CertificationRequestInfo
+         */
+        /**
          *  Set public key
          *
          *  @param {Key} pubkey Public key
          *
          * @memberOf CertificationRequestInfo
          */
-        pubkey: Key;
+        publicKey: Key;
+        /**
+         * Rerutn version
+         *
+         * @readonly
+         * @type {number}
+         * @memberof CertificationRequestInfo
+         */
         /**
          * Set version certificate
          *
@@ -2156,44 +2514,6 @@ declare namespace trusted.pki {
          * @memberOf CrlCollection
          */
         removeAt(index: number): void;
-    }
-}
-declare namespace trusted.pki {
-    /**
-     * Final class for make certification request
-     *
-     * @export
-     * @class CSR
-     * @extends {BaseObject<native.PKI.CSR>}
-     */
-    class CSR extends BaseObject<native.PKI.CSR> {
-        /**
-         * Creates an instance of CSR.
-         *
-         * @param {string} name
-         * @param {Key} key
-         * @param {string} digest
-         *
-         * @memberOf CSR
-         */
-        constructor(name: string, key: Key, digest: string);
-        /**
-         * Return encoded structure
-         *
-         * @readonly
-         * @type {Buffer}
-         * @memberOf CSR
-         */
-        readonly encoded: Buffer;
-        /**
-         * Write CSR to file
-         *
-         * @param {string} filename File path
-         * @param {DataFormat} [dataFormat=DEFAULT_DATA_FORMAT]
-         *
-         * @memberOf CSR
-         */
-        save(filename: string, dataFormat?: DataFormat): void;
     }
 }
 declare namespace trusted.pki {

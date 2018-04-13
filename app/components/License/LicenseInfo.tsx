@@ -17,6 +17,7 @@ interface ILicenseInfoProps {
   license: ILicenseModel;
   loaded: boolean;
   loading: boolean;
+  lic_format: string;
   loadLicense: () => void;
 }
 
@@ -30,10 +31,14 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
     // tslint:disable-next-line:no-shadowed-variable
     const { loadLicense } = this.props;
     const { loaded, loading } = this.props;
+    const { lic_format } = this.props;
+   if(lic_format == 'TRIAL'){
 
-    if (!loaded && !loading) {
+   }else{
+      if (!loaded && !loading) {
       loadLicense();
     }
+  }
   }
 
   getLocaleDate = (time: number) => {
@@ -52,6 +57,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
   render() {
     const { localize, locale } = this.context;
     const { license } = this.props;
+    const { lic_format } = this.props;
 
     const style = { height: 39 + "px" };
 
@@ -59,11 +65,13 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
     let notBefore: string;
     let productName: string;
 
+   
     if (!license.exp && license.exp != 0) {
       notAfter = "-";
     } else {
       const exp = new Date(license.exp * 1000);
-      notAfter = ((exp.getFullYear() === 2038)||(license.exp == 0)) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+      notAfter = ((exp.getFullYear() === 2038)||((lic_format == 'MTX') && (license.exp == 0))) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+      if(lic_format == 'NONE') notAfter = '-';
     }
 
     if (!license.iat) {
@@ -78,35 +86,85 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
       productName = "-";
     }
 
-    return (
-      <div>
-        <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
-        <div className="row leftshifter">
-          <div className="col s6">
-            <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+    if(lic_format == 'TRIAL'){
+      return (
+        <div>
+          <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+            </div>
           </div>
-          <div className="col s6">
-            <LicenseInfoFiled title={localize("Common.subject", locale)} info={license.aud} />
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+            </div>
           </div>
-        </div>
-        <div className="row leftshifter">
-          <div className="col s6">
-            <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
-          </div>
-          <div className="col s6">
-            <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
-          </div>
-        </div>
-        <div className="row leftshifter">
-          <div className="col s6">
-            <LicenseInfoFiled title="" info="" style={style} />
-          </div>
-          <div className="col s6">
-            <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+          <div className="row leftshifter">
           </div>
         </div>
-      </div>
-    );
+      );
+    }else if(lic_format == 'MTX'){
+      return (
+        <div>
+          <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+            </div>
+          </div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+            </div>
+            <div className="col s6">
+
+            </div>
+          </div>
+          <div className="row leftshifter">
+          </div>
+        </div>
+      );
+    }else{
+      return (
+        <div>
+          <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={license.iss} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.subject", locale)} info={license.aud} />
+            </div>
+          </div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+            </div>
+          </div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title="" info="" style={style} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
 }
 
@@ -115,5 +173,6 @@ export default connect((state) => {
     license: state.license.info,
     loaded: state.license.loaded,
     loading: state.license.loading,
+    lic_format: state.license.lic_format,
   };
 }, {loadLicense}, null, {pure: false})(LicenseInfo);

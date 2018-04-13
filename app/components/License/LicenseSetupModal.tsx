@@ -74,7 +74,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 
     let data = null;
     let key;
-    let old_license = false;
+    let lic_format;
 
     if (license_key) {
       key = license_key;
@@ -101,14 +101,21 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       //validation of old format license
       let result = key.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
       if(result != null){
+        lic_format = 'MTX';
+        let productMarker = key.match(/^CAG/ig);
+        if(productMarker == null) {status = 907};
+        let expirationTime =  trusted.utils.Jwt.getExpirationTime(key); 
+        let dateExp = new Date(expirationTime* 1000).getTime();
+        let dateNow = new Date().getTime();
+        let dateDif = dateExp - dateNow;
+        if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;
         //validate
-        old_license = true;
         data = {
             aud : '-',
             sub : 'CryptoARM GOST',
             core: 65535,
             iss : 'ООО "Цифровые технологии"',
-            exp : 0,
+            exp : expirationTime,
             iat : '',
             jti : '',
             desc : 'CryptoARM GOST'
@@ -123,16 +130,18 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
               && parsedLicense.jti && parsedLicense.sub) {
               data = parsedLicense;
+              lic_format = 'JWT';
             }
           } catch (e) {
             data = null;
+            lic_format = 'NONE';
           }
         }
       } 
     }
 
     if (data && data.sub !== "-") {
-      status = jwt.checkLicense(key);
+      if(status != 908) status = jwt.checkLicense(key);
       if (status === 0) {
         if (PLATFORM === "win32") {
           command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
