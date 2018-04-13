@@ -3023,3 +3023,27 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:before, [type="radio"].with-gap:checked+label:after {
   border: 2px solid #bf3817;
 }
+
+/* label focus color */
+.input-field input[type=text]:focus + label {
+  color: #bf3817;
+}
+
+/* label focus color */
+.input-field input[type=email]:focus + label {
+  color: #bf3817;
+}
+
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #bf3817;
+  box-shadow: 0 1px 0 0 #bf3817;
+}
+
+.input-field input[type=email]:focus {
+  border-bottom: 1px solid #bf3817;
+  box-shadow: 0 1px 0 0 #bf3817;
+}
+
+.noUi-handle {
+  background-color: #bf3817 !important;
+}
