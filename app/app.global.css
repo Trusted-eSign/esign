@@ -311,7 +311,7 @@ body {
 /*----------------------*/
 [type="checkbox"].filled-in:checked+label:after {
     border: rgb(135, 134, 159);
-    background-color: #bf3817;
+    background-color: #334294;
 }
 #directory {
     border-bottom: 1px solid rgb(135, 134, 159);
