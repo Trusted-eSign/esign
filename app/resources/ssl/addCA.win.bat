@@ -1,5 +1,8 @@
 @echo off
 
+if not exist "%UserProfile%\AppData\Local\Trusted\CryptoARM GOST" mkdir "%UserProfile%\AppData\Local\Trusted\CryptoARM GOST"
+
+
 setlocal
 
 @echo Installing "CryptoARM Local CA" certificate
