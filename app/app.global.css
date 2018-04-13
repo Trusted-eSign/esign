@@ -189,7 +189,9 @@ body {
 }
 .select-wrapper input.select-dropdown{
     font-size: 100%;
+    border-bottom: none;
 }
+
 .settins-check-title {
     width: calc(100% - 60px);
 }
