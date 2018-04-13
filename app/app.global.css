@@ -3014,3 +3014,12 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   border-right: 2px solid #bf3817;
   background: transparent;
 }
+
+[type="radio"]:checked + label:after,
+[type="radio"].with-gap:checked + label:after {
+  background-color: #bf3817;
+}
+
+[type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:before, [type="radio"].with-gap:checked+label:after {
+  border: 2px solid #bf3817;
+}
