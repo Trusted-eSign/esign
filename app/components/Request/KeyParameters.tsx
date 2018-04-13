@@ -135,6 +135,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
               id="newKey"
               checked={generateNewKey}
               onChange={handleGenerateNewKeyChange}
+              onClick={handleGenerateNewKeyChange}
             />
             <label htmlFor="newKey">{localize("CSR.generate_new_key", locale)}</label>
           </div>
@@ -342,7 +343,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
               className="with-gap" type="radio"
               id="exportableKey"
               checked={exportableKey}
-              onChange={toggleExportableKey}
+              onClick={toggleExportableKey}
             />
             <label htmlFor="exportableKey" className="label tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
               {localize("CSR.exportable_key", locale)}
