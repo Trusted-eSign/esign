@@ -47,6 +47,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
             name="groupDelCont"
             type="checkbox"
             id="delCont"
+            className="checkbox-red"
             checked={deleteContainer}
             onClick={this.toggleDeleteContainer}
           />

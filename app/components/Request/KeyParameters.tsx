@@ -128,7 +128,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
         </div>
         <div className="row">
-          <div className="col s12">
+          <div className="col s12 input-radio">
             <input
               name="groupKeyGeneration"
               className="with-gap" type="radio"
@@ -156,12 +156,12 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
           : null}
         {generateNewKey && algorithm === "RSA" ?
-          <div className="row">
+          <div className="row nobottom">
             <div className="valign-wrapper">
-              <div className="col s4">
+              <div className="col s5">
                 <p className="label">{localize("CSR.key_length", locale)}</p>
               </div>
-              <div className="col s5">
+              <div className="col s4">
                 <div id="key-length-slider"></div>
               </div>
               <div className="col s3">
@@ -183,6 +183,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="dataEncipherment"
                 type="checkbox"
                 id="dataEncipherment"
+                className="checkbox-red"
                 checked={keyUsage.dataEncipherment}
                 onChange={handleKeyUsageChange}
               />
@@ -195,6 +196,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="keyAgreement"
                 type="checkbox"
                 id="keyAgreement"
+                className="checkbox-red"
                 checked={keyUsage.keyAgreement}
                 onChange={handleKeyUsageChange}
               />
@@ -207,6 +209,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="keyCertSign"
                 type="checkbox"
                 id="keyCertSign"
+                className="checkbox-red"
                 checked={keyUsage.keyCertSign}
                 onChange={handleKeyUsageChange}
               />
@@ -219,10 +222,11 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="decipherOnly"
                 type="checkbox"
                 id="decipherOnly"
+                className="checkbox-red"
                 checked={keyUsage.decipherOnly}
                 onChange={handleKeyUsageChange}
               />
-              <label htmlFor="decipherOnly" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_decipherOnly", locale)}>
+              <label htmlFor="decipherOnly" className="truncate tooltipped label" data-position="right" data-tooltip={localize("CSR.key_usage_decipherOnly", locale)}>
                 {localize("CSR.key_usage_decipherOnly", locale)}
               </label>
             </div>
@@ -233,6 +237,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="digitalSignature"
                 type="checkbox"
                 id="digitalSignature"
+                className="checkbox-red"
                 checked={keyUsage.digitalSignature}
                 onChange={handleKeyUsageChange}
               />
@@ -245,6 +250,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="nonRepudiation"
                 type="checkbox"
                 id="nonRepudiation"
+                className="checkbox-red"
                 checked={keyUsage.nonRepudiation}
                 onChange={handleKeyUsageChange}
               />
@@ -257,6 +263,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="cRLSign"
                 type="checkbox"
                 id="cRLSign"
+                className="checkbox-red"
                 checked={keyUsage.cRLSign}
                 onChange={handleKeyUsageChange}
               />
@@ -269,6 +276,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="keyEncipherment"
                 type="checkbox"
                 id="keyEncipherment"
+                className="checkbox-red"
                 checked={keyUsage.keyEncipherment}
                 onChange={handleKeyUsageChange}
               />
@@ -291,6 +299,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="1.3.6.1.5.5.7.3.1"
                 type="checkbox"
                 id="1.3.6.1.5.5.7.3.1"
+                className="checkbox-red"
                 checked={extKeyUsage["1.3.6.1.5.5.7.3.1"]}
                 onChange={handleExtendedKeyUsageChange}
               />
@@ -303,6 +312,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="1.3.6.1.5.5.7.3.2"
                 type="checkbox"
                 id="1.3.6.1.5.5.7.3.2"
+                className="checkbox-red"
                 checked={extKeyUsage["1.3.6.1.5.5.7.3.2"]}
                 onChange={handleExtendedKeyUsageChange}
               />
@@ -315,6 +325,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="1.3.6.1.5.5.7.3.3"
                 type="checkbox"
                 id="1.3.6.1.5.5.7.3.3"
+                className="checkbox-red"
                 checked={extKeyUsage["1.3.6.1.5.5.7.3.3"]}
                 onChange={handleExtendedKeyUsageChange}
               />
@@ -327,6 +338,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 name="1.3.6.1.5.5.7.3.4"
                 type="checkbox"
                 id="1.3.6.1.5.5.7.3.4"
+                className="checkbox-red"
                 checked={extKeyUsage["1.3.6.1.5.5.7.3.4"]}
                 onChange={handleExtendedKeyUsageChange}
               />
@@ -337,7 +349,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
         </div>
         <div className="row">
-          <div className="col s11">
+          <div className="col s12 input-radio">
             <input
               name="exportableKey"
               className="with-gap" type="radio"
@@ -345,7 +357,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
               checked={exportableKey}
               onClick={toggleExportableKey}
             />
-            <label htmlFor="exportableKey" className="label tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
+            <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
               {localize("CSR.exportable_key", locale)}
             </label>
           </div>

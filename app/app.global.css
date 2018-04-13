@@ -309,7 +309,7 @@ body {
 /*----------------------*/
 [type="checkbox"].filled-in:checked+label:after {
     border: rgb(135, 134, 159);
-    background-color: rgb(135, 134, 159);
+    background-color: #bf3817;
 }
 #directory {
     border-bottom: 1px solid rgb(135, 134, 159);
@@ -427,11 +427,16 @@ div::-webkit-scrollbar-thumb {
     line-height: 48px;
 }
 
-.label {
+.input-checkbox label {
   display: block !important;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  color: black;
+  opacity: 0.87;
+}
+
+.input-radio label {
+  display: block !important;
+  color: black;
+  opacity: 0.87;
 }
 
 /*-------------------------------Стили кнопок------------------*/
@@ -1573,8 +1578,9 @@ p.collection-title {
 }
 
 p.label {
-  font-size: 0.8rem;
-  color: #9e9e9e;
+  font-size: 1rem;
+  color: black;
+  opacity: 0.54;
 }
 
 .collection-item.files-collection {
@@ -2993,4 +2999,18 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
     background-size: 100%;
     width: 50px;
     height: 50px;
+}
+
+.checkbox-red[type="checkbox"] + label:before{
+  border: 2px solid;
+  background: transparent;
+  color: black;
+  opacity: 0.87;
+}
+
+.checkbox-red[type="checkbox"]:checked + label:before{
+  border: 2px solid transparent;
+  border-bottom: 2px solid #bf3817;
+  border-right: 2px solid #bf3817;
+  background: transparent;
 }
