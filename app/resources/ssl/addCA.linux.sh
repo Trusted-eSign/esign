@@ -1,4 +1,6 @@
 #!/bin/sh
+#Add directory for license
+mkdir "/etc/opt/Trusted"
 
 CUR_DIR=`dirname $0`
 certPath=${CUR_DIR}/root.pem

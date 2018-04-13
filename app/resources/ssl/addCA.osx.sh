@@ -1,10 +1,12 @@
 #!/bin/sh
+#Add directory for license
+mkdir "/etc/opt/Trusted"
+
 FILE="/opt/cryptoarm_gost/ssl/log.txt"
 echo "Start: `date`" > $FILE
 echo "" >> $FILE
 
 # Add certificate to system key chain
-
 CUR_DIR="/opt/cryptoarm_gost/ssl"
 certPath=${CUR_DIR}/root.pem
 certificateName="CryptoARM Local CA"
