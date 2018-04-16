@@ -1,6 +1,8 @@
 #!/bin/sh
 #Add directory for license
 mkdir "/etc/opt/Trusted"
+mkdir "/etc/opt/Trusted/CryptoARM GOST"
+chmod 777 "/etc/opt/Trusted/CryptoARM GOST"
 
 FILE="/opt/cryptoarm_gost/ssl/log.txt"
 echo "Start: `date`" > $FILE
