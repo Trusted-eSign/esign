@@ -433,6 +433,7 @@ export default {
     exit: "ВЫХОД",
     goOver: "Перейти",
     cancel: "Отмена",
+    ready: "Готово",
   },
   Csp: {
     cpcspPKZIVersion: "Версия КриптоПро CSP",

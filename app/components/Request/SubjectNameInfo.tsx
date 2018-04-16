@@ -51,7 +51,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
 
     return (
       <div className="row">
-         <HeaderWorkspaceBlock text={localize("CSR.subject_params", locale)} />
+        <HeaderWorkspaceBlock text={localize("CSR.subject_params", locale)} />
         <br />
         <div className="row">
           <div className="input-field col s12">
@@ -133,8 +133,8 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
         <br />
         <div className="row">
           <div className="input-field col s12">
-            <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >>
-                      <option value="RU">Российская Федерация (RU)</option>
+            <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >
+              <option value="RU">Российская Федерация (RU)</option>
               <option value="AU">Австралия (AU)</option>
             </select>
             <label>{localize("CSR.country", locale)}</label>

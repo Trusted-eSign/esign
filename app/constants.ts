@@ -88,6 +88,11 @@ export const GOST2001 = "GOST R 34.10-2001";
 export const GOST94 = "GOST R 34.10-94";
 export const GOST89 = "GOST 28147-89";
 
+export const ALG_RSA = "RSA";
+export const ALG_GOST2001 = "gost2001";
+export const ALG_GOST12_256 = "gost2012-256";
+export const ALG_GOST12_512 = "gost2012-512";
+
 export const ADD_CONNECTION = "ADD_CONNECTION";
 export const REMOVE_CONNECTION = "REMOVE_CONNECTION";
 export const SET_CONNECTED = "SET_CONNECTED";

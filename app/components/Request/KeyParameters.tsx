@@ -4,6 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllContainers, removeAllContainers } from "../../AC";
+import { ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA } from "../../constants";
 import { filteredContainersSelector } from "../../selectors";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
@@ -117,10 +118,10 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
         <div className="row">
           <div className="input-field col s12">
             <select className="select" ref="algorithmSelect" value={algorithm} onChange={handleAlgorithmChange} >>
-              <option value="RSA">RSA</option>
-              <option value="GOST2001">{localize("Algorithm.id_GostR3410_2001", locale)}</option>
-              <option value="GOST2012-256">{localize("Algorithm.id_tc26_gost3410_12_256", locale)}</option>
-              <option value="GOST2012-512">{localize("Algorithm.id_tc26_gost3410_12_512", locale)}</option>
+              <option value={ALG_RSA}>RSA</option>
+              <option value={ALG_GOST2001}>{localize("Algorithm.id_GostR3410_2001", locale)}</option>
+              <option value={ALG_GOST12_256}>{localize("Algorithm.id_tc26_gost3410_12_256", locale)}</option>
+              <option value={ALG_GOST12_512}>{localize("Algorithm.id_tc26_gost3410_12_512", locale)}</option>
             </select>
             <label>{localize("CSR.algorithm", locale)}</label>
           </div>
