@@ -198,7 +198,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 
   handelReady = () => {
-    const { algorithm, cn, country, containerName, exportableKey, extKeyUsage, inn, keyLength,
+    const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
       keyUsage, locality, organization, outputDirectory, province, snils } = this.state;
 
     const key = new trusted.pki.Key();
@@ -276,6 +276,12 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       exts.push(ext);
     }
 
+    if (email.length) {
+      const oid = new trusted.pki.Oid("subjectAltName");
+      const ext = new trusted.pki.Extension(oid, `email:${email}`);
+      exts.push(ext);
+    }
+
     switch (algorithm) {
       case ALG_RSA:
         keyPair = key.generate(algorithm, [`rsa_keygen_bits:${keyLength}`]);
@@ -299,6 +305,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     const atrs = [
       { type: "C", value: country },
       { type: "CN", value: cn },
+      { type: "emailAddress", value: email },
       { type: "localityName", value: locality },
       { type: "stateOrProvinceName", value: province },
       { type: "O", value: organization },
