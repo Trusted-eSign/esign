@@ -980,6 +980,7 @@ nav .cert-seacrh label i {
 
 .modal {
   max-height: 75% !important ;
+  border: 2px solid #bf3817
 }
 
 .nooverflow {
