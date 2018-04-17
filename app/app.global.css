@@ -1424,7 +1424,7 @@ form.col.s12 {
   color: #666 !important;
 }
 
-.select {
+.select, #key-length-value {
   font-size: 1rem;
 }
 
