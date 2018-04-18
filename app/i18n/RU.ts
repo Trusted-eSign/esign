@@ -86,7 +86,7 @@ export default {
   },
   CSR: {
     algorithm: "Алгоритм",
-    container: "Контейнер",
+    container: "Контейнер (будет создан новый)",
     create_selfSigned: "Создание самоподписанного сертификата",
     template_label: "Шаблон сертификата",
     template_default: "Шаблон по умолчанию",
