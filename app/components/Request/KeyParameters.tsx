@@ -118,7 +118,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
         <div className="row">
           <div className="input-field col s12">
             <select className="select" ref="algorithmSelect" value={algorithm} onChange={handleAlgorithmChange} >>
-              <option value={ALG_RSA}>RSA</option>
+              <option value={ALG_RSA}>{ALG_RSA}</option>
               <option value={ALG_GOST2001}>{localize("Algorithm.id_GostR3410_2001", locale)}</option>
               <option value={ALG_GOST12_256}>{localize("Algorithm.id_tc26_gost3410_12_256", locale)}</option>
               <option value={ALG_GOST12_512}>{localize("Algorithm.id_tc26_gost3410_12_512", locale)}</option>
@@ -139,7 +139,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
           </div>
         </div>
-        {algorithm === "RSA" ?
+        {algorithm === ALG_RSA ?
           <div className="row nobottom">
             <div className="valign-wrapper">
               <div className="col s5">
@@ -332,20 +332,24 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col s12 input-radio">
-            <input
-              name="exportableKey"
-              className="with-gap" type="radio"
-              id="exportableKey"
-              checked={exportableKey}
-              onClick={toggleExportableKey}
-            />
-            <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
-              {localize("CSR.exportable_key", locale)}
-            </label>
-          </div>
-        </div>
+        {
+          algorithm !== ALG_RSA ?
+            <div className="row">
+              <div className="col s12 input-radio">
+                <input
+                  name="exportableKey"
+                  className="with-gap" type="radio"
+                  id="exportableKey"
+                  checked={exportableKey}
+                  onClick={toggleExportableKey}
+                />
+                <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
+                  {localize("CSR.exportable_key", locale)}
+                </label>
+              </div>
+            </div>
+            : null
+        }
       </div>
     );
   }

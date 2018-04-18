@@ -138,6 +138,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
   }
 
+  componentWillUnmount() {
+    this.handelCancel();
+  }
+
   render() {
     const { localize, locale } = this.context;
     const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, keyLength,
@@ -305,12 +309,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     switch (algorithm) {
       case ALG_RSA:
-        keyPair = key.generate(algorithm, [`rsa_keygen_bits:${keyLength}`]);
+        pkeyopt.push(`rsa_keygen_bits:${keyLength}`);
+        keyPair = key.generate(algorithm, pkeyopt);
         break;
       case ALG_GOST2001:
       case ALG_GOST12_256:
       case ALG_GOST12_512:
-        keyPair = key.generate(algorithm, [`container:${containerName}`]);
+        pkeyopt.push(`container:${containerName}`);
+        keyPair = key.generate(algorithm, pkeyopt);
         break;
       default:
         return;
@@ -346,12 +352,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     const cert = new trusted.pki.Certificate(certReq);
     cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
-
-    // oid = new trusted.pki.Oid("subjectKeyIdentifier");
-    // ext = new trusted.pki.Extension(oid, `subjectKeyIdentifier:${cert.hash().toString("hex")}`);
-    // exts.push(ext);
-    // cert.extensions = exts;
-
     cert.sign(keyPair);
 
     try {
