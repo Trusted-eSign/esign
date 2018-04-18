@@ -5,8 +5,8 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, MY,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
 } from "../../constants";
 import { uuid } from "../../utils";
 import SelectFolder from "../SelectFolder";
@@ -385,9 +385,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     try {
       this.handleCertificateImport(cert);
 
-      const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
-      trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
-      trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+      if (algorithm !== ALG_RSA) {
+        const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
+        trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
+        trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+      } else {
+        window.PKISTORE.addKeyToStore(keyPair);
+      }
+
       this.handleReloadCertificates();
     } catch (e) {
       Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
@@ -400,21 +405,24 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   handleCertificateImport = (certificate: trusted.pki.Certificate) => {
     const { localize, locale } = this.context;
+    const { algorithm } = this.state;
     const OS_TYPE = os.type();
 
     let providerType: string = PROVIDER_SYSTEM;
 
-    if (OS_TYPE === "Windows_NT") {
-      providerType = PROVIDER_MICROSOFT;
-    } else {
-      providerType = PROVIDER_CRYPTOPRO;
+    if (algorithm !== ALG_RSA) {
+      if (OS_TYPE === "Windows_NT") {
+        providerType = PROVIDER_MICROSOFT;
+      } else {
+        providerType = PROVIDER_CRYPTOPRO;
+      }
     }
 
     window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
       if (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
-    });
+    }, MY );
   }
 
   handleReloadCertificates = () => {

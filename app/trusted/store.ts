@@ -93,17 +93,21 @@ export class Store {
         return undefined;
       }
 
-      return this.addKeyToStore(this._providerSystem, key, "");
+      return this.addKeyToStore(key, "");
     } catch (e) {
       return undefined;
     }
   }
 
-  addKeyToStore(provider: any, key: trusted.pki.Key, password: string): boolean {
+  addKeyToStore(key: trusted.pki.Key, password: string = "", provider?: any): boolean {
     const ITEMS = this._store.cash.export();
     let uri: string;
     let newItem: any;
     let res: boolean = false;
+
+    if (!provider) {
+      provider = this._providerSystem;
+    }
 
     uri = this._store.addKey(provider.handle, key, password);
     newItem = provider.objectToPkiItem(uri);
@@ -145,7 +149,7 @@ export class Store {
     return res;
   }
 
-  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }): void {
+  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string): void {
     let provider;
 
     switch (providerType) {
@@ -166,13 +170,13 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
         done(err);
       } else {
         done();
       }
-    });
+    }, category);
   }
 
   deleteCertificate(certificate: trusted.pkistore.PkiItem): boolean {
@@ -222,7 +226,7 @@ export class Store {
     }
 
     this.importCertificate(cert);
-    this.addKeyToStore(this._providerSystem, key, "");
+    this.addKeyToStore(key, "");
 
     try {
       ca = p12.ca(pass);
@@ -239,7 +243,7 @@ export class Store {
     return true;
   }
 
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string ) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     let urls = cert.CAIssuersUrls;
@@ -270,7 +274,7 @@ export class Store {
       const bCA = cert.isCA;
       const hasKey = provider.hasPrivateKey(cert);
 
-      if (hasKey && !bCA) {
+      if (hasKey && !bCA || category === MY) {
         store.addCert(provider.handle, MY, cert);
       } else if (!hasKey && !bCA) {
         store.addCert(provider.handle, ADDRESS_BOOK, cert);
@@ -283,7 +287,7 @@ export class Store {
       return callback();
     }
 
-    trusted.pki.Certificate.download(urls, pathForSave, function (err, res) {
+    trusted.pki.Certificate.download(urls, pathForSave, function(err, res) {
       if (err) {
         return callback(err);
       } else {
