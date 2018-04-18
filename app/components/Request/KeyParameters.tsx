@@ -68,33 +68,6 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
     $(ReactDOM.findDOMNode(this.refs.algorithmSelect)).on("change", this.props.handleAlgorithmChange);
 
     Materialize.updateTextFields();
-
-    const self = this;
-    const slider = document.getElementById("key-length-slider");
-
-    if (slider) {
-      if (slider.noUiSlider) {
-        slider.noUiSlider.destroy();
-      }
-      noUiSlider.create(slider, {
-        format: wNumb({
-          decimals: 0,
-        }),
-        range: {
-          "min": 512,
-          "25%": 1024,
-          "50%": 2048,
-          "75%": 3072,
-          "max": 4096,
-        },
-        snap: true,
-        start: self.props.keyLength,
-      });
-
-      slider.noUiSlider.on("update", (values, handle) => {
-        self.setState({ keyLength: values[handle] });
-      });
-    }
   }
 
   componentDidUpdate() {

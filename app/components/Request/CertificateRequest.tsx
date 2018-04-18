@@ -4,8 +4,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
-import { ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
-   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../../constants";
+import {
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM
+} from "../../constants";
 import { uuid } from "../../utils";
 import SelectFolder from "../SelectFolder";
 import KeyParameters from "./KeyParameters";
@@ -130,6 +132,32 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         },
         snap: true,
         start: 1024,
+      });
+
+      slider.noUiSlider.on("update", (values, handle) => {
+        self.setState({ keyLength: values[handle] });
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    const self = this;
+    const slider = document.getElementById("key-length-slider");
+
+    if (slider && !slider.noUiSlider) {
+      noUiSlider.create(slider, {
+        format: wNumb({
+          decimals: 0,
+        }),
+        range: {
+          "min": 512,
+          "25%": 1024,
+          "50%": 2048,
+          "75%": 3072,
+          "max": 4096,
+        },
+        snap: true,
+        start: self.state.keyLength,
       });
 
       slider.noUiSlider.on("update", (values, handle) => {
@@ -276,19 +304,19 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
 
     if (extKeyUsage["1.3.6.1.5.5.7.3.1"]) {
-      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.1" :  extendedKeyUsageStr += "1.3.6.1.5.5.7.3.1";
+      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.1" : extendedKeyUsageStr += "1.3.6.1.5.5.7.3.1";
     }
 
     if (extKeyUsage["1.3.6.1.5.5.7.3.2"]) {
-      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.2" :  extendedKeyUsageStr += "1.3.6.1.5.5.7.3.2";
+      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.2" : extendedKeyUsageStr += "1.3.6.1.5.5.7.3.2";
     }
 
     if (extKeyUsage["1.3.6.1.5.5.7.3.3"]) {
-      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.3" :  extendedKeyUsageStr += "1.3.6.1.5.5.7.3.3";
+      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.3" : extendedKeyUsageStr += "1.3.6.1.5.5.7.3.3";
     }
 
     if (extKeyUsage["1.3.6.1.5.5.7.3.4"]) {
-      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.4" :  extendedKeyUsageStr += "1.3.6.1.5.5.7.3.4";
+      extendedKeyUsageStr.length ? extendedKeyUsageStr += ",1.3.6.1.5.5.7.3.4" : extendedKeyUsageStr += "1.3.6.1.5.5.7.3.4";
     }
 
     if (extendedKeyUsageStr.length) {
