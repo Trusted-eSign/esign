@@ -15,11 +15,14 @@ interface ISubjectNameInfoProps {
   cn: string;
   email: string;
   organization: string;
+  organizationUnitName?: string;
   locality: string;
   province: string;
   country: string;
   inn?: string;
+  ogrnip?: string;
   snils?: string;
+  title?: string;
   handleCountryChange: (ev: any) => void;
   handleTemplateChange: (ev: any) => void;
   handleInputChange: (ev: any) => void;
@@ -64,7 +67,6 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <label>{localize("CSR.template_label", locale)}</label>
           </div>
         </div>
-        {this.getAditionalField()}
         <div className="row">
           <div className="input-field col s12">
             <input
@@ -78,6 +80,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <label htmlFor="commonName">{localize("CSR.common_name", locale)}</label>
           </div>
         </div>
+        {this.getAditionalField()}
         <div className="row">
           <div className="input-field col s12">
             <input
@@ -145,10 +148,10 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
   }
 
   getAditionalField = () => {
-    const { template, handleInputChange, inn, snils } = this.props;
+    const { template, handleInputChange, inn, ogrnip, organizationUnitName, snils, title } = this.props;
     const { localize, locale } = this.context;
 
-    if (template === "kepFiz") {
+    if (template === "kepFiz" || template === "kepIp" || template === "additional") {
       return (
         <div>
           <div className="row">
@@ -174,9 +177,59 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                 value={inn}
                 onChange={handleInputChange}
               />
-              <label htmlFor="snils">{localize("CSR.inn", locale)}</label>
+              <label htmlFor="inn">{localize("CSR.inn", locale)}</label>
             </div>
           </div>
+          {
+            template === "kepIp" || template === "additional" ?
+              (
+                <div className="row">
+                  <div className="input-field col s12">
+                    <input
+                      id="ogrnip"
+                      type="text"
+                      className="validate"
+                      name="ogrnip"
+                      value={ogrnip}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor="ogrnip">{localize("CSR.ogrnip", locale)}</label>
+                  </div>
+                </div>) :
+              null
+          }
+          {
+            template === "additional" ?
+              <div>
+                <div className="row">
+                  <div className="input-field col s12">
+                    <input
+                      id="organizationUnitName"
+                      type="text"
+                      className="validate"
+                      name="organizationUnitName"
+                      value={organizationUnitName}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor="organizationUnitName">{localize("CSR.organizational_unit_name", locale)}</label>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field col s12">
+                    <input
+                      id="title"
+                      type="text"
+                      className="validate"
+                      name="title"
+                      value={title}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor="title">{localize("CSR.title", locale)}</label>
+                  </div>
+                </div>
+              </div> :
+              null
+          }
         </div>
       );
     }

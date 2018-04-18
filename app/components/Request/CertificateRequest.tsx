@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import { ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA } from "../../constants";
+import { loadAllCertificates, removeAllCertificates } from "../../AC";
+import { ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../../constants";
 import { uuid } from "../../utils";
 import SelectFolder from "../SelectFolder";
 import KeyParameters from "./KeyParameters";
@@ -42,15 +44,21 @@ interface ICertificateRequestState {
   keyLength: number;
   keyUsage: IKeyUsage;
   locality: string;
+  ogrnip?: string;
   organization: string;
+  organizationUnitName?: string;
   outputDirectory: string;
   province: string;
   snils?: string;
   template: string;
+  title?: string;
 }
 
 interface ICertificateRequestProps {
   onCancel?: () => void;
+  certificateLoading: boolean;
+  loadAllCertificates: () => void;
+  removeAllCertificates: () => void;
 }
 
 class CertificateRequest extends React.Component<ICertificateRequestProps, ICertificateRequestState> {
@@ -63,7 +71,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     super(props);
 
     this.state = {
-      algorithm: "RSA",
+      algorithm: ALG_GOST12_256,
       cn: "",
       containerName: uuid(),
       country: "RU",
@@ -89,11 +97,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         nonRepudiation: true,
       },
       locality: "",
+      ogrnip: "",
       organization: "",
+      organizationUnitName: "",
       outputDirectory: window.HOME_DIR,
       province: "",
       snils: "",
       template: "default",
+      title: "",
     };
   }
 
@@ -130,7 +141,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   render() {
     const { localize, locale } = this.context;
     const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, organization, province, snils, template } = this.state;
+      keyUsage, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
 
     return (
       <div>
@@ -161,11 +172,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   cn={cn}
                   email={email}
                   organization={organization}
+                  organizationUnitName={organizationUnitName}
                   locality={locality}
                   province={province}
                   country={country}
                   inn={inn}
+                  ogrnip={ogrnip}
                   snils={snils}
+                  title={title}
                   handleCountryChange={this.handleCountryChange}
                   handleTemplateChange={this.handleTemplateChange}
                   handleInputChange={this.handleInputChange}
@@ -189,7 +203,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
             </div>
             <div className="col s2">
-              <a className={"waves-effect waves-light btn"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
+              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
             </div>
           </div>
         </div>
@@ -198,8 +212,9 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 
   handelReady = () => {
+    const { localize, locale } = this.context;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, organization, outputDirectory, province, snils } = this.state;
+      keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, snils, title } = this.state;
 
     const key = new trusted.pki.Key();
     const exts = new trusted.pki.ExtensionCollection();
@@ -207,6 +222,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     let keyUsageStr = "critical";
     let extendedKeyUsageStr = "";
     let keyPair;
+    let oid;
+    let ext;
 
     if (exportableKey) {
       pkeyopt.push("exportable:true");
@@ -249,8 +266,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
 
     if (keyUsageStr.length > "critical".length) {
-      const oid = new trusted.pki.Oid("keyUsage");
-      const ext = new trusted.pki.Extension(oid, keyUsageStr);
+      oid = new trusted.pki.Oid("keyUsage");
+      ext = new trusted.pki.Extension(oid, keyUsageStr);
       exts.push(ext);
     }
 
@@ -271,16 +288,20 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
 
     if (extendedKeyUsageStr.length) {
-      const oid = new trusted.pki.Oid("extendedKeyUsage");
-      const ext = new trusted.pki.Extension(oid, extendedKeyUsageStr);
+      oid = new trusted.pki.Oid("extendedKeyUsage");
+      ext = new trusted.pki.Extension(oid, extendedKeyUsageStr);
       exts.push(ext);
     }
 
     if (email.length) {
-      const oid = new trusted.pki.Oid("subjectAltName");
-      const ext = new trusted.pki.Extension(oid, `email:${email}`);
+      oid = new trusted.pki.Oid("subjectAltName");
+      ext = new trusted.pki.Extension(oid, `email:${email}`);
       exts.push(ext);
     }
+
+    oid = new trusted.pki.Oid("basicConstraints");
+    ext = new trusted.pki.Extension(oid, "critical,CA:false");
+    exts.push(ext);
 
     switch (algorithm) {
       case ALG_RSA:
@@ -309,8 +330,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       { type: "localityName", value: locality },
       { type: "stateOrProvinceName", value: province },
       { type: "O", value: organization },
+      { type: "OU", value: organizationUnitName },
+      { type: "title", value: title },
       { type: "1.2.643.100.3", value: snils },
       { type: "1.2.643.3.131.1.1", value: inn },
+      { type: "1.2.643.100.5", value: ogrnip },
     ];
 
     certReq.subject = atrs;
@@ -322,9 +346,58 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     const cert = new trusted.pki.Certificate(certReq);
     cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
+
+    // oid = new trusted.pki.Oid("subjectKeyIdentifier");
+    // ext = new trusted.pki.Extension(oid, `subjectKeyIdentifier:${cert.hash().toString("hex")}`);
+    // exts.push(ext);
+    // cert.extensions = exts;
+
     cert.sign(keyPair);
 
+    try {
+      this.handleCertificateImport(cert);
+
+      const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
+      trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
+      trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+      this.handleReloadCertificates();
+    } catch (e) {
+      Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+    }
+
     cert.save(outputDirectory + "/generated.cer", trusted.DataFormat.PEM);
+
+    this.handelCancel();
+  }
+
+  handleCertificateImport = (certificate: trusted.pki.Certificate) => {
+    const { localize, locale } = this.context;
+    const OS_TYPE = os.type();
+
+    let providerType: string = PROVIDER_SYSTEM;
+
+    if (OS_TYPE === "Windows_NT") {
+      providerType = PROVIDER_MICROSOFT;
+    } else {
+      providerType = PROVIDER_CRYPTOPRO;
+    }
+
+    window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
+      if (err) {
+        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+      }
+    });
+  }
+
+  handleReloadCertificates = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { certificateLoading, loadAllCertificates, removeAllCertificates } = this.props;
+
+    removeAllCertificates();
+
+    if (!certificateLoading) {
+      loadAllCertificates();
+    }
   }
 
   addDirect = () => {
@@ -398,4 +471,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 }
 
-export default CertificateRequest;
+export default connect((state) => {
+  return {
+    certificateLoading: state.certificates.loading,
+  };
+}, { loadAllCertificates, removeAllCertificates })(CertificateRequest);
