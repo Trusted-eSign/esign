@@ -99,19 +99,23 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <label>{localize("CSR.algorithm", locale)}</label>
           </div>
         </div>
-        <div className="row">
-          <div className="input-field col s12">
-            <input
-              id="containerName"
-              type="text"
-              className="validate"
-              name="containerName"
-              value={containerName}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
-          </div>
-        </div>
+        {
+          algorithm !== ALG_RSA ?
+            <div className="row">
+              <div className="input-field col s12">
+                <input
+                  id="containerName"
+                  type="text"
+                  className="validate"
+                  name="containerName"
+                  value={containerName}
+                  onChange={handleInputChange}
+                />
+                <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
+              </div>
+            </div>
+            : null
+        }
         {algorithm === ALG_RSA ?
           <div className="row nobottom">
             <div className="valign-wrapper">
