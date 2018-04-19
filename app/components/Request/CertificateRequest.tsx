@@ -63,6 +63,7 @@ interface ICertificateRequestProps {
   certificateLoading: boolean;
   loadAllCertificates: () => void;
   removeAllCertificates: () => void;
+  selfSigned?: boolean;
 }
 
 class CertificateRequest extends React.Component<ICertificateRequestProps, ICertificateRequestState> {
@@ -175,6 +176,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   render() {
     const { localize, locale } = this.context;
+    const { selfSigned } = this.props;
     const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, keyLength,
       keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
 
@@ -224,17 +226,21 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col s12">
-              <p className="label">
-                {localize("Settings.directory_file_save", locale)}:
+          {
+            !selfSigned ?
+              <div className="row">
+                <div className="col s12">
+                  <p className="label">
+                    {localize("Settings.directory_file_save", locale)}:
               </p>
-            </div>
-            <SelectFolder
-              directory={this.state.outputDirectory}
-              viewDirect={this.handleOutDirectoryChange}
-              openDirect={this.addDirect} />
-          </div>
+                </div>
+                <SelectFolder
+                  directory={this.state.outputDirectory}
+                  viewDirect={this.handleOutDirectoryChange}
+                  openDirect={this.addDirect} />
+              </div>
+              : null
+          }
           <div className="row">
             <div className="col s2 offset-s7">
               <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
@@ -250,6 +256,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   handelReady = () => {
     const { localize, locale } = this.context;
+    const { selfSigned } = this.props;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
       keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, snils, title } = this.state;
 
@@ -383,27 +390,29 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     certReq.sign(keyPair);
     certReq.save(outputDirectory + "/generated.req", trusted.DataFormat.PEM);
 
-    const cert = new trusted.pki.Certificate(certReq);
-    cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
-    cert.sign(keyPair);
+    if (selfSigned) {
+      const cert = new trusted.pki.Certificate(certReq);
+      cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
+      cert.sign(keyPair);
 
-    try {
-      this.handleCertificateImport(cert);
+      try {
+        this.handleCertificateImport(cert);
 
-      if (algorithm !== ALG_RSA) {
-        const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
-        trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
-        trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-      } else {
-        window.PKISTORE.addKeyToStore(keyPair);
+        if (algorithm !== ALG_RSA) {
+          const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
+          trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
+          trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+        } else {
+          window.PKISTORE.addKeyToStore(keyPair);
+        }
+
+        this.handleReloadCertificates();
+      } catch (e) {
+        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
 
-      this.handleReloadCertificates();
-    } catch (e) {
-      Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+      cert.save(outputDirectory + "/generated.cer", trusted.DataFormat.PEM);
     }
-
-    cert.save(outputDirectory + "/generated.cer", trusted.DataFormat.PEM);
 
     this.handelCancel();
   }

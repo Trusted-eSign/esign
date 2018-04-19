@@ -87,6 +87,7 @@ export default {
   CSR: {
     algorithm: "Algorithm",
     container: "Сontainer (will generated)",
+    create_request: "Create certificate request",
     create_selfSigned: "Create self-signed certificate",
     template_label: "Certificate template",
     template_default: "Default template",
