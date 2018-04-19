@@ -7,7 +7,7 @@ import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT,
 } from "../../constants";
 import { uuid } from "../../utils";
 import SelectFolder from "../SelectFolder";
@@ -407,11 +407,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         }
 
         this.handleReloadCertificates();
+
+        Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
       } catch (e) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
-
-      cert.save(outputDirectory + "/generated.cer", trusted.DataFormat.PEM);
     }
 
     this.handelCancel();
@@ -437,6 +437,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
     }, MY);
+
+    if (OS_TYPE === "Windows_NT") {
+      window.PKISTORE.importCertificate(certificate, PROVIDER_MICROSOFT, (err: Error) => {
+        if (err) {
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+        }
+      }, ROOT);
+    }
   }
 
   handleReloadCertificates = () => {

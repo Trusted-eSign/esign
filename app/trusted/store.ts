@@ -170,7 +170,7 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
       if (err) {
         done(err);
       } else {
@@ -205,7 +205,7 @@ export class Store {
     }
 
     return true;
-}
+  }
 
   importPkcs12(p12Path: string, pass: string): boolean {
     let p12: trusted.pki.Pkcs12;
@@ -243,7 +243,7 @@ export class Store {
     return true;
   }
 
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string ) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     let urls = cert.CAIssuersUrls;
@@ -274,12 +274,16 @@ export class Store {
       const bCA = cert.isCA;
       const hasKey = provider.hasPrivateKey(cert);
 
-      if (hasKey && !bCA || category === MY) {
-        store.addCert(provider.handle, MY, cert);
-      } else if (!hasKey && !bCA) {
-        store.addCert(provider.handle, ADDRESS_BOOK, cert);
-      } else if (!hasKey && bCA) {
-        store.addCert(provider.handle, CA, cert);
+      if (category) {
+        store.addCert(provider.handle, category, cert);
+      } else {
+        if (hasKey && !bCA) {
+          store.addCert(provider.handle, MY, cert);
+        } else if (!hasKey && !bCA) {
+          store.addCert(provider.handle, ADDRESS_BOOK, cert);
+        } else if (!hasKey && bCA) {
+          store.addCert(provider.handle, CA, cert);
+        }
       }
     }
 
@@ -287,7 +291,7 @@ export class Store {
       return callback();
     }
 
-    trusted.pki.Certificate.download(urls, pathForSave, function(err, res) {
+    trusted.pki.Certificate.download(urls, pathForSave, function (err, res) {
       if (err) {
         return callback(err);
       } else {
