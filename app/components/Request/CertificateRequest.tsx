@@ -94,7 +94,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         digitalSignature: true,
         encipherOnly: false,
         keyAgreement: true,
-        keyCertSign: false,
+        keyCertSign: true,
         keyEncipherment: false,
         nonRepudiation: true,
       },
