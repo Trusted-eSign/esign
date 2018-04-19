@@ -3,15 +3,16 @@ import * as React from "react";
 import Footer from "./Footer";
 import MainWindowOperation from "./MainWindowOperation";
 
+
 class MainWindow extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  render() {
+    render() {
     const { localize, locale } = this.context;
-
+    console.log('MainWindow : 0');
     return (
       <div className="main">
         <div className="main-window">
@@ -70,4 +71,5 @@ class MainWindow extends React.Component<{}, {}> {
   }
 }
 
+//export default MainWindow;
 export default MainWindow;

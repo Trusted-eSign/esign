@@ -157,18 +157,18 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseVerified, licenseStatus, licenseToken, licenseLoaded  } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error, licenseToken, licenseLoaded  } = this.props;
     const { localize, locale } = this.context;
 
-    if (licenseLoaded && !licenseToken) {
-      $(".toast-jwtErrorLoad").remove();
-      Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
-      return;
-    }
+    // if (licenseLoaded && !licenseToken) {
+    //   $(".toast-jwtErrorLoad").remove();
+    //   Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
+    //   return;
+    // }
 
-    if (licenseVerified && licenseStatus !== 0) {
+    if (licenseStatus != 1) {
       $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(licenseStatus), locale), 5000, "toast-jwtErrorLicense");
+      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
       return;
     }
 
@@ -260,8 +260,8 @@ export default connect((state) => {
     files: activeFilesSelector(state, { active: true }),
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,
+    lic_error: state.license.lic_error,
     licenseToken: state.license.data,
-    licenseVerified: state.license.verified,
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };
