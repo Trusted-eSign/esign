@@ -45,7 +45,6 @@ interface ISignatureWindowProps {
   deleteFile: (file: string) => void;
   selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
   licenseLoaded: boolean;
-  //licenseVerified: boolean;
   licenseStatus: number;
   licenseToken: string;
   lic_error: number;
@@ -185,20 +184,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     const { deleteFile, selectFile, packageSign } = this.props;
     const { localize, locale } = this.context;
 
-    // if (licenseLoaded && !licenseToken) {
-    //   $(".toast-jwtErrorLoad").remove();
-    //   Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
-    //   return;
-    // }
-    console.log('SignatureWindow : 0 :' +  licenseStatus);
-
-    //if (licenseVerified && licenseStatus !== 0) {
-    if (licenseStatus != 1) {
+    if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
       return;
     }
-
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -239,24 +229,15 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   resign = () => {
     const { connections, connectedList, files, settings,
-      signer, licenseStatus, licenseToken, licenseLoaded, uploader } = this.props;
+      signer, licenseStatus, licenseToken, licenseLoaded, uploader, lic_error } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile, selectFile, packageSign } = this.props;
     const { localize, locale } = this.context;
 
-    console.log('SignatureWindow : 1' +  licenseStatus);
-
-    // if (licenseLoaded && !licenseToken) {
-    //   $(".toast-jwtErrorLoad").remove();
-    //   Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
-    //   return;
-    // }
-
-    //if (licenseVerified && licenseStatus !== 0) {
-    if (licenseStatus != 1) {
+    if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-      
+
       return;
     }
 
@@ -491,7 +472,6 @@ export default connect((state) => {
     licenseStatus: state.license.status,
     lic_error: state.license.lic_error,
     licenseToken: state.license.data,
-  //  licenseVerified: state.license.verified,
     packageSignResult: state.signatures.packageSignResult,
     settings: state.settings.sign,
     signatures,

@@ -23,157 +23,118 @@ import { extFile, toBase64 } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
-    let status_trial =  trusted.utils.Jwt.checkTrialLicense(); //1-лицензия действует, 0 - нет
-    let lic_format = 'NONE';
+    let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+    let lic_format = "NONE";
     let licenseStatus = 0;
-    if(status_trial == 1){
-       lic_format = 'TRIAL';
-       licenseStatus = 1;
+    if (status_trial === 1) {
+      lic_format = "TRIAL";
+      licenseStatus = 1;
     }
-    dispatch({ payload: { lic_format, licenseStatus }, type: LOAD_LICENSE + START,});
-    
+    dispatch({ payload: { lic_format, licenseStatus }, type: LOAD_LICENSE + START });
 
     setTimeout(() => {
-      let data = '';
+      let data = "";
       let licenseStatus = 1;
       let parsedLicense;
       let buffer;
       let lic;
-      let lic_format = 'NONE'; //Type license: MTX - old license, JWT - license of jwt roken, TRIAL - триальная лицензия, NONE - license epsent
+      let lic_format = "NONE"; // Type license: MTX - old license, JWT - license of jwt roken, TRIAL - триальная лицензия, NONE - license epsent
       let lic_error = 900;
-      //Шаблон информации о лицензии для заполнения
+      // Шаблон информации о лицензии для заполнения
       lic = {
-        aud : '-',
-        sub : 'CryptoARM GOST',
+        aud: "-",
+        sub: "CryptoARM GOST",
         core: 65535,
-        iss : 'ООО "Цифровые технологии"',
-        exp : 0,
-        iat : 0,
-        jti : '',
-        desc : 'CryptoARM GOST'
-      } 
-      //Проверка на наличие и истечение временной лицензии
-      let status_trial =  trusted.utils.Jwt.checkTrialLicense(); //1-лицензия действует, 0 - нет
-      if(status_trial == 1){
-        lic_format = 'TRIAL'; //Работает триальная лицензия
-        let expirationTimeTrial =  trusted.utils.Jwt.getTrialExpirationTime();
+        iss: 'ООО "Цифровые технологии"',
+        exp: 0,
+        iat: 0,
+        jti: "",
+        desc: "CryptoARM GOST",
+      };
+      // Проверка на наличие и истечение временной лицензии
+      const status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+      if (status_trial === 1) {
+        lic_format = "TRIAL"; // Работает триальная лицензия
+        let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
         lic.exp = expirationTimeTrial;
-        lic.iat = expirationTimeTrial - 14*86400;
-        data = '';
+        lic.iat = expirationTimeTrial - 14 * 86400;
+        data = "";
         let loaded = true;
-        licenseStatus = 1; //Статуст лицензии: 1 - действует
-        dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
-      }else{
-        lic_format = 'NONE'; //Лицензия отсутствует, т.к. триальная истекла
-        licenseStatus = 0; //Статуст лицензии: 0 - не действует
-        data = '';
-        dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
+        licenseStatus = 1; // Статуст лицензии: 1 - действует
+        dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
+      } else {
+        lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
+        licenseStatus = 0; // Статуст лицензии: 0 - не действует
+        data = "";
+        dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL });
       }
       if (fs.existsSync(LICENSE_PATH)) {
-           data = fs.readFileSync(LICENSE_PATH, "utf8");
+        data = fs.readFileSync(LICENSE_PATH, "utf8");
       }
       if (data && data.length) {
-          //Проверка на наличие основной лицензии старого формата
-          let result = data.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
-          if(result != null){
-            lic_format = 'MTX';
-            let expirationTime =  trusted.utils.Jwt.getExpirationTime(data);
-            if(expirationTime == 0){ //лицензия корректна
-                lic.exp = expirationTime;
-                lic.iat = 0;
-                licenseStatus = 1;
-                let loaded = true;
-                dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
-            }else if(expirationTime > 900 && expirationTime <= 912){ //Возвратился код ошибки
-                lic.exp = expirationTime;
-                lic.iat = 0;
-                licenseStatus = 0;
-                lic_error = expirationTime;
-                dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
-            }    
-          }else{
-              let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
-              if(result != null){
-                  lic_format = 'JWT';
-                  let check =  trusted.utils.Jwt.checkLicense(data);
-                  if (check == 0) licenseStatus = 1; 
-                  else lic_error = check;
-                  console.log('index.ts : 0 :' + check);
-                  const splitLicense = data.split(".");
-                  if (splitLicense[1]) {
-                    try {
-                        buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-                        parsedLicense = JSON.parse(buffer);
-                        if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-                          && parsedLicense.jti && parsedLicense.sub) {
-                          lic = parsedLicense;
-                        }
-                        let loaded = true;
-                        dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
-                    } catch (e) {
-                      lic_format = 'NONE'; //Лицензия отсутствует
-                      licenseStatus = 0; //Статуст лицензии: 0 - не действует
-                      data = '';
-                      dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
-                    }
-                  }
-              }else{
-                lic_format = 'NONE'; //Лицензия отсутствует
-                licenseStatus = 0; //Статуст лицензии: 0 - не действует
-                data = '';
-                dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
-              }
+        // Проверка на наличие основной лицензии старого формата
+        const result = data.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig);
+        if (result != null) {
+          lic_format = "MTX";
+          const expirationTime = trusted.utils.Jwt.getExpirationTime(data);
+          if (expirationTime === 0) { // лицензия корректна
+            lic.exp = expirationTime;
+            lic.iat = 0;
+            licenseStatus = 1;
+            const loaded = true;
+            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
+          } else if (expirationTime > 900 && expirationTime <= 912) { // Возвратился код ошибки
+            lic.exp = expirationTime;
+            lic.iat = 0;
+            licenseStatus = 0;
+            lic_error = expirationTime;
+            dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL });
           }
+        } else {
+          let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
+          if (result != null) {
+            lic_format = "JWT";
+            const check = trusted.utils.Jwt.checkLicense(data);
+            if (check === 0) licenseStatus = 1;
+            else lic_error = check;
+            const splitLicense = data.split(".");
+            if (splitLicense[1]) {
+              try {
+                buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+                parsedLicense = JSON.parse(buffer);
+                if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+                  && parsedLicense.jti && parsedLicense.sub) {
+                  lic = parsedLicense;
+                }
+                const loaded = true;
+                dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
+              } catch (e) {
+                lic_format = "NONE"; // Лицензия отсутствует
+                licenseStatus = 0; // Статуст лицензии: 0 - не действует
+                data = "";
+                dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL });
+              }
+            }
+          } else {
+            lic_format = "NONE"; // Лицензия отсутствует
+            licenseStatus = 0; // Статуст лицензии: 0 - не действует
+            data = "";
+            dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL });
+          }
+        }
       }
-
-
-
-      //   if (data && data.length) {
-      //     //Проверка на наличие основной лицензии старого формата
-      //     let result = data.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
-      //     if(result != null){
-      //       lic_format = 'MTX';
-      //       let expirationTime =  trusted.utils.Jwt.getExpirationTime(data);   
-      //       lic.exp = expirationTime;      
-      //     }else{
-      //       //Проверка на наличие основной лицензии нового формата (JWT token)
-      //       let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
-      //       if(result != null){
-      //         lic_format = 'JWT';
-      //         const splitLicense = data.split(".");
-      //         if (splitLicense[1]) {
-      //           try {
-      //             buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-      //             parsedLicense = JSON.parse(buffer);
-      //             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-      //               && parsedLicense.jti && parsedLicense.sub) {
-      //               lic = parsedLicense;
-      //             }
-      //           } catch (e) {
-      //             dispatch({
-      //               type: LOAD_LICENSE + FAIL,
-      //             });
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      //   lic ? dispatch({ payload: { data, lic, lic_format, }, type: LOAD_LICENSE + SUCCESS, })
-      //   : dispatch({ type: LOAD_LICENSE + FAIL, });  
-      // }
-    }, 0); 
+    }, 0);
   };
 }
 
 export function verifyLicense(key: string) {
   return (dispatch) => {
-     //Проверка на истечение временной лицензии
-     let lic_format;
-     //let licenseStatus = 1;
+    // Проверка на истечение временной лицензии
+    let lic_format;
+    // let licenseStatus = 1;
     // let status_trial =  trusted.utils.Jwt.checkTrialLicense();
   };
 }
-
 
 interface IFile {
   id: number;
@@ -230,19 +191,19 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({fullpath: newPath, extra: file.extra, remoteId: file.remoteId, socket: file.socket});
+          signedFilePackage.push({ fullpath: newPath, extra: file.extra, remoteId: file.remoteId, socket: file.socket });
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
             const connectedList = connectedSelector(state, { connected: true });
 
             if (connection && connection.connected && connection.socket) {
-              connection.socket.emit(SIGNED, {id: file.remoteId});
+              connection.socket.emit(SIGNED, { id: file.remoteId });
             } else if (connectedList.length) {
               const connectedSocket = connectedList[0].socket;
 
-              connectedSocket.emit(SIGNED, {id: file.remoteId});
-              connectedSocket.broadcast.emit(SIGNED, {id: file.remoteId});
+              connectedSocket.emit(SIGNED, { id: file.remoteId });
+              connectedSocket.broadcast.emit(SIGNED, { id: file.remoteId });
             }
 
             fs.unlinkSync(file.fullpath);
@@ -252,7 +213,7 @@ export function packageSign(
 
               if (cms.isDetached()) {
                 if (!(cms = signs.setDetachedContent(cms, newPath))) {
-                  throw ("err");
+                  throw new Error(("err"));
                 }
               }
 
@@ -286,21 +247,21 @@ export function packageSign(
               }, (err, httpResponse, body) => {
                 if (err) {
                   if (connection && connection.connected && connection.socket) {
-                    connection.socket.emit(ERROR, {id: file.remoteId, error: err});
+                    connection.socket.emit(ERROR, { id: file.remoteId, error: err });
                   } else if (connectedList.length) {
                     const connectedSocket = connectedList[0].socket;
 
-                    connectedSocket.emit(ERROR, {id: file.remoteId, error: err});
-                    connectedSocket.broadcast.emit(ERROR, {id: file.remoteId, error: err});
+                    connectedSocket.emit(ERROR, { id: file.remoteId, error: err });
+                    connectedSocket.broadcast.emit(ERROR, { id: file.remoteId, error: err });
                   }
                 } else {
                   if (connection && connection.connected && connection.socket) {
-                    connection.socket.emit(UPLOADED, {id: file.remoteId});
+                    connection.socket.emit(UPLOADED, { id: file.remoteId });
                   } else if (connectedList.length) {
                     const connectedSocket = connectedList[0].socket;
 
-                    connectedSocket.emit(UPLOADED, {id: file.remoteId});
-                    connectedSocket.broadcast.emit(UPLOADED, {id: file.remoteId});
+                    connectedSocket.emit(UPLOADED, { id: file.remoteId });
+                    connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
                   }
                 }
               },
@@ -314,7 +275,7 @@ export function packageSign(
       });
 
       dispatch({
-        payload: {packageSignResult},
+        payload: { packageSignResult },
         type: PACKAGE_SIGN + SUCCESS,
       });
 
@@ -423,7 +384,7 @@ export function verifyCertificate(certificateId) {
     const { certificates } = getState();
 
     const certItem = certificates.getIn(["entities", certificateId]);
-    const certificate =  window.PKISTORE.getPkiObject(certItem);
+    const certificate = window.PKISTORE.getPkiObject(certItem);
     let certificateStatus = false;
 
     try {
@@ -472,7 +433,7 @@ export function loadAllContainers() {
       const filteredContainers = [];
 
       for (const cont of enumedContainers) {
-        if (cont.fqcnA.toLowerCase().indexOf("registry") <= 0 ) {
+        if (cont.fqcnA.toLowerCase().indexOf("registry") <= 0) {
           filteredContainers.push({
             friendlyName: cont.container,
             id: Math.random(),
@@ -540,7 +501,7 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
   let stat;
 
   if (!lastModifiedDate || !size) {
-   stat = fs.statSync(fullpath);
+    stat = fs.statSync(fullpath);
   }
 
   const extension = extFile(fullpath);
@@ -589,7 +550,7 @@ export function verifySignature(fileId: string) {
 
       if (cms.isDetached()) {
         if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
-          throw("err");
+          throw new Error(("err"));
         }
       }
 
@@ -614,14 +575,15 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-           id: Date.now() + Math.random()};
+          id: Date.now() + Math.random(),
+        };
       });
 
     } catch (error) {
       dispatch({
-        payload: {error, fileId},
+        payload: { error, fileId },
         type: VERIFY_SIGNATURE + FAIL,
-    });
+      });
     }
 
     dispatch({

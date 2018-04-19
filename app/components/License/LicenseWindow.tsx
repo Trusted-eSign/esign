@@ -4,7 +4,6 @@ import LicenseInfo from "./LicenseInfo";
 import LicenseInfoCSP from "./LicenseInfoCSP";
 import LicenseInfoField from "./LicenseInfoField";
 import LicenseSetupModal from "./LicenseSetupModal";
-//import LicenseTemporaryModal from "./LicenseTemporaryModal";
 import LicenseStatus from "./LicenseStatus";
 
 // tslint:disable-next-line:max-classes-per-file
@@ -41,9 +40,6 @@ class LicenseWindow extends React.Component<{}, {}> {
         <LicenseSetupModal text_info={localize("License.entered_the_key", locale)} closeWindow={function () {
           $("#add-licence-key").closeModal();
         }} icon="" />
-        {/* <LicenseTemporaryModal text_info={localize("License.license_request", locale)} closeWindow={function () {
-          $("#licence-temporary-modal").closeModal();
-        }} icon="" /> */}
       </div>
     );
   }

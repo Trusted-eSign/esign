@@ -87,12 +87,12 @@ class EncryptWindow extends React.Component<any, any> {
               if (file.socket) {
                 const connection = connections.getIn(["entities", file.socket]);
                 if (connection && connection.connected && connection.socket) {
-                  connection.socket.emit(ENCRYPTED, {id: file.remoteId});
+                  connection.socket.emit(ENCRYPTED, { id: file.remoteId });
                 } else if (connectedList.length) {
                   const connectedSocket = connectedList[0].socket;
 
-                  connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
-                  connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                  connectedSocket.emit(ENCRYPTED, { id: file.remoteId });
+                  connectedSocket.broadcast.emit(ENCRYPTED, { id: file.remoteId });
                 }
               }
             });
@@ -132,12 +132,12 @@ class EncryptWindow extends React.Component<any, any> {
             if (file.socket) {
               const connection = connections.getIn(["entities", file.socket]);
               if (connection && connection.connected && connection.socket) {
-                connection.socket.emit(ENCRYPTED, {id: file.remoteId});
+                connection.socket.emit(ENCRYPTED, { id: file.remoteId });
               } else if (connectedList.length) {
                 const connectedSocket = connectedList[0].socket;
 
-                connectedSocket.emit(ENCRYPTED, {id: file.remoteId});
-                connectedSocket.broadcast.emit(ENCRYPTED, {id: file.remoteId});
+                connectedSocket.emit(ENCRYPTED, { id: file.remoteId });
+                connectedSocket.broadcast.emit(ENCRYPTED, { id: file.remoteId });
               }
             }
           } else {
@@ -157,16 +157,10 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error, licenseToken, licenseLoaded  } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error, licenseToken, licenseLoaded } = this.props;
     const { localize, locale } = this.context;
 
-    // if (licenseLoaded && !licenseToken) {
-    //   $(".toast-jwtErrorLoad").remove();
-    //   Materialize.toast(localize("License.jwtErrorLoad", locale), 5000, "toast-jwtErrorLoad");
-    //   return;
-    // }
-
-    if (licenseStatus != 1) {
+    if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
       return;
@@ -193,12 +187,12 @@ class EncryptWindow extends React.Component<any, any> {
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
             if (connection && connection.connected && connection.socket) {
-              connection.socket.emit(DECRYPTED, {id: file.remoteId});
+              connection.socket.emit(DECRYPTED, { id: file.remoteId });
             } else if (connectedList.length) {
               const connectedSocket = connectedList[0].socket;
 
-              connectedSocket.emit(DECRYPTED, {id: file.remoteId});
-              connectedSocket.broadcast.emit(DECRYPTED, {id: file.remoteId});
+              connectedSocket.emit(DECRYPTED, { id: file.remoteId });
+              connectedSocket.broadcast.emit(DECRYPTED, { id: file.remoteId });
             }
           }
         } else {

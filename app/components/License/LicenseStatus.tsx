@@ -43,10 +43,9 @@ interface ILicenseStatusProps {
   loading: boolean;
   status: number;
   lic_format: string;
-  // loadLicense: () => void;
-  // // verifyLicense: (key: string) => void;
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
@@ -71,99 +70,99 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 
     let style: any;
     let styleRow: any;
-    let viewStatus = 'incorrect'; //Отображаемый статус
-    let messageStatus = ''; //Текст статуса лицензии
-    let messageExpired = ''; //Текст со временем истечения лицензии
+    let viewStatus = "incorrect";
+    let messageStatus = "";
+    let messageExpired = "";
 
     const dateExp = new Date(license.exp * 1000).getTime();
     const dateNow = new Date().getTime();
     const dateDif = dateExp - dateNow;
     const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
-    //Оценка статуса лицензии
-    if(lic_format == 'NONE'){
-          viewStatus = 'incorrect';
-          messageExpired = localize("License.failed_key_find", locale);  
+
+    if (lic_format === "NONE") {
+      viewStatus = "incorrect";
+      messageExpired = localize("License.failed_key_find", locale);
     }
-    if(lic_format == 'TRIAL'){
-        if(status == 1){
-          viewStatus = 'correct';
-          messageStatus = localize("License.License_overtimes", locale);
-          messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
-        }else{
-          viewStatus = 'incorrect';
-          messageStatus = localize("License.License_overtimes", locale);
-          messageExpired = localize("License.license_overtimes_expired", locale);          
-        }
-    }else if(lic_format == 'MTX'){
-        if(status == 1){
-          viewStatus = 'correct';
-          messageExpired = localize("License.lic_key_correct_unlimited", locale);
-        }else{
-          viewStatus = 'incorrect';
-          messageExpired = localize("License.lic_key_uncorrect", locale);          
-        }
-    }else if(lic_format == 'JWT'){
+    if (lic_format === "TRIAL") {
+      if (status === 1) {
+        viewStatus = "correct";
+        messageStatus = localize("License.License_overtimes", locale);
+        messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
+      } else {
+        viewStatus = "incorrect";
+        messageStatus = localize("License.License_overtimes", locale);
+        messageExpired = localize("License.license_overtimes_expired", locale);
+      }
+    } else if (lic_format === "MTX") {
+      if (status === 1) {
+        viewStatus = "correct";
+        messageExpired = localize("License.lic_key_correct_unlimited", locale);
+      } else {
+        viewStatus = "incorrect";
+        messageExpired = localize("License.lic_key_uncorrect", locale);
+      }
+    } else if (lic_format === "JWT") {
       let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
-      if(status == 1){
-        viewStatus = 'correct';
+      if (status === 1) {
+        viewStatus = "correct";
         let year = (new Date(dateExp)).getFullYear();
-        if(year == 1970 || year >= 2037) messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        if (year === 1970 || year >= 2037) messageExpired = localize("License.lic_key_correct_unlimited", locale);
         else localize("License.lic_key_correct", locale) + fullDays + ")";
-      }else{
-        viewStatus = 'incorrect';
-        messageExpired = localize("License.lic_key_uncorrect", locale);          
+      } else {
+        viewStatus = "incorrect";
+        messageExpired = localize("License.lic_key_uncorrect", locale);
       }
     }
 
-    if (viewStatus == 'correct') {
+    if (viewStatus === "correct") {
       style = { color: "green" };
       styleRow = { border: "2px solid green", padding: "5px" };
       return (
         <div>
-         <div className="row">
+          <div className="row">
             <div className="col s6">
-              
+
               <div style={styleRow}>
-              <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
-              <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style}  />
+                <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
+                <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} />
               </div>
             </div>
             <div className="col s6">
-                <div className="row">
-                  <div className="col s5">
-                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                      {localize("License.Enter_Key", locale)}
-                    </a>
-                  </div>
-                  <div className="col s6">
-                    <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
-                  </div>
+              <div className="row">
+                <div className="col s5">
+                  <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                    {localize("License.Enter_Key", locale)}
+                  </a>
                 </div>
+                <div className="col s6">
+                  <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       );
-    }else{
+    } else {
       style = { color: "red" };
       styleRow = { border: "2px solid red", padding: "5px" };
       return (
         <div>
           <div className="row">
             <div className="col s6">
-                <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
+              <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
             </div>
             <div className="col s6">
-                <div className="row">
-                  <div className="col s5">
-                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                      {localize("License.Enter_Key", locale)}
-                    </a>
-                  </div>
-                  <div className="col s6">
-                    <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
-                  </div>
+              <div className="row">
+                <div className="col s5">
+                  <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                    {localize("License.Enter_Key", locale)}
+                  </a>
+                </div>
+                <div className="col s6">
+                  <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
                 </div>
               </div>
+            </div>
           </div>
           {/* <div className="row">
               <div className="col s6">
@@ -190,4 +189,4 @@ export default connect((state) => {
     status: state.license.status,
     lic_format: state.license.lic_format,
   };
-}, {}, null, {pure: false})(LicenseStatus);
+}, {}, null, { pure: false })(LicenseStatus);

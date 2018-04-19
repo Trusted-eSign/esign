@@ -1,6 +1,8 @@
 import { Map, OrderedMap, Record } from "immutable";
-import { FAIL, LOAD_LICENSE,
-  START, SUCCESS, VERIFY_LICENSE } from "../constants";
+import {
+  FAIL, LOAD_LICENSE,
+  START, SUCCESS, VERIFY_LICENSE
+} from "../constants";
 import { arrayToMap } from "../utils";
 
 const LicenseModel = Record({
@@ -15,12 +17,12 @@ const LicenseModel = Record({
 const DefaultReducerState = Record({
   data: null,
   info: new LicenseModel(),
+  lic_error: null,
+  lic_format: null,
   loaded: false,
   loading: false,
   status: null,
   verified: false,
-  lic_format: null,
-  lic_error: null,
 });
 
 export default (license = new DefaultReducerState(), action) => {
@@ -29,9 +31,9 @@ export default (license = new DefaultReducerState(), action) => {
   switch (type) {
     case LOAD_LICENSE + START:
       return license
-      .set("loading", true)
-      .set("lic_format",payload.lic_format)
-      .set("status", payload.licenseStatus);
+        .set("loading", true)
+        .set("lic_format", payload.lic_format)
+        .set("status", payload.licenseStatus);
 
     case LOAD_LICENSE + SUCCESS:
       return license
@@ -39,23 +41,23 @@ export default (license = new DefaultReducerState(), action) => {
         .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true)
-        .set("lic_format",payload.lic_format)
-        .set("lic_error",payload.lic_error)       
+        .set("lic_format", payload.lic_format)
+        .set("lic_error", payload.lic_error)
         .set("status", payload.licenseStatus);
 
     case LOAD_LICENSE + FAIL:
-        return license
-          .set("loading", false)
-          .set("loaded", true)
-          .set("status", false)
-          .set("lic_error",payload.lic_error)  
-          .set("lic_format",payload.lic_format);
+      return license
+        .set("loading", false)
+        .set("loaded", true)
+        .set("status", false)
+        .set("lic_error", payload.lic_error)
+        .set("lic_format", payload.lic_format);
 
     case VERIFY_LICENSE:
       return license
         .set("status", payload.licenseStatus)
         .set("verified", true)
-        .set("lic_format",payload.lic_format);
+        .set("lic_format", payload.lic_format);
   }
 
   return license;

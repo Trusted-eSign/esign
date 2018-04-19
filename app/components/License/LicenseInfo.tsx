@@ -52,56 +52,56 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
   render() {
     const { localize, locale } = this.context;
     const { license } = this.props;
-    const { lic_format, lic_status} = this.props;
+    const { lic_format, lic_status } = this.props;
 
     const style = { height: 39 + "px" };
-    console.log('LicenseInfo : 0 :' + license);
+
     let notAfter: string;
     let notBefore: string;
     let productName: string;
     let productAutor: string;
     let productIssue: string;
 
-    if(lic_format == 'NONE'){ //Лицензионный ключ отсутствует
-        notAfter = "-";
-        notBefore = "-";
-        productAutor = "-";
-        productName = "-";
-        productIssue = "-";
-        return (
-              <div>
-                <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
-                <div className="row leftshifter">
-                  <div className="col s6">
-                    <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={productIssue} />
-                  </div>
-                  <div className="col s6">
-                    <LicenseInfoFiled title={localize("Common.subject", locale)} info={productAutor} />
-                  </div>
-                </div>
-                <div className="row leftshifter">
-                  <div className="col s6">
-                    <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
-                  </div>
-                  <div className="col s6">
-                    <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
-                  </div>
-                </div>
-                <div className="row leftshifter">
-                  <div className="col s6">
-                    <LicenseInfoFiled title="" info="" style={style} />
-                  </div>
-                  <div className="col s6">
-                    <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
-                  </div>
-                </div>
-              </div>
-        );
+    if (lic_format === "NONE") {
+      notAfter = "-";
+      notBefore = "-";
+      productAutor = "-";
+      productName = "-";
+      productIssue = "-";
+      return (
+        <div>
+          <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={productIssue} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.subject", locale)} info={productAutor} />
+            </div>
+          </div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+            </div>
+          </div>
+          <div className="row leftshifter">
+            <div className="col s6">
+              <LicenseInfoFiled title="" info="" style={style} />
+            </div>
+            <div className="col s6">
+              <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+            </div>
+          </div>
+        </div>
+      );
     }
 
-    if(lic_format == 'TRIAL'){
+    if (lic_format === "TRIAL") {
       const exp = new Date(license.exp * 1000);
-      notAfter = (license.exp == 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+      notAfter = (license.exp === 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
       notBefore = this.getLocaleDate(license.iat * 1000);
       productName = localize("About.product_name", locale);
       return (
@@ -127,14 +127,14 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
           </div>
         </div>
       );
-    }else if(lic_format == 'MTX'){
-      if(lic_status == 0){
-          notAfter = "-";
-          notBefore = "-";
-          productName = localize("About.product_name", locale);
-      }else{
+    } else if (lic_format === "MTX") {
+      if (lic_status === 0) {
+        notAfter = "-";
+        notBefore = "-";
+        productName = localize("About.product_name", locale);
+      } else {
         const exp = new Date(license.exp * 1000);
-        notAfter = (license.exp == 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+        notAfter = (license.exp === 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
         notBefore = this.getLocaleDate(license.iat * 1000);
         productName = localize("About.product_name", locale);
       }
@@ -161,20 +161,18 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
           </div>
         </div>
       );
-    }else if(lic_format == 'JWT'){
-      console.log('LicenseInfo' + license);
-      if(lic_status == 0){
-        var date = new Date(license.exp*1000);
+    } else if (lic_format === "JWT") {
+      if (lic_status === 0) {
+        var date = new Date(license.exp * 1000);
         let year = date.getFullYear();
-        console.log('' + year);
-        if((year == 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
+        if ((year === 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
         else notAfter = this.getLocaleDate(license.exp * 1000);
         notBefore = this.getLocaleDate(license.iat * 1000);
         productName = localize("About.product_name", locale);
-      }else{
-        var date = new Date(license.exp*1000);
+      } else {
+        var date = new Date(license.exp * 1000);
         let year = date.getFullYear();
-        if((year == 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
+        if ((year === 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
         else notAfter = this.getLocaleDate(license.exp * 1000);
         notBefore = this.getLocaleDate(license.iat * 1000);
         productName = localize("About.product_name", locale);
@@ -220,4 +218,4 @@ export default connect((state) => {
     lic_format: state.license.lic_format,
     lic_status: state.license.status,
   };
-}, {loadLicense}, null, {pure: false})(LicenseInfo);
+}, { loadLicense }, null, { pure: false })(LicenseInfo);
