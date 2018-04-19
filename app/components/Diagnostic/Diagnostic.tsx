@@ -128,37 +128,45 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { localize, locale } = this.context;
     const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
     const { lic_format } = this.props;
+    console.log('Diagnostic : 0 :'+lic_format);
     // tslint:disable-next-line:no-shadowed-variable
-    const { verifyLicense } = this.props;
+    // const { verifyLicense } = this.props;
 
-    if(nextProps.lic_format=='TRIAL'){
-        verifyLicense(nextProps.dataLicense);
-    }else{
+    // if(nextProps.lic_format=='TRIAL'){
+    //     verifyLicense(nextProps.dataLicense);
+    // }else{
 
-      if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
+    //   if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
+    //     this.setState({
+    //       errors: [...this.state.errors, {
+    //         important: WARNING,
+    //         type: NO_CRYPTOARM_LICENSE,
+    //       }],
+    //     });
+    //   }
+
+    //   if (!verifiedLicense && !nextProps.verifiedLicense && nextProps.loadedLicense && nextProps.dataLicense) {
+    //     verifyLicense(nextProps.dataLicense);
+    //   }
+      
+    //   if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
+    //     this.setState({
+    //       errors: [...this.state.errors, {
+    //         important: WARNING,
+    //         type: NO_CORRECT_CRYPTOARM_LICENSE,
+    //       }],
+    //     });
+    //   }
+    // }
+
+    if (loadedLicense != nextProps.loadedLicense && nextProps.lic_format == 'NONE') {
         this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
             type: NO_CRYPTOARM_LICENSE,
           }],
         });
-      }
-
-      if (!verifiedLicense && !nextProps.verifiedLicense && nextProps.loadedLicense && nextProps.dataLicense) {
-        verifyLicense(nextProps.dataLicense);
-      }
-      
-      if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
-        this.setState({
-          errors: [...this.state.errors, {
-            important: WARNING,
-            type: NO_CORRECT_CRYPTOARM_LICENSE,
-          }],
-        });
-      }
     }
-
-
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
       this.setState({
         errors: [...this.state.errors, {
@@ -178,18 +186,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (this.checkTrustedCryptoLoadedErr()) {
       this.checkCPCSP();
     }
-
-    let status_trial =  trusted.utils.Jwt.checkTrialLicense();
-    if(status_trial == 1){
-      loadLicense();
-    }else{
-      if (!loadedLicense && !loadingLicense) {
-        loadLicense();
-      }
-    }
-    if (!certificatesLoading) {
-      loadAllCertificates();
-    }
+    loadLicense();
+    console.log('Diagnostic : 1' + loadedLicense);
   }
 
   getCloseButton() {

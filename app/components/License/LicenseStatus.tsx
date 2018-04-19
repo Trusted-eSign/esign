@@ -43,8 +43,8 @@ interface ILicenseStatusProps {
   loading: boolean;
   status: number;
   lic_format: string;
-  loadLicense: () => void;
-  verifyLicense: (key: string) => void;
+  // loadLicense: () => void;
+  // // verifyLicense: (key: string) => void;
 }
 
 class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
@@ -58,64 +58,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
   }
 
   componentDidMount() {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { loadLicense, verifyLicense } = this.props;
     const { data, loaded, loading, lic_format } = this.props;
-    if(lic_format == 'TRIAL'){
-            loadLicense();
-            verifyLicense(data);
-    }else{
-        //$(".licence-temporary-modal-btn").leanModal();
-        if (!loaded && !loading) {
-            loadLicense();
-        }
-         verifyLicense(data);
-    }
-  }
-
-  getInfoText(): string {
-    const { localize, locale } = this.context;
-    const { data, license, loaded, status, lic_format } = this.props;
-
-    const dateExp = new Date(license.exp * 1000).getTime();
-    const dateNow = new Date().getTime();
-    const dateDif = dateExp - dateNow;
-    const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
-    let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
-    if((lic_format == 'MTX') && (license.exp == 0)) unlimited = true;
-
-    let message = '';
-
-    if(lic_format == 'TRIAL'){
-      message =  localize("License.lic_key_correct", locale) + fullDays + ")";
-      return message;
-    }else{
-        if (loaded && !data) {
-          return localize("License.jwtErrorLoad", locale);
-        }
-
-        switch (status) {
-          case 0:
-            message =  localize("License.lic_key_correct", locale) + fullDays + ")";
-            break;
-
-          default:
-            message =  localize(jwt.getErrorMessage(status), locale);
-        }
-
-        return unlimited ? localize("License.lic_unlimited", locale) : message;
-    }
-
-  }
-
-  getTrialText():string{
-    const { localize, locale } = this.context;
-    const { status, lic_format } = this.props;
-    let message = '';
-    if((status ==0) && (lic_format == 'TRIAL')){
-      message = localize("License.License_overtimes", locale);
-    }
-    return message;
   }
 
   render() {
@@ -128,15 +71,86 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 
     let style: any;
     let styleRow: any;
-   
-    if (status !== 0) {
+    let viewStatus = 'incorrect'; //Отображаемый статус
+    let messageStatus = ''; //Текст статуса лицензии
+    let messageExpired = ''; //Текст со временем истечения лицензии
+
+    const dateExp = new Date(license.exp * 1000).getTime();
+    const dateNow = new Date().getTime();
+    const dateDif = dateExp - dateNow;
+    const fullDays = Math.round(dateDif / (24 * 3600 * 1000));
+    //Оценка статуса лицензии
+    if(lic_format == 'NONE'){
+          viewStatus = 'incorrect';
+          messageExpired = localize("License.failed_key_find", locale);  
+    }
+    if(lic_format == 'TRIAL'){
+        if(status == 1){
+          viewStatus = 'correct';
+          messageStatus = localize("License.License_overtimes", locale);
+          messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
+        }else{
+          viewStatus = 'incorrect';
+          messageStatus = localize("License.License_overtimes", locale);
+          messageExpired = localize("License.license_overtimes_expired", locale);          
+        }
+    }else if(lic_format == 'MTX'){
+        if(status == 1){
+          viewStatus = 'correct';
+          messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        }else{
+          viewStatus = 'incorrect';
+          messageExpired = localize("License.lic_key_uncorrect", locale);          
+        }
+    }else if(lic_format == 'JWT'){
+      let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
+      if(status == 1){
+        viewStatus = 'correct';
+        let year = (new Date(dateExp)).getFullYear();
+        if(year == 1970 || year >= 2037) messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        else localize("License.lic_key_correct", locale) + fullDays + ")";
+      }else{
+        viewStatus = 'incorrect';
+        messageExpired = localize("License.lic_key_uncorrect", locale);          
+      }
+    }
+
+    if (viewStatus == 'correct') {
+      style = { color: "green" };
+      styleRow = { border: "2px solid green", padding: "5px" };
+      return (
+        <div>
+         <div className="row">
+            <div className="col s6">
+              
+              <div style={styleRow}>
+              <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
+              <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style}  />
+              </div>
+            </div>
+            <div className="col s6">
+                <div className="row">
+                  <div className="col s5">
+                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                      {localize("License.Enter_Key", locale)}
+                    </a>
+                  </div>
+                  <div className="col s6">
+                    <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      );
+    }else{
       style = { color: "red" };
       styleRow = { border: "2px solid red", padding: "5px" };
       return (
         <div>
           <div className="row">
             <div className="col s6">
-                <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText()} style={style} styleRow={styleRow} />
+                <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
             </div>
             <div className="col s6">
                 <div className="row">
@@ -163,37 +177,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
           </div> */}
         </div>
       );
-    } else {
-      style = { color: "green" };
-      styleRow = { border: "2px solid green", padding: "5px" };
-      return (
-        <div>
-         <div className="row">
-            <div className="col s6">
-              
-              <div style={styleRow}>
-              <div className="desktoplic_text_item topitem" style={style}>{this.getTrialText()}</div>
-              <LicenseInfoField title={localize("License.lic_status", locale)} info={this.getInfoText()} style={style}  />
-              </div>
-            </div>
-            <div className="col s6">
-                <div className="row">
-                  <div className="col s5">
-                    <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                      {localize("License.Enter_Key", locale)}
-                    </a>
-                  </div>
-                  <div className="col s6">
-                    <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
-                  </div>
-                </div>
-            </div>
-          </div>
-        </div>
-      );
     }
-
-
   }
 }
 
@@ -206,4 +190,4 @@ export default connect((state) => {
     status: state.license.status,
     lic_format: state.license.lic_format,
   };
-}, {loadLicense, verifyLicense}, null, {pure: false})(LicenseStatus);
+}, {}, null, {pure: false})(LicenseStatus);

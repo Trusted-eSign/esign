@@ -18,6 +18,7 @@ interface ILicenseInfoProps {
   loaded: boolean;
   loading: boolean;
   lic_format: string;
+  lic_status: number;
   loadLicense: () => void;
 }
 
@@ -31,14 +32,8 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
     // tslint:disable-next-line:no-shadowed-variable
     const { loadLicense } = this.props;
     const { loaded, loading } = this.props;
-    const { lic_format } = this.props;
-   if(lic_format == 'TRIAL'){
-
-   }else{
-      if (!loaded && !loading) {
-      loadLicense();
-    }
-  }
+    const { lic_format, lic_status } = this.props;
+    loadLicense();
   }
 
   getLocaleDate = (time: number) => {
@@ -57,36 +52,58 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
   render() {
     const { localize, locale } = this.context;
     const { license } = this.props;
-    const { lic_format } = this.props;
+    const { lic_format, lic_status} = this.props;
 
     const style = { height: 39 + "px" };
-
+    console.log('LicenseInfo : 0 :' + license);
     let notAfter: string;
     let notBefore: string;
     let productName: string;
+    let productAutor: string;
+    let productIssue: string;
 
-   
-    if (!license.exp && license.exp != 0) {
-      notAfter = "-";
-    } else {
-      const exp = new Date(license.exp * 1000);
-      notAfter = ((exp.getFullYear() === 2038)||((lic_format == 'MTX') && (license.exp == 0))) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
-      if(lic_format == 'NONE') notAfter = '-';
-    }
-
-    if (!license.iat) {
-      notBefore = "-";
-    } else {
-      notBefore = this.getLocaleDate(license.iat * 1000);
-    }
-
-    if (license.sub === "CryptoARM GOST") {
-      productName = localize("About.product_name", locale);
-    } else {
-      productName = "-";
+    if(lic_format == 'NONE'){ //Лицензионный ключ отсутствует
+        notAfter = "-";
+        notBefore = "-";
+        productAutor = "-";
+        productName = "-";
+        productIssue = "-";
+        return (
+              <div>
+                <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
+                <div className="row leftshifter">
+                  <div className="col s6">
+                    <LicenseInfoFiled title={localize("Certificate.issuer_name", locale)} info={productIssue} />
+                  </div>
+                  <div className="col s6">
+                    <LicenseInfoFiled title={localize("Common.subject", locale)} info={productAutor} />
+                  </div>
+                </div>
+                <div className="row leftshifter">
+                  <div className="col s6">
+                    <LicenseInfoFiled title={localize("Common.product", locale)} info={productName} />
+                  </div>
+                  <div className="col s6">
+                    <LicenseInfoFiled title={localize("License.lic_notbefore", locale)} info={notBefore} />
+                  </div>
+                </div>
+                <div className="row leftshifter">
+                  <div className="col s6">
+                    <LicenseInfoFiled title="" info="" style={style} />
+                  </div>
+                  <div className="col s6">
+                    <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
+                  </div>
+                </div>
+              </div>
+        );
     }
 
     if(lic_format == 'TRIAL'){
+      const exp = new Date(license.exp * 1000);
+      notAfter = (license.exp == 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+      notBefore = this.getLocaleDate(license.iat * 1000);
+      productName = localize("About.product_name", locale);
       return (
         <div>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
@@ -111,6 +128,16 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
         </div>
       );
     }else if(lic_format == 'MTX'){
+      if(lic_status == 0){
+          notAfter = "-";
+          notBefore = "-";
+          productName = localize("About.product_name", locale);
+      }else{
+        const exp = new Date(license.exp * 1000);
+        notAfter = (license.exp == 0) ? localize("License.lic_unlimited", locale) : this.getLocaleDate(license.exp * 1000);
+        notBefore = this.getLocaleDate(license.iat * 1000);
+        productName = localize("About.product_name", locale);
+      }
       return (
         <div>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
@@ -134,7 +161,24 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
           </div>
         </div>
       );
-    }else{
+    }else if(lic_format == 'JWT'){
+      console.log('LicenseInfo' + license);
+      if(lic_status == 0){
+        var date = new Date(license.exp*1000);
+        let year = date.getFullYear();
+        console.log('' + year);
+        if((year == 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
+        else notAfter = this.getLocaleDate(license.exp * 1000);
+        notBefore = this.getLocaleDate(license.iat * 1000);
+        productName = localize("About.product_name", locale);
+      }else{
+        var date = new Date(license.exp*1000);
+        let year = date.getFullYear();
+        if((year == 1970) || (year >= 2037)) notAfter = localize("License.lic_unlimited", locale);
+        else notAfter = this.getLocaleDate(license.exp * 1000);
+        notBefore = this.getLocaleDate(license.iat * 1000);
+        productName = localize("About.product_name", locale);
+      }
       return (
         <div>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
@@ -174,5 +218,6 @@ export default connect((state) => {
     loaded: state.license.loaded,
     loading: state.license.loading,
     lic_format: state.license.lic_format,
+    lic_status: state.license.status,
   };
 }, {loadLicense}, null, {pure: false})(LicenseInfo);

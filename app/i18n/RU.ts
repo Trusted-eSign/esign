@@ -380,6 +380,7 @@ export default {
     lic_file_uncorrect: "Некорректный лицензинный файл",
     lic_key_uncorrect: "Некорректный лицензионный ключ",
     lic_key_correct: "Действительна (Осталось дней: ",
+    lic_key_correct_unlimited: "Действительна ( Бессрочная )",
     lic_key_correct_days: "Срок действия лицензии истечет через: ",
     lic_key_setup: "Лицензионный ключ успешно установлен",
     lic_file_choose: "Выберите файл лицензии",
@@ -403,6 +404,7 @@ export default {
     jwtGetLicense: "Для приобретения лицензии перейдите на сайт:",
     license_correct: "Действительна",
     license_incorrect: "Недействительна",
+    license_overtimes_expired: "Срок действия временной лицензии истек",
   },
   Кegistration: {
     LoginAndPass: "АВТОРИЗАЦИЯ ПО ЛОГИНУ И ПАРОЛЮ",

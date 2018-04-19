@@ -23,17 +23,25 @@ import { extFile, toBase64 } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
-    dispatch({
-      type: LOAD_LICENSE + START,
-    });
+    let status_trial =  trusted.utils.Jwt.checkTrialLicense(); //1-лицензия действует, 0 - нет
+    let lic_format = 'NONE';
+    let licenseStatus = 0;
+    if(status_trial == 1){
+       lic_format = 'TRIAL';
+       licenseStatus = 1;
+    }
+    dispatch({ payload: { lic_format, licenseStatus }, type: LOAD_LICENSE + START,});
+    
 
     setTimeout(() => {
-      let data;
+      let data = '';
+      let licenseStatus = 1;
       let parsedLicense;
       let buffer;
       let lic;
       let lic_format = 'NONE'; //Type license: MTX - old license, JWT - license of jwt roken, TRIAL - триальная лицензия, NONE - license epsent
-
+      let lic_error = 900;
+      //Шаблон информации о лицензии для заполнения
       lic = {
         aud : '-',
         sub : 'CryptoARM GOST',
@@ -44,56 +52,128 @@ export function loadLicense() {
         jti : '',
         desc : 'CryptoARM GOST'
       } 
-      //Проверка на истечение временной лицензии
-      let status_trial =  trusted.utils.Jwt.checkTrialLicense();
+      //Проверка на наличие и истечение временной лицензии
+      let status_trial =  trusted.utils.Jwt.checkTrialLicense(); //1-лицензия действует, 0 - нет
       if(status_trial == 1){
         lic_format = 'TRIAL'; //Работает триальная лицензия
         let expirationTimeTrial =  trusted.utils.Jwt.getTrialExpirationTime();
         lic.exp = expirationTimeTrial;
         lic.iat = expirationTimeTrial - 14*86400;
-        data = 'trial';
+        data = '';
         let loaded = true;
-        dispatch({ payload: { data, lic, lic_format, loaded }, type: LOAD_LICENSE + SUCCESS, });  
+        licenseStatus = 1; //Статуст лицензии: 1 - действует
+        dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
       }else{
-        if (fs.existsSync(LICENSE_PATH)) {
-          data = fs.readFileSync(LICENSE_PATH, "utf8");
-        }
-        if (data && data.length) {
+        lic_format = 'NONE'; //Лицензия отсутствует, т.к. триальная истекла
+        licenseStatus = 0; //Статуст лицензии: 0 - не действует
+        data = '';
+        dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
+      }
+      if (fs.existsSync(LICENSE_PATH)) {
+           data = fs.readFileSync(LICENSE_PATH, "utf8");
+      }
+      if (data && data.length) {
           //Проверка на наличие основной лицензии старого формата
           let result = data.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
           if(result != null){
             lic_format = 'MTX';
-            let expirationTime =  trusted.utils.Jwt.getExpirationTime(data);   
-            lic.exp = expirationTime;      
+            let expirationTime =  trusted.utils.Jwt.getExpirationTime(data);
+            if(expirationTime == 0){ //лицензия корректна
+                lic.exp = expirationTime;
+                lic.iat = 0;
+                licenseStatus = 1;
+                let loaded = true;
+                dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
+            }else if(expirationTime > 900 && expirationTime <= 912){ //Возвратился код ошибки
+                lic.exp = expirationTime;
+                lic.iat = 0;
+                licenseStatus = 0;
+                lic_error = expirationTime;
+                dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
+            }    
           }else{
-            //Проверка на наличие основной лицензии нового формата (JWT token)
-            let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
-            if(result != null){
-              lic_format = 'JWT';
-              const splitLicense = data.split(".");
-              if (splitLicense[1]) {
-                try {
-                  buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-                  parsedLicense = JSON.parse(buffer);
-                  if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-                    && parsedLicense.jti && parsedLicense.sub) {
-                    lic = parsedLicense;
+              let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
+              if(result != null){
+                  lic_format = 'JWT';
+                  let check =  trusted.utils.Jwt.checkLicense(data);
+                  if (check == 0) licenseStatus = 1; 
+                  else lic_error = check;
+                  console.log('index.ts : 0 :' + check);
+                  const splitLicense = data.split(".");
+                  if (splitLicense[1]) {
+                    try {
+                        buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+                        parsedLicense = JSON.parse(buffer);
+                        if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+                          && parsedLicense.jti && parsedLicense.sub) {
+                          lic = parsedLicense;
+                        }
+                        let loaded = true;
+                        dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS, });
+                    } catch (e) {
+                      lic_format = 'NONE'; //Лицензия отсутствует
+                      licenseStatus = 0; //Статуст лицензии: 0 - не действует
+                      data = '';
+                      dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
+                    }
                   }
-                } catch (e) {
-                  dispatch({
-                    type: LOAD_LICENSE + FAIL,
-                  });
-                }
+              }else{
+                lic_format = 'NONE'; //Лицензия отсутствует
+                licenseStatus = 0; //Статуст лицензии: 0 - не действует
+                data = '';
+                dispatch({ payload: { data, lic_format, licenseStatus, lic_error }, type: LOAD_LICENSE + FAIL, });
               }
-            }
           }
-        }
-        lic ? dispatch({ payload: { data, lic, lic_format, }, type: LOAD_LICENSE + SUCCESS, })
-        : dispatch({ type: LOAD_LICENSE + FAIL, });  
       }
+
+
+
+      //   if (data && data.length) {
+      //     //Проверка на наличие основной лицензии старого формата
+      //     let result = data.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
+      //     if(result != null){
+      //       lic_format = 'MTX';
+      //       let expirationTime =  trusted.utils.Jwt.getExpirationTime(data);   
+      //       lic.exp = expirationTime;      
+      //     }else{
+      //       //Проверка на наличие основной лицензии нового формата (JWT token)
+      //       let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
+      //       if(result != null){
+      //         lic_format = 'JWT';
+      //         const splitLicense = data.split(".");
+      //         if (splitLicense[1]) {
+      //           try {
+      //             buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
+      //             parsedLicense = JSON.parse(buffer);
+      //             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
+      //               && parsedLicense.jti && parsedLicense.sub) {
+      //               lic = parsedLicense;
+      //             }
+      //           } catch (e) {
+      //             dispatch({
+      //               type: LOAD_LICENSE + FAIL,
+      //             });
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      //   lic ? dispatch({ payload: { data, lic, lic_format, }, type: LOAD_LICENSE + SUCCESS, })
+      //   : dispatch({ type: LOAD_LICENSE + FAIL, });  
+      // }
     }, 0); 
   };
 }
+
+export function verifyLicense(key: string) {
+  return (dispatch) => {
+     //Проверка на истечение временной лицензии
+     let lic_format;
+     //let licenseStatus = 1;
+    // let status_trial =  trusted.utils.Jwt.checkTrialLicense();
+  };
+}
+
 
 interface IFile {
   id: number;
@@ -286,30 +366,6 @@ export function filePackageDelete(filePackage: number[]) {
   return {
     payload: { filePackage },
     type: PACKAGE_DELETE_FILE,
-  };
-}
-
-export function verifyLicense(key: string) {
-  return (dispatch) => {
-     //Проверка на истечение временной лицензии
-     let lic_format;
-     let licenseStatus = 1;
-
-     let status_trial =  trusted.utils.Jwt.checkTrialLicense();
-     if(status_trial == 1){
-        lic_format = 'TRIAL'; //Работает триальная лицензия
-        licenseStatus = 0;
-        dispatch({
-          payload: { licenseStatus, lic_format, },
-          type: VERIFY_LICENSE,
-        });
-     }else{
-        licenseStatus = jwt.checkLicense(key);
-        dispatch({
-          payload: { licenseStatus, },
-          type: VERIFY_LICENSE,
-        });
-     }
   };
 }
 
