@@ -105,3 +105,7 @@ export const LOCATION_CONTAINERS = "/containers";
 export const LOCATION_ABOUT = "/about";
 export const LOCATION_LICENSE = "/license";
 export const LOCATION_HELP = "/help";
+
+export const KEY_USAGE_SIGN = "sign";
+export const KEY_USAGE_ENCIPHERMENT  = "encipherment";
+export const KEY_USAGE_SIGN_AND_ENCIPHERMENT  = "signAndEncipherment";

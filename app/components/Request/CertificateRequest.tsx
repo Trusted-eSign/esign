@@ -5,7 +5,8 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, MY,
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
 } from "../../constants";
 import { uuid } from "../../utils";
@@ -45,6 +46,7 @@ interface ICertificateRequestState {
   inn?: string;
   keyLength: number;
   keyUsage: IKeyUsage;
+  keyUsageGroup: string;
   locality: string;
   ogrnip?: string;
   organization: string;
@@ -98,6 +100,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         keyEncipherment: false,
         nonRepudiation: true,
       },
+      keyUsageGroup: KEY_USAGE_SIGN_AND_ENCIPHERMENT,
       locality: "",
       ogrnip: "",
       organization: "",
@@ -173,7 +176,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   render() {
     const { localize, locale } = this.context;
     const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
+      keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
 
     return (
       <div>
@@ -189,9 +192,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   extKeyUsage={extKeyUsage}
                   keyLength={keyLength}
                   keyUsage={keyUsage}
+                  keyUsageGroup={keyUsageGroup}
                   handleAlgorithmChange={this.handleAlgorithmChange}
                   handleInputChange={this.handleInputChange}
                   handleKeyUsageChange={this.handleKeyUsageChange}
+                  handleKeyUsageGroupChange={this.handleKeyUsageGroupChange}
                   handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
                   toggleExportableKey={this.toggleExportableKey}
                 />
@@ -422,7 +427,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       if (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
-    }, MY );
+    }, MY);
   }
 
   handleReloadCertificates = () => {
@@ -492,6 +497,64 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         [name]: !this.state.keyUsage[name],
       },
     });
+  }
+
+  handleKeyUsageGroupChange = (ev: any) => {
+    const group = ev.target.value;
+    this.setState({ keyUsageGroup: group });
+
+    switch (group) {
+      case KEY_USAGE_SIGN:
+        this.setState({
+          keyUsage: {
+            cRLSign: false,
+            dataEncipherment: false,
+            decipherOnly: false,
+            digitalSignature: true,
+            encipherOnly: false,
+            keyAgreement: false,
+            keyCertSign: true,
+            keyEncipherment: false,
+            nonRepudiation: true,
+          },
+        });
+        break;
+
+      case KEY_USAGE_ENCIPHERMENT:
+        this.setState({
+          keyUsage: {
+            cRLSign: false,
+            dataEncipherment: true,
+            decipherOnly: false,
+            digitalSignature: false,
+            encipherOnly: false,
+            keyAgreement: true,
+            keyCertSign: true,
+            keyEncipherment: false,
+            nonRepudiation: false,
+          },
+        });
+        break;
+
+      case KEY_USAGE_SIGN_AND_ENCIPHERMENT:
+        this.setState({
+          keyUsage: {
+            cRLSign: false,
+            dataEncipherment: true,
+            decipherOnly: false,
+            digitalSignature: true,
+            encipherOnly: false,
+            keyAgreement: true,
+            keyCertSign: true,
+            keyEncipherment: false,
+            nonRepudiation: true,
+          },
+        });
+        break;
+
+      default:
+        return;
+    }
   }
 
   handleExtendedKeyUsageChange = (ev: any) => {

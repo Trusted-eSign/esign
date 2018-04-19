@@ -4,7 +4,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllContainers, removeAllContainers } from "../../AC";
-import { ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA } from "../../constants";
+import {
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT,
+} from "../../constants";
 import { filteredContainersSelector } from "../../selectors";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
@@ -40,9 +43,11 @@ interface IKeyParametersProps {
   extKeyUsage: IExtendedKeyUsage;
   keyLength: number;
   keyUsage: IKeyUsage;
+  keyUsageGroup: string;
   handleAlgorithmChange: (ev: any) => void;
   handleInputChange: (ev: any) => void;
   handleKeyUsageChange: (ev: any) => void;
+  handleKeyUsageGroupChange: (ev: any) => void;
   handleExtendedKeyUsageChange: (ev: any) => void;
   toggleExportableKey: () => void;
 }
@@ -66,6 +71,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
     });
 
     $(ReactDOM.findDOMNode(this.refs.algorithmSelect)).on("change", this.props.handleAlgorithmChange);
+    $(ReactDOM.findDOMNode(this.refs.keyUsageGroup)).on("change", this.props.handleKeyUsageGroupChange);
 
     Materialize.updateTextFields();
   }
@@ -80,9 +86,9 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, exportableKey, extKeyUsage, keyLength, keyUsage,
+    const { algorithm, containerName, exportableKey, extKeyUsage, keyLength, keyUsage, keyUsageGroup,
       handleAlgorithmChange, handleExtendedKeyUsageChange,
-      handleInputChange, handleKeyUsageChange, toggleExportableKey } = this.props;
+      handleInputChange, handleKeyUsageChange, handleKeyUsageGroupChange, toggleExportableKey } = this.props;
 
     return (
       <div className="row">
@@ -131,6 +137,18 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             </div>
           </div>
           : null}
+
+        <br />
+        <div className="row nobottom">
+          <div className="input-field col s12">
+            <select className="select" ref="keyUsageGroup" value={keyUsageGroup} name="keyUsageGroup" onChange={handleKeyUsageGroupChange} >
+              <option value={KEY_USAGE_SIGN}>{localize("CSR.key_usage_sign", locale)}</option>
+              <option value={KEY_USAGE_ENCIPHERMENT}>{localize("CSR.key_usage_encrypt", locale)}</option>
+              <option value={KEY_USAGE_SIGN_AND_ENCIPHERMENT}>{localize("CSR.key_usage_sign_encrypt", locale)}</option>
+            </select>
+            <label>{localize("CSR.key_usage_group", locale)}</label>
+          </div>
+        </div>
 
         <div className="row">
           <div className="col s12">
