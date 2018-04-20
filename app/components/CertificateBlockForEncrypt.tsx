@@ -140,10 +140,11 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     const CERTIFICATES_IS_ACTIVE = certificates;
     const CERTIFICATE_FOR_INFO = this.state.activeCertificate;
-    const CHOOSE = !selectedRecipients || !selectedRecipients.length ? "not-active" : "active";
+    const CHOOSE = !selectedRecipients || !selectedRecipients.length || CERTIFICATE_FOR_INFO ? "not-active" : "active";
     const CHOOSE_VIEW = !selectedRecipients || !selectedRecipients.length ? "active" : "not-active";
     const DISABLE = !CERTIFICATES_IS_ACTIVE ? "disabled" : "";
     const NOT_ACTIVE = recipients && recipients.length > 0 ? "not-active" : "";
+    const NOT_ACTIVE_RIGTH_BTN = !selectedRecipients || !selectedRecipients.length ? "not-active" : "";
     let activeButton: any = null;
     let cert: any = null;
     let title: any = null;
@@ -163,7 +164,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       cert = "";
       title = <span>{localize("Certificate.certs_getters", locale)}</span>;
       activeButton = <li className="right">
-        <a className={"nav-small-btn waves-effect waves-light " + DISABLE} data-activates="dropdown-btn-certlist">
+        <a className={"nav-small-btn waves-effect waves-light " + NOT_ACTIVE_RIGTH_BTN} data-activates="dropdown-btn-certlist">
           <i className="nav-small-icon material-icons">more_vert</i>
         </a>
         <ul id="dropdown-btn-certlist" className="dropdown-content">
