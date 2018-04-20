@@ -90,11 +90,13 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
       handleAlgorithmChange, handleExtendedKeyUsageChange,
       handleInputChange, handleKeyUsageChange, handleKeyUsageGroupChange, toggleExportableKey } = this.props;
 
+    const nobottom = algorithm === ALG_RSA ? "nobottom" : "";
+
     return (
       <div className="row">
         <HeaderWorkspaceBlock text={localize("CSR.keys_params", locale)} />
         <br />
-        <div className="row">
+        <div className={"row " + nobottom}>
           <div className="input-field col s12">
             <select className="select" ref="algorithmSelect" value={algorithm} onChange={handleAlgorithmChange} >>
               <option value={ALG_RSA}>{ALG_RSA}</option>
