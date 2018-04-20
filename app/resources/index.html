@@ -62,6 +62,7 @@
     var trusted;
     try {
       trusted = require('trusted-crypto');
+      var status = trusted.utils.Jwt.checkTrialLicense();
     } catch(err) {
       window.tcerr = err;
     }

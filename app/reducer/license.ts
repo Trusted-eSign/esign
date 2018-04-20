@@ -33,10 +33,10 @@ export default (license = new DefaultReducerState(), action) => {
     case LOAD_LICENSE + START:
       return license
         .set("loading", true)
-        .set("lic_format", payload.lic_format)
-        .set("loaded", false)
-        .set("verified", payload.verified)        
-        .set("status", payload.licenseStatus);
+        //.set("lic_format", payload.lic_format)
+        .set("loaded", false);
+       // .set("verified", payload.verified)        
+       // .set("status", payload.licenseStatus);
 
     case LOAD_LICENSE + SUCCESS:
       return license
