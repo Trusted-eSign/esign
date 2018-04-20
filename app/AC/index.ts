@@ -27,7 +27,7 @@ export function loadLicense() {
     let loaded = false;
     let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
     let licenseStatus = 0;
-    let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+    dispatch({ type: LOAD_LICENSE + START });
 
     setTimeout(() => {
       let data = "";
