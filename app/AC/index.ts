@@ -452,14 +452,12 @@ export function loadAllContainers() {
       const filteredContainers = [];
 
       for (const cont of enumedContainers) {
-        if (cont.fqcnA.toLowerCase().indexOf("registry") <= 0) {
           filteredContainers.push({
             friendlyName: cont.container,
             id: Math.random(),
             name: cont.unique,
             reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
           });
-        }
       }
 
       dispatch({
