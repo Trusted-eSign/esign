@@ -362,11 +362,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         return;
     }
 
-    keyPair.writePrivateKey(outputDirectory + "/privkey_s.key", trusted.DataFormat.PEM, "");
-    keyPair.writePublicKey(outputDirectory + "/pubkey_s.key", trusted.DataFormat.PEM);
-
-    const publickey = trusted.pki.Key.readPublicKey(outputDirectory + "/pubkey_s.key", trusted.DataFormat.PEM);
-
     const certReq = new trusted.pki.CertificationRequest();
 
     const atrs = [
@@ -385,7 +380,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     certReq.subject = atrs;
     certReq.version = 2;
-    certReq.publicKey = publickey;
+    certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
     certReq.save(outputDirectory + "/generated.req", trusted.DataFormat.PEM);
@@ -438,12 +433,16 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       }
     }, MY);
 
-    if (OS_TYPE === "Windows_NT") {
-      window.PKISTORE.importCertificate(certificate, PROVIDER_MICROSOFT, (err: Error) => {
-        if (err) {
-          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-        }
-      }, ROOT);
+    try {
+      if (OS_TYPE === "Windows_NT") {
+        window.PKISTORE.importCertificate(certificate, PROVIDER_MICROSOFT, (err: Error) => {
+          if (err) {
+            Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+          }
+        }, ROOT);
+      }
+    } catch (e) {
+      // e
     }
   }
 
