@@ -140,8 +140,8 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
     const CERTIFICATES_IS_ACTIVE = certificates;
     const CERTIFICATE_FOR_INFO = this.state.activeCertificate;
-    const CHOOSE = !CERTIFICATES_IS_ACTIVE || CERTIFICATE_FOR_INFO ? "not-active" : "active";
-    const CHOOSE_VIEW = !CERTIFICATES_IS_ACTIVE ? "active" : "not-active";
+    const CHOOSE = !selectedRecipients || !selectedRecipients.length ? "not-active" : "active";
+    const CHOOSE_VIEW = !selectedRecipients || !selectedRecipients.length ? "active" : "not-active";
     const DISABLE = !CERTIFICATES_IS_ACTIVE ? "disabled" : "";
     const NOT_ACTIVE = recipients && recipients.length > 0 ? "not-active" : "";
     let activeButton: any = null;
