@@ -385,6 +385,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     certReq.sign(keyPair);
     certReq.save(outputDirectory + "/generated.req", trusted.DataFormat.PEM);
 
+    if (!selfSigned && algorithm === ALG_RSA) {
+      keyPair.writePrivateKey(outputDirectory + "/generated.key", trusted.DataFormat.PEM, "");
+    }
+
     if (selfSigned) {
       const cert = new trusted.pki.Certificate(certReq);
       cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
@@ -407,6 +411,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       } catch (e) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
+    } else {
+      Materialize.toast(localize("CSR.create_request_created", locale), 2000, "toast-csr_created");
     }
 
     this.handelCancel();

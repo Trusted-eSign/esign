@@ -88,6 +88,7 @@ export default {
     algorithm: "Algorithm",
     container: "Сontainer (will generated)",
     create_request: "Create certificate request",
+    create_request_created: "Certificate request was successfully created",
     create_selfSigned: "Create self-signed certificate",
     template_label: "Certificate template",
     template_default: "Default template",
