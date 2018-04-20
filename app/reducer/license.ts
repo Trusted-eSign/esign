@@ -17,6 +17,7 @@ const LicenseModel = Record({
 const DefaultReducerState = Record({
   data: null,
   info: new LicenseModel(),
+  //lic_trial_verified: null,
   lic_error: null,
   lic_format: null,
   loaded: false,
@@ -33,6 +34,8 @@ export default (license = new DefaultReducerState(), action) => {
       return license
         .set("loading", true)
         .set("lic_format", payload.lic_format)
+        .set("loaded", false)
+        .set("verified", payload.verified)        
         .set("status", payload.licenseStatus);
 
     case LOAD_LICENSE + SUCCESS:
@@ -41,6 +44,7 @@ export default (license = new DefaultReducerState(), action) => {
         .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true)
+        .set("verified", payload.verified) 
         .set("lic_format", payload.lic_format)
         .set("lic_error", payload.lic_error)
         .set("status", payload.licenseStatus);
@@ -48,8 +52,9 @@ export default (license = new DefaultReducerState(), action) => {
     case LOAD_LICENSE + FAIL:
       return license
         .set("loading", false)
-        .set("loaded", true)
-        .set("status", false)
+        .set("loaded", false)
+        .set("status", 0)
+        .set("verified", payload.verified) 
         .set("lic_error", payload.lic_error)
         .set("lic_format", payload.lic_format);
 

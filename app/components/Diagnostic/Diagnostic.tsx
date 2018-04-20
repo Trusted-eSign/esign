@@ -127,16 +127,33 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   componentWillReceiveProps(nextProps: any) {
     const { localize, locale } = this.context;
     const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
-    const { lic_format } = this.props;
+    const { lic_format, lic_error, lic_trial_verified } = this.props;
 
-    if (loadedLicense !== nextProps.loadedLicense && nextProps.lic_format === "NONE") {
-        this.setState({
+    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true){
+            this.setState({
+                errors: [...this.state.errors, {
+                  important: WARNING,
+                  type: NO_CRYPTOARM_LICENSE,
+                }],
+              });
+    }
+    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){  
+      this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
-            type: NO_CRYPTOARM_LICENSE,
+            type: NO_CORRECT_CRYPTOARM_LICENSE,
           }],
         });
     }
+    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){  
+      this.setState({
+          errors: [...this.state.errors, {
+            important: WARNING,
+            type: NO_CORRECT_CRYPTOARM_LICENSE,
+          }],
+        });
+    }
+
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
       this.setState({
         errors: [...this.state.errors, {
@@ -273,6 +290,7 @@ export default connect((state) => {
     loadedLicense: state.license.loaded,
     loadingLicense: state.license.loading,
     statusLicense: state.license.status,
+    lic_error: state.license.lic_error,   
     verifiedLicense: state.license.verified,
     lic_format: state.license.lic_format,
   };
