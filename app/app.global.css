@@ -851,7 +851,7 @@ nav .cert-seacrh label i {
 .nav-small-btn.active {
     visibility: visible;
 }
-.nav-small-btn.not-active{
+.nav-small-icon.not-active{
     visibility: hidden;
 }
 .collection-item.avatar.certs-collection {

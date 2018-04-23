@@ -41,6 +41,7 @@ interface IKeyParametersProps {
   containerName: string;
   exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
+  formVerified: boolean;
   keyLength: number;
   keyUsage: IKeyUsage;
   keyUsageGroup: string;
@@ -114,12 +115,14 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 <input
                   id="containerName"
                   type="text"
-                  className="validate"
+                  className={!this.props.formVerified ? "validate" : containerName.length > 0 ? "valid" : "invalid"}
                   name="containerName"
                   value={containerName}
                   onChange={handleInputChange}
                 />
-                <label htmlFor="containerName">{localize("CSR.container", locale)}</label>
+                <label htmlFor="containerName">
+                  {localize("CSR.container", locale) + " *"}
+                </label>
               </div>
             </div>
             : null

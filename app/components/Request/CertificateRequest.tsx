@@ -7,7 +7,8 @@ import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT,
+  REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT,
 } from "../../constants";
 import { uuid } from "../../utils";
 import SelectFolder from "../SelectFolder";
@@ -43,6 +44,7 @@ interface ICertificateRequestState {
   email: string;
   exportableKey: boolean;
   extKeyUsage: IExtendedKeyUsage;
+  formVerified: boolean;
   inn?: string;
   keyLength: number;
   keyUsage: IKeyUsage;
@@ -88,6 +90,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         "1.3.6.1.5.5.7.3.3": false,
         "1.3.6.1.5.5.7.3.4": true,
       },
+      formVerified: false,
       inn: "",
       keyLength: 1024,
       keyUsage: {
@@ -177,7 +180,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   render() {
     const { localize, locale } = this.context;
     const { selfSigned } = this.props;
-    const { algorithm, cn, containerName, country, email, exportableKey, extKeyUsage, inn, keyLength,
+    const { algorithm, cn, containerName, country, formVerified, email, exportableKey, extKeyUsage, inn, keyLength,
       keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
 
     return (
@@ -192,6 +195,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   containerName={containerName}
                   exportableKey={exportableKey}
                   extKeyUsage={extKeyUsage}
+                  formVerified={formVerified}
                   keyLength={keyLength}
                   keyUsage={keyUsage}
                   keyUsageGroup={keyUsageGroup}
@@ -213,6 +217,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                   organization={organization}
                   organizationUnitName={organizationUnitName}
                   locality={locality}
+                  formVerified={formVerified}
                   province={province}
                   country={country}
                   inn={inn}
@@ -246,12 +251,40 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
             </div>
             <div className="col s2">
-              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
+              <a className={"waves-effect waves-light btn"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
             </div>
           </div>
         </div>
       </div>
     );
+  }
+
+  verifyFields = () => {
+    const { algorithm, cn, containerName, inn, locality, ogrnip, province, snils, template } = this.state;
+
+    if (cn.length > 0) {
+      if (template === REQUEST_TEMPLATE_KEP_FIZ) {
+        if (!snils || !snils.length || !province.length || !locality.length) {
+          return false;
+        }
+      }
+
+      if (template === REQUEST_TEMPLATE_KEP_IP) {
+        if (!snils || !snils.length || !ogrnip || !ogrnip.length || !province.length || !locality.length) {
+          return false;
+        }
+      }
+
+      if (algorithm === ALG_GOST2001 || algorithm === ALG_GOST12_256 || algorithm === ALG_GOST12_512) {
+        if (!containerName.length) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    return false;
   }
 
   handelReady = () => {
@@ -268,6 +301,17 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     let keyPair;
     let oid;
     let ext;
+
+    if (!this.verifyFields()) {
+      $(".toast-required_fields").remove();
+      Materialize.toast(localize("CSR.fill_required_fields", locale), 2000, "toast-required_fields");
+
+      if (!this.state.formVerified) {
+      this.setState({formVerified: true});
+      }
+
+      return;
+    }
 
     if (exportableKey) {
       pkeyopt.push("exportable:true");

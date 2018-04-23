@@ -3,6 +3,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllContainers, removeAllContainers } from "../../AC";
+import {
+  REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP,
+} from "../../constants";
 import { filteredContainersSelector } from "../../selectors";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
@@ -19,6 +22,7 @@ interface ISubjectNameInfoProps {
   locality: string;
   province: string;
   country: string;
+  formVerified: boolean;
   inn?: string;
   ogrnip?: string;
   snils?: string;
@@ -59,10 +63,10 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
         <div className="row">
           <div className="input-field col s12">
             <select className="select" ref="templateSelect" value={template} name="template" onChange={handleTemplateChange} >
-              <option value="default">{localize("CSR.template_default", locale)}</option>
-              <option value="kepIp">{localize("CSR.template_kep_ip", locale)}</option>
-              <option value="kepFiz">{localize("CSR.template_kep_fiz", locale)}</option>
-              <option value="additional">{localize("CSR.template_additional_fields", locale)}</option>
+              <option value={REQUEST_TEMPLATE_DEFAULT}>{localize("CSR.template_default", locale)}</option>
+              <option value={REQUEST_TEMPLATE_KEP_IP}>{localize("CSR.template_kep_ip", locale)}</option>
+              <option value={REQUEST_TEMPLATE_KEP_FIZ}>{localize("CSR.template_kep_fiz", locale)}</option>
+              <option value={REQUEST_TEMPLATE_ADDITIONAL}>{localize("CSR.template_additional_fields", locale)}</option>
             </select>
             <label>{localize("CSR.template_label", locale)}</label>
           </div>
@@ -72,12 +76,12 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <input
               id="commonName"
               type="text"
-              className="validate"
+              className={!this.props.formVerified ? "validate" : cn.length > 0 ? "valid" : "invalid"}
               name="cn"
               value={cn}
               onChange={handleInputChange}
             />
-            <label htmlFor="commonName">{localize("CSR.common_name", locale)}</label>
+            <label htmlFor="commonName">{localize("CSR.common_name", locale)} *</label>
           </div>
         </div>
         {this.getAditionalField()}
@@ -112,12 +116,15 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <input
               id="localityName"
               type="text"
-              className="validate"
+              className={!this.props.formVerified || template === REQUEST_TEMPLATE_DEFAULT ||
+                template === REQUEST_TEMPLATE_ADDITIONAL ? "validate" : locality.length > 0 ? "valid" : "invalid"}
               name="locality"
               value={locality}
               onChange={handleInputChange}
             />
-            <label htmlFor="localityName">{localize("CSR.locality_name", locale)}</label>
+            <label htmlFor="localityName">
+              {localize("CSR.locality_name", locale)}
+              {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}</label>
           </div>
         </div>
         <div className="row">
@@ -125,12 +132,16 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <input
               id="stateOrProvinceName"
               type="text"
-              className="validate"
+              className={!this.props.formVerified || template === REQUEST_TEMPLATE_DEFAULT ||
+                template === REQUEST_TEMPLATE_ADDITIONAL ? "validate" : province.length > 0 ? "valid" : "invalid"}
               name="province"
               value={province}
               onChange={handleInputChange}
             />
-            <label htmlFor="stateOrProvinceName">{localize("CSR.province_name", locale)}</label>
+            <label htmlFor="stateOrProvinceName">
+              {localize("CSR.province_name", locale)}
+              {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}
+            </label>
           </div>
         </div>
         <br />
@@ -151,7 +162,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
     const { template, handleInputChange, inn, ogrnip, organizationUnitName, snils, title } = this.props;
     const { localize, locale } = this.context;
 
-    if (template === "kepFiz" || template === "kepIp" || template === "additional") {
+    if (template === REQUEST_TEMPLATE_KEP_FIZ || template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL) {
       return (
         <div>
           <div className="row">
@@ -159,12 +170,16 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
               <input
                 id="snils"
                 type="text"
-                className="validate"
+                className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
+                  "validate" : snils && snils.length > 0 ? "valid" : "invalid"}
                 name="snils"
                 value={snils}
                 onChange={handleInputChange}
               />
-              <label htmlFor="snils">{localize("CSR.snils", locale)}</label>
+              <label htmlFor="snils">
+                {localize("CSR.snils", locale)}
+                {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}
+              </label>
             </div>
           </div>
           <div className="row">
@@ -181,25 +196,29 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             </div>
           </div>
           {
-            template === "kepIp" || template === "additional" ?
+            template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL ?
               (
                 <div className="row">
                   <div className="input-field col s12">
                     <input
                       id="ogrnip"
                       type="text"
-                      className="validate"
+                      className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
+                        "validate" : ogrnip && ogrnip.length > 0 ? "valid" : "invalid"}
                       name="ogrnip"
                       value={ogrnip}
                       onChange={handleInputChange}
                     />
-                    <label htmlFor="ogrnip">{localize("CSR.ogrnip", locale)}</label>
+                    <label htmlFor="ogrnip">
+                      {localize("CSR.ogrnip", locale)}
+                      {template === REQUEST_TEMPLATE_KEP_IP ? " *" : ""}
+                    </label>
                   </div>
                 </div>) :
               null
           }
           {
-            template === "additional" ?
+            template === REQUEST_TEMPLATE_ADDITIONAL ?
               <div>
                 <div className="row">
                   <div className="input-field col s12">

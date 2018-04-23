@@ -133,6 +133,7 @@ export default {
     eku_clientAuth: "Client authentication",
     eku_emailProtection: "Email protection",
     eku_codeSigning: "Code signing",
+    fill_required_fields: "Fill out the required fields",
   },
   Key: {
     key_load_failed: "Error load key",

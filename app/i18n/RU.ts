@@ -133,6 +133,7 @@ export default {
     eku_clientAuth: "Проверка подлинности клиента",
     eku_emailProtection: "Защита электронной почты",
     eku_codeSigning: "Подпись кода",
+    fill_required_fields: "Заполните обязательные поля",
   },
   Key: {
     key_load_failed: "Не удалось прочитать ключ",
