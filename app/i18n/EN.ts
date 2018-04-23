@@ -115,6 +115,7 @@ export default {
     locality_name: "Locality Name (eg, city)",
     province_name: "State or Province Name (full name)",
     email_address: "Email Address",
+    key_generation_error: "Error generation key pair",
     key_usage: "Key usage",
     key_usage_group: "Key usage group",
     key_usage_sign: "Digital signature",

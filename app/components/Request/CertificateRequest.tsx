@@ -395,19 +395,25 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     ext = new trusted.pki.Extension(oid, "critical,CA:false");
     exts.push(ext);
 
-    switch (algorithm) {
-      case ALG_RSA:
-        pkeyopt.push(`rsa_keygen_bits:${keyLength}`);
-        keyPair = key.generate(algorithm, pkeyopt);
-        break;
-      case ALG_GOST2001:
-      case ALG_GOST12_256:
-      case ALG_GOST12_512:
-        pkeyopt.push(`container:${containerName}`);
-        keyPair = key.generate(algorithm, pkeyopt);
-        break;
-      default:
-        return;
+    try {
+      switch (algorithm) {
+        case ALG_RSA:
+          pkeyopt.push(`rsa_keygen_bits:${keyLength}`);
+          keyPair = key.generate(algorithm, pkeyopt);
+          break;
+        case ALG_GOST2001:
+        case ALG_GOST12_256:
+        case ALG_GOST12_512:
+          pkeyopt.push(`container:${containerName}`);
+          keyPair = key.generate(algorithm, pkeyopt);
+          break;
+        default:
+          return;
+      }
+    } catch (e) {
+      $(".toast-key_generation_error").remove();
+      Materialize.toast(localize("CSR.key_generation_error", locale), 3000, "toast-key_generation_error");
+      return;
     }
 
     const certReq = new trusted.pki.CertificationRequest();

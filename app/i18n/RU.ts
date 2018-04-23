@@ -115,6 +115,7 @@ export default {
     locality_name: "Город",
     province_name: "Область",
     email_address: "Email адрес",
+    key_generation_error: "Ошибка генерации ключевой пары",
     key_usage: "Использование ключа",
     key_usage_group: "Назначение ключа",
     key_usage_sign: "Подпись",
