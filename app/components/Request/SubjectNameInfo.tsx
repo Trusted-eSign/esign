@@ -7,6 +7,7 @@ import {
   REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP,
 } from "../../constants";
 import { filteredContainersSelector } from "../../selectors";
+import { validateInn, validateOgrnip, validateSnils } from "../../utils";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
@@ -171,7 +172,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                 id="snils"
                 type="text"
                 className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
-                  "validate" : snils && snils.length > 0 ? "valid" : "invalid"}
+                  "validate" : snils && snils.length > 0 && validateSnils(snils) ? "valid" : "invalid"}
                 name="snils"
                 value={snils}
                 onChange={handleInputChange}
@@ -187,7 +188,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
               <input
                 id="inn"
                 type="text"
-                className="validate"
+                className={!inn || !inn.length ? "validate" : validateInn(inn) ? "valid" : "invalid"}
                 name="inn"
                 value={inn}
                 onChange={handleInputChange}
@@ -204,7 +205,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                       id="ogrnip"
                       type="text"
                       className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
-                        "validate" : ogrnip && ogrnip.length > 0 ? "valid" : "invalid"}
+                        "validate" : ogrnip && ogrnip.length > 0 && validateOgrnip(ogrnip) ? "valid" : "invalid"}
                       name="ogrnip"
                       value={ogrnip}
                       onChange={handleInputChange}

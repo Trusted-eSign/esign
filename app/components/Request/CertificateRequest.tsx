@@ -10,7 +10,7 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT,
 } from "../../constants";
-import { uuid } from "../../utils";
+import { uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import SelectFolder from "../SelectFolder";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
@@ -264,13 +264,13 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     if (cn.length > 0) {
       if (template === REQUEST_TEMPLATE_KEP_FIZ) {
-        if (!snils || !snils.length || !province.length || !locality.length) {
+        if (!snils || !snils.length || !validateSnils(snils) || !province.length || !locality.length) {
           return false;
         }
       }
 
       if (template === REQUEST_TEMPLATE_KEP_IP) {
-        if (!snils || !snils.length || !ogrnip || !ogrnip.length || !province.length || !locality.length) {
+        if (!snils || !snils.length || !ogrnip || !ogrnip.length || !validateOgrnip(ogrnip) || !province.length || !locality.length) {
           return false;
         }
       }
@@ -279,6 +279,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         if (!containerName.length) {
           return false;
         }
+      }
+
+      if (inn && inn.length && !validateInn(inn)) {
+        return false;
       }
 
       return true;
