@@ -3035,6 +3035,12 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   color: #334294;
 }
 
+/* label focus color */
+.input-field textarea:focus + label {
+  color: #334294 !important;
+}
+
+
 .input-field input[type=text]:focus {
   border-bottom: 1px solid #334294;
   box-shadow: 0 1px 0 0 #334294;
@@ -3045,6 +3051,15 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   box-shadow: 0 1px 0 0 #334294;
 }
 
+.input-field textarea:focus {
+  border-bottom: 1px solid #334294 !important;
+  box-shadow: 0 1px 0 0 #334294 !important;
+}
+
 .noUi-handle {
   background-color: #334294 !important;
+}
+
+.prefix.active {
+  color: #334294 !important;
 }
