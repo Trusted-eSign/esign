@@ -103,23 +103,27 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       if(result != null){
         lic_format = 'MTX';
         let productMarker = key.match(/^CAG/ig);
-        if(productMarker == null) {status = 907};
-        let expirationTime =  trusted.utils.Jwt.getExpirationTime(key); 
-        let dateExp = new Date(expirationTime* 1000).getTime();
-        let dateNow = new Date().getTime();
-        let dateDif = dateExp - dateNow;
-        if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;
-        //validate
-        data = {
-            aud : '-',
-            sub : 'CryptoARM GOST',
-            core: 65535,
-            iss : 'ООО "Цифровые технологии"',
-            exp : expirationTime,
-            iat : '',
-            jti : '',
-            desc : 'CryptoARM GOST'
-        } 
+        if(productMarker == null) {
+          status = 907;
+          data = "-";
+        }else{
+          let expirationTime =  trusted.utils.Jwt.getExpirationTime(key); 
+          let dateExp = new Date(expirationTime* 1000).getTime();
+          let dateNow = new Date().getTime();
+          let dateDif = dateExp - dateNow;
+          if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;       
+          //validate
+          data = {
+              aud : '-',
+              sub : 'CryptoARM GOST',
+              core: 65535,
+              iss : 'ООО "Цифровые технологии"',
+              exp : expirationTime,
+              iat : '',
+              jti : '',
+              desc : 'CryptoARM GOST'
+          } 
+        }
       }else{
         const splitLicense = key.split(".");
         if (splitLicense[1]) {
@@ -131,6 +135,10 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               && parsedLicense.jti && parsedLicense.sub) {
               data = parsedLicense;
               lic_format = 'JWT';
+              if(data.sub != 'CryptoARM GOST'){
+                status = 907;
+                data = data.sub = "-";
+              }
             }
           } catch (e) {
             data = null;
