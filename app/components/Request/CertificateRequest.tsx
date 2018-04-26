@@ -10,7 +10,7 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT,
 } from "../../constants";
-import { uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
+import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import SelectFolder from "../SelectFolder";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
@@ -445,6 +445,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     if (selfSigned) {
       const cert = new trusted.pki.Certificate(certReq);
+      cert.serialNumber = randomSerial();
       cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
       cert.sign(keyPair);
 

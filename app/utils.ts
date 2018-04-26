@@ -130,6 +130,10 @@ export const uuid = () => {
   return rnb.substring(0, 8) + "-" + rnb.substring(8, 12) + "-" + rnb.substring(12, 16) + "-" + rnb.substring(16, 20) + "-" + rnb.substring(20);
 };
 
+export const randomSerial = () => {
+  return Math.floor(Math.random() * 1000000000000000000);
+};
+
 export const validateSnils = (snils: string | number) => {
   let result = false;
 
