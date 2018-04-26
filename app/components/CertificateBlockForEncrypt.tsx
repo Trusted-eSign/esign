@@ -94,7 +94,12 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
   getCertificateList() {
     const { certificates } = this.props;
+    const { modalCertList } = this.state;
     const { localize, locale } = this.context;
+
+    if (!modalCertList) {
+      return null;
+    }
 
     $(".lean-overlay").remove();
 

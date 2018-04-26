@@ -56,7 +56,11 @@
     }
     var crypto_module = require('crypto');
     if (process.platform == 'win32') {
+      try {
       crypto_module.loadConfig("./config/openssl.cfg");
+      } catch (e) {
+        // error
+      }
     }
 
     var trusted;
@@ -106,6 +110,7 @@
   </script>
   <script src="./js/materialize.min.js"></script>
   <script src="./js/nouislider.js"></script>
+  <script src="./js/jquery.visible.min.js"></script>
   <script>
     {
       const scripts = [];

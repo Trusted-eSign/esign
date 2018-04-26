@@ -44,21 +44,10 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
   componentDidMount() {
     $(".cert-setting-item").dropdown();
-    this.checkAndVerify(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.checkAndVerify(nextProps);
-  }
-
-  checkAndVerify({ cert, verifyCertificate }) {
-    if (!cert.verified) {
-      verifyCertificate(cert.id);
-    }
   }
 
   handleClick = () => {
-    const { chooseCert, toggleOpen } = this.props;
+    const { cert, chooseCert, toggleOpen } = this.props;
 
     chooseCert();
     toggleOpen();
@@ -110,7 +99,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     return (
-      <div className="row certificate-list-item">
+      <div className="row certificate-list-item" id={cert.id}>
         <div className={"collection-item avatar certs-collection " + active}
           onClick={this.handleClick}>
           <div className={"rectangle"} style={rectangleStyle}></div>
