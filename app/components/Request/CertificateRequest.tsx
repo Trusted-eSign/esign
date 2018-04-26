@@ -260,7 +260,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 
   verifyFields = () => {
-    const { algorithm, cn, containerName, inn, locality, ogrnip, province, snils, template } = this.state;
+    const { algorithm, cn, containerName, email, inn, locality, ogrnip, province, snils, template } = this.state;
+    const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
     if (cn.length > 0) {
       if (template === REQUEST_TEMPLATE_KEP_FIZ) {
@@ -282,6 +283,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       }
 
       if (inn && inn.length && !validateInn(inn)) {
+        return false;
+      }
+
+      if (email && email.length && !REQULAR_EXPRESSION.test(email)) {
         return false;
       }
 

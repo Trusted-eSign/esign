@@ -14,6 +14,8 @@ import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
+const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
 interface ISubjectNameInfoProps {
   template: string;
   cn: string;
@@ -91,7 +93,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <input
               id="emailAddress"
               type="email"
-              className="validate"
+              className={!email || !email.length ? "validate" : REQULAR_EXPRESSION.test(email) ? "valid" : "invalid"}
               name="email"
               value={email}
               onChange={handleInputChange}
