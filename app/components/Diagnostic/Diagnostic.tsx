@@ -137,7 +137,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
                 }],
               });
     }
-    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){  
+    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){
       this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
@@ -145,7 +145,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           }],
         });
     }
-    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){  
+    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){
       this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
@@ -173,7 +173,12 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (this.checkTrustedCryptoLoadedErr()) {
       this.checkCPCSP();
     }
+
     loadLicense();
+
+    if (!certificatesLoading) {
+      loadAllCertificates();
+    }
   }
 
   getCloseButton() {
@@ -290,7 +295,7 @@ export default connect((state) => {
     loadedLicense: state.license.loaded,
     loadingLicense: state.license.loading,
     statusLicense: state.license.status,
-    lic_error: state.license.lic_error,   
+    lic_error: state.license.lic_error,
     verifiedLicense: state.license.verified,
     lic_format: state.license.lic_format,
   };
