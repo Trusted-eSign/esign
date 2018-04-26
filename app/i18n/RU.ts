@@ -125,6 +125,7 @@ export default {
     key_usage_keyAgreement: "Согласование",
     key_usage_keyCertSign: "Подпись сертификатов",
     key_usage_decipherOnly: "Только расшифрование",
+    key_usage_encipherOnly: "Только шифрование",
     key_usage_digitalSignature: "Подпись",
     key_usage_nonRepudiation: "Неотрекаемость",
     key_usage_cRLSign: "Автономное подписание списка отзыва (CRL)",

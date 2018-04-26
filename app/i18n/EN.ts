@@ -125,6 +125,7 @@ export default {
     key_usage_keyAgreement: "Key agreement",
     key_usage_keyCertSign: "Certificate sign",
     key_usage_decipherOnly: "Decipher only",
+    key_usage_encipherOnly: "Encipher only",
     key_usage_digitalSignature: "Digital signature",
     key_usage_nonRepudiation: "Nonrepudiation",
     key_usage_cRLSign: "CRL sign",

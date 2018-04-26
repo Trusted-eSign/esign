@@ -214,6 +214,19 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 {localize("CSR.key_usage_decipherOnly", locale)}
               </label>
             </div>
+            <div className="input-checkbox">
+              <input
+                name="encipherOnly"
+                type="checkbox"
+                id="encipherOnly"
+                className="checkbox-red"
+                checked={keyUsage.encipherOnly}
+                onChange={handleKeyUsageChange}
+              />
+              <label htmlFor="encipherOnly" className="truncate tooltipped label" data-position="right" data-tooltip={localize("CSR.key_usage_encipherOnly", locale)}>
+                {localize("CSR.key_usage_encipherOnly", locale)}
+              </label>
+            </div>
           </div>
           <div className="col s6">
             <div className="input-checkbox">
@@ -263,6 +276,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 className="checkbox-red"
                 checked={keyUsage.keyEncipherment}
                 onChange={handleKeyUsageChange}
+                disabled={true}
               />
               <label htmlFor="keyEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyEncipherment", locale)}>
                 {localize("CSR.key_usage_keyEncipherment", locale)}
