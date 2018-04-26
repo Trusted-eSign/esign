@@ -79,10 +79,6 @@ app.on('ready', async () => {
     frame: false,
     toolbar: false,
     show: false,
-    // This handles disabling web security
-    webPreferences: {
-      webSecurity: false
-    }
   });
 
 
