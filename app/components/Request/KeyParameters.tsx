@@ -169,6 +169,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="dataEncipherment"
                 className="checkbox-red"
                 checked={keyUsage.dataEncipherment}
+                disabled={keyUsageGroup === KEY_USAGE_SIGN}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="dataEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_dataEncipherment", locale)}>
@@ -182,6 +183,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="keyAgreement"
                 className="checkbox-red"
                 checked={keyUsage.keyAgreement}
+                disabled={keyUsageGroup === KEY_USAGE_SIGN}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="keyAgreement" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyAgreement", locale)}>
@@ -208,6 +210,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="decipherOnly"
                 className="checkbox-red"
                 checked={keyUsage.decipherOnly}
+                disabled={true}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="decipherOnly" className="truncate tooltipped label" data-position="right" data-tooltip={localize("CSR.key_usage_decipherOnly", locale)}>
@@ -221,6 +224,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="encipherOnly"
                 className="checkbox-red"
                 checked={keyUsage.encipherOnly}
+                disabled={ keyUsageGroup === KEY_USAGE_SIGN}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="encipherOnly" className="truncate tooltipped label" data-position="right" data-tooltip={localize("CSR.key_usage_encipherOnly", locale)}>
@@ -236,6 +240,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="digitalSignature"
                 className="checkbox-red"
                 checked={keyUsage.digitalSignature}
+                disabled={keyUsageGroup === KEY_USAGE_ENCIPHERMENT}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="digitalSignature" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_digitalSignature", locale)}>
@@ -249,6 +254,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="nonRepudiation"
                 className="checkbox-red"
                 checked={keyUsage.nonRepudiation}
+                disabled={keyUsageGroup === KEY_USAGE_ENCIPHERMENT}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="nonRepudiation" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_nonRepudiation", locale)}>
@@ -262,6 +268,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="cRLSign"
                 className="checkbox-red"
                 checked={keyUsage.cRLSign}
+                disabled={keyUsageGroup === KEY_USAGE_ENCIPHERMENT}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="cRLSign" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_cRLSign", locale)}>
@@ -275,8 +282,8 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="keyEncipherment"
                 className="checkbox-red"
                 checked={keyUsage.keyEncipherment}
+                disabled={keyUsageGroup === KEY_USAGE_SIGN}
                 onChange={handleKeyUsageChange}
-                disabled={true}
               />
               <label htmlFor="keyEncipherment" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.key_usage_keyEncipherment", locale)}>
                 {localize("CSR.key_usage_keyEncipherment", locale)}
