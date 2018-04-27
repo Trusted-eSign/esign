@@ -372,7 +372,7 @@ export function loadAllCertificates() {
 
       const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
         if (!item.id) {
-          item.id = item.hash + "_" + Math.floor(Math.random() * 10000);
+          item.id = item.provider + "_" + item.category + "_" +  item.hash;
         }
         return item.type === "CERTIFICATE";
       });

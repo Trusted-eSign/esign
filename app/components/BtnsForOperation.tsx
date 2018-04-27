@@ -167,6 +167,6 @@ export default connect((state) => {
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     method: state.remoteFiles.method,
     recipients: mapToArr(state.recipients.entities),
-    signer: state.signers.signer,
+    signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
 })(BtnsForOperation);

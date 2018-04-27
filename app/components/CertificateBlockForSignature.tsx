@@ -2,7 +2,7 @@ import * as events from "events";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { selectSignerCertificate } from "../AC";
+import { selectSignerCertificate, verifyCertificate } from "../AC";
 import { filteredCertificatesSelector } from "../selectors";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
@@ -37,9 +37,13 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   }
 
   getCertificateInfo() {
-    const { signer } = this.props;
+    const { signer, verifyCertificate } = this.props;
 
     let curStatusStyle;
+
+    if (signer && !signer.verified) {
+      verifyCertificate(signer.id);
+    }
 
     if (signer && signer.status) {
       curStatusStyle = "cert_status_ok";
@@ -195,4 +199,4 @@ export default connect((state) => {
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { selectSignerCertificate }, null, {pure: false})(CertificateBlockForSignature);
+}, { selectSignerCertificate, verifyCertificate }, null, {pure: false})(CertificateBlockForSignature);
