@@ -282,7 +282,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         }
       }
 
-      if (inn && inn.length && !validateInn(inn)) {
+      if (template !== REQUEST_TEMPLATE_DEFAULT && inn && inn.length && !validateInn(inn)) {
         return false;
       }
 
