@@ -32,7 +32,7 @@ class MainWindow extends React.Component<{}, {}> {
               <div className="maincontent">
                 <div className="appfunction">
                   <div className="row">
-                    <div className="col s4">
+                    <div className="col s4 waves-effect">
                       <MainWindowOperation
                         info={localize("About.info_about_sign", locale)}
                         title_pre={localize("Settings.Digital", locale)}
@@ -40,7 +40,7 @@ class MainWindow extends React.Component<{}, {}> {
                         operation="sign"
                       />
                     </div>
-                    <div className="col s4">
+                    <div className="col s4 waves-effect">
                       <MainWindowOperation
                         info={localize("About.info_about_encrypt", locale)}
                         title_pre={localize("Encrypt.Encryption", locale)}
@@ -48,7 +48,7 @@ class MainWindow extends React.Component<{}, {}> {
                         operation="encrypt"
                       />
                     </div>
-                    <div className="col s4">
+                    <div className="col s4 waves-effect">
                       <MainWindowOperation
                         info={localize("About.info_about_certificate", locale)}
                         title_pre={localize("Settings.Control", locale)}
