@@ -13,7 +13,7 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
 
   render() {
     const { localize, locale } = this.context;
-    const { certificates, recipients, handleCleanRecipientsList } = this.props;
+    const { certificates, recipients, handleCleanRecipientsList, onСlickBtn } = this.props;
 
     const DISABLED = certificates.length > 0 ? "" : "disabled";
     const ACTIVE = recipients.length > 0 ? "" : "not-active";
@@ -22,7 +22,7 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
       <ul className="app-bar-items">
         <li className="app-bar-item" style={appBarStyle}><span>{localize("Certificate.certs_encrypt", locale)}</span></li>
         <li className="right">
-          <a className={"nav-small-btn waves-effect waves-light " + ACTIVE} onClick={function () { $("#add-cert").openModal(); }}>
+          <a className={"nav-small-btn waves-effect waves-light " + ACTIVE} onClick={onСlickBtn.bind(this)}>
             <i className="material-icons nav-small-icon">add</i>
           </a>
           <a className={"nav-small-btn waves-effect waves-light " + ACTIVE} data-activates="dropdown-btn-set-cert">

@@ -98,7 +98,9 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const { modalCertList } = this.state;
     const { localize, locale } = this.context;
 
-    if (!modalCertList && !recipients) {
+    console.log("modalCertList", modalCertList);
+
+    if (!modalCertList) {
       return null;
     }
 
@@ -186,6 +188,10 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
         <ToolBarForEncryptCertificateBlock certificates={certificates} recipients={recipients}
+          onСlickBtn={() => {
+            this.setState({ modalCertList: true });
+            $("#add-cert").openModal();
+          }}
           handleCleanRecipientsList={() => {
             this.handleCleanStateList();
             this.handleCleanRecipientsList();
