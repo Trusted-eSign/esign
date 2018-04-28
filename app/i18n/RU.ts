@@ -409,6 +409,7 @@ export default {
     license_correct: "Действительна",
     license_incorrect: "Недействительна",
     license_overtimes_expired: "Срок действия временной лицензии истек",
+    serial_number: "Серийный номер",
   },
   Кegistration: {
     LoginAndPass: "АВТОРИЗАЦИЯ ПО ЛОГИНУ И ПАРОЛЮ",

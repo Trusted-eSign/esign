@@ -407,6 +407,7 @@ export default {
     jwtGetLicense: "For buy a license go to:",
     license_correct: "Correct",
     license_incorrect: "Incorrect",
+    serial_number: "Serial number",
   },
   Kegistration: {
     LoginAndPass: "A USERNAME AND PASSWORD AUTHENTICATION",

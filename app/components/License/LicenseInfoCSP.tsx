@@ -24,7 +24,7 @@ class LicenseInfoCSP extends React.Component<{}, {}> {
         <div className="row leftshifter">
           <div className="col s6">
             <LicenseInfoFiled
-              title={localize("License.license", locale)}
+              title={localize("License.serial_number", locale)}
               info={license.substring(0, license.length - 5)}
             />
           </div>

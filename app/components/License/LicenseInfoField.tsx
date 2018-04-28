@@ -3,15 +3,13 @@ import * as React from "react";
 interface ILicenseInfoField {
   title: string;
   info: string;
-  style?: object;
-  styleRow?: object;
 }
 
-export default function LicenseInfoField({ title, info, style, styleRow }: ILicenseInfoField) {
+export default function LicenseInfoField({ title, info }: ILicenseInfoField) {
     return (
-      <div style={styleRow}>
-        <div className="desktoplic_text_item topitem" style={style}>{info}</div>
+      <div>
         <div className="desktoplic_text_item bottomitem">{title}</div>
+        <div className="desktoplic_text_item topitem">{info}</div>
       </div>
     );
 }
