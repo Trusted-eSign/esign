@@ -6,18 +6,22 @@ let preloader = null;
 global.globalObj = {
   id: 123,
   launch: null,
-  closeFunc: function () {
-    if (this.launch == true) {
-      if (mainWindow) mainWindow.hide();
-    } else {
-      mainWindow = null;
-      if (process.platform === 'darwin') {
-        app.quit();
-      }
-    }
-  }
 };
 
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -103,9 +107,9 @@ app.on('ready', async () => {
   var trayIcon;
   if (platform == 'win32') {
     trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
-  } else if (platform == 'darwin'){
+  } else if (platform == 'darwin') {
     trayIcon = new Tray(__dirname + '/resources/image/tray_mac.png');
-  }else{
+  } else {
     trayIcon = new Tray(__dirname + '/resources/image/tray.png');
   }
 

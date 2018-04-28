@@ -669,7 +669,6 @@ export function changeEncryptOutfolder(outfolder: string) {
 
 export function addRecipientCertificate(certId: number) {
   return {
-    generateId: true,
     payload: { certId },
     type: ADD_RECIPIENT_CERTIFICATE,
   };
