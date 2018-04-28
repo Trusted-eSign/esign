@@ -13,6 +13,7 @@ import ProgressBars from "./ProgressBars";
 import RecipientsList from "./RecipientsList";
 import ToolBarForEncryptCertificateBlock from "./ToolBarForEncryptCertificateBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
+import recipients from "../reducer/recipients";
 
 class CertificateBlockForEncrypt extends React.Component<any, any> {
   static contextTypes = {
@@ -97,7 +98,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const { modalCertList } = this.state;
     const { localize, locale } = this.context;
 
-    if (!modalCertList) {
+    if (!modalCertList && !recipients) {
       return null;
     }
 
