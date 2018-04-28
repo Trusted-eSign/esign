@@ -1392,7 +1392,7 @@ span.card-title.sub {
 }
 
 .card-infos{
-  color: slategray;
+  color: gray;
   font-size: 16px;
 }
 
@@ -1436,7 +1436,7 @@ h6.contact-text {
   -webkit-user-select: text;
   font-size: 1.0rem;
   line-height: 110%;
-  color: #898989;
+  color: grey;
 }
 
 .h6.text-center {
@@ -1454,7 +1454,7 @@ h6.contact-title {
   line-height: 110%;
   padding-left: 52px;
   padding-top: 14px;
-  color: #898989;
+  color: gray;
 }
 
 .contact-text p {
