@@ -98,8 +98,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const { modalCertList } = this.state;
     const { localize, locale } = this.context;
 
-    console.log("modalCertList", modalCertList);
-
     if (!modalCertList) {
       return null;
     }
