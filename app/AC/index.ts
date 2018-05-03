@@ -169,7 +169,7 @@ interface IFile {
 
 interface IFilePath {
   fullpath: string;
-  extra: any;
+  extra?: any;
   remoteId?: string;
   socket?: string;
 }

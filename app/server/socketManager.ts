@@ -6,7 +6,7 @@ import { push } from "react-router-redux";
 import {
   ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE,
-  LOCATION_ENCRYPT, LOCATION_SIGN, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
+  LOCATION_ENCRYPT, LOCATION_SIGN, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
   REMOVE_CONNECTION, SELECT_FILE, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS,
 } from "../constants";
 import store from "../store/index";
@@ -126,7 +126,26 @@ const downloadFiles = (data: ISignRequest | IEncryptRequest, socket: SocketIO.So
           store.dispatch({ type: DOWNLOAD_REMOTE_FILE + SUCCESS, payload: { id: file.id } });
 
           const fileProps = getFileProperty(goodPath);
-          store.dispatch({ generateId: true, type: SELECT_FILE, payload: { file: { ...fileProps, extra, remoteId: file.id, socket: socket.id } } });
+
+          store.dispatch({
+            type: PACKAGE_SELECT_FILE + START,
+          });
+
+          setTimeout(() => {
+            store.dispatch({
+              payload: {
+                filePackage: [{
+                  ...fileProps,
+                  active: true,
+                  extra,
+                  id: Date.now() + Math.random(),
+                  remoteId: file.id,
+                  socket: socket.id,
+                }],
+              },
+              type: PACKAGE_SELECT_FILE + SUCCESS,
+            });
+          }, 0);
         }
       }
     });
