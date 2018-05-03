@@ -1,7 +1,16 @@
 import * as fs from "fs";
+import { Map, OrderedMap, Record } from "immutable";
 import * as path from "path";
 import { SETTINGS_JSON } from "../constants";
-import { fileExists } from "../utils";
+import { arrayToMap, fileExists, mapToArr } from "../utils";
+
+const RecipientModel = Record({
+  certId: null,
+});
+
+const DefaultRecipientsState = Record({
+  entities: OrderedMap({}),
+});
 
 let odata = {};
 
@@ -10,7 +19,17 @@ if (fileExists(SETTINGS_JSON)) {
 
   if (data) {
     try {
+      let recipientsMap = new DefaultRecipientsState();
+
       odata = JSON.parse(data);
+
+      for (const recipient of odata.recipients) {
+        recipientsMap = recipientsMap.setIn(["entities", recipient.certId], new RecipientModel({
+          certId: recipient.certId,
+        }));
+      }
+
+      odata.recipients = recipientsMap;
     } catch (e) {
       odata = {};
     }

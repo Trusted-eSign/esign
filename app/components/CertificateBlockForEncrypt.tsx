@@ -2,7 +2,8 @@ import * as events from "events";
 import PropTypes from "prop-types";
 import * as React from "react";
 import { connect } from "react-redux";
-import { addRecipientCertificate, deleteRecipient } from "../AC";
+import { addRecipientCertificate, deleteRecipient, verifyCertificate } from "../AC";
+import recipients from "../reducer/recipients";
 import { filteredCertificatesSelector } from "../selectors";
 import { extFile, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
@@ -13,7 +14,6 @@ import ProgressBars from "./ProgressBars";
 import RecipientsList from "./RecipientsList";
 import ToolBarForEncryptCertificateBlock from "./ToolBarForEncryptCertificateBlock";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
-import recipients from "../reducer/recipients";
 
 class CertificateBlockForEncrypt extends React.Component<any, any> {
   static contextTypes = {
@@ -40,6 +40,17 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
       inDuration: 300,
       outDuration: 225,
     });
+
+    // tslint:disable-next-line:no-shadowed-variable
+    const { verifyCertificate, recipients } = this.props;
+
+    if (recipients && recipients.length) {
+      for (const recipient of recipients) {
+        if (recipient && !recipient.verified) {
+          verifyCertificate(recipient.id);
+        }
+      }
+    }
   }
 
   handleAddRecipient = (cert: any) => {
@@ -258,6 +269,8 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "encrypt" }),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
-    recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
+    recipients: mapToArr(state.recipients.entities)
+      .map((recipient) => state.certificates.getIn(["entities", recipient.certId]))
+      .filter((recipient) => recipient !== undefined),
   };
-}, { addRecipientCertificate, deleteRecipient }, null, { pure: false })(CertificateBlockForEncrypt);
+}, { addRecipientCertificate, deleteRecipient, verifyCertificate }, null, { pure: false })(CertificateBlockForEncrypt);

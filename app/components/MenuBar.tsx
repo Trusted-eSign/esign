@@ -32,9 +32,10 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { encSettings, signSettings, signer } = this.props;
+    const { encSettings, recipients, signSettings, signer } = this.props;
 
     const state = ({
+      recipients,
       settings: {
         encrypt: encSettings,
         locale,
@@ -162,6 +163,7 @@ export default connect((state, ownProps) => {
     files: mapToArr(state.files.entities),
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     location: ownProps.location,
+    recipients: mapToArr(state.recipients.entities),
     signSettings: state.settings.sign,
     signer: state.signers.signer,
   };
