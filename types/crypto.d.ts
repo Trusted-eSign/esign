@@ -53,7 +53,7 @@ declare namespace trusted {
 declare namespace native {
     namespace PKI {
         class Key {
-            generate(format: trusted.DataFormat, pubExp: trusted.PublicExponent, keySize: number): Key;
+            generate(algorithm: string, pkeyopts?: string[]): Key;
             readPrivateKey(filename: string, format: trusted.DataFormat, password: string): any;
             readPublicKey(filename: string, format: trusted.DataFormat): any;
             writePrivateKey(filename: string, format: trusted.DataFormat, password: string): any;
@@ -530,6 +530,7 @@ declare namespace native {
             getCertifiacteFromContainer(contName: string, provType: number, provName?: string): PKI.Certificate;
             getContainerNameByCertificate(cert: PKI.Certificate, category: string): string;
             installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+            installCertifiacteToContainer(cert: PKI.Certificate, contName: string, provType: number, provName?: string): void;
             deleteContainer(contName: string, provType: number, provName?: string): void;
             buildChain(cert: PKI.Certificate): PKI.CertificateCollection;
             verifyCertificateChain(cert: PKI.Certificate): boolean;
@@ -995,6 +996,7 @@ declare namespace trusted.utils {
          */
         static getCertifiacteFromContainer(contName: string, provType: number, provName?: string): pki.Certificate;
         static installCertifiacteFromContainer(contName: string, provType: number, provName?: string): void;
+        static installCertifiacteToContainer(cert: pki.Certificate, contName: string, provType: number, provName?: string): void;
         static deleteContainer(contName: string, provType: number, provName?: string): void;
         /**
          * Get container name by certificate
@@ -1099,15 +1101,12 @@ declare namespace trusted.pki {
         /**
          * Generate key
          *
-         * @param {DataFormat} format
-         * @param {PublicExponent} pubExp
-         * @param {number} keySize
-         * @param {string} password
+         * @param {string} algorithm
+         * @param {string[]} [pkeyopts]
          * @returns {Key}
-         *
-         * @memberOf Key
+         * @memberof Key
          */
-        generate(format: DataFormat, pubExp: PublicExponent, keySize: number, password: string): Key;
+        generate(algorithm: string, pkeyopts?: string[]): Key;
         /**
          * Load private key from file
          *
