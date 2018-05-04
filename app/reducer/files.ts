@@ -1,7 +1,8 @@
+import * as fs from "fs";
 import { Map, OrderedMap, Record } from "immutable";
 import { filePackageDelete } from "../AC/index";
 import { ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, SELECT_FILE, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
-import { arrayToMap } from "../utils";
+import { arrayToMap, fileExists } from "../utils";
 
 const FileModel = Record({
   active: true,
@@ -50,11 +51,25 @@ export default (files = new DefaultReducerState(), action) => {
       return files.setIn(["entities", payload.fileId, "active"], payload.isActive);
 
     case DELETE_FILE:
+      const file = files.getIn(["entities", payload.fileId]);
+
+      if (file && file.socket && fileExists(file.fullpath)) {
+        fs.unlinkSync(file.fullpath);
+      }
+
       return files.deleteIn(["entities", payload.fileId]);
 
     case PACKAGE_DELETE_FILE:
       let newFiles = files;
-      payload.filePackage.forEach((id: number) => { newFiles = newFiles.deleteIn(["entities", id]); });
+      payload.filePackage.forEach((id: number) => {
+        const tfile = files.getIn(["entities", id]);
+
+        if (tfile && tfile.socket && fileExists(tfile.fullpath)) {
+          fs.unlinkSync(tfile.fullpath);
+        }
+
+        newFiles = newFiles.deleteIn(["entities", id]);
+      });
 
       return newFiles;
 
