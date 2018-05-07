@@ -211,7 +211,8 @@
     "socket.io-client": "^2.0.4",
     "socket.io-stream": "^0.9.1",
     "source-map-support": "^0.4.14",
-    "systeminformation": "^3.37.1"
+    "systeminformation": "^3.37.1",
+    "winston": "^3.0.0-rc5"
   },
   "devEngines": {
     "node": ">=6.x",

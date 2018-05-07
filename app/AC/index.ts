@@ -1,14 +1,15 @@
 import * as fs from "fs";
 import * as path from "path";
+import * as readline from "readline";
 import {
-  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE,
+  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE, APP_LOG_FILE,
   CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP, DEFAULT_PATH, DELETE_FILE,
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
-  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
+  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS, LOAD_ALL_EVENTS,
   LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_DELETE_FILE, PACKAGE_ENCRYPT, PACKAGE_SELECT_FILE, PACKAGE_SIGN, PACKAGE_VERIFY,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
@@ -354,6 +355,40 @@ export function filePackageDelete(filePackage: number[]) {
   return {
     payload: { filePackage },
     type: PACKAGE_DELETE_FILE,
+  };
+}
+
+export function loadAllEvents() {
+  return (dispatch) => {
+    dispatch({
+      type: LOAD_ALL_EVENTS + START,
+    });
+
+    setTimeout(() => {
+      const rl = readline.createInterface({
+        input: fs.createReadStream(APP_LOG_FILE),
+      });
+
+      const events: any[] = [];
+
+      rl
+        .on("line", (line) => {
+          const data = JSON.parse(line);
+
+          events.push({
+            ...data,
+            id: data.timestamp,
+          });
+        })
+        .on("close", () => {
+          dispatch({
+            payload: {
+              events,
+            },
+            type: LOAD_ALL_EVENTS + SUCCESS,
+          });
+        });
+    }, 0);
   };
 }
 

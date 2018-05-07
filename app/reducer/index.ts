@@ -3,6 +3,7 @@ import {combineReducers} from "redux";
 import certificates from "./certificates";
 import connections from "./connections";
 import containers from "./containers";
+import events from "./events";
 import files from "./files";
 import filters from "./filters";
 import license from "./license";
@@ -17,6 +18,7 @@ export default combineReducers({
   certificates,
   connections,
   containers,
+  events,
   files,
   filters,
   license,

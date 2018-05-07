@@ -1,3 +1,7 @@
+export const ADD_EVENT = "ADD_EVENT";
+export const LOAD_ALL_EVENTS = "LOAD_ALL_EVENTS";
+export const REMOVE_ALL_EVENTS = "REMOVE_ALL_EVENTS";
+
 export const CHANGE_SEARCH_VALUE = "CHANGE_SEARCH_VALUE";
 
 export const LOAD_ALL_CERTIFICATES = "LOAD_ALL_CERTIFICATES";
@@ -74,6 +78,7 @@ export const TMP_DIR: string = window.TMP_DIR;
 export const LICENSE_PATH = window.LICENSE_PATH;
 export const SETTINGS_JSON = window.SETTINGS_JSON;
 export const TRUSTED_CRYPTO_LOG = window.TRUSTED_CRYPTO_LOG;
+export const APP_LOG_FILE = window.APP_LOG_FILE;
 
 export const SIGNWITHDIGEST_GOST3410_12_256 = "GOST R 34.10-2012 with 34.11-2012 256-bit";
 export const SIGNWITHDIGEST_GOST3410_12_512 = "GOST R 34.10-2012 with 34.11-2012 512-bit";
