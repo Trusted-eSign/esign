@@ -305,6 +305,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     const key = new trusted.pki.Key();
     const exts = new trusted.pki.ExtensionCollection();
     const pkeyopt: string[] = [];
+    const OS_TYPE = os.type();
+    let providerType: string = PROVIDER_SYSTEM;
     let keyUsageStr = "critical";
     let extendedKeyUsageStr = "";
     let keyPair;
@@ -316,7 +318,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       Materialize.toast(localize("CSR.fill_required_fields", locale), 2000, "toast-required_fields");
 
       if (!this.state.formVerified) {
-      this.setState({formVerified: true});
+        this.setState({ formVerified: true });
       }
 
       return;
@@ -454,13 +456,30 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
       cert.sign(keyPair);
 
-      try {
-        this.handleCertificateImport(cert);
+      if (algorithm !== ALG_RSA) {
+        if (OS_TYPE === "Windows_NT") {
+          providerType = PROVIDER_MICROSOFT;
+        } else {
+          providerType = PROVIDER_CRYPTOPRO;
+        }
+      }
 
+      try {
+        if (OS_TYPE === "Windows_NT") {
+          window.PKISTORE.importCertificate(cert, PROVIDER_MICROSOFT, (err: Error) => {
+            if (err) {
+              Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+            }
+          }, ROOT);
+        }
+      } catch (e) {
+        // e
+      }
+
+      try {
         if (algorithm !== ALG_RSA) {
-          const cont = trusted.utils.Csp.getContainerNameByCertificate(cert);
-          trusted.utils.Csp.installCertifiacteToContainer(cert, cont, 75);
-          trusted.utils.Csp.installCertifiacteFromContainer(cont, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+          trusted.utils.Csp.installCertifiacteToContainer(cert, containerName, 75);
+          trusted.utils.Csp.installCertifiacteFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
         } else {
           window.PKISTORE.addKeyToStore(keyPair);
         }
