@@ -71,6 +71,13 @@ export function loadLicense() {
             lic_error = expirationTime;
             let verified = true;
             dispatch({ payload: { data, lic_format, licenseStatus, lic_error, verified }, type: LOAD_LICENSE + FAIL });
+          }else{
+            lic.exp = expirationTime;
+            lic.iat = 0;
+            licenseStatus = 1;
+            const loaded = true;
+            lic_error = 900;//CTLICENSE_R_NO_ERROR
+            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
           }
         } else {
           let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
@@ -89,6 +96,7 @@ export function loadLicense() {
                   lic = parsedLicense;
                 }
                 const loaded = true;
+                if(check == 0) lic_error = 900;//CTLICENSE_R_NO_ERROR
                 dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
               } catch (e) {
                 lic_format = "NONE"; // Лицензия отсутствует

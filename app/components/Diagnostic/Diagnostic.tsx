@@ -129,7 +129,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
     const { lic_format, lic_error, lic_trial_verified } = this.props;
 
-    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true){
+    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true && loadingLicense === false){
             this.setState({
                 errors: [...this.state.errors, {
                   important: WARNING,

@@ -96,7 +96,11 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
     } else if (lic_format === "MTX") {
       if (status === 1  && lic_error !== 903 && lic_error !== 907) {
         viewStatus = "correct";
-        messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        if(license.exp== 0) {
+            messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        }else{
+            messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
+        }
       } else {
         viewStatus = "incorrect";
         messageExpired = localize("License.lic_key_uncorrect", locale);
@@ -107,7 +111,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         viewStatus = "correct";
         let year = (new Date(dateExp)).getFullYear();
         if (year === 1970 || year >= 2037) messageExpired = localize("License.lic_key_correct_unlimited", locale);
-        else localize("License.lic_key_correct", locale) + fullDays + ")";
+        else messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";   
       } else {
         viewStatus = "incorrect";
         messageExpired = localize("License.lic_key_uncorrect", locale);

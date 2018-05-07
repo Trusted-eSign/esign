@@ -505,6 +505,7 @@ declare namespace native {
             checkTrialLicense(): number;
             getExpirationTime(data?: string): number;
             getTrialExpirationTime(): number;
+            createTrialLicense(): number;
         }
         class Cerber {
             sign(modulePath: string, cert: PKI.Certificate, key: PKI.Key): void;
@@ -702,6 +703,14 @@ declare namespace trusted.utils {
          */
         static getTrialExpirationTime(): number;
         /**
+         * Create Trial License
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        static createTrialLicense(): number;
+        /**
          * Creates an instance of Jwt.
          *
          *
@@ -742,6 +751,14 @@ declare namespace trusted.utils {
          * @memberOf Jwt
          */
         getTrialExpirationTime(): number;
+        /**
+         * Create Trial License
+         *
+         * @returns {number}
+         *
+         * @memberOf Jwt
+         */
+        createTrialLicense(): number;
     }
 }
 declare namespace trusted.utils {
