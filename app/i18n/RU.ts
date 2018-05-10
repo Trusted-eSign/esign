@@ -59,6 +59,10 @@ export default {
     certs_root: "Доверенные корневые сертификаты",
     certs_token: "Сертификаты внешних носителей",
   },
+  Events: {
+    Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",
+    operations_log: "Журнал операций",
+  },
   Export: {
     export: "Экспорт",
     export_certificate: "Экспорт сертификата",

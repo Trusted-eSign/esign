@@ -42,6 +42,9 @@
         "certs_getters": "The recipients' certificates",
         "cert_imported": "The certificate is already imported"
     },
+    "Events": {
+        "operations_log": "Operations log"
+    },
     "Key" : {
         "key_load_failed": "Error load key"
     },

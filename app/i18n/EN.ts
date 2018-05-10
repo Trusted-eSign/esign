@@ -59,6 +59,10 @@ export default {
     certs_root: "Trusted Root Certificates",
     certs_token: "External token/card certificates",
   },
+  Events: {
+    Operations_log: "OPERATIONS LOG",
+    operations_log: "Operations log",
+  },
   Export: {
     export: "Export",
     export_certificate: "Export certificate",

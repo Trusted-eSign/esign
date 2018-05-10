@@ -1,6 +1,10 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import { Link } from "react-router-dom";
+import {
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,
+  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
+} from "../constants";
 
 const remote = window.electron.remote;
 
@@ -30,23 +34,28 @@ class SideMenu extends React.Component<{}, {}> {
           </div>
         </nav>
         <div className="row">
-          <Link to="/sign">
+          <Link to={LOCATION_SIGN}>
             {localize("Sign.Sign", locale)}
             <i className="material-icons left sign">mode_edit</i>
           </Link>
-          <Link to="/encrypt">
+          <Link to={LOCATION_ENCRYPT}>
             {localize("Encrypt.Encrypt", locale)}
             <i className="material-icons left encrypt">enhanced_encryption</i>
           </Link>
 
-          <Link to="/certificate">
+          <Link to={LOCATION_CERTIFICATES}>
             {localize("Certificate.Certificate", locale)}
             <i className="material-icons left cert">library_books</i>
           </Link>
 
-          <Link to="/containers">
+          <Link to={LOCATION_CONTAINERS}>
             {localize("Containers.Containers", locale)}
             <i className="material-icons left keystore">library_books</i>
+          </Link>
+
+          <Link to={LOCATION_EVENTS}>
+            {localize("Events.Operations_log", locale)}
+            <i className="material-icons left help">help</i>
           </Link>
         </div>
         <div className="row">
@@ -56,11 +65,11 @@ class SideMenu extends React.Component<{}, {}> {
                 {localize("About.About", locale)}
                 <i className="material-icons left about">about</i>
               </Link>
-              <Link to="/license">
+              <Link to={LOCATION_LICENSE}>
                 {localize("License.License", locale)}
                 <i className="material-icons left license">license</i>
               </Link>
-              <Link to="/help">
+              <Link to={LOCATION_HELP}>
                 {localize("Help.Help", locale)}
                 <i className="material-icons left help">help</i>
               </Link>

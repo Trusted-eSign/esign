@@ -10,6 +10,7 @@ import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import ContainersWindow from "./ContainersWindow";
 import EncryptWindow from "./EncryptWindow";
+import EventsWindow from "./Events/EventsWindow";
 import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
@@ -51,6 +52,7 @@ class App extends React.Component<IAppProps, {}> {
           <Route path="/license" component={LicenseWindow} />
           <Route path="/about" component={AboutWindow} />
           <Route path="/help" component={HelpWindow} />
+          <Route path="/events" component={EventsWindow} />
         </div>
       </Router>
     );

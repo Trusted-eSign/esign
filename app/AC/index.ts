@@ -20,7 +20,7 @@ import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, toBase64 } from "../utils";
+import { extFile, fileExists, toBase64 } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
@@ -365,11 +365,22 @@ export function loadAllEvents() {
     });
 
     setTimeout(() => {
+      const events: any[] = [];
+
+      if (!fileExists(APP_LOG_FILE)) {
+        dispatch({
+          payload: {
+            events,
+          },
+          type: LOAD_ALL_EVENTS + SUCCESS,
+        });
+      }
+
       const rl = readline.createInterface({
         input: fs.createReadStream(APP_LOG_FILE),
       });
 
-      const events: any[] = [];
+      let index = 0;
 
       rl
         .on("line", (line) => {
@@ -377,8 +388,10 @@ export function loadAllEvents() {
 
           events.push({
             ...data,
-            id: data.timestamp,
+            id: index,
           });
+
+          index++;
         })
         .on("close", () => {
           dispatch({

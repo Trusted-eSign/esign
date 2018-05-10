@@ -1,6 +1,7 @@
 @import "./resources/css/font-awesome-animation.min.css";
 @import "./resources/css/materialize.min.css";
 @import "./resources/css/nouislider.css";
+@import "./resources/css/react-virtualized.css";
 @import "./resources/fonts/material-design-icons/material-icons.css";
 
 /* Стили заголовка окна  */
