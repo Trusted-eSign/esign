@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
+import { USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding, fileExists } from "../utils";
+import logger from "../winstonLogger";
 import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
@@ -90,14 +92,26 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
     sd.freeContent();
   } catch (err) {
-    //  let jwtRes: number = jwt.checkLicense();
-    //  if (jwtRes) {
-    //      $(".toast-jwt_error").remove();
-    //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-    // }
+    logger.log({
+      certificate: cert.subjectName,
+      fileName: path.basename(uri),
+      level: "error",
+      message: "Error sign",
+      operation: "Подпись",
+      userName: USER_NAME,
+    });
 
     return "";
   }
+
+  logger.log({
+    certificate: cert.subjectName,
+    fileName: path.basename(uri),
+    level: "info",
+    message: "Файл подписан",
+    operation: "Подпись",
+    userName: USER_NAME,
+  });
 
   return outURI;
 }
@@ -151,6 +165,15 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
 
     return "";
   }
+
+  logger.log({
+    certificate: cert.subjectName,
+    fileName: path.basename(uri),
+    level: "info",
+    message: "Подпись добавлена",
+    operation: "Добавление подписи",
+    userName: USER_NAME,
+  });
 
   return outURI;
 }

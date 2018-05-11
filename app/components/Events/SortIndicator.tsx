@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import SortDirection from "./SortDirection";
 
+type TSortDirection = "ASC" | "DESC" | undefined;
+
 /**
  * Displayed beside a header to indicate that a Table is currently sorted by this column.
  */
-export default function SortIndicator({ sortDirection }) {
+export default function SortIndicator({ sortDirection }: { sortDirection: TSortDirection }) {
   const classNames = cn("ReactVirtualized__Table__sortableHeaderIcon", {
     "ReactVirtualized__Table__sortableHeaderIcon--ASC":
       sortDirection === SortDirection.ASC,

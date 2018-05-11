@@ -11,6 +11,7 @@ import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
 import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
+import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import Dialog from "./Dialog";

@@ -46,7 +46,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     super(props);
 
     const sortBy = "timestamp";
-    const sortDirection = SortDirection.ASC;
+    const sortDirection = SortDirection.DESC;
     const sortedList = this.sortList({ sortBy, sortDirection });
 
     this.state = {
@@ -61,13 +61,14 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     // tslint:disable-next-line:no-shadowed-variable
     const { isLoaded, isLoading, loadAllEvents } = this.props;
 
-    if (!isLoaded && !isLoading) {
+    if (!isLoading) {
       loadAllEvents();
     }
   }
 
   componentDidUpdate(prevProps: IEventTableProps & IEventTableDispatch, prevState: IEventTableState) {
-    if (!prevProps.eventsMap.size && this.props.eventsMap && this.props.eventsMap.size) {
+    if (!prevProps.eventsMap.size && this.props.eventsMap && this.props.eventsMap.size ||
+      (prevProps.eventsMap.size !== this.props.eventsMap.size)) {
       this.sort(this.state);
     }
   }
@@ -88,7 +89,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         ref="Table"
         disableHeader={disableHeader}
         height={500}
-        width={750}
+        width={780}
         headerHeight={30}
         noRowsRenderer={this.noRowsRenderer}
         headerClassName={"headerColumn"}
@@ -103,31 +104,73 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
       >
         <Column
           cellRenderer={({ cellData }) => {
+            let msg;
+            let levelStyle;
+
+            switch (cellData) {
+              case "info":
+                msg = "Успех";
+                levelStyle = "icon_ok";
+                break;
+              case "error":
+                msg = "Ошибка";
+                levelStyle = "icon_fail";
+                break;
+            }
+
+            return (
+              <div className="row nobottom">
+                <div className="valign-wrapper">
+                  <div className="col s2">
+                    <div className={levelStyle} />
+                  </div>
+                  <div className="col s10">
+                    <p>{msg}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          }}
+          dataKey="level"
+          disableSort={false}
+          headerRenderer={this.headerRenderer}
+          width={100}
+          label="Статус"
+        />
+        <Column
+          cellRenderer={({ cellData }) => {
             return (new Date(cellData)).toLocaleDateString(locale, {
               day: "numeric",
               hour: "numeric",
               minute: "numeric",
-              month: "long",
+              month: "numeric",
               year: "numeric",
             });
           }}
           dataKey="timestamp"
           disableSort={false}
-          width={250}
-          label="время"
+          width={150}
+          label="Дата и время"
         />
         <Column
-          dataKey="level"
+          dataKey="operation"
           disableSort={false}
           headerRenderer={this.headerRenderer}
-          width={100}
-          label="тип"
+          width={180}
+          label="Тип операции"
         />
         <Column
-          dataKey="message"
+          dataKey="userName"
+          disableSort={false}
+          headerRenderer={this.headerRenderer}
+          width={150}
+          label="Пользователь"
+        />
+        <Column
+          dataKey="fileName"
           disableSort
-          width={400}
-          label="сообщение"
+          width={200}
+          label="Файл"
           className={"exampleColumn"}
         />
       </Table>
@@ -165,10 +208,10 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     );
   }
 
-  headerRenderer = ({ dataKey, sortBy, sortDirection }: { dataKey?: string, sortBy?: string, sortDirection?: TSortDirection }) => {
+  headerRenderer = ({ dataKey, label, sortBy, sortDirection }: { dataKey?: string, label?: string, sortBy?: string, sortDirection?: TSortDirection }) => {
     return (
       <div>
-        тип
+        {label}
         {sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}
       </div>
     );

@@ -8,6 +8,7 @@ import { ERROR, SIGNED, UPLOADED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
+import logger from "../winstonLogger";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";

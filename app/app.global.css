@@ -3064,3 +3064,25 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 .prefix.active {
   color: #334294 !important;
 }
+
+.icon_ok {
+  background: url(./resources/image/icon_ok.svg);
+  background-size: 100%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 7px;
+  padding-left: 0px;
+  left: 0px;
+}
+
+.icon_fail {
+  background: url(./resources/image/icon_fail.svg);
+  background-size: 100%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 7px;
+  padding-left: 0px;
+  left: 0px;
+}
