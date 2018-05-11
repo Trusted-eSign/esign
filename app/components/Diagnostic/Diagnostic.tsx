@@ -137,7 +137,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
                 }],
               });
     }
-    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){
+    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false){
       this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
@@ -145,7 +145,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           }],
         });
     }
-    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true){
+    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false){
       this.setState({
           errors: [...this.state.errors, {
             important: WARNING,
