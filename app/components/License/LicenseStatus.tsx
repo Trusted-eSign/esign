@@ -125,7 +125,6 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         <div>
           <div className="row">
             <div className="col s6">
-
               <div style={styleRow}>
                 <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
                 <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} />
@@ -153,7 +152,10 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         <div>
           <div className="row">
             <div className="col s6">
-              <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
+              <div style={styleRow}>
+                <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
+                <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
+             </div>
             </div>
             <div className="col s6">
               <div className="row">

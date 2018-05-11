@@ -86,7 +86,10 @@ export function loadLicense() {
             lic_format = "JWT";
             const check = trusted.utils.Jwt.checkLicense(data);
             if (check == 0) licenseStatus = 1;
-            else lic_error = check;
+            else{ 
+              lic_error = check;
+              licenseStatus = 0;
+            }
             const splitLicense = data.split(".");
             if (splitLicense[1]) {
               try {
