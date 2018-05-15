@@ -88,7 +88,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
       <Table
         ref="Table"
         disableHeader={disableHeader}
-        height={500}
+        height={430}
         width={780}
         headerHeight={30}
         noRowsRenderer={this.noRowsRenderer}
