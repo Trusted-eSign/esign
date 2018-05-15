@@ -3086,3 +3086,32 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   padding-left: 0px;
   left: 0px;
 }
+
+.picker__date-display, .picker__weekday-display {
+  background-color: #bf3817;
+}
+
+.picker__day--selected, .picker__day--selected:hover,
+.picker--focused .picker__day--selected {
+  background-color: #bf3817;
+}
+
+.picker__close, .picker__today {
+  color: #bf3817;
+}
+
+.picker__day.picker__day--today {
+  color: #bf3817;
+}
+
+.picker__date-display, .picker__clear {
+  display: none;
+}
+
+.picker__nav--prev:hover, .picker__nav--next:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
+  background: rgba(0,0,0,0.1);
+}
