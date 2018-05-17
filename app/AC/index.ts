@@ -222,7 +222,7 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({ fullpath: newPath, extra: file.extra, remoteId: file.remoteId, socket: file.socket });
+          signedFilePackage.push({ fullpath: newPath });
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
