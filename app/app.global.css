@@ -189,7 +189,6 @@ body {
 }
 .select-wrapper input.select-dropdown{
     font-size: 100%;
-    border-bottom: none;
 }
 
 .settins-check-title {
@@ -987,7 +986,7 @@ nav .cert-seacrh label i {
 }
 
 .modal-body {
-  height: 400px;
+  height: 500px;
 }
 
 .overflow {
@@ -2960,6 +2959,10 @@ a.help_paragraf {
     margin-bottom: 0px;
 }
 
+.col.nobottom {
+  margin-bottom: 0px;
+}
+
 .col.s12.nopadding {
     padding-left: 0px;
     padding-right: 0px;
@@ -3062,4 +3065,14 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 
 .prefix.active {
   color: #334294 !important;
+}
+
+.header-tab {
+  font-size: 55%;
+  color: gray;
+}
+
+.tbody {
+  height: 300px;
+  overflow: auto;
 }

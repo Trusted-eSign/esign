@@ -11,7 +11,6 @@ import {
 import { filteredContainersSelector } from "../../selectors";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
-import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
@@ -95,8 +94,6 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
     return (
       <div className="row">
-        <HeaderWorkspaceBlock text={localize("CSR.keys_params", locale)} />
-        <br />
         <div className={"row " + nobottom}>
           <div className="input-field col s12">
             <select className="select" ref="algorithmSelect" value={algorithm} onChange={handleAlgorithmChange} >>
@@ -143,7 +140,6 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
           : null}
 
-        <br />
         <div className="row nobottom">
           <div className="input-field col s12">
             <select className="select" ref="keyUsageGroup" value={keyUsageGroup} name="keyUsageGroup" onChange={handleKeyUsageGroupChange} >

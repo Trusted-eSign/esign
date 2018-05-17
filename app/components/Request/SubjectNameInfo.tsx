@@ -10,7 +10,6 @@ import { filteredContainersSelector } from "../../selectors";
 import { validateInn, validateOgrnip, validateSnils } from "../../utils";
 import BlockNotElements from "../BlockNotElements";
 import ContainersList from "../ContainersList";
-import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
@@ -61,8 +60,6 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
 
     return (
       <div className="row">
-        <HeaderWorkspaceBlock text={localize("CSR.subject_params", locale)} />
-        <br />
         <div className="row">
           <div className="input-field col s12">
             <select className="select" ref="templateSelect" value={template} name="template" onChange={handleTemplateChange} >
@@ -87,20 +84,6 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <label htmlFor="commonName">{localize("CSR.common_name", locale)} *</label>
           </div>
         </div>
-        {this.getAditionalField()}
-        <div className="row">
-          <div className="input-field col s12">
-            <input
-              id="emailAddress"
-              type="email"
-              className={!email || !email.length ? "validate" : REQULAR_EXPRESSION.test(email) ? "valid" : "invalid"}
-              name="email"
-              value={email}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="emailAddress">{localize("CSR.email_address", locale)}</label>
-          </div>
-        </div>
         <div className="row">
           <div className="input-field col s12">
             <input
@@ -114,8 +97,9 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
             <label htmlFor="organizationName">{localize("CSR.organization_name", locale)}</label>
           </div>
         </div>
+        {this.getAditionalField()}
         <div className="row">
-          <div className="input-field col s12">
+          <div className="input-field col s6">
             <input
               id="localityName"
               type="text"
@@ -129,9 +113,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
               {localize("CSR.locality_name", locale)}
               {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}</label>
           </div>
-        </div>
-        <div className="row">
-          <div className="input-field col s12">
+          <div className="input-field col s6">
             <input
               id="stateOrProvinceName"
               type="text"
@@ -149,7 +131,18 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
         </div>
         <br />
         <div className="row">
-          <div className="input-field col s12">
+          <div className="input-field col s6">
+            <input
+              id="emailAddress"
+              type="email"
+              className={!email || !email.length ? "validate" : REQULAR_EXPRESSION.test(email) ? "valid" : "invalid"}
+              name="email"
+              value={email}
+              onChange={handleInputChange}
+            />
+            <label htmlFor="emailAddress">{localize("CSR.email_address", locale)}</label>
+          </div>
+          <div className="input-field col s6">
             <select className="select" ref="countrySelect" value={country} onChange={handleCountryChange} >
               <option value="RU">Российская Федерация (RU)</option>
               <option value="AU">Австралия (AU)</option>
@@ -168,36 +161,6 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
     if (template === REQUEST_TEMPLATE_KEP_FIZ || template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL) {
       return (
         <div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                id="snils"
-                type="text"
-                className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
-                  "validate" : snils && snils.length > 0 && validateSnils(snils) ? "valid" : "invalid"}
-                name="snils"
-                value={snils}
-                onChange={handleInputChange}
-              />
-              <label htmlFor="snils">
-                {localize("CSR.snils", locale)}
-                {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}
-              </label>
-            </div>
-          </div>
-          <div className="row">
-            <div className="input-field col s12">
-              <input
-                id="inn"
-                type="text"
-                className={!inn || !inn.length ? "validate" : validateInn(inn) ? "valid" : "invalid"}
-                name="inn"
-                value={inn}
-                onChange={handleInputChange}
-              />
-              <label htmlFor="inn">{localize("CSR.inn", locale)}</label>
-            </div>
-          </div>
           {
             template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL ?
               (
@@ -220,11 +183,39 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                 </div>) :
               null
           }
+          <div className="row">
+            <div className="input-field col s6">
+              <input
+                id="snils"
+                type="text"
+                className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
+                  "validate" : snils && snils.length > 0 && validateSnils(snils) ? "valid" : "invalid"}
+                name="snils"
+                value={snils}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="snils">
+                {localize("CSR.snils", locale)}
+                {template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_KEP_FIZ ? " *" : ""}
+              </label>
+            </div>
+            <div className="input-field col s6">
+              <input
+                id="inn"
+                type="text"
+                className={!inn || !inn.length ? "validate" : validateInn(inn) ? "valid" : "invalid"}
+                name="inn"
+                value={inn}
+                onChange={handleInputChange}
+              />
+              <label htmlFor="inn">{localize("CSR.inn", locale)}</label>
+            </div>
+          </div>
           {
             template === REQUEST_TEMPLATE_ADDITIONAL ?
               <div>
                 <div className="row">
-                  <div className="input-field col s12">
+                  <div className="input-field col s6">
                     <input
                       id="organizationUnitName"
                       type="text"
@@ -235,9 +226,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                     />
                     <label htmlFor="organizationUnitName">{localize("CSR.organizational_unit_name", locale)}</label>
                   </div>
-                </div>
-                <div className="row">
-                  <div className="input-field col s12">
+                  <div className="input-field col s6">
                     <input
                       id="title"
                       type="text"

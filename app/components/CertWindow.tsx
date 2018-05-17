@@ -15,7 +15,6 @@ import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
 import ContainersList from "./ContainersList";
-import CSR from "./CSR";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import Modal from "./Modal";
 import ProgressBars from "./ProgressBars";
@@ -37,7 +36,6 @@ class CertWindow extends React.Component<any, any> {
       showModalCertificateRequest: false,
       showModalDeleteCertifiacte: false,
       showModalExportCertifiacte: false,
-      showModalSelfSigned: false,
     });
   }
 
@@ -63,14 +61,6 @@ class CertWindow extends React.Component<any, any> {
 
   handleShowModalCertificateRequest = () => {
     this.setState({ showModalCertificateRequest: true });
-  }
-
-  handleCloseModalSelfSigned = () => {
-    this.setState({ showModalSelfSigned: false });
-  }
-
-  handleShowModalSelfSigned = () => {
-    this.setState({ showModalSelfSigned: true });
   }
 
   handlePasswordChange = (password: string) => {
@@ -358,28 +348,6 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
-  showModalSelfSigned = () => {
-    const { localize, locale } = this.context;
-    const { showModalSelfSigned } = this.state;
-
-    if (!showModalSelfSigned) {
-      return;
-    }
-
-    return (
-      <Modal
-        isOpen={showModalSelfSigned}
-        header={localize("CSR.create_selfSigned", locale)}
-        onClose={this.handleCloseModalSelfSigned}>
-
-        <CertificateRequest
-          onCancel={this.handleCloseModalSelfSigned}
-          selfSigned={true}
-        />
-      </Modal>
-    );
-  }
-
   render() {
     const { certificates, isLoading } = this.props;
     const { activeTabIsCertInfo, certificate } = this.state;
@@ -403,7 +371,6 @@ class CertWindow extends React.Component<any, any> {
                 <ToolBarWithSearch operation="certificate" disable=""
                   reloadCertificates={this.handleReloadCertificates}
                   handleShowModalCertificateRequest={this.handleShowModalCertificateRequest}
-                  handleShowModalSelfSigned={this.handleShowModalSelfSigned}
                   rightBtnAction={
                     (event: any) => {
                       this.handleCertificateImport(event.target.files);
@@ -448,7 +415,6 @@ class CertWindow extends React.Component<any, any> {
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
                 {this.showModalCertificateRequest()}
-                {this.showModalSelfSigned()}
               </div>
             </div>
           </div>
