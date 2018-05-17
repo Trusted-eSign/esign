@@ -106,7 +106,7 @@ export function fileCoding(filePath: string): number {
  */
 export function fileExists(filePath: string): boolean {
   try {
-    return fs.statSync(filePath).isFile();
+    return fs.existsSync(filePath);
   } catch (err) {
     return false;
   }

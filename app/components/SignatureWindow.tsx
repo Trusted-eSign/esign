@@ -273,10 +273,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       files.forEach((file) => {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
-        if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath, undefined, undefined, undefined, file.remoteId, file.socket);
 
+        if (newPath) {
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
 
@@ -345,6 +343,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
                     connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
                   }
                 }
+
+                deleteFile(file.id);
               },
               );
             }

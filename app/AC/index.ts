@@ -20,7 +20,7 @@ import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, toBase64 } from "../utils";
+import { extFile, toBase64, fileExists } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
@@ -86,7 +86,7 @@ export function loadLicense() {
             lic_format = "JWT";
             const check = trusted.utils.Jwt.checkLicense(data);
             if (check == 0) licenseStatus = 1;
-            else{ 
+            else{
               lic_error = check;
               licenseStatus = 0;
             }
@@ -562,6 +562,10 @@ export function activeContainer(container: number) {
 
 export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) {
   let stat;
+
+  if (!fileExists(fullpath)) {
+    return;
+  }
 
   if (!lastModifiedDate || !size) {
     stat = fs.statSync(fullpath);
