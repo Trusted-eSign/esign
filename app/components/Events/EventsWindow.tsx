@@ -24,12 +24,35 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
     };
   }
 
+  componentDidMount() {
+    $(".nav-small-btn, .file-setting-item").dropdown({
+      alignment: "left",
+      belowOrigin: false,
+      gutter: 0,
+      inDuration: 300,
+      outDuration: 225,
+    });
+  }
+
   render() {
     const { localize, locale } = this.context;
     const { selectedFrom, selectedTo } = this.state;
 
     return (
       <div className="row">
+        {/* <nav className="app-bar-content">
+          <ul className="app-bar-items">
+            <li className="right">
+              <a className={"nav-small-btn waves-effect waves-light "} data-activates="dropdown-btn-set-cert-2">
+                <i className="material-icons right">arrow_drop_down</i>
+              </a>
+              <ul id="dropdown-btn-set-cert-2" className="dropdown-content">
+                <li><a onClick={() => console.log("+++ 1")}>Фильтрация</a></li>
+                <li><a onClick={() => console.log("+++ 1")}>Архивация</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav> */}
         <br />
         <div className="col s6">
           <DatePicker
