@@ -8,8 +8,10 @@ const logger = winston.createLogger({
   ),
   level: "debug",
   transports: [
-    new winston.transports.File({ filename: APP_ERRORS_LOG_FILE, level: "error" }),
-    new winston.transports.File({ filename: APP_LOG_FILE }),
+    new winston.transports.File({
+      filename: APP_LOG_FILE,
+      maxsize: 4096,
+    }),
   ],
 });
 
