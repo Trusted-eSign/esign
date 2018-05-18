@@ -3076,3 +3076,7 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   height: 300px;
   overflow: auto;
 }
+
+.content-item-relative {
+  position: relative;
+}

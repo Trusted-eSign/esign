@@ -197,46 +197,50 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
             {activeSubjectNameInfoTab ?
               <div className="col s12 ">
                 <div className="content-wrapper z-depth-1 tbody">
-                  <br />
-                  <SubjectNameInfo
-                    template={template}
-                    cn={cn}
-                    email={email}
-                    organization={organization}
-                    organizationUnitName={organizationUnitName}
-                    locality={locality}
-                    formVerified={formVerified}
-                    province={province}
-                    country={country}
-                    inn={inn}
-                    ogrnip={ogrnip}
-                    snils={snils}
-                    title={title}
-                    handleCountryChange={this.handleCountryChange}
-                    handleTemplateChange={this.handleTemplateChange}
-                    handleInputChange={this.handleInputChange}
-                  />
+                  <div className="content-item-relative">
+                    <br />
+                    <SubjectNameInfo
+                      template={template}
+                      cn={cn}
+                      email={email}
+                      organization={organization}
+                      organizationUnitName={organizationUnitName}
+                      locality={locality}
+                      formVerified={formVerified}
+                      province={province}
+                      country={country}
+                      inn={inn}
+                      ogrnip={ogrnip}
+                      snils={snils}
+                      title={title}
+                      handleCountryChange={this.handleCountryChange}
+                      handleTemplateChange={this.handleTemplateChange}
+                      handleInputChange={this.handleInputChange}
+                    />
+                  </div>
                 </div>
               </div> :
-              <div className="col s12 ">
+              <div className="col s12">
                 <div className="content-wrapper z-depth-1 tbody">
-                  <br />
-                  <KeyParameters
-                    algorithm={algorithm}
-                    containerName={containerName}
-                    exportableKey={exportableKey}
-                    extKeyUsage={extKeyUsage}
-                    formVerified={formVerified}
-                    keyLength={keyLength}
-                    keyUsage={keyUsage}
-                    keyUsageGroup={keyUsageGroup}
-                    handleAlgorithmChange={this.handleAlgorithmChange}
-                    handleInputChange={this.handleInputChange}
-                    handleKeyUsageChange={this.handleKeyUsageChange}
-                    handleKeyUsageGroupChange={this.handleKeyUsageGroupChange}
-                    handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
-                    toggleExportableKey={this.toggleExportableKey}
-                  />
+                  <div className="content-item-relative">
+                    <br />
+                    <KeyParameters
+                      algorithm={algorithm}
+                      containerName={containerName}
+                      exportableKey={exportableKey}
+                      extKeyUsage={extKeyUsage}
+                      formVerified={formVerified}
+                      keyLength={keyLength}
+                      keyUsage={keyUsage}
+                      keyUsageGroup={keyUsageGroup}
+                      handleAlgorithmChange={this.handleAlgorithmChange}
+                      handleInputChange={this.handleInputChange}
+                      handleKeyUsageChange={this.handleKeyUsageChange}
+                      handleKeyUsageGroupChange={this.handleKeyUsageGroupChange}
+                      handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
+                      toggleExportableKey={this.toggleExportableKey}
+                    />
+                  </div>
                 </div>
               </div>
             }
