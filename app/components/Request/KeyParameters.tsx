@@ -140,7 +140,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           </div>
           : null}
 
-        <div className="row nobottom">
+        <div className="row">
           <div className="input-field col s12">
             <select className="select" ref="keyUsageGroup" value={keyUsageGroup} name="keyUsageGroup" onChange={handleKeyUsageGroupChange} >
               <option value={KEY_USAGE_SIGN}>{localize("CSR.key_usage_sign", locale)}</option>
@@ -150,6 +150,23 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <label>{localize("CSR.key_usage_group", locale)}</label>
           </div>
         </div>
+
+        {
+          algorithm !== ALG_RSA ?
+            <div className="col s12 input-radio">
+              <input
+                name="exportableKey"
+                className="with-gap" type="radio"
+                id="exportableKey"
+                checked={exportableKey}
+                onClick={toggleExportableKey}
+              />
+              <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
+                {localize("CSR.exportable_key", locale)}
+              </label>
+            </div>
+            : null
+        }
 
         <div className="row">
           <div className="col s12">
@@ -220,7 +237,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
                 id="encipherOnly"
                 className="checkbox-red"
                 checked={keyUsage.encipherOnly}
-                disabled={ keyUsageGroup === KEY_USAGE_SIGN}
+                disabled={keyUsageGroup === KEY_USAGE_SIGN}
                 onChange={handleKeyUsageChange}
               />
               <label htmlFor="encipherOnly" className="truncate tooltipped label" data-position="right" data-tooltip={localize("CSR.key_usage_encipherOnly", locale)}>
@@ -349,24 +366,6 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             </div>
           </div>
         </div>
-        {
-          algorithm !== ALG_RSA ?
-            <div className="row">
-              <div className="col s12 input-radio">
-                <input
-                  name="exportableKey"
-                  className="with-gap" type="radio"
-                  id="exportableKey"
-                  checked={exportableKey}
-                  onClick={toggleExportableKey}
-                />
-                <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
-                  {localize("CSR.exportable_key", locale)}
-                </label>
-              </div>
-            </div>
-            : null
-        }
       </div>
     );
   }
