@@ -229,6 +229,7 @@ export default {
     password: "Password",
     password_confirm: "Password confirm",
     wait: "Please wait",
+    pattern_failed: "Only latin letters, numbers or a special characters",
   },
   Help: {
     help: "Help",
