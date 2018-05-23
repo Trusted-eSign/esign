@@ -537,6 +537,7 @@ declare namespace native {
             verifyCertificateChain(cert: PKI.Certificate): boolean;
             isHaveExportablePrivateKey(cert: PKI.Certificate): boolean;
             certToPkcs12(cert: PKI.Certificate, exportPrivateKey: boolean, password?: string): PKI.Pkcs12;
+            importPkcs12(p12: PKI.Pkcs12, password?: string): void;
         }
     }
     namespace COMMON {
@@ -1048,6 +1049,16 @@ declare namespace trusted.utils {
          * @memberof Csp
          */
         static certToPkcs12(cert: pki.Certificate, exportPrivateKey: boolean, password?: string): pki.Pkcs12;
+        /**
+         * Import PFX to store
+         *
+         * @static
+         * @param {pki.Pkcs12} p12
+         * @param {string} [password]
+         * @returns {void}
+         * @memberof Csp
+         */
+        static importPkcs12(p12: pki.Pkcs12, password?: string): void;
         /**
          * Creates an instance of Csp.
          *

@@ -17,6 +17,7 @@ import CertificateList from "./CertificateList";
 import ContainersList from "./ContainersList";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import Modal from "./Modal";
+import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
 import CertificateRequest from "./Request/CertificateRequest";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
@@ -33,6 +34,7 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      password: "",
       showModalCertificateRequest: false,
       showModalDeleteCertifiacte: false,
       showModalExportCertifiacte: false,
@@ -121,8 +123,10 @@ class CertWindow extends React.Component<any, any> {
     try {
       certificate = trusted.pki.Certificate.load(path, format);
     } catch (e) {
-      $(".toast-cert_load_failed").remove();
-      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+      this.p12Import(event);
+
+      /*$(".toast-cert_load_failed").remove();
+      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");*/
 
       return;
     }
@@ -149,12 +153,11 @@ class CertWindow extends React.Component<any, any> {
   }
 
   p12Import = (event: any) => {
-    const { certificates } = this.props;
     const { localize, locale } = this.context;
+    const self = this;
 
     const P12_PATH = event[0].path;
-    let p12: trusted.pki.Pkcs12;
-    const certCount = certificates.length;
+    let p12: trusted.pki.Pkcs12 | undefined;
 
     try {
       p12 = trusted.pki.Pkcs12.load(P12_PATH);
@@ -165,23 +168,28 @@ class CertWindow extends React.Component<any, any> {
     if (!p12) {
       $(".toast-cert_load_failed").remove();
       Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+
       return;
     }
 
     $("#get-password").openModal({
       complete() {
-        if (!window.PKISTORE.importPkcs12(P12_PATH, this.state.pass_value)) {
-          $(".toast-cert_import_failed").remove();
-          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
-        } else {
-          if (certCount === certificates.length) {
-            $(".toast-cert_imported").remove();
-            Materialize.toast(localize("Certificate.cert_imported", locale), 2000, ".toast-cert_imported");
-          } else {
-            $(".toast-cert_import_ok").remove();
-            Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_import_ok");
+        try {
+          trusted.utils.Csp.importPkcs12(p12, self.state.password);
+
+          self.handlePasswordChange("");
+
+          self.props.removeAllCertificates();
+
+          if (!self.props.isLoading) {
+            self.props.loadAllCertificates();
           }
 
+          $(".toast-cert_import_ok").remove();
+          Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
+        } catch (e) {
+          $(".toast-cert_import_failed").remove();
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
         }
       },
       dismissible: false,
@@ -192,7 +200,7 @@ class CertWindow extends React.Component<any, any> {
     if (isEncryptedKey(event[0].path)) {
       $("#get-password").openModal({
         complete() {
-          this.importCertKeyHelper(event[0].path, this.state.pass_value);
+          this.importCertKeyHelper(event[0].path, this.state.password);
         },
         dismissible: false,
       });
@@ -419,6 +427,7 @@ class CertWindow extends React.Component<any, any> {
             </div>
           </div>
         </div>
+        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
   }
