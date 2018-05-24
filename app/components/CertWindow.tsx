@@ -116,6 +116,7 @@ class CertWindow extends React.Component<any, any> {
     const path = event[0].path;
     const format: trusted.DataFormat = fileCoding(path);
     const OS_TYPE = os.type();
+    let container = "";
 
     let certificate: trusted.pki.Certificate;
     let providerType: string = PROVIDER_SYSTEM;
@@ -125,22 +126,20 @@ class CertWindow extends React.Component<any, any> {
     } catch (e) {
       this.p12Import(event);
 
-      /*$(".toast-cert_load_failed").remove();
-      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");*/
-
       return;
     }
 
-    if (OS_TYPE === "Windows_NT") {
-      providerType = PROVIDER_MICROSOFT;
-    } else {
-      providerType = PROVIDER_CRYPTOPRO;
+    try {
+      container = trusted.utils.Csp.getContainerNameByCertificate(certificate);
+    } catch (e) {
+      //
     }
 
-    window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
-      if (err) {
-        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-      } else {
+    if (container) {
+      try {
+        trusted.utils.Csp.installCertifiacteToContainer(certificate, container, 75);
+        trusted.utils.Csp.installCertifiacteFromContainer(container, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+
         removeAllCertificates();
 
         if (!isLoading) {
@@ -148,8 +147,32 @@ class CertWindow extends React.Component<any, any> {
         }
 
         Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+      } catch (e) {
+        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+
+        return;
       }
-    });
+    } else {
+      if (OS_TYPE === "Windows_NT") {
+        providerType = PROVIDER_MICROSOFT;
+      } else {
+        providerType = PROVIDER_CRYPTOPRO;
+      }
+
+      window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
+        if (err) {
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+        } else {
+          removeAllCertificates();
+
+          if (!isLoading) {
+            loadAllCertificates();
+          }
+
+          Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+        }
+      });
+    }
   }
 
   p12Import = (event: any) => {
