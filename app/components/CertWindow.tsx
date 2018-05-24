@@ -188,6 +188,8 @@ class CertWindow extends React.Component<any, any> {
           $(".toast-cert_import_ok").remove();
           Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
         } catch (e) {
+          self.handlePasswordChange("");
+
           $(".toast-cert_import_failed").remove();
           Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
         }
