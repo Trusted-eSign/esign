@@ -92,7 +92,7 @@ export default {
     create_selfSigned: "Создать самоподписанный сертификат",
     template_label: "Шаблон сертификата",
     template_default: "Шаблон по умолчанию",
-    template_additional_fields: "Шаблон с расширенным списокм полей",
+    template_additional_fields: "Шаблон с расширенным списком полей",
     template_kep_ip: "Сертификат КЭП индивидуального предпринимателя",
     template_kep_fiz: "Сертификат КЭП физичексого лица",
     csp_label: "Используемый криптопровайдер",
