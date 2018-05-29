@@ -188,8 +188,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     return (
       <div>
-        <div className="modal-body overflow">
-          <div className="row">
+        <div className="modal-body">
+          <div className="row nobottom">
             <div className="col s12">
               <HeaderTabs activeSubjectNameInfoTab={this.handleChangeActiveTab} />
             </div>
@@ -198,7 +198,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               <div className="col s12 ">
                 <div className="content-wrapper z-depth-1 tbody">
                   <div className="content-item-relative">
-                    <br />
+                    <div className="row halfbottom" />
                     <SubjectNameInfo
                       template={template}
                       cn={cn}
@@ -223,7 +223,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               <div className="col s12">
                 <div className="content-wrapper z-depth-1 tbody">
                   <div className="content-item-relative">
-                    <br />
+                    <div className="row halfbottom" />
                     <KeyParameters
                       algorithm={algorithm}
                       containerName={containerName}
@@ -245,9 +245,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               </div>
             }
 
-            <div className="row nobottom">
-              <div className="col s6 input-radio">
-                <br />
+            <div className="row halfbottom" />
+
+            <div className="row">
+              <div className="col s7 input-radio">
                 <input
                   name="selfSigned"
                   className="with-gap" type="radio"
@@ -260,9 +261,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
                 </label>
               </div>
 
-              <div className="col s6">
+              <div className="col s5">
                 <div className="row">
-                  <br />
                   <div className="col s6">
                     <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
                   </div>

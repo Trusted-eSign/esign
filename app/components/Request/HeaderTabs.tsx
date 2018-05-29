@@ -26,7 +26,7 @@ class HeaderTabs extends React.Component<IHeaderTabsProps, {}> {
     const { activeSubjectNameInfoTab } = this.props;
 
     return (
-      <div className="row">
+      <div className="row halfbottom">
         <ul id="tabs-swipe-demo" className="tabs">
           <li className="tab col s6">
             <a className="header-tab active" onClick={() => activeSubjectNameInfoTab(true)}>
