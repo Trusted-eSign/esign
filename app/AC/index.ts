@@ -404,14 +404,6 @@ export function loadAllCertificates() {
     setTimeout(() => {
       const certificateStore = new Store();
 
-      try {
-        const certificate = trusted.pki.Certificate.load(DEFAULT_PATH + "/cert1.crt", trusted.DataFormat.PEM);
-        certificateStore.importCertificate(certificate);
-        certificateStore.importKey(DEFAULT_PATH + "/cert1.key", "");
-      } catch (e) {
-        alert(`Error import test certificate! \n ${e}`);
-      }
-
       window.PKISTORE = certificateStore;
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;

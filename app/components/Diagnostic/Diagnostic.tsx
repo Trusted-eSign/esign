@@ -154,7 +154,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         });
     }
 
-    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
+    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length === 0)) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
