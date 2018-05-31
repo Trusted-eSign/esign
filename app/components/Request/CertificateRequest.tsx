@@ -248,13 +248,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
             <div className="row halfbottom" />
 
             <div className="row">
-              <div className="col s7 input-radio">
+              <div className="col s7">
                 <input
                   name="selfSigned"
-                  className="with-gap" type="radio"
+                  className="filled-in"
+                  type="checkbox"
                   id="selfSigned"
                   checked={selfSigned}
-                  onClick={this.toggleSelfSigned}
+                  onChange={this.toggleSelfSigned}
                 />
                 <label htmlFor="selfSigned">
                   {localize("CSR.create_selfSigned", locale)}

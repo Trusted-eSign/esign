@@ -3201,6 +3201,8 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   line-height: 1.2rem;
   font-size: 0.9rem;
   padding-left: 25px;
+  color: black;
+  opacity: 0.87;
 }
 
 .input-field-csr {

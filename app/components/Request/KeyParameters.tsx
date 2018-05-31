@@ -126,10 +126,11 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
         <div className="col s6 input-radio input-field-csr">
           <input
             name="exportableKey"
-            className="with-gap" type="radio"
+            className="filled-in"
+            type="checkbox"
             id="exportableKey"
             checked={exportableKey}
-            onClick={toggleExportableKey}
+            onChange={toggleExportableKey}
           />
           <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
             {localize("CSR.exportable_key", locale)}
