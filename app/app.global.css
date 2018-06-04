@@ -3239,3 +3239,9 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 .content-item-relative {
   position: relative;
 }
+
+@media only screen and (max-width: 992px) {
+  .modal {
+    width: 85%;
+  }
+}
