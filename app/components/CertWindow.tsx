@@ -201,8 +201,10 @@ class CertWindow extends React.Component<any, any> {
 
     this.handleCloseDialogInstallRootCertificate();
 
+    const isSelfSigned = importingCertificate.isSelfSigned;
+
     if (OS_TYPE === "Windows_NT") {
-      const storeName = importingCertificate.isSelfSigned ? ROOT : CA;
+      const storeName = isSelfSigned ? ROOT : CA;
 
       window.PKISTORE.importCertificate(importingCertificate, PROVIDER_MICROSOFT, (err: Error) => {
         if (err) {
@@ -226,8 +228,10 @@ class CertWindow extends React.Component<any, any> {
         certmgrPath = os.arch() === "ia32" ? "/opt/cprocsp/bin/ia32/certmgr" : "/opt/cprocsp/bin/amd64/certmgr";
       }
 
+      const storeName = isSelfSigned ? "uROOT" : "uCA";
+
       // tslint:disable-next-line:quotemark
-      const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store uROOT -file ' + "'" + importingCertificatePath + "'" + "\"";
+      const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store ' + "'" + storeName + "'" + ' -file ' + "'" + importingCertificatePath + "'" + "\"";
 
       const options = {
         name: "CryptoARM GOST",
