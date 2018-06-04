@@ -1,3 +1,4 @@
+import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -272,17 +273,41 @@ export class Store {
       }
     } else {
       const bCA = cert.isCA;
+      const selfSigned = cert.isSelfSigned;
       const hasKey = provider.hasPrivateKey(cert);
 
       if (category) {
         store.addCert(provider.handle, category, cert);
       } else {
-        if (hasKey && !bCA) {
+        if (hasKey) {
           store.addCert(provider.handle, MY, cert);
         } else if (!hasKey && !bCA) {
           store.addCert(provider.handle, ADDRESS_BOOK, cert);
-        } else if (!hasKey && bCA) {
-          store.addCert(provider.handle, CA, cert);
+        } else if (bCA) {
+          if (OS_TYPE === "Windows_NT") {
+            selfSigned ? store.addCert(provider.handle, ROOT, cert) : store.addCert(provider.handle, CA, cert);
+          } else {
+            let certmgrPath = "";
+
+            if (OS_TYPE === "Darwin") {
+              certmgrPath = "/opt/cprocsp/bin/certmgr";
+            } else {
+              certmgrPath = os.arch() === "ia32" ? "/opt/cprocsp/bin/ia32/certmgr" : "/opt/cprocsp/bin/amd64/certmgr";
+            }
+
+            // tslint:disable-next-line:quotemark
+            const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store uROOT -file ' +  + "\"";
+
+            const options = {
+              name: "CryptoARM GOST",
+            };
+
+            window.sudo.exec(cmd, options, function(error) {
+              if (error) {
+                console.log("--- error", error);
+              }
+            });
+          }
         }
       }
     }

@@ -45,6 +45,8 @@ export default {
     cert_export_failed: "Не удалось экспортировать сертификат",
     cert_import_ok: "Сертификат успешно импортирован",
     cert_import_failed: "Не удалось импортировать сертификат",
+    cert_trusted_import_ok: "Корневой сертификат успешно импортирован",
+    cert_trusted_import_failed: "Не удалось импортировать корневой сертификат",
     cert_load_failed: "Не удалось прочитать сертификат",
     cert_delete_ok: "Сертификат успешно удалён",
     cert_delete_failed: "Не удалось удалить сертификат",
