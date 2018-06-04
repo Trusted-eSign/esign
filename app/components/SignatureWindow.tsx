@@ -11,7 +11,6 @@ import { dirExists, mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
-import Dialog from "./Dialog";
 import FileSelector from "./FileSelector";
 import ProgressBars from "./ProgressBars";
 import SignatureInfoBlock from "./SignatureInfoBlock";
@@ -145,7 +144,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     return (
       <div className="main">
-        <Dialog />
         <div className="content">
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
