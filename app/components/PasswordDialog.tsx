@@ -58,12 +58,14 @@ class PasswordDialog extends React.Component<any, any> {
           <HeaderWorkspaceBlock text={localize("Settings.pass_enter", locale)} new_class="modal-bar" icon="close" onСlickBtn={this.closeModal} />
           <div className="password-modal-content">
             <div className="input-password">
-              <div className="input-field col s6 input-field-password">
+              <div className="input-field col s8 input-field-password">
                 <i className={"material-icons prefix key-prefix"}>vpn_key</i>
                 <input id="input_password" type="password" value={value} onChange={this.handleChange} />
                 <label htmlFor="input_password" className={active}>{localize("Settings.password", locale)}</label>
               </div>
-              <a className="waves-effect waves-light btn modal-close" id="enter-pass">{localize("License.Entered", locale)}</a>
+              <div className="col s4">
+                <a className="waves-effect waves-light btn modal-close" id="enter-pass">{localize("License.Entered", locale)}</a>
+              </div>
             </div>
           </div>
         </div>

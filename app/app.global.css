@@ -1983,7 +1983,7 @@ p.message_onlinelic{
   font-size: 80%;
 }
 .input-field-password {
-  width: calc(100% - 92px);
+  width: calc(100%);
 }
 .input-field-password .key-prefix {
   font-size: 20px;
