@@ -12,6 +12,7 @@ import {
 } from "../../constants";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import SelectFolder from "../SelectFolder";
+import HeaderTabs from "./HeaderTabs";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
 
@@ -37,6 +38,7 @@ interface IExtendedKeyUsage {
 }
 
 interface ICertificateRequestState {
+  activeSubjectNameInfoTab: boolean;
   algorithm: string;
   cn: string;
   containerName: string;
@@ -55,6 +57,7 @@ interface ICertificateRequestState {
   organizationUnitName?: string;
   outputDirectory: string;
   province: string;
+  selfSigned: boolean;
   snils?: string;
   template: string;
   title?: string;
@@ -65,7 +68,6 @@ interface ICertificateRequestProps {
   certificateLoading: boolean;
   loadAllCertificates: () => void;
   removeAllCertificates: () => void;
-  selfSigned?: boolean;
 }
 
 class CertificateRequest extends React.Component<ICertificateRequestProps, ICertificateRequestState> {
@@ -78,6 +80,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     super(props);
 
     this.state = {
+      activeSubjectNameInfoTab: true,
       algorithm: ALG_GOST12_256,
       cn: "",
       containerName: uuid(),
@@ -111,6 +114,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       organizationUnitName: "",
       outputDirectory: window.HOME_DIR,
       province: "",
+      selfSigned: false,
       snils: "",
       template: "default",
       title: "",
@@ -179,83 +183,99 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   render() {
     const { localize, locale } = this.context;
-    const { selfSigned } = this.props;
-    const { algorithm, cn, containerName, country, formVerified, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, snils, template, title } = this.state;
+    const { activeSubjectNameInfoTab, algorithm, cn, containerName, country, formVerified, email, exportableKey, extKeyUsage, inn, keyLength,
+      keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, selfSigned, snils, template, title } = this.state;
 
     return (
       <div>
-        <div className="modal-body overflow">
-          <div className="row" />
-          <div className="row">
-            <div className="col s6 m6 l6 content-item-height">
-              <div className="content-wrapper z-depth-1">
-                <KeyParameters
-                  algorithm={algorithm}
-                  containerName={containerName}
-                  exportableKey={exportableKey}
-                  extKeyUsage={extKeyUsage}
-                  formVerified={formVerified}
-                  keyLength={keyLength}
-                  keyUsage={keyUsage}
-                  keyUsageGroup={keyUsageGroup}
-                  handleAlgorithmChange={this.handleAlgorithmChange}
-                  handleInputChange={this.handleInputChange}
-                  handleKeyUsageChange={this.handleKeyUsageChange}
-                  handleKeyUsageGroupChange={this.handleKeyUsageGroupChange}
-                  handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
-                  toggleExportableKey={this.toggleExportableKey}
-                />
-              </div>
+        <div className="modal-body">
+          <div className="row nobottom">
+            <div className="col s12">
+              <HeaderTabs activeSubjectNameInfoTab={this.handleChangeActiveTab} />
             </div>
-            <div className="col s6 m6 l6 content-item-height">
-              <div className="content-wrapper z-depth-1">
-                <SubjectNameInfo
-                  template={template}
-                  cn={cn}
-                  email={email}
-                  organization={organization}
-                  organizationUnitName={organizationUnitName}
-                  locality={locality}
-                  formVerified={formVerified}
-                  province={province}
-                  country={country}
-                  inn={inn}
-                  ogrnip={ogrnip}
-                  snils={snils}
-                  title={title}
-                  handleCountryChange={this.handleCountryChange}
-                  handleTemplateChange={this.handleTemplateChange}
-                  handleInputChange={this.handleInputChange}
-                />
-              </div>
-            </div>
-          </div>
-          {
-            !selfSigned ?
-              <div className="row">
-                <div className="col s12">
-                  <p className="label">
-                    {localize("Settings.directory_file_save", locale)}:
-              </p>
+
+            {activeSubjectNameInfoTab ?
+              <div className="col s12 ">
+                <div className="content-wrapper z-depth-1 tbody">
+                  <div className="content-item-relative">
+                    <div className="row halfbottom" />
+                    <SubjectNameInfo
+                      template={template}
+                      cn={cn}
+                      email={email}
+                      organization={organization}
+                      organizationUnitName={organizationUnitName}
+                      locality={locality}
+                      formVerified={formVerified}
+                      province={province}
+                      country={country}
+                      inn={inn}
+                      ogrnip={ogrnip}
+                      snils={snils}
+                      title={title}
+                      handleCountryChange={this.handleCountryChange}
+                      handleTemplateChange={this.handleTemplateChange}
+                      handleInputChange={this.handleInputChange}
+                    />
+                  </div>
                 </div>
-                <SelectFolder
-                  directory={this.state.outputDirectory}
-                  viewDirect={this.handleOutDirectoryChange}
-                  openDirect={this.addDirect} />
+              </div> :
+              <div className="col s12">
+                <div className="content-wrapper z-depth-1 tbody">
+                  <div className="content-item-relative">
+                    <div className="row halfbottom" />
+                    <KeyParameters
+                      algorithm={algorithm}
+                      containerName={containerName}
+                      exportableKey={exportableKey}
+                      extKeyUsage={extKeyUsage}
+                      formVerified={formVerified}
+                      keyLength={keyLength}
+                      keyUsage={keyUsage}
+                      keyUsageGroup={keyUsageGroup}
+                      handleAlgorithmChange={this.handleAlgorithmChange}
+                      handleInputChange={this.handleInputChange}
+                      handleKeyUsageChange={this.handleKeyUsageChange}
+                      handleKeyUsageGroupChange={this.handleKeyUsageGroupChange}
+                      handleExtendedKeyUsageChange={this.handleExtendedKeyUsageChange}
+                      toggleExportableKey={this.toggleExportableKey}
+                    />
+                  </div>
+                </div>
               </div>
-              : null
-          }
-          <div className="row">
-            <div className="col s2 offset-s7">
-              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
-            </div>
-            <div className="col s2">
-              <a className={"waves-effect waves-light btn"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
+            }
+
+            <div className="row halfbottom" />
+
+            <div className="row">
+              <div className="col s7">
+                <input
+                  name="selfSigned"
+                  className="filled-in"
+                  type="checkbox"
+                  id="selfSigned"
+                  checked={selfSigned}
+                  onChange={this.toggleSelfSigned}
+                />
+                <label htmlFor="selfSigned">
+                  {localize("CSR.create_selfSigned", locale)}
+                </label>
+              </div>
+
+              <div className="col s5">
+                <div className="row">
+                  <div className="col s6">
+                    <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+                  </div>
+                  <div className="col s6">
+                    <a className={"waves-effect waves-light btn"} onClick={this.handelReady}>{localize("Common.ready", locale)}</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 
@@ -296,11 +316,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     return false;
   }
 
+  handleChangeActiveTab = (activeSubjectNameInfoTab: boolean) => {
+    this.setState({ activeSubjectNameInfoTab });
+  }
+
   handelReady = () => {
     const { localize, locale } = this.context;
-    const { selfSigned } = this.props;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, snils, title } = this.state;
+      keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, selfSigned, snils, title } = this.state;
 
     const key = new trusted.pki.Key();
     const exts = new trusted.pki.ExtensionCollection();
@@ -548,26 +571,16 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
   }
 
-  addDirect = () => {
-    const dialog = window.electron.remote.dialog;
-    const directory = dialog.showOpenDialog({ properties: ["openDirectory"] });
-
-    if (directory) {
-      this.setState({ outputDirectory: (directory[0]) });
-    }
-  }
-
-  handleOutDirectoryChange = (ev: any) => {
-    ev.preventDefault();
-    this.setState({ outputDirectory: ev.target.value });
-  }
-
   handelCancel = () => {
     const { onCancel } = this.props;
 
     if (onCancel) {
       onCancel();
     }
+  }
+
+  toggleSelfSigned = () => {
+    this.setState({ selfSigned: !this.state.selfSigned });
   }
 
   toggleExportableKey = () => {

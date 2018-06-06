@@ -152,6 +152,7 @@ html {
     overflow: hidden;
 }
 body {
+    background-color: white;
     margin: 0;
     padding: 0;
     height: 100%;
@@ -188,9 +189,15 @@ body {
 .bordered--top{
     border-top:1px solid rgba(0,0,0, 0.5);
 }
+
 .select-wrapper input.select-dropdown{
+    height: 42px;
+    line-height: 30px;
     font-size: 100%;
-    border-bottom: none;
+}
+
+.select-wrapper+label {
+  top: -3px;
 }
 
 .settins-check-title {
@@ -310,6 +317,94 @@ body {
     background-color: lightgray;
 }
 /*----------------------*/
+[type="checkbox"].filled-in+label:after {
+  border-radius: 2px
+}
+
+[type="checkbox"].filled-in+label:before,[type="checkbox"].filled-in+label:after {
+  content: '';
+  left: 0;
+  position: absolute;
+  transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
+  z-index: 1
+}
+
+[type="checkbox"].filled-in:not(:checked)+label:before {
+  width: 0;
+  height: 0;
+  border: 3px solid transparent;
+  left: 4px;
+  top: 8px;
+  -webkit-transform: rotateZ(37deg);
+  transform: rotateZ(37deg);
+  -webkit-transform-origin: 20% 40%;
+  transform-origin: 100% 100%
+}
+
+[type="checkbox"].filled-in:not(:checked)+label:after {
+  height: 16px;
+  width: 16px;
+  background-color: transparent;
+  border: 2px solid #5a5a5a;
+  top: 0px;
+  z-index: 0
+}
+
+[type="checkbox"].filled-in:checked+label:before {
+  top: 0;
+  left: 1px;
+  width: 6px;
+  height: 10px;
+  border-top: 2px solid transparent;
+  border-left: 2px solid transparent;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  -webkit-transform: rotateZ(37deg);
+  transform: rotateZ(37deg);
+  -webkit-transform-origin: 100% 100%;
+  transform-origin: 100% 100%
+}
+
+[type="checkbox"].filled-in:checked+label:after {
+  top: 0;
+  width:16px;
+  height: 16px;
+  border: 2px solid #26a69a;
+  background-color: #26a69a;
+  z-index: 0
+}
+
+[type="checkbox"].filled-in.tabbed:focus+label:after {
+  border-radius: 2px;
+  border-color: #5a5a5a;
+  background-color: rgba(0,0,0,0.1)
+}
+
+[type="checkbox"].filled-in.tabbed:checked:focus+label:after {
+  border-radius: 2px;
+  background-color: #26a69a;
+  border-color: #26a69a
+}
+
+[type="checkbox"].filled-in:disabled:not(:checked)+label:before {
+  background-color: transparent;
+  border: 2px solid transparent
+}
+
+[type="checkbox"].filled-in:disabled:not(:checked)+label:after {
+  border-color: transparent;
+  background-color: #BDBDBD
+}
+
+[type="checkbox"].filled-in:disabled:checked+label:before {
+  background-color: transparent
+}
+
+[type="checkbox"].filled-in:disabled:checked+label:after {
+  background-color: #BDBDBD;
+  border-color: #BDBDBD
+}
+
 [type="checkbox"].filled-in:checked+label:after {
     border: rgb(135, 134, 159);
     background-color: #334294;
@@ -673,6 +768,10 @@ i.material-icons.choosefolder {
 
 /*-------------------------------Стили сомпонента выбора сертификатов------------------*/
 
+.tabs {
+  height: 35px;
+}
+
 .tabs .tab a{
     color:black;
 }
@@ -683,6 +782,11 @@ i.material-icons.choosefolder {
 
 .tabs .indicator{
     background-color: #334294;
+}
+
+.tabs .tab {
+  height: 35px;
+  line-height: 30px;
 }
 
 .collapsible-header.color{
@@ -979,8 +1083,7 @@ nav .cert-seacrh label i {
 }*/
 
 .modal {
-  max-height: 85% !important ;
-  border: 2px solid #bf3817;
+  max-height: 87% !important ;
 }
 
 .nooverflow {
@@ -988,7 +1091,7 @@ nav .cert-seacrh label i {
 }
 
 .modal-body {
-  height: 400px;
+  height: 500px;
 }
 
 .overflow {
@@ -1426,7 +1529,7 @@ form.col.s12 {
 }
 
 .select, #key-length-value {
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .contact-icon {
@@ -1584,6 +1687,11 @@ p.label {
   font-size: 1rem;
   color: black;
   opacity: 0.54;
+}
+
+p.label-csr {
+  font-size: 0.9rem;
+  color: #334294;
 }
 
 .collection-item.files-collection {
@@ -1876,7 +1984,7 @@ p.message_onlinelic{
   font-size: 80%;
 }
 .input-field-password {
-  width: calc(100% - 92px);
+  width: calc(100%);
 }
 .input-field-password .key-prefix {
   font-size: 20px;
@@ -2620,6 +2728,8 @@ i.material-icons.left.line {
 /*----------------------------*/
 .modal-bar {
     background-color: #bf3817;
+    height: 40px;
+    line-height: 40px;
 }
 .modal-bar .app-bar-item {
     color: #ffffff;
@@ -2868,11 +2978,6 @@ i.material-icons.left.line {
     height: 290px;
     background-color: white;
 }
-.contain-btn{
-    left: 633px;
-    top: 467px;
-    position: absolute;
-}
 
 .problem-contaner {
     height: 400px;
@@ -2959,6 +3064,14 @@ a.help_paragraf {
 
 .row.nobottom {
     margin-bottom: 0px;
+}
+
+.row.halfbottom {
+  margin-bottom: 10px;
+}
+
+.col.nobottom {
+  margin-bottom: 0px;
 }
 
 .col.s12.nopadding {
@@ -3052,9 +3165,54 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   box-shadow: 0 1px 0 0 #334294;
 }
 
+.input-field input[type=password]:focus {
+  border-bottom: 1px solid #334294;
+  box-shadow: 0 1px 0 0 #334294;
+}
+
+/* label focus color */
+.input-field input[type=password]:focus + label {
+  color: #334294;
+}
+
 .input-field textarea:focus {
   border-bottom: 1px solid #334294 !important;
   box-shadow: 0 1px 0 0 #334294 !important;
+}
+
+/* .input-field-csr [type="radio"]:not(:checked)+label, [type="radio"]:checked+label {
+  font-size: 0.8rem;
+} */
+
+.input-field label {
+  color: #334294;
+  font-size: 0.9rem;
+}
+
+.input-field label.active {
+  font-size: 0.9rem;
+}
+
+[type="checkbox"]+label {
+  height: 1.6rem;
+  line-height: 1.2rem;
+  font-size: 0.9rem;
+  padding-left: 25px;
+  color: black;
+  opacity: 0.87;
+}
+
+.input-field-csr {
+  height: 36px;
+  line-height: 10px;
+}
+
+.input-field-csr input[type=text] {
+  font-size: 0.9rem;
+}
+
+.input-field-csr input[type=email] {
+  font-size: 0.9rem;
 }
 
 .noUi-handle {
@@ -3114,4 +3272,24 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 
 button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
   background: rgba(0,0,0,0.1);
+}
+
+.header-tab {
+  font-size: 55%;
+  color: gray;
+}
+
+.tbody {
+  height: 380px;
+  overflow: auto;
+}
+
+.content-item-relative {
+  position: relative;
+}
+
+@media only screen and (max-width: 992px) {
+  .modal {
+    width: 85%;
+  }
 }

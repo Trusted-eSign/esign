@@ -1,5 +1,5 @@
 interface JQuery {
   closeModal(): void;
   leanModal(): void;
-  openModal(): void;
+  openModal(complete?: any, dismissible?: boolean): void;
 }

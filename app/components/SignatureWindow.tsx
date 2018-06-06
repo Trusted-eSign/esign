@@ -12,7 +12,6 @@ import logger from "../winstonLogger";
 import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
-import Dialog from "./Dialog";
 import FileSelector from "./FileSelector";
 import ProgressBars from "./ProgressBars";
 import SignatureInfoBlock from "./SignatureInfoBlock";
@@ -146,7 +145,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     return (
       <div className="main">
-        <Dialog />
         <div className="content">
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
@@ -274,10 +272,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       files.forEach((file) => {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
-        if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath, undefined, undefined, undefined, file.remoteId, file.socket);
 
+        if (newPath) {
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
 
@@ -346,6 +342,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
                     connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
                   }
                 }
+
+                deleteFile(file.id);
               },
               );
             }

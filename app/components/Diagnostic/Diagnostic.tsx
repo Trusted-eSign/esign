@@ -55,7 +55,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
             type: NO_GOST_2001,
           }],
         });
-        this.setState({ criticalError: true});
+        this.setState({ criticalError: true });
         return false;
       }
 
@@ -129,32 +129,32 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
     const { lic_format, lic_error, lic_trial_verified } = this.props;
 
-    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true && loadingLicense === false){
-            this.setState({
-                errors: [...this.state.errors, {
-                  important: WARNING,
-                  type: NO_CRYPTOARM_LICENSE,
-                }],
-              });
-    }
-    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false){
+    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
-          errors: [...this.state.errors, {
-            important: WARNING,
-            type: NO_CORRECT_CRYPTOARM_LICENSE,
-          }],
-        });
+        errors: [...this.state.errors, {
+          important: WARNING,
+          type: NO_CRYPTOARM_LICENSE,
+        }],
+      });
     }
-    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false){
+    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
-          errors: [...this.state.errors, {
-            important: WARNING,
-            type: NO_CORRECT_CRYPTOARM_LICENSE,
-          }],
-        });
+        errors: [...this.state.errors, {
+          important: WARNING,
+          type: NO_CORRECT_CRYPTOARM_LICENSE,
+        }],
+      });
+    }
+    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+      this.setState({
+        errors: [...this.state.errors, {
+          important: WARNING,
+          type: NO_CORRECT_CRYPTOARM_LICENSE,
+        }],
+      });
     }
 
-    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
+    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length === 0)) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -188,24 +188,18 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     if (!criticalError && activeError === NO_HAVE_CERTIFICATES_WITH_KEY) {
       return (
         <Link to={"/containers"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <div className="contain-btn">
-            <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-          </div>
+          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
         </Link>
       );
     } else if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
       return (
         <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <div className="contain-btn">
-            <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-          </div>
+          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
         </Link>
       );
     } else {
       return (
-        <div className="contain-btn">
-          <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
-        </div>
+        <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
       );
     }
   }
@@ -254,7 +248,10 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
             </div>
             <div className="row">
-              {this.getCloseButton()}
+              <div className="row halfbottom" />
+              <div className="col s3 offset-s9">
+                {this.getCloseButton()}
+              </div>
             </div>
           </div>
         </div>

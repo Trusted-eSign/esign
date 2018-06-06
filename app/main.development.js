@@ -1,8 +1,9 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron';
-import MenuBuilder from './menu';
+const { app, BrowserWindow, Tray, Menu } = require('electron');
+const MenuBuilder = require('./menu');
 
 let mainWindow = null;
 let preloader = null;
+
 global.globalObj = {
   id: 123,
   launch: null,
@@ -103,8 +104,10 @@ app.on('ready', async () => {
     mainWindow.webContents.openDevTools();
   }
 
-  var platform = require('os').platform();
-  var trayIcon;
+  const platform = require('os').platform();
+  const lang = app.getLocale().split("-")[0];
+  let trayIcon;
+
   if (platform == 'win32') {
     trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
   } else if (platform == 'darwin') {
@@ -115,17 +118,18 @@ app.on('ready', async () => {
 
   const trayMenuTemplate = [
     {
-      label: 'Open Application',
+      label: lang === 'ru' ? 'Открыть приложение' : 'Open Application',
       click: function () { mainWindow.show(); }
     },
     {
-      label: 'Close',
+      label: lang === 'ru' ? 'Выйти' : 'Close',
       click: function () {
         global.sharedObject.isQuiting = true;
         app.quit();
       }
     }
   ];
+
   var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
   trayIcon.setContextMenu(trayMenu);
 

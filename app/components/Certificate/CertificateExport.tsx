@@ -199,11 +199,27 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
   }
 
   handlePasswordChange = (password: string) => {
-    this.setState({ password });
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z!@#$%^&*]+$/i;
+
+    if (pattern.test(password) || !password) {
+      this.setState({ password });
+    } else {
+      $(".toast-pattern_failed").remove();
+      Materialize.toast(localize("Settings.pattern_failed", locale), 2000, "toast-pattern_failed");
+    }
   }
 
   handlePasswordConfirmChange = (passwordConfirm: string) => {
-    this.setState({ passwordConfirm });
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z!@#$%^&*]+$/i;
+
+    if (pattern.test(passwordConfirm) || !passwordConfirm) {
+      this.setState({ passwordConfirm });
+    } else {
+      $(".toast-pattern_failed").remove();
+      Materialize.toast(localize("Settings.pattern_failed", locale), 2000, "toast-pattern_failed");
+    }
   }
 
   handleEncodingChange = (encoding: string) => {

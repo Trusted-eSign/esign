@@ -20,7 +20,7 @@ import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, fileExists, toBase64 } from "../utils";
+import { extFile, toBase64, fileExists } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
@@ -86,7 +86,10 @@ export function loadLicense() {
             lic_format = "JWT";
             const check = trusted.utils.Jwt.checkLicense(data);
             if (check == 0) licenseStatus = 1;
-            else lic_error = check;
+            else{
+              lic_error = check;
+              licenseStatus = 0;
+            }
             const splitLicense = data.split(".");
             if (splitLicense[1]) {
               try {
@@ -219,7 +222,7 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({ fullpath: newPath, extra: file.extra, remoteId: file.remoteId, socket: file.socket });
+          signedFilePackage.push({ fullpath: newPath });
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
@@ -414,14 +417,6 @@ export function loadAllCertificates() {
     setTimeout(() => {
       const certificateStore = new Store();
 
-      try {
-        const certificate = trusted.pki.Certificate.load(DEFAULT_PATH + "/cert1.crt", trusted.DataFormat.PEM);
-        certificateStore.importCertificate(certificate);
-        certificateStore.importKey(DEFAULT_PATH + "/cert1.key", "");
-      } catch (e) {
-        alert(`Error import test certificate! \n ${e}`);
-      }
-
       window.PKISTORE = certificateStore;
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
@@ -572,6 +567,10 @@ export function activeContainer(container: number) {
 
 export function selectFile(fullpath: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) {
   let stat;
+
+  if (!fileExists(fullpath)) {
+    return;
+  }
 
   if (!lastModifiedDate || !size) {
     stat = fs.statSync(fullpath);

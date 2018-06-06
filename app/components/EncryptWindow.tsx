@@ -14,7 +14,6 @@ import { dirExists, mapToArr } from "../utils";
 import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
-import Dialog from "./Dialog";
 import EncryptSettings from "./EncryptSettings";
 import FileSelector from "./FileSelector";
 import ProgressBars from "./ProgressBars";
@@ -221,7 +220,6 @@ class EncryptWindow extends React.Component<any, any> {
 
     return (
       <div className="main">
-        <Dialog />
         <div className="content">
           <div className="content-tem">
             <div className="col s6 m6 l6 content-item">

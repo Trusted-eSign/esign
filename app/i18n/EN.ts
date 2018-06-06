@@ -45,6 +45,8 @@ export default {
     cert_export_failed: "The certificate export failed",
     cert_import_ok: "The certificate is successfully imported",
     cert_import_failed: "The certificate import failed",
+    cert_trusted_import_ok: "The trusted certificate is successfully imported",
+    cert_trusted_import_failed: "The trusted certificate import failed",
     cert_delete_ok: "The certificate is successfully deleted",
     cert_delete_failed: "The certificate delete failed",
     cert_load_failed: "The certificate file cannot be read",
@@ -233,6 +235,7 @@ export default {
     password: "Password",
     password_confirm: "Password confirm",
     wait: "Please wait",
+    pattern_failed: "Only latin letters, numbers or a special characters",
   },
   Help: {
     help: "Help",

@@ -1,3 +1,4 @@
+import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -246,9 +247,7 @@ export class Store {
   handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
-    let urls = cert.CAIssuersUrls;
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
-    let tempCert;
 
     if (provider instanceof trusted.pkistore.Provider_System) {
       const uri = store.addCert(provider.handle, MY, cert);
@@ -272,22 +271,27 @@ export class Store {
       }
     } else {
       const bCA = cert.isCA;
+      const selfSigned = cert.isSelfSigned;
       const hasKey = provider.hasPrivateKey(cert);
 
       if (category) {
         store.addCert(provider.handle, category, cert);
       } else {
-        if (hasKey && !bCA) {
+        if (hasKey) {
           store.addCert(provider.handle, MY, cert);
         } else if (!hasKey && !bCA) {
           store.addCert(provider.handle, ADDRESS_BOOK, cert);
-        } else if (!hasKey && bCA) {
-          store.addCert(provider.handle, CA, cert);
+        } else if (bCA) {
+          if (OS_TYPE === "Windows_NT") {
+            selfSigned ? store.addCert(provider.handle, ROOT, cert) : store.addCert(provider.handle, CA, cert);
+          }
         }
       }
     }
 
-    if (!urls.length) {
+    return callback();
+
+    /*if (!urls.length) {
       return callback();
     }
 
@@ -300,7 +304,7 @@ export class Store {
 
         self.handleImportCertificate(tempCert, store, provider, callback);
       }
-    });
+    });*/
   }
 
   downloadCRL(cert: any, done: (err: any, res?: any) => void): any {
