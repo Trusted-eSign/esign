@@ -1,5 +1,5 @@
-import { Map, OrderedMap, Record } from "immutable";
-import { FAIL, PACKAGE_SIGN, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
+import { OrderedMap, Record } from "immutable";
+import { PACKAGE_SIGN, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
 import { arrayToMap } from "../utils";
 
 const SignatureModel = Record({
@@ -22,7 +22,7 @@ const DefaultReducerState = Record({
 });
 
 export default (signatures = new DefaultReducerState(), action) => {
-  const { type, payload, randomId } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case PACKAGE_SIGN + START:

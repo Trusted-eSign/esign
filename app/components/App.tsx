@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { HashRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import {ConnectedRouter as Router, push} from "react-router-redux";
 import history from "../history";
 import localize from "../i18n/localize";

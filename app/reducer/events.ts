@@ -1,5 +1,5 @@
-import { Map, OrderedMap, Record } from "immutable";
-import { ADD_EVENT, LOAD_ALL_EVENTS, REMOVE_ALL_EVENTS, START, SUCCESS } from "../constants";
+import { OrderedMap, Record } from "immutable";
+import { LOAD_ALL_EVENTS, REMOVE_ALL_EVENTS, START, SUCCESS } from "../constants";
 import { arrayToMap } from "../utils";
 
 const EventModel = Record({

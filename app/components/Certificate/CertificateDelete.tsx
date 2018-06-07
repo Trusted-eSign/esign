@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 
 interface ICertificateDeleteProps {
   certificate: any;
@@ -124,7 +124,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
         const x509 = window.PKISTORE.getPkiObject(certificate);
         container = trusted.utils.Csp.getContainerNameByCertificate(x509);
       } catch (e) {
-        console.log("error get container by certificate", e);
+        // console.log("error get container by certificate", e);
       }
     }
 

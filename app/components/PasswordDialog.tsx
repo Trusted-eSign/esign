@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class PasswordDialog extends React.Component<any, any> {
@@ -33,7 +33,7 @@ class PasswordDialog extends React.Component<any, any> {
     $("#get-password").closeModal();
   }
 
-  handleChange = (ev) => {
+  handleChange = (ev: any) => {
     const { onChange } = this.props;
     if (!onChange) {
       return;
@@ -44,7 +44,7 @@ class PasswordDialog extends React.Component<any, any> {
 
   render() {
     const { localize, locale } = this.context;
-    const { value, onChange } = this.props;
+    const { value } = this.props;
 
     let active = "";
 

@@ -27,7 +27,7 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
 
   componentDidMount() {
     const { locale } = this.context;
-    const { id, label, max, min, onSelect, selected } = this.props;
+    const { id, max, min, onSelect, selected } = this.props;
 
     let translations;
 

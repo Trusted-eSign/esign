@@ -1,4 +1,4 @@
-import { Map, OrderedMap, Record } from "immutable";
+import { OrderedMap, Record } from "immutable";
 import { ACTIVE_CONTAINER, GET_CERTIFICATE_FROM_CONTAINER,
    LOAD_ALL_CONTAINERS, REMOVE_ALL_CONTAINERS, START, SUCCESS } from "../constants";
 import { arrayToMap } from "../utils";

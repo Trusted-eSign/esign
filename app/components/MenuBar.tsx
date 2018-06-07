@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,

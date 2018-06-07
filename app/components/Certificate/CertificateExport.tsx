@@ -1,10 +1,9 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
-import { BASE64, DER } from "../../constants";
+import React from "react";
+import { BASE64 } from "../../constants";
 import { fileExists } from "../../utils";
 import EncodingTypeSelector from "../EncodingTypeSelector";
-import PasswordDialog from "../PasswordDialog";
 
 interface ICertificateExportState {
   exportPrivateKey: boolean;
@@ -235,7 +234,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
           const x509 = window.PKISTORE.getPkiObject(certificate);
           exportable = trusted.utils.Csp.isHaveExportablePrivateKey(x509);
         } catch (e) {
-          console.log("error get container by certificate", e);
+          // console.log("error get container by certificate", e);
         }
       }
     }

@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { EN, RU } from "../../constants";
 import DatePicker from "../DatePicker";
 import EventTable from "./EventTable";
 
@@ -15,7 +14,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
     localize: PropTypes.func,
   };
 
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
 
     this.state = {
@@ -35,8 +34,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { selectedFrom, selectedTo } = this.state;
+    const { selectedFrom } = this.state;
 
     return (
       <div className="row">

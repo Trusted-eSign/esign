@@ -33,7 +33,7 @@ class RecipientsList extends React.Component<any, any> {
   }
 
   render() {
-    const { recipients, onActive, handleRemoveRecipient, dialogType } = this.props;
+    const { recipients, dialogType } = this.props;
 
     if (!recipients || !recipients.length) {
       return null;

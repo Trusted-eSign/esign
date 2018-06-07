@@ -1,9 +1,8 @@
-import { Map, OrderedMap, Record } from "immutable";
+import { Record } from "immutable";
 import {
   FAIL, LOAD_LICENSE,
-  START, SUCCESS, VERIFY_LICENSE
+  START, SUCCESS, VERIFY_LICENSE,
 } from "../constants";
-import { arrayToMap } from "../utils";
 
 const LicenseModel = Record({
   aud: "-",
@@ -17,7 +16,6 @@ const LicenseModel = Record({
 const DefaultReducerState = Record({
   data: null,
   info: new LicenseModel(),
-  //lic_trial_verified: null,
   lic_error: null,
   lic_format: null,
   loaded: false,
@@ -33,10 +31,7 @@ export default (license = new DefaultReducerState(), action) => {
     case LOAD_LICENSE + START:
       return license
         .set("loading", true)
-        //.set("lic_format", payload.lic_format)
         .set("loaded", false);
-       // .set("verified", payload.verified)        
-       // .set("status", payload.licenseStatus);
 
     case LOAD_LICENSE + SUCCESS:
       return license
@@ -44,7 +39,7 @@ export default (license = new DefaultReducerState(), action) => {
         .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true)
-        .set("verified", payload.verified) 
+        .set("verified", payload.verified)
         .set("lic_format", payload.lic_format)
         .set("lic_error", payload.lic_error)
         .set("status", payload.licenseStatus);
@@ -54,7 +49,7 @@ export default (license = new DefaultReducerState(), action) => {
         .set("loading", false)
         .set("loaded", false)
         .set("status", 0)
-        .set("verified", payload.verified) 
+        .set("verified", payload.verified)
         .set("lic_error", payload.lic_error)
         .set("lic_format", payload.lic_format);
 

@@ -7,11 +7,10 @@ import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT,
 } from "../../constants";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
-import SelectFolder from "../SelectFolder";
 import HeaderTabs from "./HeaderTabs";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";

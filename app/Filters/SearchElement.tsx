@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { changeSearchValue } from "../AC";
 
@@ -8,6 +8,7 @@ interface ISearchElementState {
 
 interface ISearchElementProps {
   changeSearchValue: (ev: any) => void;
+  searchValue: string;
 }
 
 class SearchElement extends React.Component<ISearchElementProps, ISearchElementState> {
@@ -26,6 +27,7 @@ class SearchElement extends React.Component<ISearchElementProps, ISearchElementS
   }
 
   handleClose() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSearchValue } = this.props;
 
     changeSearchValue("");
@@ -35,7 +37,8 @@ class SearchElement extends React.Component<ISearchElementProps, ISearchElementS
     });
   }
 
-  handleValueChange = (ev) => {
+  handleValueChange = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { changeSearchValue } = this.props;
     changeSearchValue(ev.target.value);
   }

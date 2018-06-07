@@ -1,6 +1,5 @@
-import * as events from "events";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { selectSignerCertificate, verifyCertificate } from "../AC";
 import { filteredCertificatesSelector } from "../selectors";
@@ -109,13 +108,12 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   }
 
   render() {
-    const { certificates, isLoading, signer } = this.props;
+    const { isLoading, signer } = this.props;
     const { selectedSigner } = this.state;
     const { localize, locale } = this.context;
 
     const ACTIVE_SIGNER = selectedSigner ? "active" : "not-active";
     const NOT_ACTIVE_SIGNER = signer ? "not-active" : "active";
-    const CERTIFICATES_NOT_ACTIVE = certificates.length < 1 ? "not-active" : "";
 
     if (isLoading) {
       return <ProgressBars />;

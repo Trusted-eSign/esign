@@ -1,16 +1,14 @@
-import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
   ADDRESS_BOOK, CA, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
-  ROOT, TRUST,
+  ROOT,
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding } from "../utils";
-import * as jwt from "./jwt";
 
 const OS_TYPE = os.type();
 

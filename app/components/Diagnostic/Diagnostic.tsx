@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { loadAllCertificates, loadLicense, verifyLicense } from "../../AC";
+import { loadAllCertificates, loadLicense } from "../../AC";
 import {
   BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
@@ -91,8 +91,6 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   checkTrustedCryptoLoadedErr = () => {
-    const { localize, locale } = this.context;
-
     if (window.tcerr) {
       if (window.tcerr.message) {
         if (~window.tcerr.message.indexOf("libcapi")) {
@@ -125,11 +123,9 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    const { localize, locale } = this.context;
-    const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
-    const { lic_format, lic_error, lic_trial_verified } = this.props;
+    const { certificatesLoaded, loadingLicense } = this.props;
 
-    if (nextProps.statusLicense == 0 && nextProps.lic_format == "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -137,7 +133,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
     }
-    if (nextProps.lic_format == "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -145,7 +141,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
     }
-    if (nextProps.lic_format == "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -165,8 +161,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   componentDidMount() {
-    const { localize, locale } = this.context;
-    const { certificates, certificatesLoading, certificatesLoaded, loadedLicense, loadingLicense } = this.props;
+    const { certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { loadAllCertificates, loadLicense } = this.props;
 
@@ -183,7 +178,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
   getCloseButton() {
     const { localize, locale } = this.context;
-    const { activeError, criticalError, errors } = this.state;
+    const { activeError, criticalError } = this.state;
 
     if (!criticalError && activeError === NO_HAVE_CERTIFICATES_WITH_KEY) {
       return (
@@ -289,11 +284,11 @@ export default connect((state) => {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
     dataLicense: state.license.data,
+    lic_error: state.license.lic_error,
+    lic_format: state.license.lic_format,
     loadedLicense: state.license.loaded,
     loadingLicense: state.license.loading,
     statusLicense: state.license.status,
-    lic_error: state.license.lic_error,
     verifiedLicense: state.license.verified,
-    lic_format: state.license.lic_format,
   };
-}, { loadAllCertificates, loadLicense, verifyLicense })(Diagnostic);
+}, { loadAllCertificates, loadLicense })(Diagnostic);

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { loadLicense } from "../../AC";
 import LicenseInfoFiled from "./LicenseInfoField";
@@ -31,13 +31,12 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
     const { loadLicense } = this.props;
-    const { loaded, loading } = this.props;
-    const { lic_format, lic_status } = this.props;
+
     loadLicense();
   }
 
   getLocaleDate = (time: number) => {
-    const { localize, locale } = this.context;
+    const { locale } = this.context;
 
     return new Date(time).toLocaleDateString(locale, {
       day: "numeric",
@@ -212,10 +211,11 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
 
 export default connect((state) => {
   return {
+    lic_format: state.license.lic_format,
+    lic_status: state.license.status,
     license: state.license.info,
     loaded: state.license.loaded,
     loading: state.license.loading,
-    lic_format: state.license.lic_format,
-    lic_status: state.license.status,
+
   };
 }, { loadLicense }, null, { pure: false })(LicenseInfo);

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
 
@@ -47,14 +47,14 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   }
 
   handleClick = () => {
-    const { cert, chooseCert, toggleOpen } = this.props;
+    const { chooseCert, toggleOpen } = this.props;
 
     chooseCert();
     toggleOpen();
   }
 
   render() {
-    const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
+    const { cert, operation, isOpen } = this.props;
     const { localize, locale } = this.context;
 
     let certKeyMenu: any = null;

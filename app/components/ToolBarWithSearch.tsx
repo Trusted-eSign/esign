@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import SearchElement from "../Filters/SearchElement";
 
 interface IToolBarWithSearchProps {

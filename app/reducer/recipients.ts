@@ -1,4 +1,4 @@
-import { Map, OrderedMap, Record } from "immutable";
+import { OrderedMap, Record } from "immutable";
 import { ADD_RECIPIENT_CERTIFICATE, DELETE_RECIPIENT_CERTIFICATE, REMOVE_ALL_CERTIFICATES } from "../constants";
 
 const RecipientModel = Record({

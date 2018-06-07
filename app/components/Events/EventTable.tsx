@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
 import { loadAllEvents } from "../../AC";
@@ -59,14 +59,14 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { isLoaded, isLoading, loadAllEvents } = this.props;
+    const { isLoading, loadAllEvents } = this.props;
 
     if (!isLoading) {
       loadAllEvents();
     }
   }
 
-  componentDidUpdate(prevProps: IEventTableProps & IEventTableDispatch, prevState: IEventTableState) {
+  componentDidUpdate(prevProps: IEventTableProps & IEventTableDispatch) {
     if (!prevProps.eventsMap.size && this.props.eventsMap && this.props.eventsMap.size ||
       (prevProps.eventsMap.size !== this.props.eventsMap.size)) {
       this.sort(this.state);
@@ -74,8 +74,8 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { events, isLoaded, isLoading } = this.props;
+    const { locale } = this.context;
+    const { isLoading } = this.props;
     const { disableHeader, sortBy, sortDirection, sortedList } = this.state;
 
     if (isLoading) {
@@ -222,7 +222,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 }
 
-export default connect((state, props) => ({
+export default connect((state) => ({
   events: mapToArr(state.events.entities),
   eventsMap: state.events.entities,
   isLoaded: state.events.loaded,

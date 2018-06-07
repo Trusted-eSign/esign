@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { connect } from "react-redux";
+import React from "react";
 
 class ContainerListItem extends React.Component<any, any> {
   static contextTypes = {
@@ -8,7 +7,7 @@ class ContainerListItem extends React.Component<any, any> {
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: { isOpen: boolean; }) {
     return nextProps.isOpen !== this.props.isOpen;
   }
 
@@ -19,7 +18,7 @@ class ContainerListItem extends React.Component<any, any> {
   }
 
   render() {
-    const { container, toggleOpen, isOpen } = this.props;
+    const { container, isOpen } = this.props;
     let active = "";
 
     if (isOpen) {

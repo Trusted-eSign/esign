@@ -4,7 +4,6 @@ import { USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding, fileExists } from "../utils";
 import logger from "../winstonLogger";
-import * as jwt from "./jwt";
 
 const dialog = window.electron.remote.dialog;
 

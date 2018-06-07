@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { localizeAlgorithm } from "../i18n/localize";
 import { IX509Certificate } from "../module/global_app";
 

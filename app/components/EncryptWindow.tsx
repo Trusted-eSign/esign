@@ -1,8 +1,7 @@
-import * as archiver from "archiver";
 import * as fs from "fs";
 import * as path from "path";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
 import { HOME_DIR } from "../constants";
@@ -11,7 +10,6 @@ import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
 import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
-import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import EncryptSettings from "./EncryptSettings";
@@ -157,7 +155,7 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error, licenseToken, licenseLoaded } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseStatus !== 1) {

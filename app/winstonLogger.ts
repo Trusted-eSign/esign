@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import { APP_ERRORS_LOG_FILE, APP_LOG_FILE } from "./constants";
+import { APP_LOG_FILE } from "./constants";
 
 const logger = winston.createLogger({
   format: winston.format.combine(

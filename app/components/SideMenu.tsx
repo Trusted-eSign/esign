@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
-  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,
+  LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,
   LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
 } from "../constants";
 
@@ -14,7 +14,7 @@ class SideMenu extends React.Component<{}, {}> {
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: { locale: string }) {
+  shouldComponentUpdate(nextContext: { locale: string }) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 

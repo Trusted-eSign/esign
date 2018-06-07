@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 export default (CustomComponent: any) => class AccordionDecorator extends React.Component<any, any> {
     constructor(props: any) {

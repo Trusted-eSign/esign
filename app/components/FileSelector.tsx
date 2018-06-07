@@ -1,9 +1,8 @@
 import { is } from "immutable";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
-import { dlg } from "../module/global_app";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileList from "./FileList";
@@ -85,7 +84,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFileSelectorProps) {
-    const { files, loadingFiles, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files, loadingFiles, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
       return true;
@@ -118,7 +117,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   addFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { selectFile, filePackageSelect } = this.props;
+    const { filePackageSelect } = this.props;
 
     dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, (selectedFiles: string[]) => {
       if (selectedFiles) {
@@ -179,8 +178,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   dropHandler = (event: any) => {
-    const { localize, locale } = this.context;
-
     event.stopPropagation();
     event.preventDefault();
     event.target.classList.remove("draggedOver");
@@ -228,7 +225,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   removeAllFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, files, deleteFile } = this.props;
+    const { filePackageDelete, files } = this.props;
 
     const filePackage: number[] = [];
 
@@ -260,7 +257,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     const { files } = this.props;
 
     const active = files.length > 0 ? "active" : "not-active";
-    const collection = files.length > 0 ? "collection" : "";
     const disabled = files.length > 0 ? "" : "disabled";
     const classDisabled = this.getDisabled() ? "disabled" : "";
 

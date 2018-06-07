@@ -1,7 +1,6 @@
-import * as events from "events";
 import * as os from "os";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
 import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT } from "../constants";
@@ -14,9 +13,7 @@ import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
-import ContainersList from "./ContainersList";
 import Dialog from "./Dialog";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import Modal from "./Modal";
 import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
@@ -98,6 +95,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleReloadCertificates = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
 
     this.setState({ certificate: null });
@@ -112,6 +110,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleReloadContainers = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllContainers, removeAllContainers } = this.props;
 
     this.setState({
@@ -130,6 +129,7 @@ class CertWindow extends React.Component<any, any> {
 
   handleCertificateImport = (event: any) => {
     const { localize, locale } = this.context;
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
     const path = event[0].path;
     const format: trusted.DataFormat = fileCoding(path);
@@ -237,7 +237,7 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function(error: Error, stdout) {
+      window.sudo.exec(cmd, options, function(error: Error) {
         if (error) {
           Materialize.toast(localize("Certificate.cert_trusted_import_failed", locale), 2000, "toast-cert_trusted_import_failed");
         } else {
@@ -375,7 +375,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   getTitle() {
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { certificate } = this.state;
     const { localize, locale } = this.context;
 
     let title: any = null;
@@ -394,7 +394,7 @@ class CertWindow extends React.Component<any, any> {
 
   showModalDeleteCertificate = () => {
     const { localize, locale } = this.context;
-    const { certificate, container, deleteContainer, showModalDeleteCertifiacte } = this.state;
+    const { certificate, showModalDeleteCertifiacte } = this.state;
 
     if (!certificate || !showModalDeleteCertifiacte) {
       return;
@@ -461,14 +461,13 @@ class CertWindow extends React.Component<any, any> {
 
   render() {
     const { certificates, isLoading } = this.props;
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { certificate } = this.state;
     const { localize, locale } = this.context;
 
     if (isLoading) {
       return <ProgressBars />;
     }
 
-    const CURRENT = certificate ? "not-active" : "active";
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";

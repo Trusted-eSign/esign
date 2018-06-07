@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { connect } from "react-redux";
+import React from "react";
 
 interface IFileRemote {
   extra: any;
@@ -48,8 +47,7 @@ class RemoteFileListItem extends React.Component<IRemoteFileListItemProps, {}> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { file, operation, style } = this.props;
+    const { file, style } = this.props;
 
     if ( !file.loading ) {
       return null;

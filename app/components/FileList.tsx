@@ -1,6 +1,6 @@
 import { is } from "immutable";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
 import { activeFile, deleteFile} from "../AC";
@@ -8,7 +8,6 @@ import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
 import RemoteFileListItem from "./RemoteFileListItem";
-import SignatireStatusCicrcle from "./SignatureStatusCircle";
 
 interface IFileRedux {
   active: boolean;
@@ -56,7 +55,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFilelistProps) {
-    const { files, loadingFiles, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files, loadingFiles, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
       return true;

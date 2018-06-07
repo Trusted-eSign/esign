@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import * as npath from "path";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { loadLicense, verifyLicense } from "../../AC";
+import { loadLicense } from "../../AC";
 import { LICENSE_PATH, PLATFORM } from "../../constants";
 import * as jwt from "../../trusted/jwt";
 import { toBase64 } from "../../utils";
@@ -16,7 +16,6 @@ interface ILicenseSetupModalProps {
   loading: boolean;
   closeWindow: () => void;
   loadLicense: () => void;
-  verifyLicense: (key: string) => void;
 }
 
 interface ILicenseSetupModalState {
@@ -53,7 +52,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     const { localize, locale } = this.context;
     const { license_key, license_file } = this.state;
     // tslint:disable-next-line:no-shadowed-variable
-    const { loadLicense, verifyLicense } = this.props;
+    const { loadLicense } = this.props;
 
     const path = npath.dirname(LICENSE_PATH);
     const options = {
@@ -98,31 +97,31 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     } else {
       let parsedLicense;
       let buffer;
-      //validation of old format license
-      let result = key.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
-      if(result != null){
-        lic_format = 'MTX';
+      const result = key.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
+
+      if (result != null) {
+        lic_format = "MTX";
         let productMarker = key.match(/^CAG/ig);
-        if(productMarker == null) {
+        if (productMarker == null) {
           status = 907;
           data = "-";
-        }else{
-          let expirationTime =  trusted.utils.Jwt.getExpirationTime(key); 
-          let dateExp = new Date(expirationTime* 1000).getTime();
+        } else {
+          let expirationTime =  trusted.utils.Jwt.getExpirationTime(key);
+          let dateExp = new Date(expirationTime * 1000).getTime();
           let dateNow = new Date().getTime();
           let dateDif = dateExp - dateNow;
-          if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;       
+          if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;
           //validate
           data = {
-              aud : '-',
-              sub : 'CryptoARM GOST',
+              aud : "-",
+              sub : "CryptoARM GOST",
               core: 65535,
               iss : 'ООО "Цифровые технологии"',
               exp : expirationTime,
-              iat : '',
-              jti : '',
-              desc : 'CryptoARM GOST'
-          } 
+              iat : "",
+              jti : "",
+              desc : "CryptoARM GOST",
+          };
         }
       }else{
         const splitLicense = key.split(".");
@@ -134,22 +133,22 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
               && parsedLicense.jti && parsedLicense.sub) {
               data = parsedLicense;
-              lic_format = 'JWT';
-              if(data.sub != 'CryptoARM GOST'){
+              lic_format = "JWT";
+              if(data.sub !== "CryptoARM GOST") {
                 status = 907;
                 data = data.sub = "-";
               }
             }
           } catch (e) {
             data = null;
-            lic_format = 'NONE';
+            lic_format = "NONE";
           }
         }
-      } 
+      }
     }
 
     if (data && data.sub !== "-") {
-      if(status != 908) status = jwt.checkLicense(key);
+      if (status != 908) status = jwt.checkLicense(key);
       if (status === 0) {
         if (PLATFORM === "win32") {
           command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
@@ -163,7 +162,6 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             trusted.common.OpenSSL.run();
 
             loadLicense();
-            verifyLicense(key);
 
             $(".toast-lic_key_setup").remove();
             Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
@@ -253,4 +251,4 @@ export default connect((state) => {
     loading: state.license.loading,
     status: state.license.status,
   };
-}, {loadLicense, verifyLicense})(LicenseSetupModal);
+}, {loadLicense})(LicenseSetupModal);

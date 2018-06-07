@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import LicenseInfoFiled from "./LicenseInfoField";
 
 class LicenseInfoCSP extends React.Component<{}, {}> {
@@ -8,7 +8,7 @@ class LicenseInfoCSP extends React.Component<{}, {}> {
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
+  shouldComponentUpdate(nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
@@ -48,8 +48,6 @@ class LicenseInfoCSP extends React.Component<{}, {}> {
   }
 
   getLicenseStatus = () => {
-    const { localize, locale } = this.context;
-
     try {
       return trusted.utils.Csp.checkCPCSPLicense();
     } catch (e) {
