@@ -4,7 +4,7 @@ import { EN, RU } from "../constants";
 
 interface IDatePickerProps {
   id: string;
-  label: string;
+  label?: string;
   max?: Date;
   min?: Date;
   onSelect?: (thingSet: number) => void;
@@ -64,7 +64,7 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
         break;
     }
 
-    const input = $(".datepicker" + "_" + id).pickadate({
+    const input = $("#" + id).pickadate({
       clear: translations.clear,
       close: translations.close,
       closeOnSelect: true,
@@ -95,14 +95,14 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { id, label } = this.props;
+    const { id } = this.props;
 
     return (
       <div className="row">
-        <div className="input-field col s12">
-          <input id={id} type="text" className={"datepicker" + "_" + id} />
-          <label htmlFor={id}>{label}</label>
+        <div className="input-field col s12 valign-wrapper">
+          <i className="material-icons prefix">event</i>
+          <input id={id} type="text" />
+          <label htmlFor={id} />
         </div>
       </div>
     );

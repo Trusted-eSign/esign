@@ -65,6 +65,13 @@ export default {
     Operations_log: "OPERATIONS LOG",
     operations_log: "Operations log",
   },
+  EventsTable: {
+    date_and_time: "Date and time",
+    operation: "Operation",
+    operation_object: "Operation object",
+    status: "Status",
+    user_name: "User",
+  },
   Export: {
     export: "Export",
     export_certificate: "Export certificate",
@@ -78,6 +85,9 @@ export default {
     export_params: "Export parameters",
     export_set_password: "Protect the private key by using a password",
     export_set_encoding: "Choose encoding for use in output file",
+  },
+  Filters: {
+    filters_settings: "Filters settings",
   },
   Containers: {
     containers: "Containers",

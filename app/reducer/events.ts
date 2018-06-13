@@ -4,7 +4,7 @@ import { arrayToMap } from "../utils";
 
 const EventModel = Record({
   certificate: null,
-  fileName: null,
+  operationObject: null,
   id: null,
   level: null,
   message: null,

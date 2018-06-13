@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
-import DatePicker from "../DatePicker";
+import SearchElement from "../../Filters/SearchElement";
+import Modal from "../Modal";
 import EventTable from "./EventTable";
+import FilterEvents from "./FilterEvents";
 
 interface IEventsWindowState {
-  selectedFrom: Date | undefined;
-  selectedTo: Date | undefined;
+  showModalFilterEvents: boolean;
 }
 
 class EventsWindow extends React.Component<{}, IEventsWindowState> {
@@ -18,8 +19,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
     super(props);
 
     this.state = {
-      selectedFrom: undefined,
-      selectedTo: undefined,
+      showModalFilterEvents: false,
     };
   }
 
@@ -34,10 +34,9 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
   }
 
   render() {
-    const { selectedFrom } = this.state;
-
     return (
       <div className="row">
+        <div className="row halfbottom" />
         {/* <nav className="app-bar-content">
           <ul className="app-bar-items">
             <li className="right">
@@ -51,41 +50,48 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
             </li>
           </ul>
         </nav> */}
-        <br />
-        <div className="col s6">
-          <DatePicker
-            id="input_from"
-            key="input_from"
-            label="From"
-            onSelect={this.handleFromChange}
-          />
+
+        <div className="col s10">
+          <SearchElement />
         </div>
-        <div className="col s6">
-          <DatePicker
-            id="input_to"
-            key="input_to"
-            label="To"
-            min={selectedFrom}
-            onSelect={this.handleToChange}
-          />
+        <div className="col s2">
+          <a className={"btn-floating btn-small waves-effect waves-light grey"} onClick={this.handleShowModalFilterEvents}>
+            <i className="material-icons">filter_list</i>
+          </a>
         </div>
         <div className="col s12">
           <EventTable />
         </div>
+        {this.showModalCertificateRequest()}
       </div>
     );
   }
 
-  handleFromChange = (ev: any) => {
-    if (ev && ev.select) {
-      this.setState({ selectedFrom: new Date(ev.select) });
+  showModalCertificateRequest = () => {
+    const { localize, locale } = this.context;
+    const { showModalFilterEvents } = this.state;
+
+    if (!showModalFilterEvents) {
+      return;
     }
+
+    return (
+      <Modal
+        isOpen={showModalFilterEvents}
+        header={localize("Filters.filters_settings", locale)}
+        onClose={this.handleCloseModalFilterEvents}>
+
+        <FilterEvents />
+      </Modal>
+    );
   }
 
-  handleToChange = (ev: any) => {
-    if (ev && ev.select) {
-      this.setState({ selectedTo: new Date(ev.select) });
-    }
+  handleShowModalFilterEvents = () => {
+    this.setState({ showModalFilterEvents: true });
+  }
+
+  handleCloseModalFilterEvents = () => {
+    this.setState({ showModalFilterEvents: false });
   }
 }
 

@@ -65,6 +65,13 @@ export default {
     Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",
     operations_log: "Журнал операций",
   },
+  EventsTable: {
+    date_and_time: "Дата и время",
+    operation: "Операция",
+    operation_object: "Объект операции",
+    status: "Статус",
+    user_name: "Пользователь",
+  },
   Export: {
     export: "Экспорт",
     export_certificate: "Экспорт сертификата",
@@ -78,6 +85,9 @@ export default {
     export_params: "Экспорт параметров",
     export_set_password: "Укажите пароль для защиты закрытого ключа",
     export_set_encoding: "Выберите тип кодировки для применения в экспортируемом файле",
+  },
+  Filters: {
+    filters_settings: "Настройки фильтрации",
   },
   Containers: {
     containers: "Контейнеры",

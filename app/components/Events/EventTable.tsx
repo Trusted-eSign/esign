@@ -93,7 +93,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         headerHeight={30}
         noRowsRenderer={this.noRowsRenderer}
         headerClassName={"headerColumn"}
-        rowHeight={40}
+        rowHeight={45}
         rowClassName={this.rowClassName}
         overscanRowCount={5}
         rowGetter={rowGetter}
@@ -102,6 +102,51 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         sortBy={sortBy}
         sortDirection={sortDirection}
       >
+        <Column
+          cellRenderer={({ cellData }) => {
+            return (new Date(cellData)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "numeric",
+              year: "numeric",
+            });
+          }}
+          dataKey="timestamp"
+          disableSort={false}
+          width={130}
+          label="Дата и время"
+        />
+        <Column
+          dataKey="operation"
+          disableSort={false}
+          headerRenderer={this.headerRenderer}
+          width={180}
+          label="Операция"
+        />
+        <Column
+          dataKey="userName"
+          disableSort={false}
+          headerRenderer={this.headerRenderer}
+          width={120}
+          label="Пользователь"
+        />
+        <Column
+          cellRenderer={({ cellData }) => {
+            return (
+              <div className="row nobottom">
+                <div className="col s12">
+                  <div className="truncate">{cellData.in}</div>
+                  <div className="truncate" style={{opacity: .6}}> -> {cellData.out}</div>
+                </div>
+              </div>
+            );
+          }}
+          dataKey="operationObject"
+          disableSort
+          width={250}
+          label="Объект операции"
+        />
         <Column
           cellRenderer={({ cellData }) => {
             let msg;
@@ -121,10 +166,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             return (
               <div className="row nobottom">
                 <div className="valign-wrapper">
-                  <div className="col s2">
-                    <div className={levelStyle} />
-                  </div>
-                  <div className="col s10">
+                  <div className="col s12">
                     <p>{msg}</p>
                   </div>
                 </div>
@@ -136,42 +178,6 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
           headerRenderer={this.headerRenderer}
           width={100}
           label="Статус"
-        />
-        <Column
-          cellRenderer={({ cellData }) => {
-            return (new Date(cellData)).toLocaleDateString(locale, {
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              month: "numeric",
-              year: "numeric",
-            });
-          }}
-          dataKey="timestamp"
-          disableSort={false}
-          width={150}
-          label="Дата и время"
-        />
-        <Column
-          dataKey="operation"
-          disableSort={false}
-          headerRenderer={this.headerRenderer}
-          width={180}
-          label="Тип операции"
-        />
-        <Column
-          dataKey="userName"
-          disableSort={false}
-          headerRenderer={this.headerRenderer}
-          width={150}
-          label="Пользователь"
-        />
-        <Column
-          dataKey="fileName"
-          disableSort
-          width={200}
-          label="Файл"
-          className={"exampleColumn"}
         />
       </Table>
     );

@@ -93,10 +93,13 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
   } catch (err) {
     logger.log({
       certificate: cert.subjectName,
-      fileName: path.basename(uri),
       level: "error",
       message: "Error sign",
       operation: "Подпись",
+      operationObject: {
+        in: path.basename(uri),
+        out: path.basename(outURI),
+      },
       userName: USER_NAME,
     });
 
@@ -105,10 +108,13 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
   logger.log({
     certificate: cert.subjectName,
-    fileName: path.basename(uri),
     level: "info",
     message: "Файл подписан",
     operation: "Подпись",
+    operationObject: {
+      in: path.basename(uri),
+      out: path.basename(outURI),
+    },
     userName: USER_NAME,
   });
 
@@ -167,10 +173,13 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
 
   logger.log({
     certificate: cert.subjectName,
-    fileName: path.basename(uri),
     level: "info",
     message: "Подпись добавлена",
     operation: "Добавление подписи",
+    operationObject: {
+      in: path.basename(uri),
+      out: path.basename(outURI),
+    },
     userName: USER_NAME,
   });
 
