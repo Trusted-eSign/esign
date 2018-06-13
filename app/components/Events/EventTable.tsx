@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
 import { loadAllEvents } from "../../AC";
+import { filteredEventsSelector } from "../../selectors/eventsSelectors";
 import "../../table.global.css";
 import { mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
@@ -11,15 +12,7 @@ import SortIndicator from "./SortIndicator";
 
 type TSortDirection = "ASC" | "DESC" | undefined;
 
-interface IEvent {
-  id: string;
-  level: string;
-  message: string;
-  timestamp: Date;
-}
-
 interface IEventTableProps {
-  events: IEvent[];
   eventsMap: any;
   isLoaded: boolean;
   isLoading: boolean;
@@ -229,8 +222,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 }
 
 export default connect((state) => ({
-  events: mapToArr(state.events.entities),
-  eventsMap: state.events.entities,
+  eventsMap: filteredEventsSelector(state),
   isLoaded: state.events.loaded,
   isLoading: state.events.loading,
 }), { loadAllEvents })(EventTable);

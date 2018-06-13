@@ -1,6 +1,6 @@
 import {
   CHANGE_FILTER_DATE_FROM,
-  CHANGE_FILTER_DATE_TO, CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_OPERATION_TYPE,
+  CHANGE_FILTER_DATE_TO, CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
   CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME,
 } from "../constants";
 
@@ -11,16 +11,16 @@ export function changeFilterUserName(userName: string) {
   };
 }
 
-export function changeFilterInObject(inObject: string) {
+export function changeFilterInObject(operationObjectIn: string) {
   return {
-    payload: { inObject },
+    payload: { operationObjectIn },
     type: CHANGE_FILTER_IN_OPERATION_OBJECT,
   };
 }
 
-export function changeFilterOutObject(outObject: string) {
+export function changeFilterOutObject(operationObjectOut: string) {
   return {
-    payload: { outObject },
+    payload: { operationObjectOut },
     type: CHANGE_FILTER_OUT_OPERATION_OBJECT,
   };
 }
@@ -43,5 +43,12 @@ export function changeFilterOperationsType(operations: any) {
   return {
     payload: { operations },
     type: CHANGE_FILTER_OPERATION_TYPE,
+  };
+}
+
+export function changeFilterLevel(level: string) {
+  return {
+    payload: { level },
+    type: CHANGE_FILTER_LEVEL,
   };
 }

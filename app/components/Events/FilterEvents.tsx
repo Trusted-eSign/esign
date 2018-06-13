@@ -1,20 +1,32 @@
 import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
+import { connect } from "react-redux";
+import { changeFilterInObject, changeFilterLevel, changeFilterOutObject, changeFilterUserName } from "../../AC/filtersActions";
 import DatePicker from "../DatePicker";
+
+interface IFilterEventsProps {
+  changeFilterInObject: (objectIn: string) => void;
+  changeFilterLevel: (level: string) => void;
+  changeFilterOutObject: (objectOut: string) => void;
+  changeFilterUserName: (userName: string) => void;
+  operationObjectIn: string;
+  operationObjectOut: string;
+  userName: string;
+}
 
 interface IFilterEventsState {
   selectedFrom: Date | undefined;
   selectedTo: Date | undefined;
 }
 
-class FilterEvents extends React.Component<{}, IFilterEventsState> {
+class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: {}) {
+  constructor(props: IFilterEventsProps) {
     super(props);
 
     this.state = {
@@ -35,7 +47,7 @@ class FilterEvents extends React.Component<{}, IFilterEventsState> {
       $(".tooltipped").tooltip();
     });
 
-    $(ReactDOM.findDOMNode(this.refs.algorithmSelect)).on("change", () => console.log("333"));
+    $(ReactDOM.findDOMNode(this.refs.operationSelect)).on("change", this.handleChangeFilterLevel);
 
     Materialize.updateTextFields();
   }
@@ -46,6 +58,8 @@ class FilterEvents extends React.Component<{}, IFilterEventsState> {
 
   render() {
     const { selectedFrom } = this.state;
+    const { operationObjectIn, operationObjectOut, userName } = this.props;
+    const { localize, locale } = this.context;
 
     return (
       <div className="modal-body">
@@ -58,19 +72,19 @@ class FilterEvents extends React.Component<{}, IFilterEventsState> {
                 type="text"
                 className={"validate"}
                 name="userName"
-                value={""}
+                value={userName}
                 placeholder="Укажите имя пользователя"
-                onChange={() => console.log("22s")}
+                onChange={this.handleUserChange}
               />
               <label htmlFor="userName">
-                Пользователь
-            </label>
+                {localize("EventsTable.user_name", locale)}
+              </label>
             </div>
             <div className="input-field input-field-csr col s6">
-              <select className="select" ref="operationSelect" value={"sign"} onChange={() => console.log("123")} >>
-              <option value={"sign"}>{"Все"}</option>
-                <option value={"encrypt"}>{"Успешно"}</option>
-                <option value={"generate"}>{"Ошибка"}</option>
+              <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
+                <option value={"all"}>{"Все"}</option>
+                <option value={"info"}>{"Успешно"}</option>
+                <option value={"error"}>{"Ошибка"}</option>
               </select>
               <label>Статус</label>
             </div>
@@ -95,16 +109,60 @@ class FilterEvents extends React.Component<{}, IFilterEventsState> {
             </div>
           </div>
           <div className="input-field input-field-csr col s6">
-              <select className="select" ref="operationSelect" value={"sign"} onChange={() => console.log("123")} >>
-              <option value={"sign"}>{"Все"}</option>
-                <option value={"encrypt"}>{"Успешно"}</option>
-                <option value={"generate"}>{"Ошибка"}</option>
-              </select>
-              <label>Выходной объект</label>
-            </div>
+            <input
+              id="objectIn"
+              type="text"
+              className={"validate"}
+              name="objectIn"
+              value={operationObjectIn}
+              placeholder="Укажите наименование для фильтрации"
+              onChange={this.handleChangeFilterInObject}
+            />
+            <label htmlFor="objectIn">
+              {localize("EventsTable.operation_object", locale)}
+            </label>
+          </div>
+          <div className="input-field input-field-csr col s6">
+            <input
+              id="objectOut"
+              type="text"
+              className={"validate"}
+              name="objectOut"
+              value={operationObjectOut}
+              placeholder="Укажите наименование для фильтрации"
+              onChange={this.handleChangeFilterOutObject}
+            />
+            <label htmlFor="objectOut">
+              {localize("EventsTable.operation_object", locale)}
+            </label>
+          </div>
         </div>
       </div>
     );
+  }
+
+  handleUserChange = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterUserName } = this.props;
+    changeFilterUserName(ev.target.value);
+  }
+
+  handleChangeFilterInObject = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterInObject } = this.props;
+    changeFilterInObject(ev.target.value);
+  }
+
+  handleChangeFilterOutObject = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterOutObject } = this.props;
+    changeFilterOutObject(ev.target.value);
+  }
+
+  handleChangeFilterLevel = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterLevel } = this.props;
+    changeFilterLevel(ev.target.value);
   }
 
   handleFromChange = (ev: any) => {
@@ -120,4 +178,8 @@ class FilterEvents extends React.Component<{}, IFilterEventsState> {
   }
 }
 
-export default FilterEvents;
+export default connect((state) => ({
+  operationObjectIn: state.filters.operationObjectIn,
+  operationObjectOut: state.filters.operationObjectOut,
+  userName: state.filters.userName,
+}), { changeFilterInObject, changeFilterLevel, changeFilterOutObject, changeFilterUserName })(FilterEvents);
