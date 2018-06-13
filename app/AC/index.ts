@@ -432,13 +432,6 @@ export function removeAllCertificates() {
   };
 }
 
-export function changeSearchValue(searchValue) {
-  return {
-    payload: { searchValue },
-    type: CHANGE_SEARCH_VALUE,
-  };
-}
-
 export function verifyCertificate(certificateId) {
   return (dispatch, getState) => {
     const { certificates } = getState();

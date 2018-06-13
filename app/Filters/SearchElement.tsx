@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { changeSearchValue } from "../AC";
+import { changeSearchValue } from "../AC/searchActions";
 
 interface ISearchElementState {
   open: boolean;
