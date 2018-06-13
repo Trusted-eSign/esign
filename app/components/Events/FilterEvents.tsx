@@ -43,7 +43,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       $("select").material_select();
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
 
@@ -65,76 +65,84 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       <div className="modal-body">
         <div className="row">
           <div className="row halfbottom" />
-          <div className="row">
-            <div className="input-field input-field-csr col s6">
-              <input
-                id="userName"
-                type="text"
-                className={"validate"}
-                name="userName"
-                value={userName}
-                placeholder="Укажите имя пользователя"
-                onChange={this.handleUserChange}
-              />
-              <label htmlFor="userName">
-                {localize("EventsTable.user_name", locale)}
-              </label>
-            </div>
-            <div className="input-field input-field-csr col s6">
-              <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
-                <option value={"all"}>{"Все"}</option>
-                <option value={"info"}>{"Успешно"}</option>
-                <option value={"error"}>{"Ошибка"}</option>
-              </select>
-              <label>Статус</label>
-            </div>
-          </div>
           <div className="col s6">
-            <div className="col s6">
-              <DatePicker
-                id="input_from"
-                key="input_from"
-                label="From"
-                onSelect={this.handleFromChange}
-              />
+            <div className="row">
+              <div className="input-field input-field-csr col s12">
+                <input
+                  id="userName"
+                  type="text"
+                  className={"validate"}
+                  name="userName"
+                  value={userName}
+                  placeholder="Укажите имя пользователя"
+                  onChange={this.handleUserChange}
+                />
+                <label htmlFor="userName">
+                  {localize("EventsTable.user_name", locale)}
+                </label>
+              </div>
             </div>
-            <div className="col s6">
-              <DatePicker
-                id="input_to"
-                key="input_to"
-                label="To"
-                min={selectedFrom}
-                onSelect={this.handleToChange}
-              />
+            <div className="row">
+              <div className="input-field input-field-csr col s12">
+                <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
+                <option value={"all"}>{"Все"}</option>
+                  <option value={"info"}>{"Успешно"}</option>
+                  <option value={"error"}>{"Ошибка"}</option>
+                </select>
+                <label>Статус</label>
+              </div>
             </div>
-          </div>
-          <div className="input-field input-field-csr col s6">
-            <input
-              id="objectIn"
-              type="text"
-              className={"validate"}
-              name="objectIn"
-              value={operationObjectIn}
-              placeholder="Укажите наименование для фильтрации"
-              onChange={this.handleChangeFilterInObject}
-            />
-            <label htmlFor="objectIn">
-              {localize("EventsTable.operation_object", locale)}
-            </label>
-          </div>
-          <div className="input-field input-field-csr col s6">
-            <input
-              id="objectOut"
-              type="text"
-              className={"validate"}
-              name="objectOut"
-              value={operationObjectOut}
-              placeholder="Укажите наименование для фильтрации"
-              onChange={this.handleChangeFilterOutObject}
-            />
-            <label htmlFor="objectOut">
-              {localize("EventsTable.operation_object", locale)}
-            </label>
+            <div className="row">
+              <div className="col s6">
+                <DatePicker
+                  id="input_from"
+                  key="input_from"
+                  label="From"
+                  onSelect={this.handleFromChange}
+                />
+              </div>
+              <div className="col s6">
+                <DatePicker
+                  id="input_to"
+                  key="input_to"
+                  label="To"
+                  min={selectedFrom}
+                  onSelect={this.handleToChange}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="input-field input-field-csr col s12">
+                <input
+                  id="objectIn"
+                  type="text"
+                  className={"validate"}
+                  name="objectIn"
+                  value={operationObjectIn}
+                  placeholder="Укажите наименование для фильтрации"
+                  onChange={this.handleChangeFilterInObject}
+                />
+                <label htmlFor="objectIn">
+                  {localize("EventsTable.operation_object", locale)}
+                </label>
+              </div>
+            </div>
+            <div className="row">
+              <div className="input-field input-field-csr col s12">
+                <input
+                  id="objectOut"
+                  type="text"
+                  className={"validate"}
+                  name="objectOut"
+                  value={operationObjectOut}
+                  placeholder="Укажите наименование для фильтрации"
+                  onChange={this.handleChangeFilterOutObject}
+                />
+                <label htmlFor="objectOut">
+                  {localize("EventsTable.operation_object", locale)}
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
