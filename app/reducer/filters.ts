@@ -1,6 +1,7 @@
 import {
   CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO, CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL,
-  CHANGE_FILTER_OPERATION_TYPE, CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE,
+  CHANGE_FILTER_OPERATION_TYPE, CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME,
+  CHANGE_SEARCH_VALUE, RESET_EVENTS_FILTERS,
 } from "../constants";
 
 const defaultFilters = {
@@ -41,6 +42,18 @@ export default (filters = defaultFilters, action) => {
 
     case CHANGE_FILTER_LEVEL:
       return { ...filters, level: payload.level };
+
+    case RESET_EVENTS_FILTERS:
+      return {
+        ...filters,
+        dateFrom: "",
+        dateTo: "",
+        level: "all",
+        operationObjectIn: "",
+        operationObjectOut: "",
+        operationType: "",
+        userName: "",
+      };
   }
 
   return filters;

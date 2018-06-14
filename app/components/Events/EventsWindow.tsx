@@ -81,7 +81,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
         header={localize("Filters.filters_settings", locale)}
         onClose={this.handleCloseModalFilterEvents}>
 
-        <FilterEvents />
+        <FilterEvents onCancel={this.handleCloseModalFilterEvents}/>
       </Modal>
     );
   }

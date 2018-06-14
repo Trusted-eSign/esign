@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import {
   changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
   changeFilterLevel, changeFilterOutObject, changeFilterUserName,
+  resetEventsFilters,
 } from "../../AC/filtersActions";
 import DatePicker from "../DatePicker";
 
@@ -24,8 +25,10 @@ interface IFilterEventsProps {
   changeFilterUserName: (userName: string) => void;
   dateFrom: Date;
   dateTo: Date;
+  onCancel?: () => void;
   operationObjectIn: string;
   operationObjectOut: string;
+  resetEventsFilters: () => void;
   userName: string;
 }
 
@@ -74,6 +77,10 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
   componentDidUpdate() {
     Materialize.updateTextFields();
+  }
+
+  componentWillUnmount() {
+    this.handelCancel();
   }
 
   render() {
@@ -235,11 +242,19 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
         <div className="row">
           <div className="col s3 right">
-            <a className={"waves-effect waves-light btn modal-close"} onClick={() => console.log("a")}>{localize("Common.reset", locale)}</a>
+            <a className={"waves-effect waves-light btn modal-close"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
           </div>
         </div>
       </div>
     );
+  }
+
+  handelCancel = () => {
+    const { onCancel } = this.props;
+
+    if (onCancel) {
+      onCancel();
+    }
   }
 
   handleUserChange = (ev: any) => {
@@ -299,6 +314,12 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       },
     });
   }
+
+  handleResetFilters = () => {
+    this.props.resetEventsFilters();
+
+    this.handelCancel();
+  }
 }
 
 export default connect((state) => ({
@@ -309,5 +330,6 @@ export default connect((state) => ({
   userName: state.filters.userName,
 }), {
     changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-    changeFilterLevel, changeFilterOutObject, changeFilterUserName
+    changeFilterLevel, changeFilterOutObject, changeFilterUserName,
+    resetEventsFilters,
   })(FilterEvents);

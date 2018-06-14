@@ -1,7 +1,7 @@
 import {
   CHANGE_FILTER_DATE_FROM,
   CHANGE_FILTER_DATE_TO, CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
-  CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME,
+  CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, RESET_EVENTS_FILTERS,
 } from "../constants";
 
 export function changeFilterUserName(userName: string) {
@@ -50,5 +50,11 @@ export function changeFilterLevel(level: string) {
   return {
     payload: { level },
     type: CHANGE_FILTER_LEVEL,
+  };
+}
+
+export function resetEventsFilters() {
+  return {
+    type: RESET_EVENTS_FILTERS,
   };
 }
