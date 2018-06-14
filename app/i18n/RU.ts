@@ -445,6 +445,8 @@ export default {
     Empowerment: "РАСШИРЕНИЕ ВОЗМОЖНОСТЕЙ С ПОДКЛЮЧЕНИЕМ К СЕРВИСУ TRUSTED NET",
   },
   Common: {
+    clear: "Очистить",
+    reset: "Сбросить",
     yes: "Да",
     no: "Нет",
     add_files: "Добавление файлов",

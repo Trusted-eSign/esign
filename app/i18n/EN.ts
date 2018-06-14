@@ -443,6 +443,8 @@ export default {
     Empowerment: "FUNCTIONAL EXTENSIONS WITH CONNECTION TO TRUSTED NET SERVICE",
   },
   Common: {
+    clear: "Clear",
+    reset: "Reset",
     yes: "Yes",
     no: "No",
     add_files: "Add files",

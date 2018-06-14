@@ -8,6 +8,13 @@ import {
 } from "../../AC/filtersActions";
 import DatePicker from "../DatePicker";
 
+interface IOperationTypes {
+  "sign": boolean;
+  "encrypt": boolean;
+  "csr": boolean;
+  [key: string]: boolean;
+}
+
 interface IFilterEventsProps {
   changeFilterDateFrom: (dateFrom: Date) => void;
   changeFilterDateTo: (dateTo: Date) => void;
@@ -23,6 +30,7 @@ interface IFilterEventsProps {
 }
 
 interface IFilterEventsState {
+  operationTypes: IOperationTypes;
   selectedFrom: Date | undefined;
   selectedTo: Date | undefined;
 }
@@ -37,6 +45,11 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
     super(props);
 
     this.state = {
+      operationTypes: {
+        "sign": true,
+        "encrypt": true,
+        "csr": true,
+      },
       selectedFrom: undefined,
       selectedTo: undefined,
     };
@@ -64,98 +77,165 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   render() {
-    const { selectedFrom } = this.state;
+    const { operationTypes, selectedFrom } = this.state;
     const { dateFrom, dateTo, operationObjectIn, operationObjectOut, userName } = this.props;
     const { localize, locale } = this.context;
 
     return (
       <div className="modal-body">
+        <div className="row" />
         <div className="row">
-          <div className="row halfbottom" />
-          <div className="col s6">
-            <div className="row">
-              <div className="input-field input-field-csr col s12">
-                <input
-                  id="userName"
-                  type="text"
-                  className={"validate"}
-                  name="userName"
-                  value={userName}
-                  placeholder="Укажите имя пользователя"
-                  onChange={this.handleUserChange}
-                />
-                <label htmlFor="userName">
-                  {localize("EventsTable.user_name", locale)}
-                </label>
-              </div>
-            </div>
-            <div className="row">
-              <div className="input-field input-field-csr col s12">
-                <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
-                <option value={"all"}>{"Все"}</option>
-                  <option value={"info"}>{"Успешно"}</option>
-                  <option value={"error"}>{"Ошибка"}</option>
-                </select>
-                <label>Статус</label>
-              </div>
-            </div>
-            <div className="row">
+          <div className="col s12">
+            <div className="content-wrapper z-depth-1 tbody">
               <div className="col s6">
-                <DatePicker
-                  id="input_from"
-                  key="input_from"
-                  label="From"
-                  onSelect={this.handleFromChange}
-                  selected={dateFrom}
-                />
+                <div className="row" />
+                <div className="row">
+                  <div className="input-field input-field-csr col s12">
+                    <input
+                      id="userName"
+                      type="text"
+                      className={"validate"}
+                      name="userName"
+                      value={userName}
+                      placeholder="Укажите имя пользователя"
+                      onChange={this.handleUserChange}
+                    />
+                    <label htmlFor="userName">
+                      {localize("EventsTable.user_name", locale)}
+                    </label>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field input-field-csr col s12">
+                    <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
+                      <option value={"all"}>{"Все"}</option>
+                      <option value={"info"}>{"Успешно"}</option>
+                      <option value={"error"}>{"Ошибка"}</option>
+                    </select>
+                    <label>Статус</label>
+                  </div>
+                </div>
+                <div className="row nobottom">
+                  <div className="col s12">
+                    <p className="label-csr">
+                      {"Дата"}
+                    </p>
+                  </div>
+                  <div className="col s6">
+                    <DatePicker
+                      id="input_from"
+                      key="input_from"
+                      label="From"
+                      onSelect={this.handleFromChange}
+                      selected={dateFrom}
+                    />
+                  </div>
+                  <div className="col s6">
+                    <DatePicker
+                      id="input_to"
+                      key="input_to"
+                      label="To"
+                      min={selectedFrom}
+                      onSelect={this.handleToChange}
+                      selected={dateTo}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field input-field-csr col s12">
+                    <input
+                      id="objectIn"
+                      type="text"
+                      className={"validate"}
+                      name="objectIn"
+                      value={operationObjectIn}
+                      placeholder="Укажите наименование для фильтрации"
+                      onChange={this.handleChangeFilterInObject}
+                    />
+                    <label htmlFor="objectIn">
+                      {localize("EventsTable.operation_object", locale)}
+                    </label>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field input-field-csr col s12">
+                    <input
+                      id="objectOut"
+                      type="text"
+                      className={"validate"}
+                      name="objectOut"
+                      value={operationObjectOut}
+                      placeholder="Укажите наименование для фильтрации"
+                      onChange={this.handleChangeFilterOutObject}
+                    />
+                    <label htmlFor="objectOut">
+                      {localize("EventsTable.operation_result", locale)}
+                    </label>
+                  </div>
+                </div>
               </div>
               <div className="col s6">
-                <DatePicker
-                  id="input_to"
-                  key="input_to"
-                  label="To"
-                  min={selectedFrom}
-                  onSelect={this.handleToChange}
-                  selected={dateTo}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="input-field input-field-csr col s12">
-                <input
-                  id="objectIn"
-                  type="text"
-                  className={"validate"}
-                  name="objectIn"
-                  value={operationObjectIn}
-                  placeholder="Укажите наименование для фильтрации"
-                  onChange={this.handleChangeFilterInObject}
-                />
-                <label htmlFor="objectIn">
-                  {localize("EventsTable.operation_object", locale)}
-                </label>
-              </div>
-            </div>
-            <div className="row">
-              <div className="input-field input-field-csr col s12">
-                <input
-                  id="objectOut"
-                  type="text"
-                  className={"validate"}
-                  name="objectOut"
-                  value={operationObjectOut}
-                  placeholder="Укажите наименование для фильтрации"
-                  onChange={this.handleChangeFilterOutObject}
-                />
-                <label htmlFor="objectOut">
-                  {localize("EventsTable.operation_result", locale)}
-                </label>
+                <div className="row">
+                  <p className="label-csr">
+                    {localize("EventsTable.operation", locale)}
+                  </p>
+                  <div className="z-depth-1">
+                    <div className="row">
+                      <div className="col s12">
+                        <div className="row halfbottom" />
+                        <div className="input-checkbox">
+                          <input
+                            name="sign"
+                            type="checkbox"
+                            id="sign"
+                            className="filled-in"
+                            checked={operationTypes["sign"]}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor="sign" className="truncate">
+                            {"Подпись"}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name="encrypt"
+                            type="checkbox"
+                            id="encrypt"
+                            className="filled-in"
+                            checked={operationTypes["encrypt"]}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor="encrypt" className="truncate">
+                            {"Шифрование"}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name="csr"
+                            type="checkbox"
+                            id="csr"
+                            className="filled-in"
+                            checked={operationTypes["csr"]}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor="csr" className="truncate">
+                            {"Генерация сертификата"}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="col s6">
-            <div className="row">
-            </div>
+        </div>
+
+        <div className="row halfbottom" />
+
+        <div className="row">
+          <div className="col s3 right">
+            <a className={"waves-effect waves-light btn modal-close"} onClick={() => console.log("a")}>{localize("Common.reset", locale)}</a>
           </div>
         </div>
       </div>
@@ -207,6 +287,18 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
     changeFilterDateTo(new Date(ev.select));
   }
+
+  handleOperationTypesChange = (ev: any) => {
+    const target = ev.target;
+    const name = target.name;
+
+    this.setState({
+      operationTypes: {
+        ...this.state.operationTypes,
+        [name]: !this.state.operationTypes[name],
+      },
+    });
+  }
 }
 
 export default connect((state) => ({
@@ -215,5 +307,7 @@ export default connect((state) => ({
   operationObjectIn: state.filters.operationObjectIn,
   operationObjectOut: state.filters.operationObjectOut,
   userName: state.filters.userName,
-}), { changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-   changeFilterLevel, changeFilterOutObject, changeFilterUserName })(FilterEvents);
+}), {
+    changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
+    changeFilterLevel, changeFilterOutObject, changeFilterUserName
+  })(FilterEvents);
