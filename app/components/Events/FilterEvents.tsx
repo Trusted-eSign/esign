@@ -2,14 +2,21 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import { changeFilterInObject, changeFilterLevel, changeFilterOutObject, changeFilterUserName } from "../../AC/filtersActions";
+import {
+  changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
+  changeFilterLevel, changeFilterOutObject, changeFilterUserName,
+} from "../../AC/filtersActions";
 import DatePicker from "../DatePicker";
 
 interface IFilterEventsProps {
+  changeFilterDateFrom: (dateFrom: Date) => void;
+  changeFilterDateTo: (dateTo: Date) => void;
   changeFilterInObject: (objectIn: string) => void;
   changeFilterLevel: (level: string) => void;
   changeFilterOutObject: (objectOut: string) => void;
   changeFilterUserName: (userName: string) => void;
+  dateFrom: Date;
+  dateTo: Date;
   operationObjectIn: string;
   operationObjectOut: string;
   userName: string;
@@ -58,7 +65,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
   render() {
     const { selectedFrom } = this.state;
-    const { operationObjectIn, operationObjectOut, userName } = this.props;
+    const { dateFrom, dateTo, operationObjectIn, operationObjectOut, userName } = this.props;
     const { localize, locale } = this.context;
 
     return (
@@ -99,6 +106,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                   key="input_from"
                   label="From"
                   onSelect={this.handleFromChange}
+                  selected={dateFrom}
                 />
               </div>
               <div className="col s6">
@@ -108,6 +116,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                   label="To"
                   min={selectedFrom}
                   onSelect={this.handleToChange}
+                  selected={dateTo}
                 />
               </div>
             </div>
@@ -139,9 +148,13 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                   onChange={this.handleChangeFilterOutObject}
                 />
                 <label htmlFor="objectOut">
-                  {localize("EventsTable.operation_object", locale)}
+                  {localize("EventsTable.operation_result", locale)}
                 </label>
               </div>
+            </div>
+          </div>
+          <div className="col s6">
+            <div className="row">
             </div>
           </div>
         </div>
@@ -174,20 +187,33 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   handleFromChange = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterDateFrom } = this.props;
+
     if (ev && ev.select) {
       this.setState({ selectedFrom: new Date(ev.select) });
     }
+
+    changeFilterDateFrom(new Date(ev.select));
   }
 
   handleToChange = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterDateTo } = this.props;
+
     if (ev && ev.select) {
       this.setState({ selectedTo: new Date(ev.select) });
     }
+
+    changeFilterDateTo(new Date(ev.select));
   }
 }
 
 export default connect((state) => ({
+  dateFrom: state.filters.dateFrom,
+  dateTo: state.filters.dateTo,
   operationObjectIn: state.filters.operationObjectIn,
   operationObjectOut: state.filters.operationObjectOut,
   userName: state.filters.userName,
-}), { changeFilterInObject, changeFilterLevel, changeFilterOutObject, changeFilterUserName })(FilterEvents);
+}), { changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
+   changeFilterLevel, changeFilterOutObject, changeFilterUserName })(FilterEvents);

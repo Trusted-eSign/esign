@@ -69,6 +69,7 @@ export default {
     date_and_time: "Date and time",
     operation: "Operation",
     operation_object: "Operation object",
+    operation_result: "Operation result",
     status: "Status",
     user_name: "User",
   },

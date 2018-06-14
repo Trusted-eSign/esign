@@ -34,10 +34,10 @@ export default (filters = defaultFilters, action) => {
       return { ...filters, operationType: payload.operationType };
 
     case CHANGE_FILTER_DATE_FROM:
-      return { ...filters, operationType: payload.dateFrom };
+      return { ...filters, dateFrom: payload.dateFrom };
 
     case CHANGE_FILTER_DATE_TO:
-      return { ...filters, operationType: payload.dateTo };
+      return { ...filters, dateTo: payload.dateTo };
 
     case CHANGE_FILTER_LEVEL:
       return { ...filters, level: payload.level };
