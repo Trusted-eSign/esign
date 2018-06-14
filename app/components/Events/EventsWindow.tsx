@@ -6,6 +6,7 @@ import EventTable from "./EventTable";
 import FilterEvents from "./FilterEvents";
 
 interface IEventsWindowState {
+  searchValue: string;
   showModalFilterEvents: boolean;
 }
 
@@ -19,6 +20,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
     super(props);
 
     this.state = {
+      searchValue: "",
       showModalFilterEvents: false,
     };
   }
@@ -52,7 +54,16 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
         </nav> */}
 
         <div className="col s10">
-          <SearchElement />
+          <div className="input-field input-field-csr col s12 card">
+            <i className="material-icons prefix">search</i>
+            <input
+              id="search"
+              type="search"
+              placeholder="Поиск по журналу операций"
+              value={this.state.searchValue}
+              onChange={this.handleSearchValueChange} />
+            <i className="material-icons" onClick={() => this.setState({ searchValue: ""})}>close</i>
+          </div>
         </div>
         <div className="col s2">
           <a className={"btn-floating btn-small waves-effect waves-light grey"} onClick={this.handleShowModalFilterEvents}>
@@ -81,9 +92,13 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
         header={localize("Filters.filters_settings", locale)}
         onClose={this.handleCloseModalFilterEvents}>
 
-        <FilterEvents onCancel={this.handleCloseModalFilterEvents}/>
+        <FilterEvents onCancel={this.handleCloseModalFilterEvents} />
       </Modal>
     );
+  }
+
+  handleSearchValueChange = (ev: any) => {
+    this.setState({ searchValue: ev.target.value });
   }
 
   handleShowModalFilterEvents = () => {

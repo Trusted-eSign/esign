@@ -822,15 +822,20 @@ i.material-icons.choosefolder {
 .search-bar {
     height: 100%;
 }
+
 #search {
-    margin: 0;
-    width: calc(100% - 8rem);
-    color: black;
-    padding: 0 4rem;
+  padding-left: 0rem;
 }
-#search:focus {
+
+input[type=search] {
+  border-bottom: none;
+  height: 2rem;
+}
+
+/* #search:focus {
     border-bottom: 2px solid lightgray;
-}
+} */
+
 .cert-bar-text {
     width: calc(100% - 45px);
     color: black;
