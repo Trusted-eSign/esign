@@ -99,7 +99,7 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
 
     return (
       <div className="row">
-        <div className="input-field col s12 valign-wrapper">
+        <div className="input-field input-field-csr col s12 nopadding valign-wrapper">
           <i className="material-icons prefix">event</i>
           <input id={id} type="text" />
           <label htmlFor={id} />

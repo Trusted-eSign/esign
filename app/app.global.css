@@ -3083,6 +3083,10 @@ a.help_paragraf {
   margin-bottom: 0px;
 }
 
+.nopadding {
+  padding: 0;
+}
+
 .col.s12.nopadding {
     padding-left: 0px;
     padding-right: 0px;
