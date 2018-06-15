@@ -11,6 +11,9 @@
 .oddRow {
   background-color: #fafafa;
 }
+.foundEvent {
+  background-color: #f0e68c;
+}
 .headerColumn {
   text-transform: none;
 }

@@ -71,7 +71,7 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
           </a>
         </div>
         <div className="col s12">
-          <EventTable />
+          <EventTable searchValue={this.state.searchValue}/>
         </div>
         {this.showModalCertificateRequest()}
       </div>

@@ -16,6 +16,7 @@ interface IEventTableProps {
   eventsMap: any;
   isLoaded: boolean;
   isLoading: boolean;
+  searchValue?: string;
 }
 
 interface IEventTableDispatch {
@@ -24,6 +25,8 @@ interface IEventTableDispatch {
 
 interface IEventTableState {
   disableHeader: boolean;
+  foundEvents: number[];
+  scrollToIndex: number | undefined;
   sortBy: string;
   sortDirection: TSortDirection;
   sortedList: any;
@@ -44,6 +47,8 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
     this.state = {
       disableHeader: false,
+      foundEvents: [],
+      scrollToIndex: undefined,
       sortBy,
       sortDirection,
       sortedList,
@@ -64,12 +69,20 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
       (prevProps.eventsMap.size !== this.props.eventsMap.size)) {
       this.sort(this.state);
     }
+
+    if (prevProps.searchValue !== this.props.searchValue && this.props.searchValue) {
+      this.search(this.props.searchValue);
+    }
+
+    if (prevProps.searchValue && !this.props.searchValue) {
+      this.setState({ foundEvents: [] });
+    }
   }
 
   render() {
     const { locale } = this.context;
     const { isLoading } = this.props;
-    const { disableHeader, sortBy, sortDirection, sortedList } = this.state;
+    const { disableHeader, scrollToIndex, sortBy, sortDirection, sortedList } = this.state;
 
     if (isLoading) {
       return <ProgressBars />;
@@ -91,6 +104,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         overscanRowCount={5}
         rowGetter={rowGetter}
         rowCount={sortedList.size}
+        scrollToIndex={scrollToIndex}
         sort={this.sort}
         sortBy={sortBy}
         sortDirection={sortDirection}
@@ -130,7 +144,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
               <div className="row nobottom">
                 <div className="col s12">
                   <div className="truncate">{cellData.in}</div>
-                  <div className="truncate" style={{opacity: .6}}> -> {cellData.out}</div>
+                  <div className="truncate" style={{ opacity: .6 }}> -> {cellData.out}</div>
                 </div>
               </div>
             );
@@ -183,10 +197,18 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   rowClassName = ({ index }: { index: number }) => {
+    const { foundEvents } = this.state;
+
     if (index < 0) {
       return "headerRow";
     } else {
-      return index % 2 === 0 ? "evenRow" : "oddRow";
+      let rowClassName = index % 2 === 0 ? "evenRow " : "oddRow ";
+
+      if (foundEvents.indexOf(index) >= 0) {
+        rowClassName += "foundEvent";
+      }
+
+      return rowClassName;
     }
   }
 
@@ -194,6 +216,36 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     const sortedList = this.sortList({ sortBy, sortDirection });
 
     this.setState({ sortBy, sortDirection, sortedList });
+
+    this.search(this.props.searchValue, sortedList);
+  }
+
+  search = (searchValue: string | undefined, list?: any) => {
+    const { sortedList } = this.state;
+
+    if (!searchValue) {
+      this.setState({ foundEvents: [] });
+      return;
+    }
+
+    const arr = list ? mapToArr(list) : mapToArr(sortedList);
+
+    const foundEvents: number[] = [];
+
+    arr.forEach((event: any, index: number) => {
+      if (event.userName.match(searchValue) ||
+        event.operationObject.in.match(searchValue) ||
+        event.operationObject.out.match(searchValue) ||
+        event.level.match(searchValue) ||
+        event.timestamp.match(searchValue)) {
+
+        foundEvents.push(index);
+      }
+    });
+
+    this.scrollToRow(foundEvents[0]);
+
+    this.setState({ foundEvents });
   }
 
   sortList = ({ sortBy, sortDirection }: { sortBy: string, sortDirection: TSortDirection }) => {
@@ -218,6 +270,10 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
   noRowsRenderer = () => {
     return <div className={"noRows"}>No rows</div>;
+  }
+
+  scrollToRow = (index: number) => {
+    this.setState({ scrollToIndex: index });
   }
 }
 
