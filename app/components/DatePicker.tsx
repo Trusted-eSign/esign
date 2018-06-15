@@ -75,7 +75,7 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
       monthsFull: translations.monthsFull,
       monthsShort: translations.monthsShort,
       onSet: (thingSet) => {
-        if (onSelect) {
+        if (onSelect && thingSet && thingSet.select) {
           onSelect(thingSet);
         }
       },

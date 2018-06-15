@@ -10,8 +10,8 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
     return event.userName.match(userName) &&
       event.operationObject.in.match(operationObjectIn) &&
       event.operationObject.out.match(operationObjectOut) &&
-      level === "all" ? true : event.level.match(level) &&
-      dateFrom ? (new Date(event.timestamp)).getTime() >= (new Date(dateFrom)).getTime() : true &&
-      dateTo ? (new Date(event.timestamp)).getTime() <= (new Date(dateTo)).getTime() : true;
+      (level === "all" ? true : event.level.match(level)) &&
+      (dateFrom ? (new Date(event.timestamp)).getTime() >= (new Date(dateFrom)).getTime() : true) &&
+      (dateTo ? (new Date(event.timestamp)).getTime() <= (new Date(dateTo)).getTime() : true);
   });
 });
