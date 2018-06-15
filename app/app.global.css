@@ -28,6 +28,10 @@ nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
   pointer-events: none;
 }
 
+.cryptoarm-blue {
+  color: #334294;
+}
+
 .maximize-window-btn, .minimize-window-btn, .close-window-btn, .setting-window-btn, .menu-btn, .cert-setting-btn, .setting-btn  {
     border-radius: 100%;
     overflow: hidden;
