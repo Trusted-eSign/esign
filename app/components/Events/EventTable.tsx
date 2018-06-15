@@ -190,11 +190,11 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         </Table>
         {searchValue ?
           <div className="card navigationToolbar valign-wrapper">
-            <i className="small material-icons cryptoarm-blue" onClick={this.handleScrollToFirstOfFoud}>first_page</i>
-            <i className="small material-icons cryptoarm-blue" onClick={this.handleScrollToBefore}>navigate_before</i>
+            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToFirstOfFoud}>first_page</i>
+            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToBefore}>navigate_before</i>
             {foundEvents.indexOf(scrollToIndex) + 1}/{foundEvents.length}
-            <i className="small material-icons cryptoarm-blue" onClick={this.handleScrollToNext}>navigate_next</i>
-            <i className="small material-icons cryptoarm-blue" onClick={this.handleScrollToLastOfFoud}>last_page</i>
+            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToNext}>navigate_next</i>
+            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToLastOfFoud}>last_page</i>
           </div> :
           null}
       </div>
