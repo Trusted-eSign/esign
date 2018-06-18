@@ -4,28 +4,24 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import {
   changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-  changeFilterLevel, changeFilterOutObject, changeFilterUserName,
-  resetEventsFilters,
+  changeFilterLevel, changeFilterOperationsType, changeFilterOutObject,
+  changeFilterUserName, resetEventsFilters,
 } from "../../AC/filtersActions";
+import { CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, ENCRYPT, SIGN } from "../../constants";
 import DatePicker from "../DatePicker";
-
-interface IOperationTypes {
-  "sign": boolean;
-  "encrypt": boolean;
-  "csr": boolean;
-  [key: string]: boolean;
-}
 
 interface IFilterEventsProps {
   changeFilterDateFrom: (dateFrom: Date) => void;
   changeFilterDateTo: (dateTo: Date) => void;
   changeFilterInObject: (objectIn: string) => void;
   changeFilterLevel: (level: string) => void;
+  changeFilterOperationsType: (type: string, value: boolean) => void;
   changeFilterOutObject: (objectOut: string) => void;
   changeFilterUserName: (userName: string) => void;
   dateFrom: Date;
   dateTo: Date;
   onCancel?: () => void;
+  operations: any;
   operationObjectIn: string;
   operationObjectOut: string;
   resetEventsFilters: () => void;
@@ -33,7 +29,6 @@ interface IFilterEventsProps {
 }
 
 interface IFilterEventsState {
-  operationTypes: IOperationTypes;
   selectedFrom: Date | undefined;
   selectedTo: Date | undefined;
 }
@@ -48,11 +43,6 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
     super(props);
 
     this.state = {
-      operationTypes: {
-        "sign": true,
-        "encrypt": true,
-        "csr": true,
-      },
       selectedFrom: undefined,
       selectedTo: undefined,
     };
@@ -66,7 +56,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       $("select").material_select();
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
 
@@ -84,8 +74,8 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   render() {
-    const { operationTypes, selectedFrom } = this.state;
-    const { dateFrom, dateTo, operationObjectIn, operationObjectOut, userName } = this.props;
+    const { selectedFrom } = this.state;
+    const { dateFrom, dateTo, operations, operationObjectIn, operationObjectOut, userName } = this.props;
     const { localize, locale } = this.context;
 
     return (
@@ -104,7 +94,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       className={"validate"}
                       name="userName"
                       value={userName}
-                      placeholder="Укажите имя пользователя"
+                      placeholder={localize("EventsFilters.write_user_name", locale)}
                       onChange={this.handleUserChange}
                     />
                     <label htmlFor="userName">
@@ -115,17 +105,17 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                 <div className="row">
                   <div className="input-field input-field-csr col s12">
                     <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
-                      <option value={"all"}>{"Все"}</option>
-                      <option value={"info"}>{"Успешно"}</option>
-                      <option value={"error"}>{"Ошибка"}</option>
+                      <option value={"all"}>{localize("EventsFilters.level_all", locale)}</option>
+                      <option value={"info"}>{localize("EventsFilters.level_info", locale)}</option>
+                      <option value={"error"}>{localize("EventsFilters.level_error", locale)}</option>
                     </select>
-                    <label>Статус</label>
+                    <label>{localize("EventsTable.status", locale)}</label>
                   </div>
                 </div>
                 <div className="row nobottom">
                   <div className="col s12">
                     <p className="label-csr">
-                      {"Дата"}
+                      {localize("EventsFilters.date", locale)}
                     </p>
                   </div>
                   <div className="col s6">
@@ -156,7 +146,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       className={"validate"}
                       name="objectIn"
                       value={operationObjectIn}
-                      placeholder="Укажите наименование для фильтрации"
+                      placeholder={localize("EventsFilters.write_object_for_filter", locale)}
                       onChange={this.handleChangeFilterInObject}
                     />
                     <label htmlFor="objectIn">
@@ -172,7 +162,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       className={"validate"}
                       name="objectOut"
                       value={operationObjectOut}
-                      placeholder="Укажите наименование для фильтрации"
+                      placeholder={localize("EventsFilters.write_object_for_filter", locale)}
                       onChange={this.handleChangeFilterOutObject}
                     />
                     <label htmlFor="objectOut">
@@ -192,41 +182,67 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                         <div className="row halfbottom" />
                         <div className="input-checkbox">
                           <input
-                            name="sign"
+                            name={SIGN}
                             type="checkbox"
-                            id="sign"
+                            id={SIGN}
                             className="filled-in"
-                            checked={operationTypes["sign"]}
+                            checked={operations.SIGN}
                             onChange={this.handleOperationTypesChange}
                           />
-                          <label htmlFor="sign" className="truncate">
-                            {"Подпись"}
+                          <label htmlFor={SIGN} className="truncate">
+                            {localize("EventsFilters.sign", locale)}
                           </label>
                         </div>
                         <div className="input-checkbox">
                           <input
-                            name="encrypt"
+                            name={ENCRYPT}
                             type="checkbox"
-                            id="encrypt"
+                            id={ENCRYPT}
                             className="filled-in"
-                            checked={operationTypes["encrypt"]}
+                            checked={operations.ENCRYPT}
                             onChange={this.handleOperationTypesChange}
                           />
-                          <label htmlFor="encrypt" className="truncate">
-                            {"Шифрование"}
+                          <label htmlFor={ENCRYPT} className="truncate">
+                            {localize("EventsFilters.encrypt", locale)}
                           </label>
                         </div>
                         <div className="input-checkbox">
                           <input
-                            name="csr"
+                            name={DECRYPT}
                             type="checkbox"
-                            id="csr"
+                            id={DECRYPT}
                             className="filled-in"
-                            checked={operationTypes["csr"]}
+                            checked={operations.DECRYPT}
                             onChange={this.handleOperationTypesChange}
                           />
-                          <label htmlFor="csr" className="truncate">
-                            {"Генерация сертификата"}
+                          <label htmlFor={DECRYPT} className="truncate">
+                            {localize("EventsFilters.decrypt", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={CERTIFICATE_GENERATION}
+                            type="checkbox"
+                            id={CERTIFICATE_GENERATION}
+                            className="filled-in"
+                            checked={operations.CERTIFICATE_GENERATION}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={CERTIFICATE_GENERATION} className="truncate">
+                            {localize("EventsFilters.certificate_generation", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={CERTIFICATE_IMPORT}
+                            type="checkbox"
+                            id={CERTIFICATE_IMPORT}
+                            className="filled-in"
+                            checked={operations.CERTIFICATE_IMPORT}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={CERTIFICATE_IMPORT} className="truncate">
+                            {localize("EventsFilters.certificate_import", locale)}
                           </label>
                         </div>
                       </div>
@@ -304,15 +320,12 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   handleOperationTypesChange = (ev: any) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterOperationsType, operations } = this.props;
     const target = ev.target;
     const name = target.name;
 
-    this.setState({
-      operationTypes: {
-        ...this.state.operationTypes,
-        [name]: !this.state.operationTypes[name],
-      },
-    });
+    changeFilterOperationsType(name, !operations[name]);
   }
 
   handleResetFilters = () => {
@@ -327,9 +340,10 @@ export default connect((state) => ({
   dateTo: state.filters.dateTo,
   operationObjectIn: state.filters.operationObjectIn,
   operationObjectOut: state.filters.operationObjectOut,
+  operations: state.filters.operations,
   userName: state.filters.userName,
 }), {
     changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-    changeFilterLevel, changeFilterOutObject, changeFilterUserName,
-    resetEventsFilters,
+    changeFilterLevel, changeFilterOperationsType, changeFilterOutObject,
+    changeFilterUserName, resetEventsFilters,
   })(FilterEvents);

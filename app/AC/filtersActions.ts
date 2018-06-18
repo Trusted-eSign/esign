@@ -39,9 +39,9 @@ export function changeFilterDateTo(dateTo: Date) {
   };
 }
 
-export function changeFilterOperationsType(operations: any) {
+export function changeFilterOperationsType(type: string, value: boolean) {
   return {
-    payload: { operations },
+    payload: { type, value },
     type: CHANGE_FILTER_OPERATION_TYPE,
   };
 }

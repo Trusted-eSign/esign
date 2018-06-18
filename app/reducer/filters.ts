@@ -1,7 +1,8 @@
 import {
-  CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO, CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL,
-  CHANGE_FILTER_OPERATION_TYPE, CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME,
-  CHANGE_SEARCH_VALUE, RESET_EVENTS_FILTERS,
+  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
+  CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
+  CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT, ENCRYPT,
+  RESET_EVENTS_FILTERS, SIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -10,7 +11,13 @@ const defaultFilters = {
   level: "",
   operationObjectIn: "",
   operationObjectOut: "",
-  operationType: "",
+  operations: {
+    CERTIFICATE_GENERATION: true,
+    CERTIFICATE_IMPORT: true,
+    DECRYPT: true,
+    ENCRYPT: true,
+    SIGN: true,
+  },
   searchValue: "",
   userName: "",
 };
@@ -32,7 +39,12 @@ export default (filters = defaultFilters, action) => {
       return { ...filters, operationObjectOut: payload.operationObjectOut };
 
     case CHANGE_FILTER_OPERATION_TYPE:
-      return { ...filters, operationType: payload.operationType };
+      return {
+        ...filters, operations: {
+          ...filters.operations,
+          [payload.type]: payload.value,
+        },
+      };
 
     case CHANGE_FILTER_DATE_FROM:
       return { ...filters, dateFrom: payload.dateFrom };
@@ -51,7 +63,7 @@ export default (filters = defaultFilters, action) => {
         level: "all",
         operationObjectIn: "",
         operationObjectOut: "",
-        operationType: "",
+        operations: "",
         userName: "",
       };
   }
