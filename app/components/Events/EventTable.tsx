@@ -276,7 +276,8 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         event.operationObject.in.match(searchValue) ||
         event.operationObject.out.match(searchValue) ||
         event.level.match(searchValue) ||
-        event.timestamp.match(searchValue)) {
+        event.timestamp.match(searchValue) ||
+        event.operation.match(searchValue)) {
 
         foundEvents.push(index);
       }
