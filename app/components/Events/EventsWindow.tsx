@@ -1,25 +1,41 @@
 import PropTypes from "prop-types";
 import React from "react";
-import SearchElement from "../../Filters/SearchElement";
+import { connect } from "react-redux";
+import { loadAllEvents, loadArchiveLogFile, removeAllEvents } from "../../AC/eventsActions";
 import Modal from "../Modal";
 import EventTable from "./EventTable";
 import FilterEvents from "./FilterEvents";
 
+const dialog = window.electron.remote.dialog;
+
 interface IEventsWindowState {
+  isArchiveLogFile: boolean;
   searchValue: string;
   showModalFilterEvents: boolean;
 }
 
-class EventsWindow extends React.Component<{}, IEventsWindowState> {
+interface IEventsWindowProps {
+  eventsLoaded: boolean;
+  eventsLoading: boolean;
+}
+
+interface IEventsWindowDispatch {
+  loadAllEvents: () => void;
+  loadArchiveLogFile: (filePath: string) => void;
+  removeAllEvents: () => void;
+}
+
+class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDispatch, IEventsWindowState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: {}) {
+  constructor(props: IEventsWindowProps & IEventsWindowDispatch) {
     super(props);
 
     this.state = {
+      isArchiveLogFile: false,
       searchValue: "",
       showModalFilterEvents: false,
     };
@@ -36,22 +52,12 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
   }
 
   render() {
+    const { localize, locale } = this.context;
+    const { isArchiveLogFile } = this.state;
+
     return (
       <div className="row">
         <div className="row halfbottom" />
-        {/* <nav className="app-bar-content">
-          <ul className="app-bar-items">
-            <li className="right">
-              <a className={"nav-small-btn waves-effect waves-light "} data-activates="dropdown-btn-set-cert-2">
-                <i className="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul id="dropdown-btn-set-cert-2" className="dropdown-content">
-                <li><a onClick={() => console.log("+++ 1")}>Фильтрация</a></li>
-                <li><a onClick={() => console.log("+++ 1")}>Архивация</a></li>
-              </ul>
-            </li>
-          </ul>
-        </nav> */}
 
         <div className="col s10">
           <div className="input-field input-field-csr col s12 card">
@@ -59,19 +65,28 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
             <input
               id="search"
               type="search"
-              placeholder="Поиск по журналу операций"
+              placeholder={localize("EventsTable.search_in_table", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
-            <i className="material-icons" onClick={() => this.setState({ searchValue: ""})}>close</i>
+            <i className="material-icons" onClick={() => this.setState({ searchValue: "" })}>close</i>
           </div>
         </div>
-        <div className="col s2">
+        <div className="col s1">
           <a className={"btn-floating btn-small waves-effect waves-light grey"} onClick={this.handleShowModalFilterEvents}>
             <i className="material-icons">filter_list</i>
           </a>
         </div>
+        <div className="col s1">
+          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events">
+            <i className="nav-small-icon material-icons cert-settings">more_vert</i>
+          </a>
+          <ul id="dropdown-btn-for-events" className="dropdown-content">
+            <li><a onClick={this.handleReloadEvents}>{isArchiveLogFile ? localize("EventsTable.goto_current_logfile", locale) : localize("Common.update", locale)}</a></li>
+            <li><a onClick={this.handleLoadArchiveLogFile}>{localize("EventsTable.load_archive_logfile", locale)}</a></li>
+          </ul>
+        </div>
         <div className="col s12">
-          <EventTable searchValue={this.state.searchValue}/>
+          <EventTable searchValue={this.state.searchValue} />
         </div>
         {this.showModalCertificateRequest()}
       </div>
@@ -108,6 +123,44 @@ class EventsWindow extends React.Component<{}, IEventsWindowState> {
   handleCloseModalFilterEvents = () => {
     this.setState({ showModalFilterEvents: false });
   }
+
+  handleReloadEvents = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { eventsLoading, loadAllEvents, removeAllEvents } = this.props;
+
+    removeAllEvents();
+
+    if (!eventsLoading) {
+      loadAllEvents();
+    }
+  }
+
+  handleLoadArchiveLogFile = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { eventsLoading, loadArchiveLogFile, removeAllEvents } = this.props;
+    const { localize, locale } = this.context;
+
+    if (!window.framework_NW) {
+      const file = dialog.showOpenDialog({
+        filters: [
+          { name: localize("Events.operations_log", locale), extensions: ["log"] },
+        ],
+        properties: ["openFile"],
+      });
+      if (file) {
+        removeAllEvents();
+
+        if (!eventsLoading) {
+          loadArchiveLogFile(file[0]);
+        }
+
+        this.setState({ isArchiveLogFile: true });
+      }
+    }
+  }
 }
 
-export default EventsWindow;
+export default connect((state) => ({
+  eventsLoaded: state.events.loaded,
+  eventsLoading: state.events.loading,
+}), { loadAllEvents, loadArchiveLogFile, removeAllEvents })(EventsWindow);

@@ -67,9 +67,12 @@ export default {
   },
   EventsTable: {
     date_and_time: "Date and time",
+    goto_current_logfile: "Go to the current log",
+    load_archive_logfile: "Load archive operations log",
     operation: "Operation",
     operation_object: "Operation object",
     operation_result: "Operation result",
+    search_in_table: "Search in operations log",
     status: "Status",
     user_name: "User",
   },

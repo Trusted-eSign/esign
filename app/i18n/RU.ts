@@ -67,9 +67,12 @@ export default {
   },
   EventsTable: {
     date_and_time: "Дата и время",
+    goto_current_logfile: "Вернуться к текущему журналу",
+    load_archive_logfile: "Загрузить архивный журнал",
     operation: "Операция",
     operation_object: "Объект операции",
     operation_result: "Результат операции",
+    search_in_table: "Поиск по журналу операций",
     status: "Статус",
     user_name: "Пользователь",
   },

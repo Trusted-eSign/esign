@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllEvents } from "../../AC";
+import { loadAllEvents } from "../../AC/eventsActions";
 import { filteredEventsSelector } from "../../selectors/eventsSelectors";
 import "../../table.global.css";
 import { mapToArr } from "../../utils";
