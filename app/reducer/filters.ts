@@ -63,7 +63,13 @@ export default (filters = defaultFilters, action) => {
         level: "all",
         operationObjectIn: "",
         operationObjectOut: "",
-        operations: "",
+        operations: {
+          CERTIFICATE_GENERATION: true,
+          CERTIFICATE_IMPORT: true,
+          DECRYPT: true,
+          ENCRYPT: true,
+          SIGN: true,
+        },
         userName: "",
       };
   }
