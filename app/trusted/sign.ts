@@ -94,11 +94,11 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     logger.log({
       certificate: cert.subjectName,
       level: "error",
-      message: "Error sign",
+      message: err.message ? err.message : err,
       operation: "Подпись",
       operationObject: {
         in: path.basename(uri),
-        out: path.basename(outURI),
+        out: "Null",
       },
       userName: USER_NAME,
     });
@@ -109,7 +109,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
   logger.log({
     certificate: cert.subjectName,
     level: "info",
-    message: "Файл подписан",
+    message: "",
     operation: "Подпись",
     operationObject: {
       in: path.basename(uri),
@@ -162,11 +162,17 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
     sd.sign();
     sd.save(outURI, format);
   } catch (err) {
-    // let jwtRes: number = jwt.checkLicense();
-    //  if (jwtRes) {
-    //      $(".toast-jwt_error").remove();
-    //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-    //  }
+    logger.log({
+      certificate: cert.subjectName,
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Подпись",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
 
     return "";
   }
@@ -174,8 +180,8 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   logger.log({
     certificate: cert.subjectName,
     level: "info",
-    message: "Подпись добавлена",
-    operation: "Добавление подписи",
+    message: "Добавление подписи",
+    operation: "Подпись",
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
