@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 
 const appBarStyle = {
   width: "calc(100% - 85px)",

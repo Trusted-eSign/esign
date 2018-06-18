@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature } from "../AC";
 import { activeFilesSelector, connectedSelector } from "../selectors";
@@ -8,15 +8,12 @@ import { ERROR, SIGNED, UPLOADED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
-import BlockNotElements from "./BlockNotElements";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
 import FileSelector from "./FileSelector";
 import ProgressBars from "./ProgressBars";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
-
-const dialog = window.electron.remote.dialog;
 
 interface IFile {
   id: string;
@@ -99,7 +96,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   componentWillReceiveProps(nextProps: ISignatureWindowProps) {
     const { localize, locale } = this.context;
-    const { certificatesLoaded, certificatesLoading, files, signatures } = this.props;
+    const { files, signatures } = this.props;
 
     if (files.length !== nextProps.files.length || signatures.length !== nextProps.signatures.length) {
       if (nextProps.files && nextProps.files.length === 1) {
@@ -177,9 +174,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   signed = () => {
-    const { files, settings, signer, licenseStatus, licenseToken, licenseLoaded, lic_error } = this.props;
+    const { files, settings, signer, licenseStatus, lic_error } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, selectFile, packageSign } = this.props;
+    const { packageSign } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseStatus !== 1) {
@@ -227,9 +224,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   resign = () => {
     const { connections, connectedList, files, settings,
-      signer, licenseStatus, licenseToken, licenseLoaded, uploader, lic_error } = this.props;
+      signer, licenseStatus, uploader, lic_error } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, selectFile, packageSign } = this.props;
+    const { deleteFile } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseStatus !== 1) {
@@ -321,7 +318,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
                   signers: JSON.stringify(normalyzeSignatureInfo),
                 },
                 url: uploader,
-              }, (err, httpResponse, body) => {
+              }, (err) => {
                 if (err) {
                   if (connection && connection.connected && connection.socket) {
                     connection.socket.emit(ERROR, { id: file.remoteId, error: err });

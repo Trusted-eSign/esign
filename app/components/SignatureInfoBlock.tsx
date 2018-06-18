@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { connect } from "react-redux";
-import { activeFilesSelector } from "../selectors";
-import { mapToArr } from "../utils";
+import React from "react";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import SignatureStatus from "./SignatureStatus";
 import SignerCertificateInfo from "./SignerCertificateInfo";

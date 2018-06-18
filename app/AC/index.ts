@@ -1,33 +1,27 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as readline from "readline";
 import {
-  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE, APP_LOG_FILE,
+  ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE,
   CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
-  CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE, CHANGE_SEARCH_VALUE,
+  CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP, DEFAULT_PATH, DELETE_FILE,
+  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
-  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS, LOAD_ALL_EVENTS,
-  LOAD_LICENSE, PACKAGE_DECRYPT, PACKAGE_DELETE_FILE, PACKAGE_ENCRYPT, PACKAGE_SELECT_FILE, PACKAGE_SIGN, PACKAGE_VERIFY,
+  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
+  LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
-  VERIFY_CERTIFICATE, VERIFY_LICENSE, VERIFY_SIGNATURE,
+  VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
-import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
 import { extFile, toBase64, fileExists } from "../utils";
 
 export function loadLicense() {
   return (dispatch) => {
-    let lic_format = "NONE";
-    let loaded = false;
-    let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-    let licenseStatus = 0;
     dispatch({ type: LOAD_LICENSE + START });
 
     setTimeout(() => {
@@ -162,11 +156,6 @@ export function loadLicense() {
   };
 }
 
-export function verifyLicense(key: string) {
-  return (dispatch) => {
-  };
-}
-
 interface IFile {
   id: number;
   filename: string;
@@ -275,7 +264,7 @@ export function packageSign(
                   signers: JSON.stringify(normalyzeSignatureInfo),
                 },
                 url: remoteFiles.uploader,
-              }, (err, httpResponse, body) => {
+              }, (err) => {
                 if (err) {
                   if (connection && connection.connected && connection.socket) {
                     connection.socket.emit(ERROR, { id: file.remoteId, error: err });
@@ -361,40 +350,6 @@ export function filePackageDelete(filePackage: number[]) {
   };
 }
 
-export function loadAllEvents() {
-  return (dispatch) => {
-    dispatch({
-      type: LOAD_ALL_EVENTS + START,
-    });
-
-    setTimeout(() => {
-      const rl = readline.createInterface({
-        input: fs.createReadStream(APP_LOG_FILE),
-      });
-
-      const events: any[] = [];
-
-      rl
-        .on("line", (line) => {
-          const data = JSON.parse(line);
-
-          events.push({
-            ...data,
-            id: data.timestamp,
-          });
-        })
-        .on("close", () => {
-          dispatch({
-            payload: {
-              events,
-            },
-            type: LOAD_ALL_EVENTS + SUCCESS,
-          });
-        });
-    }, 0);
-  };
-}
-
 export function loadAllCertificates() {
   return (dispatch) => {
     dispatch({
@@ -426,13 +381,6 @@ export function loadAllCertificates() {
 export function removeAllCertificates() {
   return {
     type: REMOVE_ALL_CERTIFICATES,
-  };
-}
-
-export function changeSearchValue(searchValue) {
-  return {
-    payload: { searchValue },
-    type: CHANGE_SEARCH_VALUE,
   };
 }
 

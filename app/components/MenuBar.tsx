@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
-  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT,
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,
   LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN, SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
 } from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
@@ -81,6 +81,9 @@ class MenuBar extends React.Component<any, any> {
 
       case LOCATION_SIGN:
         return localize("Sign.sign_and_verify", locale);
+
+      case LOCATION_EVENTS:
+        return localize("Events.operations_log", locale);
 
       default:
         return localize("About.product_NAME", locale);

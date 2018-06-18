@@ -1,11 +1,10 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
   changeSignatureDetached, changeSignatureEncoding,
   changeSignatureOutfolder, changeSignatureTimestamp,
 } from "../AC";
-import { BASE64, DER } from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";

@@ -1,4 +1,4 @@
-import { Map, OrderedMap, Record } from "immutable";
+import { OrderedMap, Record } from "immutable";
 import { ADD_CONNECTION, REMOVE_CONNECTION, SET_CONNECTED, SET_DISCONNECTED } from "../constants";
 
 const ConnectionModel = Record({

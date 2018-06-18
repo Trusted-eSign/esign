@@ -1,5 +1,7 @@
 interface Window {
     APP_LOG_FILE: string;
+    APP_ERRORS_LOG_FILE: string;
+    USER_NAME: string;
     mainWindow: any;
     electron: any;
     framework_NW: boolean;

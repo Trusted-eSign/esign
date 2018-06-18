@@ -1,17 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
-import { connect } from "react-redux";
-import { loadAllContainers, removeAllContainers } from "../../AC";
 import {
   REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP,
 } from "../../constants";
-import { filteredContainersSelector } from "../../selectors";
 import { validateInn, validateOgrnip, validateSnils } from "../../utils";
-import BlockNotElements from "../BlockNotElements";
-import ContainersList from "../ContainersList";
-import ProgressBars from "../ProgressBars";
-import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
 const REQULAR_EXPRESSION = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 

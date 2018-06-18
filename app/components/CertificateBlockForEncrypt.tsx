@@ -1,11 +1,9 @@
-import * as events from "events";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { addRecipientCertificate, deleteRecipient, verifyCertificate } from "../AC";
-import recipients from "../reducer/recipients";
 import { filteredCertificatesSelector } from "../selectors";
-import { extFile, mapToArr } from "../utils";
+import { mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
@@ -73,7 +71,7 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
 
   handleChooseRecipients = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { addRecipientCertificate, recipients } = this.props;
+    const { addRecipientCertificate } = this.props;
     const { selectedRecipients } = this.state;
 
     this.handleCleanRecipientsList();
@@ -159,7 +157,6 @@ class CertificateBlockForEncrypt extends React.Component<any, any> {
     const CERTIFICATE_FOR_INFO = this.state.activeCertificate;
     const CHOOSE = !selectedRecipients || !selectedRecipients.length || CERTIFICATE_FOR_INFO ? "not-active" : "active";
     const CHOOSE_VIEW = !selectedRecipients || !selectedRecipients.length ? "active" : "not-active";
-    const DISABLE = !CERTIFICATES_IS_ACTIVE ? "disabled" : "";
     const NOT_ACTIVE = recipients && recipients.length > 0 ? "not-active" : "";
     const NOT_ACTIVE_RIGTH_BTN = !selectedRecipients || !selectedRecipients.length ? "not-active" : "";
     let activeButton: any = null;

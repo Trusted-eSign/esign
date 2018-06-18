@@ -6,9 +6,12 @@ const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json(),
   ),
-  level: "info",
+  level: "debug",
   transports: [
-    new winston.transports.File({ filename: APP_LOG_FILE }),
+    new winston.transports.File({
+      filename: APP_LOG_FILE,
+      maxsize: 4096,
+    }),
   ],
 });
 

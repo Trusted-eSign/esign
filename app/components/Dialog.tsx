@@ -1,9 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { DialogBox, dlg } from "../module/global_app";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-
-const dialog = window.electron.remote.dialog;
 
 interface IDialogProps {
   isOpen: boolean;
@@ -40,7 +37,7 @@ class Dialog extends React.Component<IDialogProps, IDialogState> {
 
   render() {
     const { localize, locale } = this.context;
-    const { isOpen, header, body } = this.props;
+    const { header, body } = this.props;
     const { active } = this.state;
 
     if (!active) {

@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { BASE64, DER } from "../constants";
 
 interface IEncodingTypeSelectorProps {
   EncodingValue: string;
@@ -21,7 +20,7 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {
     const self = this;
     $(document).ready(() => {
       $("select").material_select();
-      $("select").on("change", function () {
+      $("select").on("change", function() {
         self.changeEncoding($(this)[0].value);
       });
     });

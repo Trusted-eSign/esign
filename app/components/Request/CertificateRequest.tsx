@@ -1,17 +1,16 @@
 import noUiSlider from "nouislider";
 import PropTypes from "prop-types";
 import React from "react";
-import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_ADDITIONAL, REQUEST_TEMPLATE_DEFAULT,
-  REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
+  REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
-import SelectFolder from "../SelectFolder";
+import logger from "../../winstonLogger";
 import HeaderTabs from "./HeaderTabs";
 import KeyParameters from "./KeyParameters";
 import SubjectNameInfo from "./SubjectNameInfo";
@@ -479,6 +478,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
       cert.sign(keyPair);
 
+      logger.log({
+        certificate: cert.subjectName,
+        level: "info",
+        message: "",
+        operation: "Генерация сертификата",
+        operationObject: {
+          in: "CN=" + cert.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       if (algorithm !== ALG_RSA) {
         if (OS_TYPE === "Windows_NT") {
           providerType = PROVIDER_MICROSOFT;
@@ -494,9 +505,31 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
               Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
             }
           }, ROOT);
+
+          logger.log({
+            certificate: cert.subjectName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + cert.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
         }
-      } catch (e) {
-        // e
+      } catch (err) {
+        logger.log({
+          certificate: cert.subjectName,
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + cert.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
       }
 
       try {
@@ -516,8 +549,32 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         this.handleReloadCertificates();
 
         Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
-      } catch (e) {
+
+        logger.log({
+          certificate: cert.subjectName,
+          level: "info",
+          message: "",
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + cert.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+      } catch (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+
+        logger.log({
+          certificate: cert.subjectName,
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + cert.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
       }
     } else {
       Materialize.toast(localize("CSR.create_request_created", locale), 2000, "toast-csr_created");

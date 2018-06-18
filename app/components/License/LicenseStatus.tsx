@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { loadLicense, verifyLicense } from "../../AC";
-import * as jwt from "../../trusted/jwt";
 import LicenseInfoField from "./LicenseInfoField";
 
 interface IButtonWithExternalLinkProps {
@@ -56,10 +54,6 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
     super(props);
   }
 
-  componentDidMount() {
-    const { data, loaded, loading, lic_format, lic_error } = this.props;
-  }
-
   render() {
     const { localize, locale } = this.context;
     const { license, status, lic_format, lic_error } = this.props;
@@ -96,7 +90,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
     } else if (lic_format === "MTX") {
       if (status === 1  && lic_error !== 903 && lic_error !== 907) {
         viewStatus = "correct";
-        if(license.exp== 0) {
+        if (license.exp == 0) {
             messageExpired = localize("License.lic_key_correct_unlimited", locale);
         }else{
             messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
@@ -106,12 +100,11 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         messageExpired = localize("License.lic_key_uncorrect", locale);
       }
     } else if (lic_format === "JWT") {
-      let unlimited: boolean = (new Date(dateExp)).getFullYear() === 2038;
       if (status === 1 && lic_error !== 903 && lic_error !== 907) {
         viewStatus = "correct";
         let year = (new Date(dateExp)).getFullYear();
         if (year === 1970 || year >= 2037) messageExpired = localize("License.lic_key_correct_unlimited", locale);
-        else messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";   
+        else messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
       } else {
         viewStatus = "incorrect";
         messageExpired = localize("License.lic_key_uncorrect", locale);
@@ -189,11 +182,11 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 export default connect((state) => {
   return {
     data: state.license.data,
+    lic_error : state.license.lic_error,
+    lic_format: state.license.lic_format,
     license: state.license.info,
     loaded: state.license.loaded,
     loading: state.license.loading,
     status: state.license.status,
-    lic_format: state.license.lic_format,
-    lic_error : state.license.lic_error,
   };
 }, {}, null, { pure: false })(LicenseStatus);

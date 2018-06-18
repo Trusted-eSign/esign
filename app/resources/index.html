@@ -87,13 +87,15 @@
 
     window.HOME_DIR = os.homedir();
     window.TMP_DIR = os.tmpdir();
+    window.USER_NAME = os.userInfo().username;
     window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CertStore');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
     window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/CryptoARM GOST/license.lic");
     window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "CryptoARM GOST", "settings.json");
     window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "cryptoarm_gost.log");
-    window.APP_LOG_FILE = path.join(HOME_DIR, ".Trusted", "app_cryptoarm_gost.log");
+    window.APP_LOG_FILE = path.join(HOME_DIR, ".Trusted", "cryptoarm_gost_operations.log");
+    window.APP_ERRORS_LOG_FILE = path.join(HOME_DIR, ".Trusted", "cryptoarm_gost_errors.log");
 
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted'), { mode: 0o700 });

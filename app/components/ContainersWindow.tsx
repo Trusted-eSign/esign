@@ -1,19 +1,11 @@
-import * as events from "events";
-import * as os from "os";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllContainers, removeAllCertificates } from "../AC";
-import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
+import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
 import { filteredContainersSelector } from "../selectors";
-import { fileCoding } from "../utils";
-import { mapToArr } from "../utils";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
-import CertificateInfoTabs from "./CertificateInfoTabs";
-import CertificateList from "./CertificateList";
 import ContainersList from "./ContainersList";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 import ProgressBars from "./ProgressBars";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
@@ -24,6 +16,7 @@ class ContainersWindow extends React.Component<any, any> {
   };
 
   handleInstallCertificate = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { certificatesLoading, container, loadAllCertificates, removeAllCertificates } = this.props;
     const { localize, locale } = this.context;
 
@@ -47,6 +40,7 @@ class ContainersWindow extends React.Component<any, any> {
   }
 
   handleReloadContainers = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllContainers, removeAllContainers } = this.props;
 
     removeAllContainers();
@@ -73,6 +67,7 @@ class ContainersWindow extends React.Component<any, any> {
   }
 
   getCertificateInfoBody() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { container, getCertificateFromContainer } = this.props;
     const { localize, locale } = this.context;
 
@@ -108,7 +103,6 @@ class ContainersWindow extends React.Component<any, any> {
     const block = containers.length > 0 ? "not-active" : "active";
     const active = container ? "active" : "not-active";
     const view = containers.length < 1 ? "not-active" : "";
-    const disabled = container ? "" : "disabled";
 
     return (
       <div className="main">

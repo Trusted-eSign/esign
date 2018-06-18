@@ -1,18 +1,10 @@
-import noUiSlider from "nouislider";
 import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
-import { connect } from "react-redux";
-import { loadAllContainers, removeAllContainers } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT,
 } from "../../constants";
-import { filteredContainersSelector } from "../../selectors";
-import BlockNotElements from "../BlockNotElements";
-import ContainersList from "../ContainersList";
-import ProgressBars from "../ProgressBars";
-import { ToolBarWithSearch } from "../ToolBarWithSearch";
 
 interface IKeyUsage {
   cRLSign: boolean;
@@ -86,7 +78,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, exportableKey, extKeyUsage, keyLength, keyUsage, keyUsageGroup,
+    const { algorithm, containerName, exportableKey, extKeyUsage, keyUsage, keyUsageGroup,
       handleAlgorithmChange, handleExtendedKeyUsageChange,
       handleInputChange, handleKeyUsageChange, handleKeyUsageGroupChange, toggleExportableKey } = this.props;
 

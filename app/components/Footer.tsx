@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 
 class Footer extends React.Component<{}, {}> {
   static contextTypes = {
@@ -7,7 +7,7 @@ class Footer extends React.Component<{}, {}> {
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: { locale: string }) {
+  shouldComponentUpdate(nextContext: { locale: string }) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 

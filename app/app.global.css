@@ -1,6 +1,7 @@
 @import "./resources/css/font-awesome-animation.min.css";
 @import "./resources/css/materialize.min.css";
 @import "./resources/css/nouislider.css";
+@import "./resources/css/react-virtualized.css";
 @import "./resources/fonts/material-design-icons/material-icons.css";
 
 /* Стили заголовка окна  */
@@ -25,6 +26,10 @@ nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
   color: #9c3b23;
   cursor: default;
   pointer-events: none;
+}
+
+.cryptoarm-blue {
+  color: #334294;
 }
 
 .maximize-window-btn, .minimize-window-btn, .close-window-btn, .setting-window-btn, .menu-btn, .cert-setting-btn, .setting-btn  {
@@ -821,15 +826,20 @@ i.material-icons.choosefolder {
 .search-bar {
     height: 100%;
 }
+
 #search {
-    margin: 0;
-    width: calc(100% - 8rem);
-    color: black;
-    padding: 0 4rem;
+  padding-left: 0rem;
 }
-#search:focus {
+
+input[type=search] {
+  border-bottom: none;
+  height: 2rem;
+}
+
+/* #search:focus {
     border-bottom: 2px solid lightgray;
-}
+} */
+
 .cert-bar-text {
     width: calc(100% - 45px);
     color: black;
@@ -3073,6 +3083,10 @@ a.help_paragraf {
   margin-bottom: 0px;
 }
 
+.nopadding {
+  padding: 0;
+}
+
 .col.s12.nopadding {
     padding-left: 0px;
     padding-right: 0px;
@@ -3222,6 +3236,61 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   color: #334294 !important;
 }
 
+.icon_ok {
+  background: url(./resources/image/icon_ok.svg);
+  background-size: 100%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 7px;
+  padding-left: 0px;
+  left: 0px;
+}
+
+.icon_fail {
+  background: url(./resources/image/icon_fail.svg);
+  background-size: 100%;
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  top: 7px;
+  padding-left: 0px;
+  left: 0px;
+}
+
+.picker__date-display, .picker__weekday-display {
+  background-color: #bf3817;
+}
+
+.picker__day--selected, .picker__day--selected:hover,
+.picker--focused .picker__day--selected {
+  background-color: #bf3817;
+}
+
+.picker__close, .picker__today {
+  color: #bf3817;
+}
+
+.picker__day.picker__day--today {
+  color: #bf3817;
+}
+
+.picker__date-display, .picker__clear {
+  display: none;
+}
+
+.picker__nav--prev:hover, .picker__nav--next:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+.picker__input.picker__input--active {
+  border-color: #334294;
+}
+
+button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
+  background: rgba(0,0,0,0.1);
+}
+
 .header-tab {
   font-size: 55%;
   color: gray;
@@ -3240,4 +3309,8 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   .modal {
     width: 85%;
   }
+}
+
+svg:hover {
+  fill: #334294;
 }

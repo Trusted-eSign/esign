@@ -1,7 +1,5 @@
-import { Map, OrderedMap, Record } from "immutable";
-import { filePackageDelete } from "../AC/index";
+import { OrderedMap, Record } from "immutable";
 import { ADD_REMOTE_FILE, DOWNLOAD_REMOTE_FILE, REMOVE_ALL_REMOTE_FILES, SET_REMOTE_FILES_PARAMS, START, SUCCESS, UPLOAD_FILE } from "../constants";
-import { arrayToMap } from "../utils";
 
 export interface IRemoteFile {
   extra: any;
@@ -33,7 +31,7 @@ const DefaultReducerState = Record({
 });
 
 export default (files = new DefaultReducerState(), action) => {
-  const { type, payload, randomId } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case ADD_REMOTE_FILE:

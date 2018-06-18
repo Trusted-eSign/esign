@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
+import { USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding, fileExists } from "../utils";
-import * as jwt from "./jwt";
+import logger from "../winstonLogger";
 
 const dialog = window.electron.remote.dialog;
 
@@ -90,14 +91,32 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
     sd.freeContent();
   } catch (err) {
-    //  let jwtRes: number = jwt.checkLicense();
-    //  if (jwtRes) {
-    //      $(".toast-jwt_error").remove();
-    //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-    // }
+    logger.log({
+      certificate: cert.subjectName,
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Подпись",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
 
     return "";
   }
+
+  logger.log({
+    certificate: cert.subjectName,
+    level: "info",
+    message: "",
+    operation: "Подпись",
+    operationObject: {
+      in: path.basename(uri),
+      out: path.basename(outURI),
+    },
+    userName: USER_NAME,
+  });
 
   return outURI;
 }
@@ -143,14 +162,32 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
     sd.sign();
     sd.save(outURI, format);
   } catch (err) {
-    // let jwtRes: number = jwt.checkLicense();
-    //  if (jwtRes) {
-    //      $(".toast-jwt_error").remove();
-    //      Materialize.toast(jwt.getErrorMessage(jwtRes), 4000, "toast-jwt_error");
-    //  }
+    logger.log({
+      certificate: cert.subjectName,
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Подпись",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
 
     return "";
   }
+
+  logger.log({
+    certificate: cert.subjectName,
+    level: "info",
+    message: "Добавление подписи",
+    operation: "Подпись",
+    operationObject: {
+      in: path.basename(uri),
+      out: path.basename(outURI),
+    },
+    userName: USER_NAME,
+  });
 
   return outURI;
 }

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 interface IModalProps {
@@ -45,7 +45,6 @@ class Modal extends React.Component<IModalProps, {}> {
   }
 
   render() {
-    const { localize, locale } = this.context;
     const { isOpen, header } = this.props;
 
     if (!isOpen) {

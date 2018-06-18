@@ -1,10 +1,8 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { activeContainer, loadAllContainers } from "../AC";
-import accordion from "../decorators/accordion";
 import { filteredContainersSelector } from "../selectors";
-import { mapToArr } from "../utils";
 import ContainerListItem from "./ContainerListItem";
 import ProgressBars from "./ProgressBars";
 
@@ -42,8 +40,7 @@ class ContainersList extends React.Component<any, any> {
   }
 
   render() {
-    const { activeContainer, containers, active, isLoading, toggleOpenItem, isItemOpened } = this.props;
-    const { localize, locale } = this.context;
+    const { activeContainer, containers, active, isLoading } = this.props;
     const objContainers: { [key: string]: object[] } = {};
 
     if (isLoading) {

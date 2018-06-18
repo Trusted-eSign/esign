@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { findDOMNode } from "react-dom";
+import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, verifyCertificate } from "../AC";
 import accordion from "../decorators/accordion";
@@ -10,6 +9,11 @@ import ProgressBars from "./ProgressBars";
 
 interface ICertificateListProps {
   activeCert: (certificate: any) => void;
+  certificates: any;
+  isLoaded: boolean;
+  isLoading: boolean;
+  loadAllCertificates: () => void;
+  verifyCertificate: (id: number) => void;
 }
 
 let scrollTimer: NodeJS.Timer | null;
@@ -22,7 +26,8 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
   };
 
   componentDidMount() {
-    const { certificates, isLoaded, isLoading, loadAllCertificates } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { isLoaded, isLoading, loadAllCertificates } = this.props;
 
     if (!isLoading && !isLoaded) {
       loadAllCertificates();
