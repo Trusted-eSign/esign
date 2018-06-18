@@ -80,7 +80,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   render() {
-    const { locale } = this.context;
+    const { locale, localize } = this.context;
     const { isLoading, searchValue } = this.props;
     const { disableHeader, foundEvents, scrollToIndex, sortBy, sortDirection, sortedList } = this.state;
 
@@ -123,21 +123,21 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             dataKey="timestamp"
             disableSort={false}
             width={130}
-            label="Дата и время"
+            label={localize("EventsTable.date_and_time", locale)}
           />
           <Column
             dataKey="operation"
             disableSort={false}
             headerRenderer={this.headerRenderer}
             width={180}
-            label="Операция"
+            label={localize("EventsTable.operation", locale)}
           />
           <Column
             dataKey="userName"
             disableSort={false}
             headerRenderer={this.headerRenderer}
             width={120}
-            label="Пользователь"
+            label={localize("EventsTable.user_name", locale)}
           />
           <Column
             cellRenderer={({ cellData }) => {
@@ -153,7 +153,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             dataKey="operationObject"
             disableSort
             width={250}
-            label="Объект операции"
+            label={localize("EventsTable.operation_object", locale)}
           />
           <Column
             cellRenderer={({ cellData }) => {
@@ -185,7 +185,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             disableSort={false}
             headerRenderer={this.headerRenderer}
             width={100}
-            label="Статус"
+            label={localize("EventsTable.status", locale)}
           />
         </Table>
         {searchValue ?
@@ -308,7 +308,9 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   noRowsRenderer = () => {
-    return <div className={"noRows"}>No rows</div>;
+    const { locale, localize } = this.context;
+
+    return <div className={"noRows"}>{localize("EventsTable.no_rows", locale)}</div>;
   }
 
   scrollToRow = (index: number) => {

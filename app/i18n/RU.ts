@@ -69,6 +69,7 @@ export default {
     date_and_time: "Дата и время",
     goto_current_logfile: "Вернуться к текущему журналу",
     load_archive_logfile: "Загрузить архивный журнал",
+    no_rows: "Нет записей",
     operation: "Операция",
     operation_object: "Объект операции",
     operation_result: "Результат операции",
