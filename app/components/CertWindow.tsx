@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
-import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT } from "../constants";
+import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT, USER_NAME } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
+import logger from "../winstonLogger";
 import BlockNotElements from "./BlockNotElements";
 import CertificateDelete from "./Certificate/CertificateDelete";
 import CertificateExport from "./Certificate/CertificateExport";
@@ -167,8 +168,32 @@ class CertWindow extends React.Component<any, any> {
         trusted.utils.Csp.installCertifiacteFromContainer(container, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
 
         Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
-      } catch (e) {
+
+        logger.log({
+          certificate: certificate.subjectName,
+          level: "info",
+          message: "",
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + certificate.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+      } catch (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+
+        logger.log({
+          certificate: certificate.subjectName,
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + certificate.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
 
         return;
       }
@@ -180,6 +205,18 @@ class CertWindow extends React.Component<any, any> {
       }, ADDRESS_BOOK);
 
       Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Импорт сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
     }
 
     if (selfSigned || bCA) {
@@ -288,11 +325,35 @@ class CertWindow extends React.Component<any, any> {
 
           $(".toast-cert_import_ok").remove();
           Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
-        } catch (e) {
+
+          logger.log({
+            certificate: "",
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "PKCS12:" + P12_PATH,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+        } catch (err) {
           self.handlePasswordChange("");
 
           $(".toast-cert_import_failed").remove();
           Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
+
+          logger.log({
+            certificate: "",
+            level: "error",
+            message: err.message ? err.message : err,
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "PKCS12:" + P12_PATH,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
         }
       },
       dismissible: false,
