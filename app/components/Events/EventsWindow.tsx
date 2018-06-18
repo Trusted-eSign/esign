@@ -17,6 +17,7 @@ interface IEventsWindowState {
 interface IEventsWindowProps {
   eventsLoaded: boolean;
   eventsLoading: boolean;
+  isDefaultFilters: boolean;
 }
 
 interface IEventsWindowDispatch {
@@ -54,6 +55,9 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
   render() {
     const { localize, locale } = this.context;
     const { isArchiveLogFile } = this.state;
+    const { isDefaultFilters } = this.props;
+
+    const classDefaultFilters = isDefaultFilters ? "grey" : "green";
 
     return (
       <div className="row">
@@ -72,12 +76,12 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
           </div>
         </div>
         <div className="col s1">
-          <a className={"btn-floating btn-small waves-effect waves-light grey"} onClick={this.handleShowModalFilterEvents}>
+          <a className={"btn-floating btn-small waves-effect waves-light " + classDefaultFilters} onClick={this.handleShowModalFilterEvents}>
             <i className="material-icons">filter_list</i>
           </a>
         </div>
         <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events">
+          <a className={"nav-small-btn waves-effect waves-light grey"} data-activates="dropdown-btn-for-events">
             <i className="nav-small-icon material-icons cert-settings">more_vert</i>
           </a>
           <ul id="dropdown-btn-for-events" className="dropdown-content">
@@ -163,4 +167,5 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
 export default connect((state) => ({
   eventsLoaded: state.events.loaded,
   eventsLoading: state.events.loading,
+  isDefaultFilters: state.filters.isDefaultFilters,
 }), { loadAllEvents, loadArchiveLogFile, removeAllEvents })(EventsWindow);
