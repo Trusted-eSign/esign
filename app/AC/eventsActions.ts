@@ -1,9 +1,33 @@
 import * as fs from "fs";
+import * as path from "path";
 import * as readline from "readline";
 import { APP_LOG_FILE, LOAD_ALL_EVENTS, REMOVE_ALL_EVENTS, START, SUCCESS } from "../constants";
 import { fileExists } from "../utils";
 
+const incFile = () => {
+  const fileName = "cryptoarm_gost_operations";
+
+  let indexFile: number = 1;
+  let newLogFilePath: string = APP_LOG_FILE;
+
+  do {
+    const incName = path.join(path.dirname(APP_LOG_FILE), fileName + indexFile + ".log");
+
+    if (fileExists(incName)) {
+      newLogFilePath = incName;
+    } else {
+      break;
+    }
+
+    indexFile++;
+  } while (fileExists(newLogFilePath));
+
+  return newLogFilePath;
+};
+
 export function loadAllEvents() {
+  const LOG_FILE = incFile();
+
   return (dispatch) => {
     dispatch({
       type: LOAD_ALL_EVENTS + START,
@@ -12,7 +36,7 @@ export function loadAllEvents() {
     setTimeout(() => {
       const events: any[] = [];
 
-      if (!fileExists(APP_LOG_FILE)) {
+      if (!fileExists(LOG_FILE)) {
         dispatch({
           payload: {
             events,
@@ -22,7 +46,7 @@ export function loadAllEvents() {
       }
 
       const rl = readline.createInterface({
-        input: fs.createReadStream(APP_LOG_FILE),
+        input: fs.createReadStream(LOG_FILE),
       });
 
       let index = 0;
