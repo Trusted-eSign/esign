@@ -51,3 +51,7 @@
   background-color: rgba(255,255,255,0.8) !important;
   z-index: 1000 !important;
 }
+
+.ReactVirtualized__Grid, .ReactVirtualized__Table__headerColumn {
+  outline: none;
+}
