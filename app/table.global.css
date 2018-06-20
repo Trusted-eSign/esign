@@ -44,10 +44,10 @@
 }
 
 .navigationToolbar {
-  bottom: 20px;
-  right: 30px;
-  position: fixed;
-  padding: 10px;
-  background-color: rgba(255,255,255,0.8);
-  z-index: 1000;
+  bottom: 20px !important;
+  right: 30px !important;
+  position: fixed !important;
+  padding: 10px !important;
+  background-color: rgba(255,255,255,0.8) !important;
+  z-index: 1000 !important;
 }
