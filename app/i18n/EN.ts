@@ -460,6 +460,7 @@ export default {
     Empowerment: "FUNCTIONAL EXTENSIONS WITH CONNECTION TO TRUSTED NET SERVICE",
   },
   Common: {
+    apply: "Apply",
     clear: "Clear",
     reset: "Reset",
     yes: "Yes",

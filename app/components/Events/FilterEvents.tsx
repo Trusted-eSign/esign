@@ -257,8 +257,13 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
         <div className="row halfbottom" />
 
         <div className="row">
-          <div className="col s3 right">
-            <a className={"waves-effect waves-light btn modal-close"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
+          <div className="col s5 offset-s7">
+            <div className="col s6">
+              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
+            </div>
+            <div className="col s6">
+              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.apply", locale)}</a>
+            </div>
           </div>
         </div>
       </div>

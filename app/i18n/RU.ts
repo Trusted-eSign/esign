@@ -462,6 +462,7 @@ export default {
     Empowerment: "РАСШИРЕНИЕ ВОЗМОЖНОСТЕЙ С ПОДКЛЮЧЕНИЕМ К СЕРВИСУ TRUSTED NET",
   },
   Common: {
+    apply: "Применить",
     clear: "Очистить",
     reset: "Сбросить",
     yes: "Да",
