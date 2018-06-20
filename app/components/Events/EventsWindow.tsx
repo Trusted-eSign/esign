@@ -72,7 +72,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
               placeholder={localize("EventsTable.search_in_table", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
-            <i className="material-icons" onClick={() => this.setState({ searchValue: "" })}>close</i>
+            <i className="material-icons" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? {color : "#444"} : {}}>close</i>
           </div>
         </div>
         <div className="col s1">
