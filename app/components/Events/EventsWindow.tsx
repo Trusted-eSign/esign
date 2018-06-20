@@ -132,6 +132,8 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
     // tslint:disable-next-line:no-shadowed-variable
     const { eventsLoading, loadAllEvents, removeAllEvents } = this.props;
 
+    this.setState({ isArchiveLogFile: false });
+
     removeAllEvents();
 
     if (!eventsLoading) {
