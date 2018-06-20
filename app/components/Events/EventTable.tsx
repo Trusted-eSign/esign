@@ -122,6 +122,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             }}
             dataKey="timestamp"
             disableSort={false}
+            headerRenderer={this.headerRenderer}
             width={130}
             label={localize("EventsTable.date_and_time", locale)}
           />
@@ -152,6 +153,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             }}
             dataKey="operationObject"
             disableSort
+            headerRenderer={this.headerRenderer}
             width={250}
             label={localize("EventsTable.operation_object", locale)}
           />
