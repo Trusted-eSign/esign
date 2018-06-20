@@ -7,6 +7,7 @@ interface IDatePickerProps {
   label?: string;
   max?: Date;
   min?: Date;
+  onClear?: () => void;
   onSelect?: (thingSet: number) => void;
   selected?: Date;
 }
@@ -21,13 +22,17 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
 
   componentDidUpdate(prevProps: IDatePickerProps) {
     if ((prevProps.min !== this.props.min) && this.picker) {
-      this.picker.set("min", this.props.min);
+      if (this.props.min !== undefined) {
+        this.picker.set("min", this.props.min);
+      } else {
+        this.picker.set("min", false);
+      }
     }
   }
 
   componentDidMount() {
     const { locale } = this.context;
-    const { id, max, min, onSelect, selected } = this.props;
+    const { id, max, min, onClear, onSelect, selected } = this.props;
 
     let translations;
 
@@ -77,6 +82,10 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
       onSet: (thingSet) => {
         if (onSelect && thingSet && thingSet.select) {
           onSelect(thingSet);
+        }
+
+        if (onClear && thingSet && thingSet.clear === null) {
+          onClear();
         }
       },
       selectMonths: true,

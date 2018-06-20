@@ -25,14 +25,14 @@ export function changeFilterOutObject(operationObjectOut: string) {
   };
 }
 
-export function changeFilterDateFrom(dateFrom: Date) {
+export function changeFilterDateFrom(dateFrom: Date | undefined) {
   return {
     payload: { dateFrom },
     type: CHANGE_FILTER_DATE_FROM,
   };
 }
 
-export function changeFilterDateTo(dateTo: Date) {
+export function changeFilterDateTo(dateTo: Date | undefined) {
   return {
     payload: { dateTo },
     type: CHANGE_FILTER_DATE_TO,

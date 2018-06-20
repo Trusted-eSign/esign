@@ -3258,6 +3258,11 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   left: 0px;
 }
 
+.picker__frame {
+  min-width: 350px;
+  width: 350px;
+}
+
 .picker__date-display, .picker__weekday-display {
   background-color: #bf3817;
 }
@@ -3275,7 +3280,7 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   color: #bf3817;
 }
 
-.picker__date-display, .picker__clear {
+.picker__date-display {
   display: none;
 }
 

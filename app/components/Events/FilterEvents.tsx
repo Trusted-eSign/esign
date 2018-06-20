@@ -11,8 +11,8 @@ import { CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, ENCRYPT, SIGN } fr
 import DatePicker from "../DatePicker";
 
 interface IFilterEventsProps {
-  changeFilterDateFrom: (dateFrom: Date) => void;
-  changeFilterDateTo: (dateTo: Date) => void;
+  changeFilterDateFrom: (dateFrom: Date | undefined) => void;
+  changeFilterDateTo: (dateTo: Date | undefined) => void;
   changeFilterInObject: (objectIn: string) => void;
   changeFilterLevel: (level: string) => void;
   changeFilterOperationsType: (type: string, value: boolean) => void;
@@ -56,7 +56,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       $("select").material_select();
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
 
@@ -75,6 +75,8 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
   render() {
     const { selectedFrom } = this.state;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeFilterDateFrom, changeFilterDateTo } = this.props;
     const { dateFrom, dateTo, operations, operationObjectIn, operationObjectOut, userName } = this.props;
     const { localize, locale } = this.context;
 
@@ -123,6 +125,10 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       id="input_from"
                       key="input_from"
                       label="From"
+                      onClear={() => {
+                        this.setState({ selectedFrom: undefined });
+                        changeFilterDateFrom(undefined);
+                      }}
                       onSelect={this.handleFromChange}
                       selected={dateFrom}
                     />
@@ -133,6 +139,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       key="input_to"
                       label="To"
                       min={selectedFrom}
+                      onClear={() => changeFilterDateTo(undefined)}
                       onSelect={this.handleToChange}
                       selected={dateTo}
                     />

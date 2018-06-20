@@ -6,8 +6,8 @@ import {
 } from "../constants";
 
 const defaultFilters = {
-  dateFrom: "",
-  dateTo: "",
+  dateFrom: undefined,
+  dateTo: undefined,
   isDefaultFilters: true,
   level: "",
   operationObjectIn: "",
@@ -61,8 +61,8 @@ export default (filters = defaultFilters, action) => {
     case RESET_EVENTS_FILTERS:
       return {
         ...filters,
-        dateFrom: "",
-        dateTo: "",
+        dateFrom: undefined,
+        dateTo: undefined,
         isDefaultFilters: true,
         level: "all",
         operationObjectIn: "",
