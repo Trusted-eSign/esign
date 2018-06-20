@@ -74,6 +74,7 @@ export default {
     level_all: "All",
     level_error: "Error",
     level_info: "Info",
+    no_found_events: "No found events",
     sign: "Sign",
     write_object_for_filter: "Write object for filter",
     write_user_name: "Write user name",

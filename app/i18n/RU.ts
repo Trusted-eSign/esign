@@ -74,6 +74,7 @@ export default {
     level_all: "Все",
     level_error: "Ошибка",
     level_info: "Успешно",
+    no_found_events: "Совпадения не найдены",
     sign: "Подпись",
     write_object_for_filter: "Укажите объект для фильтрации",
     write_user_name: "Укажите имя пользователя",

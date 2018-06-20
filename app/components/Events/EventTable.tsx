@@ -88,6 +88,8 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
       return <ProgressBars />;
     }
 
+    const classDisabledNavigation = foundEvents.length && foundEvents.length === 1 ? "disabled" : "";
+
     const rowGetter = ({ index }: { index: number }) => this.getDatum(this.state.sortedList, index);
 
     return (
@@ -190,13 +192,15 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             label={localize("EventsTable.status", locale)}
           />
         </Table>
-        {searchValue ?
+        {searchValue && foundEvents.length ?
           <div className="card navigationToolbar valign-wrapper">
-            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToFirstOfFoud}>first_page</i>
-            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToBefore}>navigate_before</i>
-            {foundEvents.indexOf(scrollToIndex) + 1}/{foundEvents.length}
-            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToNext}>navigate_next</i>
-            <i className="small material-icons cryptoarm-blue waves-effect" onClick={this.handleScrollToLastOfFoud}>last_page</i>
+            <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToFirstOfFoud}>first_page</i>
+            <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToBefore}>navigate_before</i>
+            <div style={{color: "black"}}>
+              {foundEvents.indexOf(scrollToIndex) + 1}/{foundEvents.length}
+            </div>
+            <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToNext}>navigate_next</i>
+            <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToLastOfFoud}>last_page</i>
           </div> :
           null}
       </div>
@@ -262,6 +266,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   search = (searchValue: string | undefined, list?: any) => {
+    const { locale, localize } = this.context;
     const { sortedList } = this.state;
 
     if (!searchValue) {
@@ -284,6 +289,11 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         foundEvents.push(index);
       }
     });
+
+    if (!foundEvents.length) {
+      $(".toast-no_found_events").remove();
+      Materialize.toast(localize("EventsFilters.no_found_events", locale), 2000, "toast-no_found_events");
+    }
 
     this.scrollToRow(foundEvents[0]);
 
