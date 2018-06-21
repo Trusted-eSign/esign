@@ -81,7 +81,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
           </a>
         </div>
         <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events">
+          <a className={"nav-small-btn waves-effect waves-light card"} data-activates="dropdown-btn-for-events" style={{margin: 0}}>
             <i className="nav-small-icon material-icons context_menu">more_vert</i>
           </a>
           <ul id="dropdown-btn-for-events" className="dropdown-content">
