@@ -81,7 +81,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
     const { localize, locale } = this.context;
 
     return (
-      <div className="modal-body">
+      <div className="filter_setting_modal">
         <div className="row halftop">
           <div className="col s12">
             <div className="content-wrapper tbody border_group">
@@ -265,10 +265,10 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
         <div className="row">
           <div className="col s5 offset-s7">
             <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
             </div>
             <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.apply", locale)}</a>
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.apply", locale)}</a>
             </div>
           </div>
         </div>

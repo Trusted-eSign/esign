@@ -3097,10 +3097,12 @@ a.help_paragraf {
 
 .row.halftop {
     margin-top: 10px;
+    margin-bottom: 0px;
   }
 
 .row.halfbottom {
   margin-bottom: 10px;
+  margin-top: 0px;
 }
 
 .col.nobottom {
@@ -3404,6 +3406,7 @@ svg:hover {
 
 .border_group{
     box-shadow: 0 0 0 1px rgb(227, 227, 228);
+    height: 352px;
 }
 
 .operations_group{
@@ -3423,4 +3426,14 @@ svg:hover {
 
 .evenRow{
     font-size: 0.9rem!important;
+}
+
+.filter_setting_modal{
+    height: 410px;
+}
+
+.btn_modal{
+    height: 30px!important;
+    line-height: 30px!important;
+    padding-top: 2px!important;
 }
