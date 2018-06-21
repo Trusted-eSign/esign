@@ -82,10 +82,9 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
 
     return (
       <div className="modal-body">
-        <div className="row" />
-        <div className="row">
+        <div className="row halftop">
           <div className="col s12">
-            <div className="content-wrapper z-depth-1 tbody">
+            <div className="content-wrapper tbody border_group">
               <div className="col s6">
                 <div className="row" />
                 <div className="row">
@@ -183,7 +182,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                   <p className="label-csr">
                     {localize("EventsTable.operation", locale)}
                   </p>
-                  <div className="z-depth-1">
+                  <div className="operations_group">
                     <div className="row">
                       <div className="col s12">
                         <div className="row halfbottom" />

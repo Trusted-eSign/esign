@@ -3095,6 +3095,10 @@ a.help_paragraf {
     margin-bottom: 0px;
 }
 
+.row.halftop {
+    margin-top: 10px;
+  }
+
 .row.halfbottom {
   margin-bottom: 10px;
 }
@@ -3398,6 +3402,15 @@ svg:hover {
     margin-top: 3px;
 }
 
+.border_group{
+    box-shadow: 0 0 0 1px rgb(227, 227, 228);
+}
+
+.operations_group{
+    box-shadow: 0 0 0 1px #b5b5b5;
+    height: 288px;
+}
+
 .find_box{
     height: 28px;
 }
@@ -3407,4 +3420,5 @@ svg:hover {
     right: 0.4rem!important;
     font-size: 1.6rem!important;
 }
+
 
