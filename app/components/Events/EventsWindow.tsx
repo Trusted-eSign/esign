@@ -64,7 +64,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
         <div className="row halfbottom" />
 
         <div className="col s10">
-          <div className="input-field input-field-csr col s12 border_element">
+          <div className="input-field input-field-csr col s12 border_element find_box">
             <i className="material-icons prefix">search</i>
             <input
               id="search"

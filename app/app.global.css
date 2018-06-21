@@ -3236,7 +3236,7 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 }
 
 .input-field-csr {
-  height: 28px;
+  height: 36px;
   line-height: 10px;
 }
 
@@ -3396,6 +3396,10 @@ svg:hover {
 .border_element{
     box-shadow: 0 0 0 1px #b5b5b5;
     margin-top: 3px;
+}
+
+.find_box{
+    height: 28px;
 }
 
 .close{
