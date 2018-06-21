@@ -691,6 +691,26 @@ i.material-icons.left.license{
     margin-top: 10px;
   }
 
+  i.material-icons.left.journal {
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/journal_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 10px;
+  }
+
+  i.material-icons.left.document {
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/document_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 10px;
+  }
+
 /*-------------------------------Стили списка файлов------------------*/
 .add-file-item {
     color: lightgray;
@@ -3338,4 +3358,37 @@ svg:hover {
     width: 24px;
     position: absolute;
     top: 11px;
+  }
+
+  i.material-icons.filter_off {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/icon_filter_off.svg);
+    background-size: 32px 32px;
+    margin-top: 2px;
+    margin-left: 2px;
+  }
+
+  i.material-icons.filter_on {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/icon_filter_on.svg);
+    background-size: 32px 32px;
+    margin-top: 2px;
+    margin-left: 2px;
+  } 
+  
+  i.material-icons.context_menu {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/icon_context_menu.svg);
+    background-size: 32px 32px;
+    margin-top: 4px;
+    margin-left: -6px;
   }

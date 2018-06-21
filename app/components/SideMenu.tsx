@@ -55,7 +55,7 @@ class SideMenu extends React.Component<{}, {}> {
 
           <Link to={LOCATION_EVENTS}>
             {localize("Events.Operations_log", locale)}
-            <i className="material-icons left help">help</i>
+            <i className="material-icons left journal">help</i>
           </Link>
         </div>
         <div className="row">

@@ -57,7 +57,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
     const { isArchiveLogFile } = this.state;
     const { isDefaultFilters } = this.props;
 
-    const classDefaultFilters = isDefaultFilters ? "grey" : "green";
+    const classDefaultFilters = isDefaultFilters ? "filter_off" : "filter_on";
 
     return (
       <div className="row">
@@ -76,13 +76,13 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
           </div>
         </div>
         <div className="col s1">
-          <a className={"btn-floating btn-small waves-effect waves-light " + classDefaultFilters} onClick={this.handleShowModalFilterEvents}>
-            <i className="material-icons">filter_list</i>
+          <a className={"btn-small waves-effect waves-light"} onClick={this.handleShowModalFilterEvents}>
+            <i className={"material-icons " + classDefaultFilters}>filter_list</i>
           </a>
         </div>
         <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light grey"} data-activates="dropdown-btn-for-events">
-            <i className="nav-small-icon material-icons cert-settings">more_vert</i>
+          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events">
+            <i className="nav-small-icon material-icons context_menu">more_vert</i>
           </a>
           <ul id="dropdown-btn-for-events" className="dropdown-content">
             <li><a onClick={this.handleReloadEvents}>{isArchiveLogFile ? localize("EventsTable.goto_current_logfile", locale) : localize("Common.update", locale)}</a></li>
