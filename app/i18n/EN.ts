@@ -70,6 +70,8 @@ export default {
     certificate_import: "Certificate import",
     date: "Date",
     decrypt: "Decrypt",
+    delete_certificate: "Remove certificate",
+    delete_container: "Remove container",
     encrypt: "Encrypt",
     level_all: "All",
     level_error: "Error",

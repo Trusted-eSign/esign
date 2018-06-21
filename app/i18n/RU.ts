@@ -70,6 +70,8 @@ export default {
     certificate_import: "Импорт сертификата",
     date: "Дата",
     decrypt: "Расшифрование",
+    delete_certificate: "Удаление сертификата",
+    delete_container: "Удаление контейнера",
     encrypt: "Шифрование",
     level_all: "Все",
     level_error: "Ошибка",

@@ -6,9 +6,10 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
   ROOT,
 } from "../constants";
-import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR } from "../constants";
+import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding } from "../utils";
+import logger from "../winstonLogger";
 
 const OS_TYPE = os.type();
 
@@ -199,7 +200,31 @@ export class Store {
 
     try {
       this._store.deleteCert(provider.handle, certificate.category, certX509);
-    } catch (e) {
+
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    } catch (err) {
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "error",
+        message: err.message ? err.message : err,
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       return false;
     }
 

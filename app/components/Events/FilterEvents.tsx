@@ -7,7 +7,10 @@ import {
   changeFilterLevel, changeFilterOperationsType, changeFilterOutObject,
   changeFilterUserName, resetEventsFilters,
 } from "../../AC/filtersActions";
-import { CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, ENCRYPT, SIGN } from "../../constants";
+import {
+  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN,
+} from "../../constants";
 import DatePicker from "../DatePicker";
 
 interface IFilterEventsProps {
@@ -249,6 +252,32 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                           />
                           <label htmlFor={CERTIFICATE_IMPORT} className="truncate">
                             {localize("EventsFilters.certificate_import", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={DELETE_CERTIFICATE}
+                            type="checkbox"
+                            id={DELETE_CERTIFICATE}
+                            className="filled-in"
+                            checked={operations.DELETE_CERTIFICATE}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={DELETE_CERTIFICATE} className="truncate">
+                            {localize("EventsFilters.delete_certificate", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={DELETE_CONTAINER}
+                            type="checkbox"
+                            id={DELETE_CONTAINER}
+                            className="filled-in"
+                            checked={operations.DELETE_CONTAINER}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={DELETE_CONTAINER} className="truncate">
+                            {localize("EventsFilters.delete_container", locale)}
                           </label>
                         </div>
                       </div>

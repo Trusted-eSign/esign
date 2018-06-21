@@ -1,8 +1,8 @@
 import {
   CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
   CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
-  CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT, ENCRYPT,
-  RESET_EVENTS_FILTERS, SIGN,
+  CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, RESET_EVENTS_FILTERS, SIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -16,6 +16,8 @@ const defaultFilters = {
     CERTIFICATE_GENERATION: true,
     CERTIFICATE_IMPORT: true,
     DECRYPT: true,
+    DELETE_CERTIFICATE: true,
+    DELETE_CONTAINER: true,
     ENCRYPT: true,
     SIGN: true,
   },
@@ -71,6 +73,8 @@ export default (filters = defaultFilters, action) => {
           CERTIFICATE_GENERATION: true,
           CERTIFICATE_IMPORT: true,
           DECRYPT: true,
+          DELETE_CERTIFICATE: true,
+          DELETE_CONTAINER: true,
           ENCRYPT: true,
           SIGN: true,
         },
@@ -91,7 +95,8 @@ const checkDefaultFilters = (filters: any) => {
     defaultFilters.operations.CERTIFICATE_GENERATION === filters.operations.CERTIFICATE_GENERATION &&
     defaultFilters.operations.CERTIFICATE_IMPORT === filters.operations.CERTIFICATE_IMPORT &&
     defaultFilters.operations.DECRYPT === filters.operations.DECRYPT &&
-    defaultFilters.operations.ENCRYPT === filters.operations.ENCRYPT &&
+    defaultFilters.operations.DELETE_CERTIFICATE === filters.operations.DELETE_CERTIFICATE &&
+    defaultFilters.operations.DELETE_CONTAINER === filters.operations.DELETE_CONTAINER &&
     defaultFilters.operations.SIGN === filters.operations.SIGN &&
     defaultFilters.userName === filters.userName
   ) {
