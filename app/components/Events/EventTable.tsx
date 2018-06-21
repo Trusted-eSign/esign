@@ -162,14 +162,17 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
           <Column
             cellRenderer={({ cellData }) => {
               let msg;
+              let icon_status;
               let levelStyle;
 
               switch (cellData) {
                 case "info":
+                  icon_status = "icon_operation_status_success";
                   msg = "Успех";
                   levelStyle = "icon_ok";
                   break;
                 case "error":
+                  icon_status = "icon_operation_status_error";
                   msg = "Ошибка";
                   levelStyle = "icon_fail";
                   break;
@@ -179,7 +182,8 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
                 <div className="row nobottom">
                   <div className="valign-wrapper">
                     <div className="col s12">
-                      <p>{msg}</p>
+                      {/* <p>{msg}</p> */}
+                      <div className={icon_status}></div>
                     </div>
                   </div>
                 </div>
@@ -188,7 +192,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             dataKey="level"
             disableSort={false}
             headerRenderer={this.headerRenderer}
-            width={100}
+            width={60}
             label={localize("EventsTable.status", locale)}
           />
         </Table>
