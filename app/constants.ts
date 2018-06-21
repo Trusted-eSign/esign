@@ -13,6 +13,7 @@ export const CHANGE_FILTER_DATE_TO = "CHANGE_FILTER_DATE_TO";
 export const RESET_EVENTS_FILTERS = "RESET_EVENTS_FILTERS";
 
 export const SIGN = "SIGN";
+export const UNSIGN = "UNSIGN";
 export const ENCRYPT = "ENCRYPT";
 export const DECRYPT = "DECRYPT";
 export const CERTIFICATE_GENERATION = "CERTIFICATE_GENERATION";

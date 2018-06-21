@@ -219,7 +219,30 @@ export function unSign(uri: string, folderOut: string): any {
       content = cms.content;
       try {
         fs.writeFileSync(outURI, content.data);
+
+        logger.log({
+          level: "info",
+          message: "",
+          operation: "Снятие подписи",
+          operationObject: {
+            in: path.basename(uri),
+            out: path.basename(outURI),
+          },
+          userName: USER_NAME,
+        });
       } catch (err) {
+        logger.log({
+          certificate: "",
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Снятие подписи",
+          operationObject: {
+            in: path.basename(uri),
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+
         return "";
       }
     } else {
@@ -228,6 +251,18 @@ export function unSign(uri: string, folderOut: string): any {
       return "";
     }
   } catch (err) {
+    logger.log({
+      certificate: "",
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Снятие подписи",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
+
     return "";
   }
 

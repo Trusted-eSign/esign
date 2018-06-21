@@ -2,7 +2,7 @@ import {
   CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
   CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
   CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, RESET_EVENTS_FILTERS, SIGN,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -20,6 +20,7 @@ const defaultFilters = {
     DELETE_CONTAINER: true,
     ENCRYPT: true,
     SIGN: true,
+    UNSIGN: true,
   },
   searchValue: "",
   userName: "",
@@ -77,6 +78,7 @@ export default (filters = defaultFilters, action) => {
           DELETE_CONTAINER: true,
           ENCRYPT: true,
           SIGN: true,
+          UNSIGN: true,
         },
         userName: "",
       };
@@ -98,6 +100,7 @@ const checkDefaultFilters = (filters: any) => {
     defaultFilters.operations.DELETE_CERTIFICATE === filters.operations.DELETE_CERTIFICATE &&
     defaultFilters.operations.DELETE_CONTAINER === filters.operations.DELETE_CONTAINER &&
     defaultFilters.operations.SIGN === filters.operations.SIGN &&
+    defaultFilters.operations.UNSIGN === filters.operations.UNSIGN &&
     defaultFilters.userName === filters.userName
   ) {
     return true;

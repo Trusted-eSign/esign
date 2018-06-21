@@ -10,6 +10,7 @@ import {
 import {
   CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN,
+  UNSIGN,
 } from "../../constants";
 import DatePicker from "../DatePicker";
 
@@ -200,6 +201,19 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                           />
                           <label htmlFor={SIGN} className="truncate">
                             {localize("EventsFilters.sign", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={UNSIGN}
+                            type="checkbox"
+                            id={UNSIGN}
+                            className="filled-in"
+                            checked={operations.UNSIGN}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={UNSIGN} className="truncate">
+                            {localize("EventsFilters.unsign", locale)}
                           </label>
                         </div>
                         <div className="input-checkbox">

@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN } from "../constants";
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN, UNSIGN } from "../constants";
 
 export const eventsGetter = (state) => state.events.entities;
 export const filtersGetter = (state) => state.filters;
@@ -17,6 +17,7 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
       (dateTo ? (new Date(event.timestamp)).getTime() <= (new Date(dateTo.setHours(23, 59, 59, 999))).getTime() : true) &&
       (
         operations[SIGN] && event.operation === "Подпись" ||
+        operations[UNSIGN] && event.operation === "Снятие подписи" ||
         operations[ENCRYPT] && event.operation === "Шифрование" ||
         operations[DECRYPT] && event.operation === "Расшифрование" ||
         operations[DELETE_CERTIFICATE] && event.operation === "Удаление сертификата" ||
