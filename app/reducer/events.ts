@@ -14,7 +14,10 @@ const EventModel = Record({
 });
 
 const DefaultReducerState = Record({
+  dateFrom: null,
+  dateTo: null,
   entities: OrderedMap({}),
+  isArchive: false,
   loaded: false,
   loading: false,
 });
@@ -30,7 +33,10 @@ export default (events = new DefaultReducerState(), action) => {
       return events
         .update("entities", (entities) => arrayToMap(payload.events, EventModel).merge(entities))
         .set("loading", false)
-        .set("loaded", true);
+        .set("loaded", true)
+        .set("dateFrom", payload.events && payload.events[0] ? payload.events[0].timestamp : null)
+        .set("dateTo", payload.events && payload.events[payload.events.length - 1] ? payload.events[payload.events.length - 1].timestamp : null)
+        .set("isArchive", payload.isArchive);
 
     case REMOVE_ALL_EVENTS:
       return events = new DefaultReducerState();

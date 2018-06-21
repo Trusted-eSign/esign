@@ -58,6 +58,7 @@ class MenuBar extends React.Component<any, any> {
 
   getTitle() {
     const { localize, locale } = this.context;
+    const { isArchiveLog, eventsDateFrom, eventsDateTo } = this.props;
     const pathname = this.props.location.pathname;
 
     switch (pathname) {
@@ -83,7 +84,26 @@ class MenuBar extends React.Component<any, any> {
         return localize("Sign.sign_and_verify", locale);
 
       case LOCATION_EVENTS:
-        return localize("Events.operations_log", locale);
+        let title = localize("Events.operations_log", locale);
+
+        if (isArchiveLog && eventsDateFrom && eventsDateTo) {
+          title += " [" +
+            (new Date(eventsDateFrom)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "numeric",
+              year: "numeric",
+            }) + " - " +
+            (new Date(eventsDateTo)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "numeric",
+              year: "numeric",
+            }) + "]";
+        }
+        return title;
 
       default:
         return localize("About.product_NAME", locale);
@@ -163,7 +183,10 @@ class MenuBar extends React.Component<any, any> {
 export default connect((state, ownProps) => {
   return {
     encSettings: state.settings.encrypt,
+    eventsDateFrom: state.events.dateFrom,
+    eventsDateTo: state.events.dateTo,
     files: mapToArr(state.files.entities),
+    isArchiveLog: state.events.isArchive,
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     location: ownProps.location,
     recipients: mapToArr(state.recipients.entities),

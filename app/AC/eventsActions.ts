@@ -96,6 +96,7 @@ export function loadArchiveLogFile(archiveLogFilePath: string) {
         dispatch({
           payload: {
             events,
+            isArchive: true,
           },
           type: LOAD_ALL_EVENTS + SUCCESS,
         });
@@ -127,6 +128,7 @@ export function loadArchiveLogFile(archiveLogFilePath: string) {
           dispatch({
             payload: {
               events,
+              isArchive: true,
             },
             type: LOAD_ALL_EVENTS + SUCCESS,
           });
