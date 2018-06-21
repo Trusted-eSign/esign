@@ -3,11 +3,13 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature } from "../AC";
+import { USER_NAME } from "../constants";
 import { activeFilesSelector, connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED } from "../server/constants";
 import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
+import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForSignature from "./CertificateBlockForSignature";
 import FileSelector from "./FileSelector";
@@ -182,6 +184,18 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
+
+      logger.log({
+        level: "error",
+        message: "No correct license",
+        operation: "Подпись",
+        operationObject: {
+          in: "License",
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       return;
     }
 
@@ -232,6 +246,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
+
+      logger.log({
+        level: "error",
+        message: "No correct license",
+        operation: "Подпись",
+        operationObject: {
+          in: "License",
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
 
       return;
     }

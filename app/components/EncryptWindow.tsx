@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, loadAllCertificates, selectFile } from "../AC";
-import { HOME_DIR } from "../constants";
+import { HOME_DIR, USER_NAME } from "../constants";
 import { activeFilesSelector, connectedSelector } from "../selectors";
 import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
 import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
+import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import EncryptSettings from "./EncryptSettings";
@@ -161,6 +162,18 @@ class EncryptWindow extends React.Component<any, any> {
     if (licenseStatus !== 1) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
+
+      logger.log({
+        level: "error",
+        message: "No correct license",
+        operation: "Расшифрование",
+        operationObject: {
+          in: "License",
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       return;
     }
 
