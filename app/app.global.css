@@ -3356,7 +3356,7 @@ svg:hover {
     position: absolute;
     top: 11px;
   }
-  
+
   .icon_operation_status_error {
     background: url(./resources/image/operation_status_error.svg);
     background-size: 100%;
@@ -3386,8 +3386,8 @@ svg:hover {
     background-size: 32px 32px;
     margin-top: 0px;
     margin-left: 2px;
-  } 
-  
+  }
+
   i.material-icons.context_menu {
     display: block;
     text-indent: -9999px;
@@ -3422,10 +3422,6 @@ svg:hover {
     top: 3px!important;
     right: 0.4rem!important;
     font-size: 1.6rem!important;
-}
-
-.evenRow{
-    font-size: 0.9rem!important;
 }
 
 .filter_setting_modal{
