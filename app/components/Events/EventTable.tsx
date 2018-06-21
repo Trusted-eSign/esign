@@ -274,14 +274,15 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     const arr = list ? mapToArr(list) : mapToArr(sortedList);
 
     const foundEvents: number[] = [];
+    const search = searchValue.toLowerCase();
 
     arr.forEach((event: any, index: number) => {
-      if (event.userName.match(searchValue) ||
-        event.operationObject.in.match(searchValue) ||
-        event.operationObject.out.match(searchValue) ||
-        event.level.match(searchValue) ||
-        event.timestamp.match(searchValue) ||
-        event.operation.match(searchValue)) {
+      if (event.userName.toLowerCase().match(search) ||
+        event.operationObject.in.toLowerCase().match(search) ||
+        event.operationObject.out.toLowerCase().match(search) ||
+        event.level.toLowerCase().match(search) ||
+        event.timestamp.toLowerCase().match(search) ||
+        event.operation.toLowerCase().match(search)) {
 
         foundEvents.push(index);
       }
