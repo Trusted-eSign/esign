@@ -13,7 +13,7 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
       event.operationObject.out.match(operationObjectOut) &&
       (level === "all" ? true : event.level.match(level)) &&
       (dateFrom ? (new Date(event.timestamp)).getTime() >= (new Date(dateFrom)).getTime() : true) &&
-      (dateTo ? (new Date(event.timestamp)).getTime() <= (new Date(dateTo)).getTime() : true) &&
+      (dateTo ? (new Date(event.timestamp)).getTime() <= (new Date(dateTo.setHours(23, 59, 59, 999))).getTime() : true) &&
       (
         operations[SIGN] && event.operation === "Подпись" ||
         operations[ENCRYPT] && event.operation === "Шифрование" ||
