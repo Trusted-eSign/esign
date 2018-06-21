@@ -156,25 +156,19 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             dataKey="operationObject"
             disableSort
             headerRenderer={this.headerRenderer}
-            width={250}
+            width={280}
             label={localize("EventsTable.operation_object", locale)}
           />
           <Column
             cellRenderer={({ cellData }) => {
-              let msg;
-              let icon_status;
-              let levelStyle;
+              let iconStatus;
 
               switch (cellData) {
                 case "info":
-                  icon_status = "icon_operation_status_success";
-                  msg = "Успех";
-                  levelStyle = "icon_ok";
+                  iconStatus = "icon_operation_status_success";
                   break;
                 case "error":
-                  icon_status = "icon_operation_status_error";
-                  msg = "Ошибка";
-                  levelStyle = "icon_fail";
+                  iconStatus = "icon_operation_status_error";
                   break;
               }
 
@@ -182,8 +176,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
                 <div className="row nobottom">
                   <div className="valign-wrapper">
                     <div className="col s12">
-                      {/* <p>{msg}</p> */}
-                      <div className={icon_status}></div>
+                      <div className={iconStatus}></div>
                     </div>
                   </div>
                 </div>
@@ -192,7 +185,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
             dataKey="level"
             disableSort={false}
             headerRenderer={this.headerRenderer}
-            width={60}
+            width={70}
             label={localize("EventsTable.status", locale)}
           />
         </Table>
@@ -200,7 +193,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
           <div className="card navigationToolbar valign-wrapper">
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToFirstOfFoud}>first_page</i>
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToBefore}>navigate_before</i>
-            <div style={{color: "black"}}>
+            <div style={{ color: "black" }}>
               {foundEvents.indexOf(scrollToIndex) + 1}/{foundEvents.length}
             </div>
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToNext}>navigate_next</i>
