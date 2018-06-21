@@ -3236,7 +3236,7 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
 }
 
 .input-field-csr {
-  height: 36px;
+  height: 28px;
   line-height: 10px;
 }
 
@@ -3367,7 +3367,7 @@ svg:hover {
     height: 32px;
     background: url(./resources/image/icon_filter_off.svg);
     background-size: 32px 32px;
-    margin-top: 2px;
+    margin-top: 0px;
     margin-left: 2px;
   }
 
@@ -3378,7 +3378,7 @@ svg:hover {
     height: 32px;
     background: url(./resources/image/icon_filter_on.svg);
     background-size: 32px 32px;
-    margin-top: 2px;
+    margin-top: 0px;
     margin-left: 2px;
   } 
   
@@ -3389,6 +3389,22 @@ svg:hover {
     height: 32px;
     background: url(./resources/image/icon_context_menu.svg);
     background-size: 32px 32px;
-    margin-top: 4px;
+    margin-top: 0px;
     margin-left: -6px;
   }
+
+.border_element{
+    box-shadow: 0 0 0 1px #b5b5b5;
+    margin-top: 3px;
+}
+
+.close{
+    position: absolute;
+    top: 3px;
+    right: 0.4rem;
+    color: transparent;
+    cursor: pointer;
+    font-size: 1.6rem;
+    transition: .3s color;
+}
+

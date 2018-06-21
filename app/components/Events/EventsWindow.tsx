@@ -64,7 +64,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
         <div className="row halfbottom" />
 
         <div className="col s10">
-          <div className="input-field input-field-csr col s12 card">
+          <div className="input-field input-field-csr col s12 border_element">
             <i className="material-icons prefix">search</i>
             <input
               id="search"
@@ -72,7 +72,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
               placeholder={localize("EventsTable.search_in_table", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
-            <i className="material-icons" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? {color : "#444"} : {}}>close</i>
+            <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? {color : "#444"} : {}}>close</i>
           </div>
         </div>
         <div className="col s1">
@@ -81,7 +81,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
           </a>
         </div>
         <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light card"} data-activates="dropdown-btn-for-events" style={{margin: 0}}>
+          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events" style={{margin: 0}}>
             <i className="nav-small-icon material-icons context_menu">more_vert</i>
           </a>
           <ul id="dropdown-btn-for-events" className="dropdown-content">
