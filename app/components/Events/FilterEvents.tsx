@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { applyEventsFilters, resetEventsFilters } from "../../AC/filtersActions";
 import {
   CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN,
   UNSIGN,
 } from "../../constants";
 import DatePicker from "../DatePicker";
@@ -36,6 +36,7 @@ interface IEventsFilters {
     DELETE_CERTIFICATE: boolean;
     DELETE_CONTAINER: boolean;
     ENCRYPT: boolean;
+    PKCS12_IMPORT: boolean;
     SIGN: boolean;
     UNSIGN: boolean;
     [key: string]: boolean;
@@ -56,6 +57,7 @@ const initialState = {
     DELETE_CERTIFICATE: true,
     DELETE_CONTAINER: true,
     ENCRYPT: true,
+    PKCS12_IMPORT: true,
     SIGN: true,
     UNSIGN: true,
   },
@@ -290,6 +292,19 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
                           />
                           <label htmlFor={CERTIFICATE_IMPORT} className="truncate">
                             {localize("EventsFilters.certificate_import", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={PKCS12_IMPORT}
+                            type="checkbox"
+                            id={PKCS12_IMPORT}
+                            className="filled-in"
+                            checked={operations.PKCS12_IMPORT}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={PKCS12_IMPORT} className="truncate">
+                            {localize("EventsFilters.pkcs12_import", locale)}
                           </label>
                         </div>
                         <div className="input-checkbox">

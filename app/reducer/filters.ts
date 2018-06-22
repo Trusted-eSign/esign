@@ -2,7 +2,7 @@ import {
   APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
   CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
   CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -19,6 +19,7 @@ const defaultFilters = {
     DELETE_CERTIFICATE: true,
     DELETE_CONTAINER: true,
     ENCRYPT: true,
+    PKCS12_IMPORT: true,
     SIGN: true,
     UNSIGN: true,
   },
@@ -80,6 +81,7 @@ export default (filters = defaultFilters, action) => {
           DELETE_CERTIFICATE: true,
           DELETE_CONTAINER: true,
           ENCRYPT: true,
+          PKCS12_IMPORT: true,
           SIGN: true,
           UNSIGN: true,
         },
@@ -102,6 +104,7 @@ const checkDefaultFilters = (filters: any) => {
     defaultFilters.operations.DECRYPT === filters.operations.DECRYPT &&
     defaultFilters.operations.DELETE_CERTIFICATE === filters.operations.DELETE_CERTIFICATE &&
     defaultFilters.operations.DELETE_CONTAINER === filters.operations.DELETE_CONTAINER &&
+    defaultFilters.operations.PKCS12_IMPORT === filters.operations.PKCS12_IMPORT &&
     defaultFilters.operations.SIGN === filters.operations.SIGN &&
     defaultFilters.operations.UNSIGN === filters.operations.UNSIGN &&
     defaultFilters.userName === filters.userName

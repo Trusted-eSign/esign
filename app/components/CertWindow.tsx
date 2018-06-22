@@ -330,9 +330,9 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "info",
             message: "",
-            operation: "Импорт сертификата",
+            operation: "Импорт PKCS12",
             operationObject: {
-              in: "PKCS12:" + P12_PATH,
+              in: path.basename(P12_PATH),
               out: "Null",
             },
             userName: USER_NAME,
@@ -347,9 +347,9 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "error",
             message: err.message ? err.message : err,
-            operation: "Импорт сертификата",
+            operation: "Импорт PKCS12",
             operationObject: {
-              in: "PKCS12:" + P12_PATH,
+              in: path.basename(P12_PATH),
               out: "Null",
             },
             userName: USER_NAME,

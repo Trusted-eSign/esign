@@ -77,6 +77,7 @@ export default {
     level_error: "Error",
     level_info: "Info",
     no_found_events: "No found events",
+    pkcs12_import: "Import PKCS12",
     sign: "Sign",
     unsign: "Unsign",
     write_object_for_filter: "Write object for filter",

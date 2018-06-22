@@ -77,6 +77,7 @@ export default {
     level_error: "Ошибка",
     level_info: "Успешно",
     no_found_events: "Совпадения не найдены",
+    pkcs12_import: "Импорт PKCS12",
     sign: "Подпись",
     unsign: "Снятие подписи",
     write_object_for_filter: "Укажите объект для фильтрации",
