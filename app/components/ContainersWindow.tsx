@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
+import { USER_NAME } from "../constants";
 import { filteredContainersSelector } from "../selectors";
+import logger from "../winstonLogger";
 import BlockNotElements from "./BlockNotElements";
 import CertificateInfo from "./CertificateInfo";
 import ContainersList from "./ContainersList";
@@ -26,8 +28,32 @@ class ContainersWindow extends React.Component<any, any> {
 
     try {
       trusted.utils.Csp.installCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-    } catch (e) {
+      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Импорт сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    } catch (err) {
       Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+
+      logger.log({
+        level: "error",
+        message: err.message ? err.message : err,
+        operation: "Импорт сертификата",
+        operationObject: {
+          in: "Null",
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
     }
 
     removeAllCertificates();
@@ -61,9 +87,9 @@ class ContainersWindow extends React.Component<any, any> {
     }
 
     return (
-    <div className={"choose-cert"}>
+      <div className={"choose-cert"}>
         <a className="waves-effect waves-light btn-large choose-btn " onClick={this.handleInstallCertificate}>{localize("Containers.installCertificate", locale)}</a>
-    </div>);
+      </div>);
   }
 
   getCertificateInfoBody() {
