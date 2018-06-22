@@ -468,6 +468,7 @@ export default {
   Common: {
     apply: "Применить",
     clear: "Очистить",
+    close: "Закрыть",
     reset: "Сбросить",
     yes: "Да",
     no: "Нет",

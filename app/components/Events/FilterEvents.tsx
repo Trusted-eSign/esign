@@ -2,11 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import {
-  changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-  changeFilterLevel, changeFilterOperationsType, changeFilterOutObject,
-  changeFilterUserName, resetEventsFilters,
-} from "../../AC/filtersActions";
+import { applyEventsFilters, resetEventsFilters } from "../../AC/filtersActions";
 import {
   CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, SIGN,
@@ -15,15 +11,10 @@ import {
 import DatePicker from "../DatePicker";
 
 interface IFilterEventsProps {
-  changeFilterDateFrom: (dateFrom: Date | undefined) => void;
-  changeFilterDateTo: (dateTo: Date | undefined) => void;
-  changeFilterInObject: (objectIn: string) => void;
-  changeFilterLevel: (level: string) => void;
-  changeFilterOperationsType: (type: string, value: boolean) => void;
-  changeFilterOutObject: (objectOut: string) => void;
-  changeFilterUserName: (userName: string) => void;
+  applyEventsFilters: (filters: IEventsFilters) => void;
   dateFrom: Date;
   dateTo: Date;
+  level: string;
   onCancel?: () => void;
   operations: any;
   operationObjectIn: string;
@@ -32,12 +23,46 @@ interface IFilterEventsProps {
   userName: string;
 }
 
-interface IFilterEventsState {
-  selectedFrom: Date | undefined;
-  selectedTo: Date | undefined;
+interface IEventsFilters {
+  dateFrom: Date | undefined;
+  dateTo: Date | undefined;
+  level: string;
+  operationObjectIn: string;
+  operationObjectOut: string;
+  operations: {
+    CERTIFICATE_GENERATION: boolean;
+    CERTIFICATE_IMPORT: boolean;
+    DECRYPT: boolean;
+    DELETE_CERTIFICATE: boolean;
+    DELETE_CONTAINER: boolean;
+    ENCRYPT: boolean;
+    SIGN: boolean;
+    UNSIGN: boolean;
+    [key: string]: boolean;
+  };
+  userName: string;
 }
 
-class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsState> {
+const initialState = {
+  dateFrom: undefined,
+  dateTo: undefined,
+  level: "all",
+  operationObjectIn: "",
+  operationObjectOut: "",
+  operations: {
+    CERTIFICATE_GENERATION: true,
+    CERTIFICATE_IMPORT: true,
+    DECRYPT: true,
+    DELETE_CERTIFICATE: true,
+    DELETE_CONTAINER: true,
+    ENCRYPT: true,
+    SIGN: true,
+    UNSIGN: true,
+  },
+  userName: "",
+};
+
+class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -46,13 +71,14 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   constructor(props: IFilterEventsProps) {
     super(props);
 
-    this.state = {
-      selectedFrom: undefined,
-      selectedTo: undefined,
-    };
+    this.state = { ...initialState, dateFrom: props.dateFrom, dateTo: props.dateTo };
   }
 
   componentDidMount() {
+    const { dateFrom, dateTo, level, operationObjectIn, operationObjectOut, operations, userName } = this.props;
+
+    this.setState({ dateFrom, dateTo, level, operationObjectIn, operationObjectOut, operations, userName });
+
     /* https://github.com/facebook/react/issues/3667
     * fix onChange for < select >
     */
@@ -60,7 +86,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
       $("select").material_select();
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
 
@@ -78,10 +104,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   render() {
-    const { selectedFrom } = this.state;
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterDateFrom, changeFilterDateTo } = this.props;
-    const { dateFrom, dateTo, operations, operationObjectIn, operationObjectOut, userName } = this.props;
+    const { dateFrom, dateTo, level, operations, operationObjectIn, operationObjectOut, userName } = this.state;
     const { localize, locale } = this.context;
 
     return (
@@ -109,7 +132,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                 </div>
                 <div className="row">
                   <div className="input-field input-field-csr col s12">
-                    <select className="select" ref="operationSelect" value={"all"} onChange={this.handleChangeFilterLevel} >>
+                    <select className="select" ref="operationSelect" value={level} onChange={this.handleChangeFilterLevel} >>
                       <option value={"all"}>{localize("EventsFilters.level_all", locale)}</option>
                       <option value={"info"}>{localize("EventsFilters.level_info", locale)}</option>
                       <option value={"error"}>{localize("EventsFilters.level_error", locale)}</option>
@@ -129,8 +152,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       key="input_from"
                       label="From"
                       onClear={() => {
-                        this.setState({ selectedFrom: undefined });
-                        changeFilterDateFrom(undefined);
+                        this.setState({ dateFrom: undefined });
                       }}
                       onSelect={this.handleFromChange}
                       selected={dateFrom}
@@ -141,8 +163,10 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
                       id="input_to"
                       key="input_to"
                       label="To"
-                      min={selectedFrom}
-                      onClear={() => changeFilterDateTo(undefined)}
+                      min={dateFrom}
+                      onClear={() => {
+                        this.setState({ dateTo: undefined });
+                      }}
                       onSelect={this.handleToChange}
                       selected={dateTo}
                     />
@@ -306,12 +330,15 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
         <div className="row halfbottom" />
 
         <div className="row">
-          <div className="col s5 offset-s7">
+          <div className="col s3">
+            <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
+          </div>
+          <div className="col s5 offset-s4">
             <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleResetFilters}>{localize("Common.reset", locale)}</a>
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleApplyFilters}>{localize("Common.apply", locale)}</a>
             </div>
             <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.apply", locale)}</a>
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
             </div>
           </div>
         </div>
@@ -328,64 +355,54 @@ class FilterEvents extends React.Component<IFilterEventsProps, IFilterEventsStat
   }
 
   handleUserChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterUserName } = this.props;
-    changeFilterUserName(ev.target.value);
+    this.setState({ userName: ev.target.value });
   }
 
   handleChangeFilterInObject = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterInObject } = this.props;
-    changeFilterInObject(ev.target.value);
+    this.setState({ operationObjectIn: ev.target.value });
   }
 
   handleChangeFilterOutObject = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterOutObject } = this.props;
-    changeFilterOutObject(ev.target.value);
+    this.setState({ operationObjectOut: ev.target.value });
   }
 
   handleChangeFilterLevel = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterLevel } = this.props;
-    changeFilterLevel(ev.target.value);
+    this.setState({ level: ev.target.value });
   }
 
   handleFromChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterDateFrom } = this.props;
-
     if (ev && ev.select) {
-      this.setState({ selectedFrom: new Date(ev.select) });
+      this.setState({ dateFrom: new Date(ev.select) });
     }
-
-    changeFilterDateFrom(new Date(ev.select));
   }
 
   handleToChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterDateTo } = this.props;
-
     if (ev && ev.select) {
-      this.setState({ selectedTo: new Date(ev.select) });
+      this.setState({ dateTo: new Date(ev.select) });
     }
-
-    changeFilterDateTo(new Date(ev.select));
   }
 
   handleOperationTypesChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeFilterOperationsType, operations } = this.props;
     const target = ev.target;
     const name = target.name;
 
-    changeFilterOperationsType(name, !operations[name]);
+    this.setState({
+      operations: {
+        ...this.state.operations,
+        [name]: !this.state.operations[name],
+      },
+    });
+  }
+
+  handleApplyFilters = () => {
+    this.props.applyEventsFilters(this.state);
+
+    this.handelCancel();
   }
 
   handleResetFilters = () => {
+    this.setState({ ...initialState });
     this.props.resetEventsFilters();
-
-    this.handelCancel();
   }
 }
 
@@ -397,7 +414,5 @@ export default connect((state) => ({
   operations: state.filters.operations,
   userName: state.filters.userName,
 }), {
-    changeFilterDateFrom, changeFilterDateTo, changeFilterInObject,
-    changeFilterLevel, changeFilterOperationsType, changeFilterOutObject,
-    changeFilterUserName, resetEventsFilters,
+    applyEventsFilters, resetEventsFilters,
   })(FilterEvents);

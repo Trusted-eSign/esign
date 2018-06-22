@@ -466,6 +466,7 @@ export default {
   Common: {
     apply: "Apply",
     clear: "Clear",
+    close: "Close",
     reset: "Reset",
     yes: "Yes",
     no: "No",

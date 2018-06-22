@@ -1,5 +1,5 @@
 import {
-  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
+  APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_FILTER_DATE_FROM, CHANGE_FILTER_DATE_TO,
   CHANGE_FILTER_IN_OPERATION_OBJECT, CHANGE_FILTER_LEVEL, CHANGE_FILTER_OPERATION_TYPE,
   CHANGE_FILTER_OUT_OPERATION_OBJECT, CHANGE_FILTER_USER_NAME, CHANGE_SEARCH_VALUE, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
@@ -30,6 +30,9 @@ export default (filters = defaultFilters, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case APPLY_EVENTS_FILTERS:
+      return { ...filters, ...payload.filters, isDefaultFilters: checkDefaultFilters(payload.filters) };
+
     case CHANGE_SEARCH_VALUE:
       return { ...filters, searchValue: payload.searchValue };
 
