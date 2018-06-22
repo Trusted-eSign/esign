@@ -134,7 +134,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
                 </div>
                 <div className="row">
                   <div className="input-field input-field-csr col s12">
-                    <select className="select" ref="operationSelect" value={level} onChange={this.handleChangeFilterLevel} >>
+                    <select className="select" ref="operationSelect" defaultValue={level} onChange={this.handleChangeFilterLevel} >>
                       <option value={"all"}>{localize("EventsFilters.level_all", locale)}</option>
                       <option value={"info"}>{localize("EventsFilters.level_info", locale)}</option>
                       <option value={"error"}>{localize("EventsFilters.level_error", locale)}</option>

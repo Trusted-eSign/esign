@@ -96,7 +96,7 @@ const checkDefaultFilters = (filters: any) => {
   if (
     defaultFilters.dateFrom === filters.dateFrom &&
     defaultFilters.dateTo === filters.dateTo &&
-    defaultFilters.level === filters.level &&
+    (defaultFilters.level === filters.level || filters.level === undefined) &&
     defaultFilters.operationObjectIn === filters.operationObjectIn &&
     defaultFilters.operationObjectOut === filters.operationObjectOut &&
     defaultFilters.operations.CERTIFICATE_GENERATION === filters.operations.CERTIFICATE_GENERATION &&
