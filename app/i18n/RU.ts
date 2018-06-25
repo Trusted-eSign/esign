@@ -66,6 +66,7 @@ export default {
     operations_log: "Журнал операций",
   },
   EventsFilters: {
+    all: "Все",
     certificate_generation: "Генерация сертификата",
     certificate_import: "Импорт сертификата",
     date: "Дата",

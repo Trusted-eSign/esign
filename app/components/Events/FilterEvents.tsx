@@ -4,9 +4,9 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { applyEventsFilters, resetEventsFilters } from "../../AC/filtersActions";
 import {
-  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN,
-  UNSIGN,
+  ALL, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT,
+  PKCS12_IMPORT, SIGN, UNSIGN,
 } from "../../constants";
 import DatePicker from "../DatePicker";
 
@@ -88,7 +88,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
       $("select").material_select();
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
 
@@ -216,6 +216,19 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
                     <div className="row">
                       <div className="col s12">
                         <div className="row halfbottom" />
+                        <div className="input-checkbox">
+                          <input
+                            name={ALL}
+                            type="checkbox"
+                            id={ALL}
+                            className="filled-in"
+                            checked={this.isAllOperationsChecked()}
+                            onChange={this.handleAllOperationTypesClick}
+                          />
+                          <label htmlFor={ALL} className="truncate">
+                            {localize("EventsFilters.all", locale)}
+                          </label>
+                        </div>
                         <div className="input-checkbox">
                           <input
                             name={SIGN}
@@ -361,6 +374,20 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
     );
   }
 
+  isAllOperationsChecked = () => {
+    const { operations } = this.state;
+
+    return operations.CERTIFICATE_GENERATION &&
+      operations.CERTIFICATE_IMPORT &&
+      operations.DECRYPT &&
+      operations.DELETE_CERTIFICATE &&
+      operations.DELETE_CONTAINER &&
+      operations.ENCRYPT &&
+      operations.PKCS12_IMPORT &&
+      operations.SIGN &&
+      operations.UNSIGN;
+  }
+
   handelCancel = () => {
     const { onCancel } = this.props;
 
@@ -395,6 +422,24 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
     if (ev && ev.select) {
       this.setState({ dateTo: new Date(ev.select) });
     }
+  }
+
+  handleAllOperationTypesClick = () => {
+    const value = !this.isAllOperationsChecked();
+
+    this.setState({
+      operations: {
+        CERTIFICATE_GENERATION: value,
+        CERTIFICATE_IMPORT: value,
+        DECRYPT: value,
+        DELETE_CERTIFICATE: value,
+        DELETE_CONTAINER: value,
+        ENCRYPT: value,
+        PKCS12_IMPORT: value,
+        SIGN: value,
+        UNSIGN: value,
+      },
+    });
   }
 
   handleOperationTypesChange = (ev: any) => {

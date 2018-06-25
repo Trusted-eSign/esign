@@ -1,6 +1,8 @@
 import { createSelector } from "reselect";
-import { CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, DELETE_CERTIFICATE,
-  DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN } from "../constants";
+import {
+  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, DELETE_CERTIFICATE,
+  DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN,
+} from "../constants";
 
 export const eventsGetter = (state) => state.events.entities;
 export const filtersGetter = (state) => state.filters;
@@ -24,7 +26,12 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
         operations[DELETE_CONTAINER] && event.operation === "Удаление контейнера" ||
         operations[CERTIFICATE_GENERATION] && event.operation === "Генерация сертификата" ||
         operations[CERTIFICATE_IMPORT] && event.operation === "Импорт сертификата" ||
-        operations[PKCS12_IMPORT] && event.operation === "Импорт PKCS12"
+        operations[PKCS12_IMPORT] && event.operation === "Импорт PKCS12" ||
+        (
+          !operations[SIGN] && !operations[UNSIGN] && !operations[ENCRYPT] &&
+          !operations[DECRYPT] && !operations[DELETE_CERTIFICATE] && !operations[DELETE_CONTAINER] &&
+          !operations[CERTIFICATE_GENERATION] && !operations[CERTIFICATE_IMPORT] && !operations[PKCS12_IMPORT]
+        )
       );
   });
 });
