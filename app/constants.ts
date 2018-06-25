@@ -129,6 +129,7 @@ export const LOCATION_SIGN = "/sign";
 export const LOCATION_ENCRYPT = "/encrypt";
 export const LOCATION_CERTIFICATES = "/certificate";
 export const LOCATION_CONTAINERS = "/containers";
+export const LOCATION_DOCUMENTS = "/documents";
 export const LOCATION_ABOUT = "/about";
 export const LOCATION_LICENSE = "/license";
 export const LOCATION_HELP = "/help";

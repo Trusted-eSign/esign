@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import {
-  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_ENCRYPT, LOCATION_EVENTS,
-  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN, SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
+  LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
+  SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
 } from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
@@ -82,6 +83,9 @@ class MenuBar extends React.Component<any, any> {
 
       case LOCATION_SIGN:
         return localize("Sign.sign_and_verify", locale);
+
+      case LOCATION_DOCUMENTS:
+        return localize("Documents.documents", locale);
 
       case LOCATION_EVENTS:
         let title = localize("Events.operations_log", locale);
