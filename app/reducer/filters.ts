@@ -112,7 +112,7 @@ export default (filters = defaultFilters, action) => {
         ...filters,
         events: {
           ...filters.events,
-          isDefaultFilters: checkDefaultEventsFilters({ ...filters.events, level: payload.level })
+          isDefaultFilters: checkDefaultEventsFilters({ ...filters.events, level: payload.level }),
         },
         level: payload.level,
       };
