@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import { applyEventsFilters, resetEventsFilters } from "../../AC/filtersActions";
+import { applyEventsFilters, resetEventsFilters } from "../../AC/eventsFiltersActions";
 import {
   ALL, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT,
@@ -467,12 +467,12 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
 }
 
 export default connect((state) => ({
-  dateFrom: state.filters.dateFrom,
-  dateTo: state.filters.dateTo,
-  operationObjectIn: state.filters.operationObjectIn,
-  operationObjectOut: state.filters.operationObjectOut,
-  operations: state.filters.operations,
-  userName: state.filters.userName,
+  dateFrom: state.filters.events.dateFrom,
+  dateTo: state.filters.events.dateTo,
+  operationObjectIn: state.filters.events.operationObjectIn,
+  operationObjectOut: state.filters.events.operationObjectOut,
+  operations: state.filters.events.operations,
+  userName: state.filters.events.userName,
 }), {
     applyEventsFilters, resetEventsFilters,
   })(FilterEvents);

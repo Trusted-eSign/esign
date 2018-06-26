@@ -169,5 +169,5 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
 export default connect((state) => ({
   eventsLoaded: state.events.loaded,
   eventsLoading: state.events.loading,
-  isDefaultFilters: state.filters.isDefaultFilters,
+  isDefaultFilters: state.filters.events.isDefaultFilters,
 }), { loadAllEvents, loadArchiveLogFile, removeAllEvents })(EventsWindow);
