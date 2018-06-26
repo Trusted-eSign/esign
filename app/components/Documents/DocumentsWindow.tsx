@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
 
 interface IDocumentsWindowProps {
   documentsLoaded: boolean;
@@ -104,4 +106,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   }
 }
 
-export default DocumentsWindow;
+export default connect((state) => ({
+  documentsLoaded: state.events.loaded,
+  documentsLoading: state.events.loading,
+}), { loadAllDocuments, removeAllDocuments })(DocumentsWindow);
