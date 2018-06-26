@@ -7,8 +7,8 @@ import { filteredEventsSelector } from "../../selectors/eventsSelectors";
 import "../../table.global.css";
 import { mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
-import SortDirection from "./SortDirection";
-import SortIndicator from "./SortIndicator";
+import SortDirection from "../Sort/SortDirection";
+import SortIndicator from "../Sort/SortIndicator";
 
 type TSortDirection = "ASC" | "DESC" | undefined;
 
