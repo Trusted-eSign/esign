@@ -64,6 +64,8 @@ export default {
   Documents: {
     Documents: "ДОКУМЕНТЫ",
     documents: "Документы",
+    go_to_documents_folder: "Перейти в каталог",
+    selected_all: "Выделить все",
   },
   Events: {
     Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",

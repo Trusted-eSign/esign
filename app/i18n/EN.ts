@@ -64,6 +64,8 @@ export default {
   Documents: {
     Documents: "DOCUMENTS",
     documents: "Documents",
+    go_to_documents_folder: "Go to folder",
+    selected_all: "Selected all",
   },
   Events: {
     Operations_log: "OPERATIONS LOG",
