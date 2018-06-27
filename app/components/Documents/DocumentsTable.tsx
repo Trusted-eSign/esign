@@ -26,6 +26,7 @@ interface IDocumentsTableDispatch {
 interface IDocumentsTableState {
   disableHeader: boolean;
   foundDocuments: number[];
+  selectedDocuments: number[];
   scrollToIndex: number;
   sortBy: string;
   sortDirection: TSortDirection;
@@ -49,6 +50,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
       disableHeader: false,
       foundDocuments: [],
       scrollToIndex: 0,
+      selectedDocuments: [],
       sortBy,
       sortDirection,
       sortedList,
@@ -104,6 +106,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           headerClassName={"headerColumn"}
           rowHeight={45}
           rowClassName={this.rowClassName}
+          onRowClick={this.handleOnRowClick}
           overscanRowCount={5}
           rowGetter={rowGetter}
           rowCount={sortedList.size}
@@ -190,6 +193,10 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`;
   }
 
+  handleOnRowClick = ({ index, rowData }: { index: number, rowData: any }) => {
+    this.setState({selectedDocuments: [...this.state.selectedDocuments, index]});
+  }
+
   handleScrollToBefore = () => {
     const { foundDocuments, scrollToIndex } = this.state;
 
@@ -225,14 +232,14 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
   }
 
   rowClassName = ({ index }: { index: number }) => {
-    const { foundDocuments } = this.state;
+    const { foundDocuments, selectedDocuments } = this.state;
 
     if (index < 0) {
       return "headerRow";
     } else {
       let rowClassName = index % 2 === 0 ? "evenRow " : "oddRow ";
 
-      if (foundDocuments.indexOf(index) >= 0) {
+      if (foundDocuments.indexOf(index) >= 0 || selectedDocuments.indexOf(index) >= 0) {
         rowClassName += "foundEvent";
       }
 
