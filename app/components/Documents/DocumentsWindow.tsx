@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
+import { DEFAULT_DOCUMENTS_PATH } from "../../constants";
 import Modal from "../Modal";
 import DocumentsTable from "./DocumentsTable";
 import FilterDocuments from "./FilterDocuments";
@@ -78,7 +79,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
           <ul id="dropdown-btn-for-documents" className="dropdown-content">
             <li><a onClick={this.handleReloadDocuments}>{localize("Common.update", locale)}</a></li>
             <li><a onClick={() => console.log("selected_all")}>{localize("Documents.selected_all", locale)}</a></li>
-            <li><a onClick={() => console.log("go_to_documents_folder")}>{localize("Documents.go_to_documents_folder", locale)}</a></li>
+            <li><a onClick={this.handleOpenDocumentsFolder}>{localize("Documents.go_to_documents_folder", locale)}</a></li>
           </ul>
         </div>
         <div className="col s12">
@@ -129,6 +130,10 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
     if (!documentsLoading) {
       loadAllDocuments();
     }
+  }
+
+  handleOpenDocumentsFolder = () => {
+    window.electron.shell.openItem(DEFAULT_DOCUMENTS_PATH);
   }
 }
 
