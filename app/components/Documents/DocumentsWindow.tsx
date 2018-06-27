@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
+import Modal from "../Modal";
 import DocumentsTable from "./DocumentsTable";
+import FilterDocuments from "./FilterDocuments";
 
 interface IDocumentsWindowProps {
   documentsLoaded: boolean;
@@ -50,9 +52,9 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
     return (
       <div className="row">
-      <div className="row halfbottom" />
+        <div className="row halfbottom" />
 
-      <div className="col s10">
+        <div className="col s10">
           <div className="input-field input-field-csr col s12 border_element find_box">
             <i className="material-icons prefix">search</i>
             <input
@@ -61,16 +63,16 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
               placeholder={localize("EventsTable.search_in_table", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
-            <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? {color : "#444"} : {}}>close</i>
+            <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? { color: "#444" } : {}}>close</i>
           </div>
         </div>
         <div className="col s1">
-          <a className={"btn-small waves-effect waves-light"} onClick={this.handleShowModalFilterEvents}>
+          <a className={"btn-small waves-effect waves-light"} onClick={this.handleShowModalFilterDocuments}>
             <i className={"material-icons " + classDefaultFilters}>filter_list</i>
           </a>
         </div>
         <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-documents" style={{margin: 0}}>
+          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-documents" style={{ margin: 0 }}>
             <i className="nav-small-icon material-icons context_menu">more_vert</i>
           </a>
           <ul id="dropdown-btn-for-documents" className="dropdown-content">
@@ -82,7 +84,27 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         <div className="col s12">
           <DocumentsTable searchValue={this.state.searchValue} />
         </div>
+        {this.showModalFilterDocuments()}
       </div>
+    );
+  }
+
+  showModalFilterDocuments = () => {
+    const { localize, locale } = this.context;
+    const { showModalFilterDocments } = this.state;
+
+    if (!showModalFilterDocments) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalFilterDocments}
+        header={localize("Filters.filters_settings", locale)}
+        onClose={this.handleCloseModalFilterDocuments}>
+
+        <FilterDocuments onCancel={this.handleCloseModalFilterDocuments} />
+      </Modal>
     );
   }
 
@@ -90,11 +112,11 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
     this.setState({ searchValue: ev.target.value });
   }
 
-  handleShowModalFilterEvents = () => {
+  handleShowModalFilterDocuments = () => {
     this.setState({ showModalFilterDocments: true });
   }
 
-  handleCloseModalFilterEvents = () => {
+  handleCloseModalFilterDocuments = () => {
     this.setState({ showModalFilterDocments: false });
   }
 
@@ -113,4 +135,5 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 export default connect((state) => ({
   documentsLoaded: state.events.loaded,
   documentsLoading: state.events.loading,
+  isDefaultFilters: state.filters.documents.isDefaultFilters,
 }), { loadAllDocuments, removeAllDocuments })(DocumentsWindow);

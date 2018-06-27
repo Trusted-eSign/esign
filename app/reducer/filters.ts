@@ -1,9 +1,9 @@
 import {
-  APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_SEARCH_VALUE, DECRYPT,
+  APPLY_DOCUMENTS_FILTERS, APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_SEARCH_VALUE, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, EVENTS_CHANGE_FILTER_DATE_FROM,
   EVENTS_CHANGE_FILTER_DATE_TO, EVENTS_CHANGE_FILTER_IN_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_LEVEL,
   EVENTS_CHANGE_FILTER_OPERATION_TYPE, EVENTS_CHANGE_FILTER_OUT_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_USER_NAME,
-  PKCS12_IMPORT, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
+  PKCS12_IMPORT, RESET_DOCUMENTS_FILTERS, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -11,6 +11,7 @@ const defaultFilters = {
     dateFrom: undefined,
     dateTo: undefined,
     filename: "",
+    isDefaultFilters: true,
     sizeFrom: null,
     sizeTo: null,
   },
@@ -46,6 +47,16 @@ export default (filters = defaultFilters, action) => {
         ...filters,
         events: {
           ...filters.events,
+          ...payload.filters,
+          isDefaultFilters: checkDefaultDocumentsFilters(payload.filters),
+        },
+      };
+
+    case APPLY_DOCUMENTS_FILTERS:
+      return {
+        ...filters,
+        documents: {
+          ...filters.documents,
           ...payload.filters,
           isDefaultFilters: checkDefaultEventsFilters(payload.filters),
         },
@@ -148,9 +159,36 @@ export default (filters = defaultFilters, action) => {
           userName: "",
         },
       };
+
+    case RESET_DOCUMENTS_FILTERS:
+      return {
+        ...filters,
+        documents: {
+          dateFrom: undefined,
+          dateTo: undefined,
+          filename: "",
+          isDefaultFilters: true,
+          sizeFrom: null,
+          sizeTo: null,
+        },
+      };
   }
 
   return filters;
+};
+
+const checkDefaultDocumentsFilters = (filters: any) => {
+  if (
+    defaultFilters.documents.dateFrom === filters.dateFrom &&
+    defaultFilters.documents.dateTo === filters.dateTo &&
+    defaultFilters.documents.filename === filters.userName &&
+    defaultFilters.documents.sizeFrom === filters.sizeFrom &&
+    defaultFilters.documents.sizeTo === filters.sizeTo
+  ) {
+    return true;
+  }
+
+  return false;
 };
 
 const checkDefaultEventsFilters = (filters: any) => {
