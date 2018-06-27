@@ -7,6 +7,13 @@ import {
 } from "../constants";
 
 const defaultFilters = {
+  documents: {
+    dateFrom: undefined,
+    dateTo: undefined,
+    filename: "",
+    sizeFrom: null,
+    sizeTo: null,
+  },
   events: {
     dateFrom: undefined,
     dateTo: undefined,
