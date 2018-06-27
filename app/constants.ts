@@ -94,6 +94,7 @@ export const PROVIDER_CRYPTOPRO = "PROVIDER_CRYPTOPRO";
 
 export const DEFAULT_PATH: string = window.DEFAULT_PATH;
 export const DEFAULT_CERTSTORE_PATH: string = window.DEFAULT_CERTSTORE_PATH;
+export const DEFAULT_DOCUMENTS_PATH = window.DEFAULT_DOCUMENTS_PATH;
 export const HOME_DIR: string = window.HOME_DIR;
 export const RESOURCES_PATH: string = window.RESOURCES_PATH;
 export const PLATFORM: string = window.PLATFORM;
