@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
+import DocumentsTable from "./DocumentsTable";
 
 interface IDocumentsWindowProps {
   documentsLoaded: boolean;
@@ -77,6 +78,9 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
             <li><a onClick={() => console.log("selected_all")}>{localize("Documents.selected_all", locale)}</a></li>
             <li><a onClick={() => console.log("go_to_documents_folder")}>{localize("Documents.go_to_documents_folder", locale)}</a></li>
           </ul>
+        </div>
+        <div className="col s12">
+          <DocumentsTable searchValue={this.state.searchValue} />
         </div>
       </div>
     );

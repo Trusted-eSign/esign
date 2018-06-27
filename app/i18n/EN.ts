@@ -63,9 +63,14 @@ export default {
   },
   Documents: {
     Documents: "DOCUMENTS",
+    date: "Date",
     documents: "Documents",
+    filename: "Filename",
+    filesize: "Size",
     go_to_documents_folder: "Go to folder",
+    mdate: "Modified date",
     selected_all: "Selected all",
+    type: "Type",
   },
   Events: {
     Operations_log: "OPERATIONS LOG",

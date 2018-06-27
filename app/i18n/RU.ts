@@ -63,9 +63,14 @@ export default {
   },
   Documents: {
     Documents: "ДОКУМЕНТЫ",
+    date: "Дата",
     documents: "Документы",
+    filename: "Имя файла",
+    filesize: "Размер",
     go_to_documents_folder: "Перейти в каталог",
+    mdate: "Дата изменения",
     selected_all: "Выделить все",
+    type: "Тип",
   },
   Events: {
     Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",
