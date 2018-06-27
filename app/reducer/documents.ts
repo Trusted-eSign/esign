@@ -6,9 +6,14 @@ import {
 import { arrayToMap } from "../utils";
 
 const DocumentModel = Record({
+  atime: null,
+  birthtime: null,
+  extname: null,
+  filename: null,
+  filesize: null,
+  fullpath: null,
   id: null,
-  path: null,
-  size: null,
+  mtime: null,
 });
 
 const DefaultReducerState = Record({
@@ -26,7 +31,7 @@ export default (documents = new DefaultReducerState(), action) => {
 
     case LOAD_ALL_DOCUMENTS + SUCCESS:
       return documents
-        .update("entities", (entities) => arrayToMap(payload.documents, DocumentModel).merge(entities))
+        .set("entities", arrayToMap(payload.documents, DocumentModel))
         .set("loading", false)
         .set("loaded", true);
 

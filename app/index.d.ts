@@ -13,6 +13,7 @@ interface Window {
     HOME_DIR: string;
     TMP_DIR: string;
     DEFAULT_CERTSTORE_PATH: string;
+    DEFAULT_DOCUMENTS_PATH: string;
     LICENSE_PATH: string;
     PLATFORM: string;
     SETTINGS_JSON: string;
