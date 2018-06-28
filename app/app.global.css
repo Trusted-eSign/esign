@@ -3375,6 +3375,14 @@ svg:hover {
     top: 11px;
   }
 
+  .icon_file_type {
+    background-size: 100% !important;
+    height: 24px !important;
+    width: 24px !important;
+    position: absolute !important;
+    top: 11px !important;
+  }
+
   i.material-icons.filter_off {
     display: block;
     text-indent: -9999px;

@@ -5,7 +5,7 @@ import { Column, Table } from "react-virtualized";
 import { loadAllDocuments } from "../../AC/documentsActions";
 import { filteredDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
-import { mapToArr } from "../../utils";
+import { extFile, mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
 import SortDirection from "../Sort/SortDirection";
 import SortIndicator from "../Sort/SortIndicator";
@@ -116,6 +116,17 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           sortDirection={sortDirection}
         >
           <Column
+            cellRenderer={({ cellData }) => {
+              return (
+                <div className="row nobottom">
+                  <div className="valign-wrapper">
+                    <div className="col s12" title={cellData}>
+                      <i className={this.getFileIconByExtname(cellData) + " icon_file_type"} />
+                    </div>
+                  </div>
+                </div>
+              );
+            }}
             dataKey="extname"
             disableSort={false}
             headerRenderer={this.headerRenderer}
@@ -193,8 +204,12 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`;
   }
 
+  getFileIconByExtname = (extname: string) => {
+    return extFile(extname);
+  }
+
   handleOnRowClick = ({ index, rowData }: { index: number, rowData: any }) => {
-    this.setState({selectedDocuments: [...this.state.selectedDocuments, index]});
+    this.setState({ selectedDocuments: [...this.state.selectedDocuments, index] });
   }
 
   handleScrollToBefore = () => {
