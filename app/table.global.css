@@ -15,6 +15,9 @@
   background-color: #fafafa;
 }
 .foundEvent {
+  background-color: PapayaWhip;
+}
+.selectedEvent {
   background-color: lightgrey;
 }
 .headerColumn {

@@ -2,13 +2,19 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Route } from "react-router-dom";
-import {ConnectedRouter as Router, push} from "react-router-redux";
+import { ConnectedRouter as Router, push } from "react-router-redux";
+import {
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS,
+  LOCATION_DOCUMENTS, LOCATION_ENCRYPT, LOCATION_EVENTS,
+  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
+} from "../constants";
 import history from "../history";
 import localize from "../i18n/localize";
 import store from "../store/index";
 import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import ContainersWindow from "./ContainersWindow";
+import DocumentsWindow from "./Documents/DocumentsWindow";
 import EncryptWindow from "./EncryptWindow";
 import EventsWindow from "./Events/EventsWindow";
 import HelpWindow from "./Help/HelpWindow";
@@ -45,14 +51,15 @@ class App extends React.Component<IAppProps, {}> {
         <div>
           <Route path="/" component={MenuBar} />
           <Route exact path="/" component={MainWindow} />
-          <Route path="/sign" component={SignatureWindow} />
-          <Route path="/encrypt" component={EncryptWindow} />
-          <Route path="/certificate" component={CertWindow} />
-          <Route path="/containers" component={ContainersWindow} />
-          <Route path="/license" component={LicenseWindow} />
-          <Route path="/about" component={AboutWindow} />
-          <Route path="/help" component={HelpWindow} />
-          <Route path="/events" component={EventsWindow} />
+          <Route path={LOCATION_SIGN} component={SignatureWindow} />
+          <Route path={LOCATION_ENCRYPT} component={EncryptWindow} />
+          <Route path={LOCATION_CERTIFICATES} component={CertWindow} />
+          <Route path={LOCATION_CONTAINERS} component={ContainersWindow} />
+          <Route path={LOCATION_LICENSE} component={LicenseWindow} />
+          <Route path={LOCATION_ABOUT} component={AboutWindow} />
+          <Route path={LOCATION_HELP} component={HelpWindow} />
+          <Route path={LOCATION_DOCUMENTS} component={DocumentsWindow} />
+          <Route path={LOCATION_EVENTS} component={EventsWindow} />
         </div>
       </Router>
     );

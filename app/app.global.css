@@ -590,8 +590,8 @@ div::-webkit-scrollbar-thumb {
 }
 
 .side-nav a {
-  height: 48px;
-  line-height: 48px;
+  height: 40px;
+  line-height: 40px;
   padding: 0 10px;
 }
 
@@ -3209,8 +3209,17 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   box-shadow: 0 1px 0 0 #334294;
 }
 
+.input-field input[type=number]:focus {
+  border-bottom: 1px solid #334294;
+  box-shadow: 0 1px 0 0 #334294;
+}
+
 /* label focus color */
 .input-field input[type=password]:focus + label {
+  color: #334294;
+}
+
+.input-field input[type=number]:focus + label {
   color: #334294;
 }
 
@@ -3364,6 +3373,14 @@ svg:hover {
     width: 24px;
     position: absolute;
     top: 11px;
+  }
+
+  .icon_file_type {
+    background-size: 100% !important;
+    height: 24px !important;
+    width: 24px !important;
+    position: absolute !important;
+    top: 11px !important;
   }
 
   i.material-icons.filter_off {

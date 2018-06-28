@@ -8,7 +8,7 @@ export const eventsGetter = (state) => state.events.entities;
 export const filtersGetter = (state) => state.filters;
 
 export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter, (events, filters) => {
-  const { dateFrom, dateTo, level, operations, operationObjectIn, operationObjectOut, userName } = filters;
+  const { dateFrom, dateTo, level, operations, operationObjectIn, operationObjectOut, userName } = filters.events;
 
   return events.filter((event: any) => {
     return event.userName.match(userName) &&

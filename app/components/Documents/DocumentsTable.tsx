@@ -2,43 +2,44 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllEvents } from "../../AC/eventsActions";
-import { filteredEventsSelector } from "../../selectors/eventsSelectors";
+import { loadAllDocuments } from "../../AC/documentsActions";
+import { filteredDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
-import { mapToArr } from "../../utils";
+import { extFile, mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
 import SortDirection from "../Sort/SortDirection";
 import SortIndicator from "../Sort/SortIndicator";
 
 type TSortDirection = "ASC" | "DESC" | undefined;
 
-interface IEventTableProps {
-  eventsMap: any;
+interface IDocumentsTableProps {
+  documentsMap: any;
   isLoaded: boolean;
   isLoading: boolean;
   searchValue?: string;
 }
 
-interface IEventTableDispatch {
-  loadAllEvents: () => void;
+interface IDocumentsTableDispatch {
+  loadAllDocuments: () => void;
 }
 
-interface IEventTableState {
+interface IDocumentsTableState {
   disableHeader: boolean;
-  foundEvents: number[];
+  foundDocuments: number[];
+  selectedDocuments: number[];
   scrollToIndex: number;
   sortBy: string;
   sortDirection: TSortDirection;
   sortedList: any;
 }
 
-class EventTable extends React.Component<IEventTableProps & IEventTableDispatch, IEventTableState> {
+class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTableDispatch, IDocumentsTableState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: IEventTableProps & IEventTableDispatch) {
+  constructor(props: IDocumentsTableProps & IDocumentsTableDispatch) {
     super(props);
 
     const sortBy = "timestamp";
@@ -47,8 +48,9 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
     this.state = {
       disableHeader: false,
-      foundEvents: [],
+      foundDocuments: [],
       scrollToIndex: 0,
+      selectedDocuments: [],
       sortBy,
       sortDirection,
       sortedList,
@@ -57,16 +59,16 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { isLoading, loadAllEvents } = this.props;
+    const { isLoading, loadAllDocuments } = this.props;
 
     if (!isLoading) {
-      loadAllEvents();
+      loadAllDocuments();
     }
   }
 
-  componentDidUpdate(prevProps: IEventTableProps & IEventTableDispatch) {
-    if (!prevProps.eventsMap.size && this.props.eventsMap && this.props.eventsMap.size ||
-      (prevProps.eventsMap.size !== this.props.eventsMap.size)) {
+  componentDidUpdate(prevProps: IDocumentsTableProps & IDocumentsTableDispatch) {
+    if (!prevProps.documentsMap.size && this.props.documentsMap && this.props.documentsMap.size ||
+      (prevProps.documentsMap.size !== this.props.documentsMap.size)) {
       this.sort(this.state);
     }
 
@@ -75,20 +77,20 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     }
 
     if (prevProps.searchValue && !this.props.searchValue) {
-      this.setState({ foundEvents: [] });
+      this.setState({ foundDocuments: [] });
     }
   }
 
   render() {
     const { locale, localize } = this.context;
     const { isLoading, searchValue } = this.props;
-    const { disableHeader, foundEvents, scrollToIndex, sortBy, sortDirection, sortedList } = this.state;
+    const { disableHeader, foundDocuments, scrollToIndex, sortBy, sortDirection, sortedList } = this.state;
 
     if (isLoading) {
       return <ProgressBars />;
     }
 
-    const classDisabledNavigation = foundEvents.length && foundEvents.length === 1 ? "disabled" : "";
+    const classDisabledNavigation = foundDocuments.length && foundDocuments.length === 1 ? "disabled" : "";
 
     const rowGetter = ({ index }: { index: number }) => this.getDatum(this.state.sortedList, index);
 
@@ -104,6 +106,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
           headerClassName={"headerColumn"}
           rowHeight={45}
           rowClassName={this.rowClassName}
+          onRowClick={this.handleOnRowClick}
           overscanRowCount={5}
           rowGetter={rowGetter}
           rowCount={sortedList.size}
@@ -114,6 +117,24 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         >
           <Column
             cellRenderer={({ cellData }) => {
+              return (
+                <div className="row nobottom">
+                  <div className="valign-wrapper">
+                    <div className="col s12" title={cellData}>
+                      <i className={this.getFileIconByExtname(cellData) + " icon_file_type"} />
+                    </div>
+                  </div>
+                </div>
+              );
+            }}
+            dataKey="extname"
+            disableSort={false}
+            headerRenderer={this.headerRenderer}
+            width={50}
+            label={localize("Documents.type", locale)}
+          />
+          <Column
+            cellRenderer={({ cellData }) => {
               return (new Date(cellData)).toLocaleDateString(locale, {
                 day: "numeric",
                 hour: "numeric",
@@ -122,79 +143,42 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
                 year: "numeric",
               });
             }}
-            dataKey="timestamp"
+            dataKey="mtime"
             disableSort={false}
             headerRenderer={this.headerRenderer}
-            width={130}
-            label={localize("EventsTable.date_and_time", locale)}
+            width={150}
+            label={localize("Documents.mdate", locale)}
           />
           <Column
-            dataKey="operation"
+            dataKey="filename"
             disableSort={false}
             headerRenderer={this.headerRenderer}
-            width={180}
-            label={localize("EventsTable.operation", locale)}
-          />
-          <Column
-            dataKey="userName"
-            disableSort={false}
-            headerRenderer={this.headerRenderer}
-            width={120}
-            label={localize("EventsTable.user_name", locale)}
+            width={480}
+            label={localize("Documents.filename", locale)}
           />
           <Column
             cellRenderer={({ cellData }) => {
               return (
                 <div className="row nobottom">
                   <div className="col s12">
-                    <div className="truncate">{cellData.in}</div>
-                    <div className="truncate" style={{ opacity: .6 }}> -> {cellData.out}</div>
+                    <div className="truncate">{this.bytesToSize(cellData)}</div>
                   </div>
                 </div>
               );
             }}
-            dataKey="operationObject"
-            disableSort
-            headerRenderer={this.headerRenderer}
-            width={280}
-            label={localize("EventsTable.operation_object", locale)}
-          />
-          <Column
-            cellRenderer={({ cellData }) => {
-              let iconStatus;
-
-              switch (cellData) {
-                case "info":
-                  iconStatus = "icon_operation_status_success";
-                  break;
-                case "error":
-                  iconStatus = "icon_operation_status_error";
-                  break;
-              }
-
-              return (
-                <div className="row nobottom">
-                  <div className="valign-wrapper">
-                    <div className="col s12">
-                      <div className={iconStatus}></div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }}
-            dataKey="level"
+            dataKey="filesize"
             disableSort={false}
             headerRenderer={this.headerRenderer}
-            width={70}
-            label={localize("EventsTable.status", locale)}
+            width={100}
+            label={localize("Documents.filesize", locale)}
           />
         </Table>
-        {searchValue && foundEvents.length ?
+        {searchValue && foundDocuments.length ?
           <div className="card navigationToolbar valign-wrapper">
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToFirstOfFoud}>first_page</i>
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToBefore}>navigate_before</i>
             <div style={{ color: "black" }}>
-              {foundEvents.indexOf(scrollToIndex) + 1}/{foundEvents.length}
+              {foundDocuments.indexOf(scrollToIndex) + 1}/{foundDocuments.length}
             </div>
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToNext}>navigate_next</i>
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToLastOfFoud}>last_page</i>
@@ -204,32 +188,64 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     );
   }
 
-  handleScrollToBefore = () => {
-    const { foundEvents, scrollToIndex } = this.state;
+  bytesToSize = (bytes: number, decimals = 2) => {
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
 
-    if (foundEvents.indexOf(scrollToIndex) - 1 >= 0) {
-      this.scrollToRow(foundEvents[foundEvents.indexOf(scrollToIndex) - 1]);
+    if (bytes === 0) {
+      return "n/a";
+    }
+
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
+    if (i === 0) {
+      return `${bytes} ${sizes[i]}`;
+    }
+
+    return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`;
+  }
+
+  getFileIconByExtname = (extname: string) => {
+    return extFile(extname);
+  }
+
+  handleOnRowClick = ({ index, rowData }: { index: number, rowData: any }) => {
+    const tdocuments = [...this.state.selectedDocuments];
+    const tid = tdocuments.indexOf(index);
+
+    if (tid > -1) {
+      tdocuments.splice(tid, 1);
+      this.setState({ selectedDocuments: tdocuments });
+    } else {
+      this.setState({ selectedDocuments: [...this.state.selectedDocuments, index] });
+    }
+  }
+
+  handleScrollToBefore = () => {
+    const { foundDocuments, scrollToIndex } = this.state;
+
+    if (foundDocuments.indexOf(scrollToIndex) - 1 >= 0) {
+      this.scrollToRow(foundDocuments[foundDocuments.indexOf(scrollToIndex) - 1]);
     }
   }
 
   handleScrollToNext = () => {
-    const { foundEvents, scrollToIndex } = this.state;
+    const { foundDocuments, scrollToIndex } = this.state;
 
-    if (foundEvents.indexOf(scrollToIndex) + 1 < foundEvents.length) {
-      this.scrollToRow(foundEvents[foundEvents.indexOf(scrollToIndex) + 1]);
+    if (foundDocuments.indexOf(scrollToIndex) + 1 < foundDocuments.length) {
+      this.scrollToRow(foundDocuments[foundDocuments.indexOf(scrollToIndex) + 1]);
     }
   }
 
   handleScrollToFirstOfFoud = () => {
-    const { foundEvents } = this.state;
+    const { foundDocuments } = this.state;
 
-    this.scrollToRow(foundEvents[0]);
+    this.scrollToRow(foundDocuments[0]);
   }
 
   handleScrollToLastOfFoud = () => {
-    const { foundEvents } = this.state;
+    const { foundDocuments } = this.state;
 
-    this.scrollToRow(foundEvents[foundEvents.length - 1]);
+    this.scrollToRow(foundDocuments[foundDocuments.length - 1]);
   }
 
   getDatum = (list: any, index: number) => {
@@ -239,14 +255,16 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
   }
 
   rowClassName = ({ index }: { index: number }) => {
-    const { foundEvents } = this.state;
+    const { foundDocuments, selectedDocuments } = this.state;
 
     if (index < 0) {
       return "headerRow";
     } else {
       let rowClassName = index % 2 === 0 ? "evenRow " : "oddRow ";
 
-      if (foundEvents.indexOf(index) >= 0) {
+      if (selectedDocuments.indexOf(index) >= 0) {
+        rowClassName += "selectedEvent";
+      } else if (foundDocuments.indexOf(index) >= 0) {
         rowClassName += "foundEvent";
       }
 
@@ -267,45 +285,39 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
     const { sortedList } = this.state;
 
     if (!searchValue) {
-      this.setState({ foundEvents: [] });
+      this.setState({ foundDocuments: [] });
       return;
     }
 
     const arr = list ? mapToArr(list) : mapToArr(sortedList);
 
-    const foundEvents: number[] = [];
+    const foundDocuments: number[] = [];
     const search = searchValue.toLowerCase();
 
-    arr.forEach((event: any, index: number) => {
-      if (event.userName.toLowerCase().match(search) ||
-        event.operationObject.in.toLowerCase().match(search) ||
-        event.operationObject.out.toLowerCase().match(search) ||
-        event.level.toLowerCase().match(search) ||
-        event.timestamp.toLowerCase().match(search) ||
-        event.operation.toLowerCase().match(search)) {
-
-        foundEvents.push(index);
+    arr.forEach((document: any, index: number) => {
+      if (document.filename.toLowerCase().match(search)) {
+        foundDocuments.push(index);
       }
     });
 
-    if (!foundEvents.length) {
+    if (!foundDocuments.length) {
       $(".toast-no_found_events").remove();
       Materialize.toast(localize("EventsFilters.no_found_events", locale), 2000, "toast-no_found_events");
     }
 
-    this.scrollToRow(foundEvents[0]);
+    this.scrollToRow(foundDocuments[0]);
 
-    this.setState({ foundEvents });
+    this.setState({ foundDocuments });
   }
 
   sortList = ({ sortBy, sortDirection }: { sortBy: string, sortDirection: TSortDirection }) => {
-    const { eventsMap } = this.props;
+    const { documentsMap } = this.props;
 
-    return eventsMap
+    return documentsMap
       .sortBy((item: any) => item[sortBy])
       .update(
         // tslint:disable-next-line:no-shadowed-variable
-        (eventsMap: any) => (sortDirection === SortDirection.DESC ? eventsMap.reverse() : eventsMap),
+        (documentsMap: any) => (sortDirection === SortDirection.DESC ? documentsMap.reverse() : documentsMap),
     );
   }
 
@@ -330,7 +342,7 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 }
 
 export default connect((state) => ({
-  eventsMap: filteredEventsSelector(state),
-  isLoaded: state.events.loaded,
-  isLoading: state.events.loading,
-}), { loadAllEvents })(EventTable);
+  documentsMap: filteredDocumentsSelector(state),
+  isLoaded: state.documents.loaded,
+  isLoading: state.documents.loading,
+}), { loadAllDocuments })(DocumentTable);
