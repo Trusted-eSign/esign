@@ -8,6 +8,8 @@ export const filteredDocumentsSelector = createSelector(documentsGetter, filters
 
   return documents.filter((document: any) => {
     return document.fullpath.match(filename) &&
+      (sizeFrom ? document.filesize >= sizeFrom : true) &&
+      (sizeTo ? document.filesize <= sizeTo : true) &&
       (dateFrom ? (new Date(document.mtime)).getTime() >= (new Date(dateFrom)).getTime() : true) &&
       (dateTo ? (new Date(document.mtime)).getTime() <= (new Date(dateTo.setHours(23, 59, 59, 999))).getTime() : true)
   });

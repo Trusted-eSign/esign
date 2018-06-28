@@ -3209,8 +3209,17 @@ a.waves-effect.waves-light.btn.licence-temporary-modal-btn.left {
   box-shadow: 0 1px 0 0 #334294;
 }
 
+.input-field input[type=number]:focus {
+  border-bottom: 1px solid #334294;
+  box-shadow: 0 1px 0 0 #334294;
+}
+
 /* label focus color */
 .input-field input[type=password]:focus + label {
+  color: #334294;
+}
+
+.input-field input[type=number]:focus + label {
   color: #334294;
 }
 

@@ -67,6 +67,8 @@ export default {
     documents: "Документы",
     filename: "Имя файла",
     filesize: "Размер",
+    filesize_from: "Размер файла больше чем",
+    filesize_to: "Размер файла меньше чем",
     go_to_documents_folder: "Перейти в каталог",
     mdate: "Дата изменения",
     selected_all: "Выделить все",

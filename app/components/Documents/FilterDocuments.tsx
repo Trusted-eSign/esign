@@ -25,19 +25,25 @@ interface IDocumentsFilters {
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
   filename: string;
-  sizeFrom: number;
-  sizeTo: number;
+  sizeFrom: number | string;
+  sizeTo: number | string;
+}
+
+interface IDocumentsState {
+  filters: IDocumentsFilters;
+  sizeTypeFrom: number;
+  sizeTypeTo: number;
 }
 
 const initialState = {
   dateFrom: undefined,
   dateTo: undefined,
   filename: "",
-  sizeFrom: 0,
-  sizeTo: 0,
+  sizeFrom: "",
+  sizeTo: "",
 };
 
-class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsFilters> {
+class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -46,17 +52,40 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsF
   constructor(props: IFilterDocumentsProps) {
     super(props);
 
-    this.state = { ...initialState, dateFrom: props.dateFrom, dateTo: props.dateTo };
+    this.state = {
+      filters: {
+        ...initialState,
+        dateFrom: props.dateFrom,
+        dateTo: props.dateTo,
+      },
+      sizeTypeFrom: 1024,
+      sizeTypeTo: 1024,
+    };
   }
 
   componentDidMount() {
     const { dateFrom, dateTo, filename, sizeFrom, sizeTo } = this.props;
 
-    this.setState({ dateFrom, dateTo, filename, sizeFrom, sizeTo });
+    this.setState({
+      filters: {
+        dateFrom,
+        dateTo,
+        filename,
+        sizeFrom: sizeFrom ? sizeFrom / 1024 : sizeFrom,
+        sizeTo: sizeTo ? sizeTo / 1024 : sizeTo,
+      },
+    });
 
     $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
+
+    $(document).ready(() => {
+      $("select").material_select();
+    });
+
+    $(ReactDOM.findDOMNode(this.refs.sizeTypeSelectFrom)).on("change", this.handleChangeSizeTypeFrom);
+    $(ReactDOM.findDOMNode(this.refs.sizeTypeSelectTo)).on("change", this.handleChangeSizeTypeTo);
 
     Materialize.updateTextFields();
   }
@@ -70,7 +99,8 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsF
   }
 
   render() {
-    const { dateFrom, dateTo, filename, sizeFrom, sizeTo } = this.state;
+    const { filters, sizeTypeFrom, sizeTypeTo } = this.state;
+    const { dateFrom, dateTo, filename, sizeFrom, sizeTo } = filters;
     const { localize, locale } = this.context;
 
     return (
@@ -108,7 +138,9 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsF
                       key="input_from"
                       label="From"
                       onClear={() => {
-                        this.setState({ dateFrom: undefined });
+                        this.setState({
+                          filters: { ...filters, dateFrom: undefined },
+                        });
                       }}
                       onSelect={this.handleFromChange}
                       selected={dateFrom}
@@ -121,11 +153,63 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsF
                       label="To"
                       min={dateFrom}
                       onClear={() => {
-                        this.setState({ dateTo: undefined });
+                        this.setState({
+                          filters: { ...filters, dateTo: undefined },
+                        });
                       }}
                       onSelect={this.handleToChange}
                       selected={dateTo}
                     />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field input-field-csr col s10">
+                    <input
+                      id="sizeFrom"
+                      type="number"
+                      className={"validate"}
+                      min="0"
+                      name="sizeFrom"
+                      value={sizeFrom}
+                      placeholder={localize("Documents.filesize", locale)}
+                      onChange={this.handleSizeFromChange}
+                    />
+                    <label htmlFor="sizeFrom">
+                      {localize("Documents.filesize_from", locale)}
+                    </label>
+                  </div>
+                  <div className="input-field input-field-csr col s2">
+                    <select className="select" ref="sizeTypeSelectFrom" defaultValue={sizeTypeFrom.toString()} onChange={this.handleChangeSizeTypeFrom} >>
+                      <option value={1024}>KB</option>
+                      <option value={1048576}>MB</option>
+                      <option value={1073741824}>GB</option>
+                      <option value={1099511627776}>TB</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="input-field input-field-csr col s10">
+                    <input
+                      id="sizeTo"
+                      type="number"
+                      className={"validate"}
+                      min="0"
+                      name="sizeTo"
+                      value={sizeTo}
+                      placeholder={localize("Documents.filesize", locale)}
+                      onChange={this.handleSizeToChange}
+                    />
+                    <label htmlFor="sizeTo">
+                      {localize("Documents.filesize_to", locale)}
+                    </label>
+                  </div>
+                  <div className="input-field input-field-csr col s2">
+                    <select className="select" ref="sizeTypeSelectTo" defaultValue={sizeTypeTo.toString()} onChange={this.handleChangeSizeTypeTo} >>
+                      <option value={1024}>KB</option>
+                      <option value={1048576}>MB</option>
+                      <option value={1073741824}>GB</option>
+                      <option value={1099511627776}>TB</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -165,29 +249,49 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsF
   }
 
   handleFilenameChange = (ev: any) => {
-    this.setState({ filename: ev.target.value });
+    this.setState({ filters: { ...this.state.filters, filename: ev.target.value } });
+  }
+
+  handleSizeFromChange = (ev: any) => {
+    this.setState({ filters: { ...this.state.filters, sizeFrom: ev.target.value } });
+  }
+
+  handleSizeToChange = (ev: any) => {
+    this.setState({ filters: { ...this.state.filters, sizeTo: ev.target.value } });
+  }
+
+  handleChangeSizeTypeFrom = (ev: any) => {
+    this.setState({ sizeTypeFrom: ev.target.value });
+  }
+
+  handleChangeSizeTypeTo = (ev: any) => {
+    this.setState({ sizeTypeTo: ev.target.value });
   }
 
   handleFromChange = (ev: any) => {
     if (ev && ev.select) {
-      this.setState({ dateFrom: new Date(ev.select) });
+      this.setState({ filters: { ...this.state.filters, dateFrom: new Date(ev.select) } });
     }
   }
 
   handleToChange = (ev: any) => {
     if (ev && ev.select) {
-      this.setState({ dateTo: new Date(ev.select) });
+      this.setState({ filters: { ...this.state.filters, dateTo: new Date(ev.select) } });
     }
   }
 
   handleApplyFilters = () => {
-    this.props.applyDocumentsFilters(this.state);
+    this.props.applyDocumentsFilters({
+      ...this.state.filters,
+      sizeFrom: this.state.filters.sizeFrom ? this.state.filters.sizeFrom * this.state.sizeTypeFrom : 0,
+      sizeTo: this.state.filters.sizeTo ? this.state.filters.sizeTo * this.state.sizeTypeTo : 0,
+    });
 
     this.handelCancel();
   }
 
   handleResetFilters = () => {
-    this.setState({ ...initialState });
+    this.setState({ filters: { ...initialState } });
     this.props.resetDocumentsFilters();
   }
 }
@@ -196,8 +300,8 @@ export default connect((state) => ({
   dateFrom: state.filters.documents.dateFrom,
   dateTo: state.filters.documents.dateTo,
   filename: state.filters.documents.filename,
-  sizeFrom: state.filters.documents.operationObjectOut,
-  sizeTo: state.filters.documents.operations,
+  sizeFrom: state.filters.documents.sizeFrom,
+  sizeTo: state.filters.documents.sizeTo,
 }), {
     applyDocumentsFilters, resetDocumentsFilters,
   })(FilterDocuments);

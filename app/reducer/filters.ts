@@ -12,8 +12,8 @@ const defaultFilters = {
     dateTo: undefined,
     filename: "",
     isDefaultFilters: true,
-    sizeFrom: null,
-    sizeTo: null,
+    sizeFrom: undefined,
+    sizeTo: undefined,
   },
   events: {
     dateFrom: undefined,

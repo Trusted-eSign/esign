@@ -67,6 +67,8 @@ export default {
     documents: "Documents",
     filename: "Filename",
     filesize: "Size",
+    filesize_from: "File size from",
+    filesize_to: "File size to",
     go_to_documents_folder: "Go to folder",
     mdate: "Modified date",
     selected_all: "Selected all",
