@@ -4,9 +4,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { applyDocumentsFilters, resetDocumentsFilters } from "../../AC/documentsFiltersActions";
 import {
-  ALL, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT,
-  PKCS12_IMPORT, SIGN, UNSIGN,
+  ALL, ENCRYPTED, SIGNED,
 } from "../../constants";
 import DatePicker from "../DatePicker";
 
@@ -16,8 +14,9 @@ interface IFilterDocumentsProps {
   dateTo: Date;
   filename: string;
   onCancel?: () => void;
-  sizeFrom: number;
-  sizeTo: number;
+  sizeFrom: number | undefined;
+  sizeTo: number | undefined;
+  types: any;
   resetDocumentsFilters: () => void;
 }
 
@@ -25,8 +24,13 @@ interface IDocumentsFilters {
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
   filename: string;
-  sizeFrom: number | string;
-  sizeTo: number | string;
+  sizeFrom: number | undefined;
+  sizeTo: number | undefined;
+  types: {
+    ENCRYPTED: boolean;
+    SIGNED: boolean;
+    [key: string]: boolean;
+  };
 }
 
 interface IDocumentsState {
@@ -39,8 +43,12 @@ const initialState = {
   dateFrom: undefined,
   dateTo: undefined,
   filename: "",
-  sizeFrom: "",
-  sizeTo: "",
+  sizeFrom: undefined,
+  sizeTo: undefined,
+  types: {
+    ENCRYPTED: false,
+    SIGNED: false,
+  },
 };
 
 class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsState> {
@@ -64,19 +72,21 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsS
   }
 
   componentDidMount() {
-    const { dateFrom, dateTo, filename, sizeFrom, sizeTo } = this.props;
+    const { dateFrom, dateTo, filename, sizeFrom, sizeTo, types } = this.props;
 
     this.setState({
       filters: {
+        ...initialState,
         dateFrom,
         dateTo,
         filename,
         sizeFrom: sizeFrom ? sizeFrom / 1024 : sizeFrom,
         sizeTo: sizeTo ? sizeTo / 1024 : sizeTo,
+        types,
       },
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
 
@@ -100,7 +110,7 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsS
 
   render() {
     const { filters, sizeTypeFrom, sizeTypeTo } = this.state;
-    const { dateFrom, dateTo, filename, sizeFrom, sizeTo } = filters;
+    const { dateFrom, dateTo, filename, sizeFrom, sizeTo, types } = filters;
     const { localize, locale } = this.context;
 
     return (
@@ -215,6 +225,55 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsS
               </div>
               <div className="col s6">
                 <div className="row">
+                  <p className="label-csr">
+                    {localize("Documents.type", locale)}
+                  </p>
+                  <div className="operations_group">
+                    <div className="row">
+                      <div className="col s12">
+                        <div className="row halfbottom" />
+                        <div className="input-checkbox">
+                          <input
+                            name={ALL}
+                            type="checkbox"
+                            id={ALL}
+                            className="filled-in"
+                            checked={this.isAllTypesChecked()}
+                            onChange={this.handleAllFilesTypesClick}
+                          />
+                          <label htmlFor={ALL} className="truncate">
+                            {localize("EventsFilters.all", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={ENCRYPTED}
+                            type="checkbox"
+                            id={ENCRYPTED}
+                            className="filled-in"
+                            checked={types.ENCRYPTED}
+                            onChange={this.handleFileTypesChange}
+                          />
+                          <label htmlFor={ENCRYPTED} className="truncate">
+                            {localize("Documents.encrypted_files", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
+                            name={SIGNED}
+                            type="checkbox"
+                            id={SIGNED}
+                            className="filled-in"
+                            checked={types.SIGNED}
+                            onChange={this.handleFileTypesChange}
+                          />
+                          <label htmlFor={SIGNED} className="truncate">
+                            {localize("Documents.signed_files", locale)}
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -238,6 +297,42 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsS
         </div>
       </div>
     );
+  }
+
+  isAllTypesChecked = () => {
+    const { filters } = this.state;
+    const { types } = filters;
+
+    return !types.ENCRYPTED && !types.SIGNED;
+  }
+
+  handleFileTypesChange = (ev: any) => {
+    const target = ev.target;
+    const name = target.name;
+
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        types: {
+          ...this.state.filters.types,
+          [name]: !this.state.filters.types[name],
+        },
+      },
+    });
+  }
+
+  handleAllFilesTypesClick = () => {
+    const value = !this.isAllTypesChecked();
+
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        types: {
+          ENCRYPTED: !value,
+          SIGNED: !value,
+        },
+      },
+    });
   }
 
   handelCancel = () => {
@@ -283,8 +378,8 @@ class FilterDocuments extends React.Component<IFilterDocumentsProps, IDocumentsS
   handleApplyFilters = () => {
     this.props.applyDocumentsFilters({
       ...this.state.filters,
-      sizeFrom: this.state.filters.sizeFrom ? this.state.filters.sizeFrom * this.state.sizeTypeFrom : 0,
-      sizeTo: this.state.filters.sizeTo ? this.state.filters.sizeTo * this.state.sizeTypeTo : 0,
+      sizeFrom: this.state.filters.sizeFrom ? this.state.filters.sizeFrom * this.state.sizeTypeFrom : undefined,
+      sizeTo: this.state.filters.sizeTo ? this.state.filters.sizeTo * this.state.sizeTypeTo : undefined,
     });
 
     this.handelCancel();
@@ -302,6 +397,7 @@ export default connect((state) => ({
   filename: state.filters.documents.filename,
   sizeFrom: state.filters.documents.sizeFrom,
   sizeTo: state.filters.documents.sizeTo,
+  types: state.filters.documents.types,
 }), {
     applyDocumentsFilters, resetDocumentsFilters,
   })(FilterDocuments);

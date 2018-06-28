@@ -18,6 +18,8 @@ export const RESET_EVENTS_FILTERS = "RESET_EVENTS_FILTERS";
 
 export const APPLY_DOCUMENTS_FILTERS = "APPLY_DOCUMENTS_FILTERS";
 export const RESET_DOCUMENTS_FILTERS = "RESET_DOCUMENTS_FILTERS";
+export const SIGNED = "SIGNED";
+export const ENCRYPTED = "ENCRYPTED";
 
 export const ALL = "ALL";
 export const SIGN = "SIGN";

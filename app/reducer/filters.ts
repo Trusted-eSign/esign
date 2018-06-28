@@ -1,9 +1,9 @@
 import {
   APPLY_DOCUMENTS_FILTERS, APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_SEARCH_VALUE, DECRYPT,
-  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, EVENTS_CHANGE_FILTER_DATE_FROM,
+  DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, ENCRYPTED, EVENTS_CHANGE_FILTER_DATE_FROM,
   EVENTS_CHANGE_FILTER_DATE_TO, EVENTS_CHANGE_FILTER_IN_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_LEVEL,
   EVENTS_CHANGE_FILTER_OPERATION_TYPE, EVENTS_CHANGE_FILTER_OUT_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_USER_NAME,
-  PKCS12_IMPORT, RESET_DOCUMENTS_FILTERS, RESET_EVENTS_FILTERS, SIGN, UNSIGN,
+  PKCS12_IMPORT, RESET_DOCUMENTS_FILTERS, RESET_EVENTS_FILTERS, SIGN, SIGNED, UNSIGN,
 } from "../constants";
 
 const defaultFilters = {
@@ -14,6 +14,10 @@ const defaultFilters = {
     isDefaultFilters: true,
     sizeFrom: undefined,
     sizeTo: undefined,
+    types: {
+      ENCRYPTED: false,
+      SIGNED: false,
+    },
   },
   events: {
     dateFrom: undefined,
@@ -48,7 +52,7 @@ export default (filters = defaultFilters, action) => {
         events: {
           ...filters.events,
           ...payload.filters,
-          isDefaultFilters: checkDefaultDocumentsFilters(payload.filters),
+          isDefaultFilters: checkDefaultEventsFilters(payload.filters),
         },
       };
 
@@ -58,7 +62,7 @@ export default (filters = defaultFilters, action) => {
         documents: {
           ...filters.documents,
           ...payload.filters,
-          isDefaultFilters: checkDefaultEventsFilters(payload.filters),
+          isDefaultFilters: checkDefaultDocumentsFilters(payload.filters),
         },
       };
 
@@ -168,8 +172,12 @@ export default (filters = defaultFilters, action) => {
           dateTo: undefined,
           filename: "",
           isDefaultFilters: true,
-          sizeFrom: null,
-          sizeTo: null,
+          sizeFrom: undefined,
+          sizeTo: undefined,
+          types: {
+            ENCRYPTED: false,
+            SIGNED: false,
+          },
         },
       };
   }
@@ -181,9 +189,11 @@ const checkDefaultDocumentsFilters = (filters: any) => {
   if (
     defaultFilters.documents.dateFrom === filters.dateFrom &&
     defaultFilters.documents.dateTo === filters.dateTo &&
-    defaultFilters.documents.filename === filters.userName &&
+    defaultFilters.documents.filename === filters.filename &&
     defaultFilters.documents.sizeFrom === filters.sizeFrom &&
-    defaultFilters.documents.sizeTo === filters.sizeTo
+    defaultFilters.documents.sizeTo === filters.sizeTo &&
+    defaultFilters.documents.types.ENCRYPTED === filters.types.ENCRYPTED &&
+    defaultFilters.documents.types.SIGNED === filters.types.SIGNED
   ) {
     return true;
   }

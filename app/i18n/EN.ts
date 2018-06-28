@@ -65,6 +65,7 @@ export default {
     Documents: "DOCUMENTS",
     date: "Date",
     documents: "Documents",
+    encrypted_files: "Encrypted files",
     filename: "Filename",
     filesize: "Size",
     filesize_from: "File size from",
@@ -72,6 +73,7 @@ export default {
     go_to_documents_folder: "Go to folder",
     mdate: "Modified date",
     selected_all: "Selected all",
+    signed_files: "Signed files",
     type: "Type",
   },
   Events: {

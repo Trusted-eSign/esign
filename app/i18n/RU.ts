@@ -65,6 +65,7 @@ export default {
     Documents: "ДОКУМЕНТЫ",
     date: "Дата",
     documents: "Документы",
+    encrypted_files: "Зашифрованные файлы",
     filename: "Имя файла",
     filesize: "Размер",
     filesize_from: "Размер файла больше чем",
@@ -72,6 +73,7 @@ export default {
     go_to_documents_folder: "Перейти в каталог",
     mdate: "Дата изменения",
     selected_all: "Выделить все",
+    signed_files: "Подписанные файлы",
     type: "Тип",
   },
   Events: {
