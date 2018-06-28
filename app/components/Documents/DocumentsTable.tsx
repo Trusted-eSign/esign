@@ -209,7 +209,15 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
   }
 
   handleOnRowClick = ({ index, rowData }: { index: number, rowData: any }) => {
-    this.setState({ selectedDocuments: [...this.state.selectedDocuments, index] });
+    const tdocuments = [...this.state.selectedDocuments];
+    const tid = tdocuments.indexOf(index);
+
+    if (tid > -1) {
+      tdocuments.splice(tid, 1);
+      this.setState({ selectedDocuments: tdocuments });
+    } else {
+      this.setState({ selectedDocuments: [...this.state.selectedDocuments, index] });
+    }
   }
 
   handleScrollToBefore = () => {
