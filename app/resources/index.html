@@ -56,22 +56,28 @@
     }
     var crypto_module = require('crypto');
     if (process.platform == 'win32') {
+      try {
       crypto_module.loadConfig("./config/openssl.cfg");
+      } catch (e) {
+        // error
+      }
     }
 
     var trusted;
     try {
       trusted = require('trusted-crypto');
+      var result = trusted.utils.Jwt.createTrialLicense();
     } catch(err) {
       window.tcerr = err;
     }
 
-    window.request = require('request'); 
     path = require('path');
     fs = require('fs');
     os = require('os');
+
     window.archiver = require('archiver');
     window.sudo = require('sudo-prompt');
+    window.request = require('request');
 
     if (process.env.NODE_ENV === "development") {
       window.DEFAULT_PATH = `${__dirname}`;
@@ -81,12 +87,16 @@
 
     window.HOME_DIR = os.homedir();
     window.TMP_DIR = os.tmpdir();
+    window.USER_NAME = os.userInfo().username;
     window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
+    window.DEFAULT_DOCUMENTS_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
     window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
     window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
     window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "trusted_esign.log");
+    window.APP_LOG_FILE = path.join(HOME_DIR, ".Trusted", "trusted_esign_operations.log");
+    window.APP_ERRORS_LOG_FILE = path.join(HOME_DIR, ".Trusted", "trusted_esign_errors.log");
 
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted'), { mode: 0o700 });
@@ -94,6 +104,9 @@
 
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign'), { mode: 0o700 });
+    }
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents'), { mode: 0o700 });
     }
 
     document.ondragover = function (evt) {
@@ -105,6 +118,7 @@
   </script>
   <script src="./js/materialize.min.js"></script>
   <script src="./js/nouislider.js"></script>
+  <script src="./js/jquery.visible.min.js"></script>
   <script>
     {
       const scripts = [];

@@ -1,8 +1,28 @@
-import { app, BrowserWindow } from 'electron';
-import MenuBuilder from './menu';
+const { app, BrowserWindow, Tray, Menu } = require('electron');
+const MenuBuilder = require('./menu');
 
 let mainWindow = null;
 let preloader = null;
+
+global.globalObj = {
+  id: 123,
+  launch: null,
+};
+
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.show();
+    mainWindow.focus();
+  }
+});
+
+if (shouldQuit) {
+  app.quit();
+}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -12,10 +32,13 @@ if (process.env.NODE_ENV === 'production') {
 var options = process.argv;
 
 if (options.indexOf('logcrypto') !== -1) {
-  global.sharedObject = {logcrypto: true};
+  global.sharedObject = { logcrypto: true };
 } else {
-  global.sharedObject = {logcrypto: false};
+  global.sharedObject = { logcrypto: false };
 }
+
+global.sharedObject.isQuiting = false;
+
 
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
@@ -52,18 +75,15 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  app.commandLine.appendSwitch('ignore-certificate-errors');  
+  app.commandLine.appendSwitch('ignore-certificate-errors');
 
   mainWindow = new BrowserWindow({
+    alwaysOnTop: false,
     width: 800, height: 600,
     resizable: false,
     frame: false,
     toolbar: false,
     show: false,
-    // This handles disabling web security
-    webPreferences : {
-      webSecurity: false
-    }
   });
 
 
@@ -84,12 +104,55 @@ app.on('ready', async () => {
     mainWindow.webContents.openDevTools();
   }
 
+  const platform = require('os').platform();
+  const lang = app.getLocale().split("-")[0];
+  let trayIcon;
+
+  if (platform == 'win32') {
+    trayIcon = new Tray(__dirname + '/resources/image/tray.ico');
+  } else if (platform == 'darwin') {
+    trayIcon = new Tray(__dirname + '/resources/image/tray_mac.png');
+  } else {
+    trayIcon = new Tray(__dirname + '/resources/image/tray.png');
+  }
+
+  const trayMenuTemplate = [
+    {
+      label: lang === 'ru' ? 'Открыть приложение' : 'Open Application',
+      click: function () { mainWindow.show(); }
+    },
+    {
+      label: lang === 'ru' ? 'Выйти' : 'Close',
+      click: function () {
+        global.sharedObject.isQuiting = true;
+        app.quit();
+      }
+    }
+  ];
+
+  var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
+  trayIcon.setContextMenu(trayMenu);
+
+
+  var startMinimized = (process.argv || []).indexOf('--service') !== -1;
+
+  startMinimized = false; //Временно
+
+  if (startMinimized == true) {
+    //console.log('App is started by AutoLaunch');
+    globalObj.launch = true;
+    if (mainWindow) mainWindow.hide();
+  } else {
+    globalObj.launch = false;
+    //console.log('App is started by User');
+  }
+
   preloader.webContents.on("did-finish-load", () => {
     preloader.show();
     preloader.focus();
   });
 
-  preloader.on("close", function() {
+  preloader.on("close", function () {
     preloader = null;
   });
 
@@ -100,15 +163,19 @@ app.on('ready', async () => {
       throw new Error('"mainWindow" is not defined');
     }
     preloader.close();
-    mainWindow.show();
-    mainWindow.focus();
+    if (!startMinimized) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
   });
 
-  mainWindow.on('closed', function() {
-    mainWindow = null;
-    if (process.platform === 'darwin') {
-      app.quit();
+  mainWindow.on('close', function (event) {
+    if (!global.sharedObject.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
     }
+
+    return false;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);

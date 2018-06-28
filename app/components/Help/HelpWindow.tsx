@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import * as Scroll from "react-scroll";
-import { animateScroll as scroll, Element, Events, Link, scroller, scrollSpy } from "react-scroll";
+import React from "react";
+import { Element, Events, Link, scroller } from "react-scroll";
 
 interface IExternalLinkProps {
   externalLink: string;
@@ -32,12 +31,12 @@ class HelpWindow extends React.Component {
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: { locale: string }) {
+  shouldComponentUpdate(nextContext: { locale: string }) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
   scrollToWithContainer() {
-    const goToContainer = new Promise((resolve, reject) => {
+    const goToContainer = new Promise((resolve) => {
 
       Events.scrollEvent.register("end", () => {
         resolve();
@@ -69,7 +68,7 @@ class HelpWindow extends React.Component {
           <div className="row nobottom">
             <div className="row nobottom">
               <div className="col s12 nopadding">
-              <h4 className="help_header">{localize("Help.Header1", locale)}</h4>
+                <h4 className="help_header">{localize("Help.Header1", locale)}</h4>
                 <p className="help_paragraf"></p>
 
                 <ul>

@@ -41,8 +41,6 @@ class CertificateChainInfo extends React.Component<any, any> {
   }
 
   render() {
-    const { certificate, onClick } = this.props;
-
     return (
       <div className={"collection"}>
         {this.getElements()}

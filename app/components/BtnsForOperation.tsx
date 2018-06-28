@@ -1,7 +1,19 @@
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import {activeFilesSelector} from "../selectors";
+import { activeFilesSelector, loadingRemoteFilesSelector } from "../selectors";
+import { ENCRYPT, SIGN, VERIFY } from "../server/constants";
 import { mapToArr } from "../utils";
+
+interface IRemoteFile {
+  extra: any;
+  id: number;
+  loaded: boolean;
+  loading: boolean;
+  name: string;
+  socketId: string;
+  totalSize: number;
+  url: string;
+}
 
 interface IBtnsForOperationProps {
   operation: string;
@@ -21,7 +33,10 @@ interface IBtnsForOperationProps {
     extension: string,
     verified: boolean,
     active: boolean,
+    remoteId?: string;
+    socket?: string;
   }>;
+  loadingFiles: IRemoteFile[];
   allFiles: Array<{
     id: string,
     filename: string,
@@ -30,28 +45,41 @@ interface IBtnsForOperationProps {
     extension: string,
     verified: boolean,
     active: boolean,
+    remoteId?: string;
+    socket?: string;
   }>;
+  method?: string;
   signer: string;
   recipients: number[];
 }
 
 class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
   render() {
-    const { allFiles, activeFiles, recipients, signer } = this.props;
+    const { allFiles, activeFiles, method, recipients, signer } = this.props;
     const active = allFiles.length > 0 ? "active" : "";
     const certsOperation: any = this.props.operation === "sign" ? signer : recipients;
     let disabledFirst = "";
     let disabledSecond = "";
     let disabledUnsign = "disabled";
     let j = 0;
+
     if (activeFiles.length > 0) {
       if (this.props.operation === "encrypt" && certsOperation.length > 0) {
-        disabledFirst = "";
+        if (this.getDisabled()) {
+          method === ENCRYPT ? disabledFirst = "" : disabledFirst = "disabled";
+        } else {
+          disabledFirst = "";
+        }
       } else if (this.props.operation === "sign" && certsOperation) {
-        disabledFirst = "";
+        if (this.getDisabled()) {
+          method === SIGN ? disabledFirst = "" : disabledFirst = "disabled";
+        } else {
+          disabledFirst = "";
+        }
       } else {
         disabledFirst = "disabled";
       }
+
       for (const file of activeFiles) {
         if (this.props.operation === "sign" && file.fullpath.split(".").pop() === "sig") {
           j++;
@@ -63,11 +91,30 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
       if (this.props.operation === "encrypt" && j === activeFiles.length) {
         disabledSecond = "";
       } else if (this.props.operation === "sign" && j === activeFiles.length) {
-        disabledSecond = "";
-        disabledUnsign = "";
+        if (this.getDisabled()) {
+          if (method === SIGN) {
+            disabledSecond = "";
+            disabledUnsign = "disabled";
+          }
+
+          if (method === VERIFY) {
+            disabledFirst = "disabled";
+            disabledSecond = "";
+            disabledUnsign = "disabled";
+          }
+        } else {
+          disabledSecond = "";
+          disabledUnsign = "";
+       }
       } else {
         if (this.props.operation === "sign" && certsOperation) {
           j > 0 ? disabledFirst = "disabled" : disabledFirst = "";
+
+          if (this.getDisabled()) {
+            if (method === VERIFY) {
+              disabledFirst = "disabled";
+            }
+          }
         }
 
         disabledSecond = "disabled";
@@ -76,7 +123,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
       disabledFirst = "disabled";
       disabledSecond = "disabled";
     }
-    if (!disabledUnsign) {
+    if (!disabledUnsign || (this.getDisabled() && method === SIGN && j === activeFiles.length)) {
       return (
         <div className={"btns-for-operation " + active}>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledFirst} onClick={this.props.operation_resign.bind(this)}>{this.props.btn_resign}</a>
@@ -93,13 +140,33 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
       );
     }
   }
+
+  getDisabled = () => {
+    const { activeFiles, loadingFiles } = this.props;
+
+    if (loadingFiles.length) {
+      return true;
+    }
+
+    if (activeFiles.length) {
+      for (const file of activeFiles) {
+        if (file.socket) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }
 
 export default connect((state) => {
   return {
-    activeFiles: activeFilesSelector(state, {active: true}),
+    activeFiles: activeFilesSelector(state, { active: true }),
     allFiles: mapToArr(state.files.entities),
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
+    method: state.remoteFiles.method,
     recipients: mapToArr(state.recipients.entities),
-    signer: state.signers.signer,
+    signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
 })(BtnsForOperation);

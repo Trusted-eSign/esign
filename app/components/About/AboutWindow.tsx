@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import FeedbackForm from "./FeedbackForm";
 import ProductInformation from "./ProductInformation";
 

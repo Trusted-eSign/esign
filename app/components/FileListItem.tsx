@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { connect } from "react-redux";
+import React from "react";
 import SignatireStatusCicrcle from "./SignatureStatusCircle";
 
 interface IFileRedux {
@@ -70,7 +69,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { file, operation, style } = this.props;
+    const { file, style } = this.props;
 
     const self = this;
     let active = "";

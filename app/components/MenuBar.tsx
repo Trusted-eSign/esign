@@ -1,12 +1,20 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { SETTINGS_JSON, TRUSTED_CRYPTO_LOG } from "../constants";
+import {
+  LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
+  LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
+  SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
+} from "../constants";
+import { loadingRemoteFilesSelector } from "../selectors";
+import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
-import Modal from "./Modal";
 import SideMenu from "./SideMenu";
+
+// tslint:disable-next-line:no-var-requires
+require("../server/socketManager");
 
 const remote = window.electron.remote;
 if (remote.getGlobal("sharedObject").logcrypto) {
@@ -20,18 +28,22 @@ class MenuBar extends React.Component<any, any> {
   };
 
   minimizeWindow() {
-    mainWindow.minimize();
+    remote.getCurrentWindow().minimize();
   }
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { encSettings, signSettings } = this.props;
+    const { encSettings, recipients, signSettings, signer } = this.props;
 
     const state = ({
+      recipients,
       settings: {
         encrypt: encSettings,
         locale,
         sign: signSettings,
+      },
+      signers: {
+        signer,
       },
     });
 
@@ -41,32 +53,65 @@ class MenuBar extends React.Component<any, any> {
         console.log(localize("Settings.write_file_failed", locale));
       }
       console.log(localize("Settings.write_file_ok", locale));
-      mainWindow.close();
+      remote.getCurrentWindow().close();
     });
   }
 
   getTitle() {
     const { localize, locale } = this.context;
+    const { isArchiveLog, eventsDateFrom, eventsDateTo } = this.props;
     const pathname = this.props.location.pathname;
-    let title: string;
-    if (pathname === "/sign")
-      title = localize("Sign.sign_and_verify", locale);
-    else if (pathname === "/encrypt")
-      title = localize("Encrypt.encrypt_and_decrypt", locale);
-    else if (pathname === "/certificate")
-      title = localize("Certificate.certs", locale);
-      else if (pathname === "/containers")
-      title = localize("Containers.containers", locale);
-    else if (pathname === "/about")
-      title = localize("About.about", locale);
-    else if (pathname === "/license")
-      title = localize("License.license", locale);
-    else if (pathname === "/help")
-      title = localize("Help.help", locale);
-    else
-      title = localize("About.product_NAME", locale);
 
-    return title;
+    switch (pathname) {
+      case LOCATION_ABOUT:
+        return localize("About.about", locale);
+
+      case LOCATION_CERTIFICATES:
+        return localize("Certificate.certs", locale);
+
+      case LOCATION_CONTAINERS:
+        return localize("Containers.containers", locale);
+
+      case LOCATION_ENCRYPT:
+        return localize("Encrypt.encrypt_and_decrypt", locale);
+
+      case LOCATION_HELP:
+        return localize("Help.help", locale);
+
+      case LOCATION_LICENSE:
+        return localize("License.license", locale);
+
+      case LOCATION_SIGN:
+        return localize("Sign.sign_and_verify", locale);
+
+      case LOCATION_DOCUMENTS:
+        return localize("Documents.documents", locale);
+
+      case LOCATION_EVENTS:
+        let title = localize("Events.operations_log", locale);
+
+        if (isArchiveLog && eventsDateFrom && eventsDateTo) {
+          title += " [" +
+            (new Date(eventsDateFrom)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "numeric",
+              year: "numeric",
+            }) + " - " +
+            (new Date(eventsDateTo)).toLocaleDateString(locale, {
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              month: "numeric",
+              year: "numeric",
+            }) + "]";
+        }
+        return title;
+
+      default:
+        return localize("About.product_NAME", locale);
+    }
   }
 
   componentDidMount() {
@@ -76,13 +121,17 @@ class MenuBar extends React.Component<any, any> {
   }
 
   render() {
+    const disabledNavigate = this.getDisabled();
+    const dataActivates = disabledNavigate ? "" : "slide-out";
+    const classDisabled = disabledNavigate ? "disabled" : "";
+
     return (
       <div>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
               <li>
-                <a data-activates="slide-out" className="menu-btn waves-effect waves-light">
+                <a data-activates={dataActivates} className={"menu-btn waves-effect waves-light " + classDisabled}>
                   <i className="material-icons">menu</i>
                 </a>
               </li>
@@ -115,11 +164,37 @@ class MenuBar extends React.Component<any, any> {
       </div>
     );
   }
+
+  getDisabled = () => {
+    const { files, loadingFiles } = this.props;
+
+    if (loadingFiles.length) {
+      return true;
+    }
+
+    if (files.length) {
+      for (const file of files) {
+        if (file.socket) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }
 
-export default connect((state) => {
+export default connect((state, ownProps) => {
   return {
     encSettings: state.settings.encrypt,
+    eventsDateFrom: state.events.dateFrom,
+    eventsDateTo: state.events.dateTo,
+    files: mapToArr(state.files.entities),
+    isArchiveLog: state.events.isArchive,
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
+    location: ownProps.location,
+    recipients: mapToArr(state.recipients.entities),
     signSettings: state.settings.sign,
+    signer: state.signers.signer,
   };
 })(MenuBar);

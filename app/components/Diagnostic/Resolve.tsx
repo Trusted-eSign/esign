@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import {
   ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
@@ -163,8 +163,6 @@ class Resolve extends React.Component<IResolveProps, {}> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-
     return (
       <div className="problem-contaner">
         {this.getResolve()}

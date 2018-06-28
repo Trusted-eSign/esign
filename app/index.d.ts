@@ -1,4 +1,7 @@
 interface Window {
+    APP_LOG_FILE: string;
+    APP_ERRORS_LOG_FILE: string;
+    USER_NAME: string;
     mainWindow: any;
     electron: any;
     framework_NW: boolean;
@@ -10,6 +13,7 @@ interface Window {
     HOME_DIR: string;
     TMP_DIR: string;
     DEFAULT_CERTSTORE_PATH: string;
+    DEFAULT_DOCUMENTS_PATH: string;
     LICENSE_PATH: string;
     PLATFORM: string;
     SETTINGS_JSON: string;

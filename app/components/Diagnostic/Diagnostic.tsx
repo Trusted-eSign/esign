@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { loadAllCertificates, loadLicense, verifyLicense } from "../../AC";
+import { loadAllCertificates, loadLicense } from "../../AC";
 import {
   BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
@@ -23,6 +23,8 @@ interface IDiagnosticState {
   criticalError: boolean;
   errors: IError[];
 }
+
+const remote = window.electron.remote;
 
 class Diagnostic extends React.Component<any, IDiagnosticState> {
   static contextTypes = {
@@ -53,7 +55,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
             type: NO_GOST_2001,
           }],
         });
-        this.setState({ criticalError: true});
+        this.setState({ criticalError: true });
         return false;
       }
 
@@ -89,8 +91,6 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   checkTrustedCryptoLoadedErr = () => {
-    const { localize, locale } = this.context;
-
     if (window.tcerr) {
       if (window.tcerr.message) {
         if (~window.tcerr.message.indexOf("libcapi")) {
@@ -123,12 +123,9 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    const { localize, locale } = this.context;
-    const { certificates, certificatesLoaded, dataLicense, loadedLicense, loadingLicense, statusLicense, verifiedLicense } = this.props;
-    // tslint:disable-next-line:no-shadowed-variable
-    const { verifyLicense } = this.props;
+    const { certificatesLoaded, loadingLicense } = this.props;
 
-    if (loadedLicense !== nextProps.loadedLicense && !nextProps.dataLicense) {
+    if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -136,12 +133,15 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
     }
-
-    if (!verifiedLicense && !nextProps.verifiedLicense && nextProps.loadedLicense && nextProps.dataLicense) {
-      verifyLicense(nextProps.dataLicense);
+    if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+      this.setState({
+        errors: [...this.state.errors, {
+          important: WARNING,
+          type: NO_CORRECT_CRYPTOARM_LICENSE,
+        }],
+      });
     }
-
-    if (verifiedLicense !== nextProps.verifiedLicense && nextProps.statusLicense > 0) {
+    if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -150,7 +150,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
       });
     }
 
-    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length < 2)) {
+    if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length === 0)) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -161,8 +161,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   componentDidMount() {
-    const { localize, locale } = this.context;
-    const { certificates, certificatesLoading, certificatesLoaded, loadedLicense, loadingLicense } = this.props;
+    const { certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { loadAllCertificates, loadLicense } = this.props;
 
@@ -170,9 +169,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
       this.checkCPCSP();
     }
 
-    if (!loadedLicense && !loadingLicense) {
-      loadLicense();
-    }
+    loadLicense();
 
     if (!certificatesLoading) {
       loadAllCertificates();
@@ -181,29 +178,23 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
   getCloseButton() {
     const { localize, locale } = this.context;
-    const { activeError, criticalError, errors } = this.state;
+    const { activeError, criticalError } = this.state;
 
     if (!criticalError && activeError === NO_HAVE_CERTIFICATES_WITH_KEY) {
       return (
         <Link to={"/containers"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <div className="contain-btn">
-            <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-          </div>
+          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
         </Link>
       );
     } else if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
       return (
         <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <div className="contain-btn">
-            <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-          </div>
+          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
         </Link>
       );
     } else {
       return (
-        <div className="contain-btn">
-          <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
-        </div>
+        <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
       );
     }
   }
@@ -214,8 +205,25 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
     if (!errors || !errors.length) {
       return null;
-    } else if (!this.state.activeError) {
-      this.setState({ activeError: errors[0].type });
+    }
+
+    const cspErrors: IError[] = [];
+
+    for (const error of errors) {
+      if (error.type === NO_GOST_2001 ||
+        error.type === ERROR_CHECK_CSP_PARAMS) {
+        cspErrors.push(error);
+      }
+    }
+
+    if (cspErrors.length) {
+      if (!this.state.activeError) {
+        this.setState({ activeError: cspErrors[0].type });
+      }
+    } else {
+      if (!this.state.activeError) {
+        this.setState({ activeError: errors[0].type });
+      }
     }
 
     return (
@@ -227,7 +235,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           <div className="row">
             <div className={"diagnostic-content-item"}>
               <div className="col s6 m5 l6 problem-contaner">
-                <Problems errors={errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
+                <Problems errors={cspErrors.length ? cspErrors : errors} activeError={this.state.activeError} onClick={this.handleClickOnError} />
               </div>
               <div className="col s6 m7 l6 problem-contaner">
                 <Resolve activeError={this.state.activeError} />
@@ -235,7 +243,10 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
             </div>
             <div className="row">
-              {this.getCloseButton()}
+              <div className="row halfbottom" />
+              <div className="col s3 offset-s9">
+                {this.getCloseButton()}
+              </div>
             </div>
           </div>
         </div>
@@ -251,7 +262,8 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { criticalError } = this.state;
 
     if (criticalError) {
-      mainWindow.close();
+      remote.getGlobal("sharedObject").isQuiting = true;
+      remote.getCurrentWindow().close();
     }
 
     $("#modal-window-diagnostic").closeModal();
@@ -272,9 +284,11 @@ export default connect((state) => {
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
     dataLicense: state.license.data,
+    lic_error: state.license.lic_error,
+    lic_format: state.license.lic_format,
     loadedLicense: state.license.loaded,
     loadingLicense: state.license.loading,
     statusLicense: state.license.status,
     verifiedLicense: state.license.verified,
   };
-}, { loadAllCertificates, loadLicense, verifyLicense })(Diagnostic);
+}, { loadAllCertificates, loadLicense })(Diagnostic);

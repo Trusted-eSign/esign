@@ -1,5 +1,6 @@
+import * as crypto from "crypto";
 import * as fs from "fs";
-import { Map, OrderedMap } from "immutable";
+import { OrderedMap } from "immutable";
 
 export function arrayToMap(arr, RecordModel) {
   return arr.reduce((acc, el) => acc.set(el.id, RecordModel ? new RecordModel(el) : el), new OrderedMap({}))
@@ -105,7 +106,7 @@ export function fileCoding(filePath: string): number {
  */
 export function fileExists(filePath: string): boolean {
   try {
-    return fs.statSync(filePath).isFile();
+    return fs.existsSync(filePath);
   } catch (err) {
     return false;
   }
@@ -121,4 +122,131 @@ export function dirExists(dirPath: string): boolean {
   } catch (err) {
     return false;
   }
+}
+
+export const uuid = () => {
+  const rnb = crypto.randomBytes(16).toString("hex");
+
+  return rnb.substring(0, 8) + "-" + rnb.substring(8, 12) + "-" + rnb.substring(12, 16) + "-" + rnb.substring(16, 20) + "-" + rnb.substring(20);
+};
+
+export const randomSerial = () => {
+  return Math.floor(Math.random() * 1000000000000000000);
+};
+
+export const validateSnils = (snils: string | number) => {
+  let result = false;
+
+  if (typeof snils === "number") {
+    snils = snils.toString();
+  } else if (typeof snils !== "string") {
+    snils = "";
+  }
+
+  if (!snils.length) {
+    return false;
+  } else if (/[^0-9]/.test(snils)) {
+    return false;
+  } else if (snils.length !== 11) {
+    return false;
+  } else {
+    let sum = 0;
+
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(snils[i], 10) * (9 - i);
+    }
+
+    let checkDigit = 0;
+    if (sum < 100) {
+      checkDigit = sum;
+    } else if (sum > 101) {
+      checkDigit = parseInt(sum % 101, 10);
+      if (checkDigit === 100) {
+        checkDigit = 0;
+      }
+    }
+    if (checkDigit === parseInt(snils.slice(-2), 10)) {
+      result = true;
+    } else {
+      return false;
+    }
+  }
+  return result;
+};
+
+export const validateInn = (inn: string | number) => {
+  let result = false;
+
+  if (typeof inn === "number") {
+    inn = inn.toString();
+  } else if (typeof inn !== "string") {
+    inn = "";
+  }
+
+  if (!inn.length) {
+    return false;
+  } else if (/[^0-9]/.test(inn)) {
+    return false;
+  } else if ([10, 12].indexOf(inn.length) === -1) {
+    return false;
+  } else {
+    const checkDigit = (inn, coefficients) => {
+      let n = 0;
+
+      // tslint:disable-next-line:forin
+      for (const i in coefficients) {
+        n += coefficients[i] * inn[i];
+      }
+
+      return parseInt(n % 11 % 10, 10);
+    };
+
+    switch (inn.length) {
+      case 10:
+        const n10 = checkDigit(inn, [2, 4, 10, 3, 5, 9, 4, 6, 8]);
+        if (n10 === parseInt(inn[9], 10)) {
+          result = true;
+        }
+        break;
+
+      case 12:
+        const n11 = checkDigit(inn, [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]);
+        const n12 = checkDigit(inn, [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]);
+        if ((n11 === parseInt(inn[10], 10)) && (n12 === parseInt(inn[11], 10))) {
+          result = true;
+        }
+        break;
+    }
+
+    if (!result) {
+      return false;
+    }
+  }
+  return result;
+};
+
+export const validateOgrnip = (ogrnip: string | number) => {
+  let result = false;
+
+  if (typeof ogrnip === "number") {
+    ogrnip = ogrnip.toString();
+  } else if (typeof ogrnip !== "string") {
+    ogrnip = "";
+  }
+
+  if (!ogrnip.length) {
+    return false;
+  } else if (/[^0-9]/.test(ogrnip)) {
+    return false;
+  } else if (ogrnip.length !== 15) {
+    return false;
+  } else {
+    const n15 = parseInt((parseInt(ogrnip.slice(0, -1), 10) % 13).toString().slice(-1), 10);
+    if (n15 === parseInt(ogrnip[14], 10)) {
+      result = true;
+    } else {
+      return false;
+    }
+  }
+  return result;
 }

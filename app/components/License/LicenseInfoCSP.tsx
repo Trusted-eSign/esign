@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import LicenseInfoFiled from "./LicenseInfoField";
 
-class LicenseInfoCSP extends React.PureComponent {
+class LicenseInfoCSP extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
+  shouldComponentUpdate(nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
@@ -24,7 +24,7 @@ class LicenseInfoCSP extends React.PureComponent {
         <div className="row leftshifter">
           <div className="col s6">
             <LicenseInfoFiled
-              title={localize("License.license", locale)}
+              title={localize("License.serial_number", locale)}
               info={license.substring(0, license.length - 5)}
             />
           </div>
@@ -48,8 +48,6 @@ class LicenseInfoCSP extends React.PureComponent {
   }
 
   getLicenseStatus = () => {
-    const { localize, locale } = this.context;
-
     try {
       return trusted.utils.Csp.checkCPCSPLicense();
     } catch (e) {

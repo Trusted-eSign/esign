@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../AC";
 
@@ -44,17 +44,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
   componentDidMount() {
     $(".cert-setting-item").dropdown();
-    this.checkAndVerify(this.props);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.checkAndVerify(nextProps);
-  }
-
-  checkAndVerify({ cert, verifyCertificate }) {
-    if (!cert.verified) {
-      verifyCertificate(cert.id);
-    }
   }
 
   handleClick = () => {
@@ -65,7 +54,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   }
 
   render() {
-    const { cert, chooseCert, operation, selectedCert, toggleOpen, isOpen } = this.props;
+    const { cert, operation, isOpen } = this.props;
     const { localize, locale } = this.context;
 
     let certKeyMenu: any = null;
@@ -110,7 +99,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     return (
-      <div className="row certificate-list-item">
+      <div className="row certificate-list-item" id={cert.id}>
         <div className={"collection-item avatar certs-collection " + active}
           onClick={this.handleClick}>
           <div className={"rectangle"} style={rectangleStyle}></div>

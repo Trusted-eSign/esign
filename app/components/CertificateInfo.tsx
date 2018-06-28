@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { localizeAlgorithm } from "../i18n/localize";
 import { IX509Certificate } from "../module/global_app";
 
@@ -21,20 +21,16 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
     return (
       <div className="add-cert-collection collection cert-info-list">
         <div className="collection-item certs-collection certificate-info">
-          <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
-          <div className={"collection-title "}>{certificate.serial ? certificate.serial : certificate.serialNumber}</div>
-        </div>
-        <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.subject", locale)}</div>
           <div className={"collection-title "}>{certificate.subjectFriendlyName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
-          <div className={"collection-info cert-info-blue"}>{localize("Certificate.organization", locale)}</div>
-          <div className={"collection-title "}>{certificate.organizationName}</div>
-        </div>
-        <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.issuer_name", locale)}</div>
           <div className={"collection-title "}>{certificate.issuerFriendlyName}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.organization", locale)}</div>
+          <div className={"collection-title "}>{certificate.organizationName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.cert_valid", locale)}</div>
@@ -45,6 +41,10 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
             month: "long",
             year: "numeric",
           })}</div>
+        </div>
+        <div className="collection-item certs-collection certificate-info">
+          <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
+          <div className={"collection-title "}>{certificate.serial ? certificate.serial : certificate.serialNumber}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Sign.alg", locale)}</div>

@@ -4,12 +4,12 @@ import * as path from "path";
 import {
   ADDRESS_BOOK, CA, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
-  ROOT, TRUST,
+  ROOT,
 } from "../constants";
-import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR } from "../constants";
+import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding } from "../utils";
-import * as jwt from "./jwt";
+import logger from "../winstonLogger";
 
 const OS_TYPE = os.type();
 
@@ -93,17 +93,21 @@ export class Store {
         return undefined;
       }
 
-      return this.addKeyToStore(this._providerSystem, key, "");
+      return this.addKeyToStore(key, "");
     } catch (e) {
       return undefined;
     }
   }
 
-  addKeyToStore(provider: any, key: trusted.pki.Key, password: string): boolean {
+  addKeyToStore(key: trusted.pki.Key, password: string = "", provider?: any): boolean {
     const ITEMS = this._store.cash.export();
     let uri: string;
     let newItem: any;
     let res: boolean = false;
+
+    if (!provider) {
+      provider = this._providerSystem;
+    }
 
     uri = this._store.addKey(provider.handle, key, password);
     newItem = provider.objectToPkiItem(uri);
@@ -145,7 +149,7 @@ export class Store {
     return res;
   }
 
-  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }): void {
+  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string): void {
     let provider;
 
     switch (providerType) {
@@ -172,7 +176,7 @@ export class Store {
       } else {
         done();
       }
-    });
+    }, category);
   }
 
   deleteCertificate(certificate: trusted.pkistore.PkiItem): boolean {
@@ -196,12 +200,36 @@ export class Store {
 
     try {
       this._store.deleteCert(provider.handle, certificate.category, certX509);
-    } catch (e) {
+
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    } catch (err) {
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "error",
+        message: err.message ? err.message : err,
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       return false;
     }
 
     return true;
-}
+  }
 
   importPkcs12(p12Path: string, pass: string): boolean {
     let p12: trusted.pki.Pkcs12;
@@ -222,7 +250,7 @@ export class Store {
     }
 
     this.importCertificate(cert);
-    this.addKeyToStore(this._providerSystem, key, "");
+    this.addKeyToStore(key, "");
 
     try {
       ca = p12.ca(pass);
@@ -239,12 +267,10 @@ export class Store {
     return true;
   }
 
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
-    let urls = cert.CAIssuersUrls;
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
-    let tempCert;
 
     if (provider instanceof trusted.pkistore.Provider_System) {
       const uri = store.addCert(provider.handle, MY, cert);
@@ -268,18 +294,27 @@ export class Store {
       }
     } else {
       const bCA = cert.isCA;
+      const selfSigned = cert.isSelfSigned;
       const hasKey = provider.hasPrivateKey(cert);
 
-      if (hasKey && !bCA) {
-        store.addCert(provider.handle, MY, cert);
-      } else if (!hasKey && !bCA) {
-        store.addCert(provider.handle, ADDRESS_BOOK, cert);
-      } else if (!hasKey && bCA) {
-        store.addCert(provider.handle, CA, cert);
+      if (category) {
+        store.addCert(provider.handle, category, cert);
+      } else {
+        if (hasKey) {
+          store.addCert(provider.handle, MY, cert);
+        } else if (!hasKey && !bCA) {
+          store.addCert(provider.handle, ADDRESS_BOOK, cert);
+        } else if (bCA) {
+          if (OS_TYPE === "Windows_NT") {
+            selfSigned ? store.addCert(provider.handle, ROOT, cert) : store.addCert(provider.handle, CA, cert);
+          }
+        }
       }
     }
 
-    if (!urls.length) {
+    return callback();
+
+    /*if (!urls.length) {
       return callback();
     }
 
@@ -292,7 +327,7 @@ export class Store {
 
         self.handleImportCertificate(tempCert, store, provider, callback);
       }
-    });
+    });*/
   }
 
   downloadCRL(cert: any, done: (err: any, res?: any) => void): any {

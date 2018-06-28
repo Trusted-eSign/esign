@@ -53,6 +53,10 @@ module.exports = {
       clear: true
     },
     {
+      file: 'app/table.global.css',
+      clear: true
+    },
+    {
       file: 'app/routes.js',
       pattern: /CounterPage/
     },

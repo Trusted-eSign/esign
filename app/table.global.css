@@ -1,0 +1,63 @@
+.Table {
+  width: 100%;
+  margin-top: 15px;
+}
+.headerRow {
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 1rem;
+}
+.evenRow,
+.oddRow {
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.9rem;
+}
+.oddRow {
+  background-color: #fafafa;
+}
+.foundEvent {
+  background-color: PapayaWhip;
+}
+.selectedEvent {
+  background-color: lightgrey;
+}
+.headerColumn {
+  text-transform: none;
+}
+.exampleColumn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checkboxLabel {
+  margin-left: .5rem;
+}
+.checkboxLabel:first-of-type {
+  margin-left: 0;
+}
+
+.noRows {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  color: #bdbdbd;
+}
+
+.navigationToolbar {
+  bottom: 20px !important;
+  right: 30px !important;
+  position: fixed !important;
+  padding: 10px !important;
+  background-color: rgba(255,255,255,0.8) !important;
+  z-index: 1000 !important;
+}
+
+.ReactVirtualized__Grid, .ReactVirtualized__Table__headerColumn {
+  outline: none;
+}

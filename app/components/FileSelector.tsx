@@ -1,9 +1,9 @@
 import { is } from "immutable";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
-import { dlg } from "../module/global_app";
+import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileList from "./FileList";
 import ProgressBars from "./ProgressBars";
@@ -22,6 +22,14 @@ interface IFile {
   size: number;
   type: string;
   webkitRelativePath: string;
+  remoteId?: string;
+  socket?: string;
+}
+
+interface IFilePath {
+  fullpath: string;
+  extra?: any;
+  socket?: string;
 }
 
 interface IFileRedux {
@@ -31,17 +39,31 @@ interface IFileRedux {
   fullpath: string;
   id: number;
   lastModifiedDate: Date;
+  remoteId: string;
+  socket: string;
+}
+
+export interface IRemoteFile {
+  extra: any;
+  id: number;
+  loaded: boolean;
+  loading: boolean;
+  name: string;
+  socketId: string;
+  totalSize: number;
+  url: string;
 }
 
 interface IFileSelectorProps {
   activeFile: (id: number, active?: boolean) => void;
   deleteFile: (fileId: number) => void;
   operation: string;
+  loadingFiles: IRemoteFile[];
   files: IFileRedux[];
   selectFile: (fullpath: string, name?: string, lastModifiedDate?: Date, size?: number) => void;
   selectedFilesPackage: boolean;
   selectingFilesPackage: boolean;
-  filePackageSelect: (files: string[]) => void;
+  filePackageSelect: (files: IFilePath[]) => void;
   filePackageDelete: (filesId: number[]) => void;
 }
 
@@ -62,9 +84,13 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: IFileSelectorProps) {
-    const { files, selectedFilesPackage, selectingFilesPackage } = this.props;
+    const { files, loadingFiles, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage !== nextProps.selectingFilesPackage) {
+      return true;
+    }
+
+    if (loadingFiles.length !== nextProps.loadingFiles.length) {
       return true;
     }
 
@@ -91,11 +117,17 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   addFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { selectFile, filePackageSelect } = this.props;
+    const { filePackageSelect } = this.props;
 
     dialog.showOpenDialog(null, { properties: ["openFile", "multiSelections"] }, (selectedFiles: string[]) => {
       if (selectedFiles) {
-        filePackageSelect(selectedFiles);
+        const pack: IFilePath[] = [];
+
+        selectedFiles.forEach((file) => {
+          pack.push({fullpath: file});
+        });
+
+        filePackageSelect(pack);
       }
     });
   }
@@ -146,8 +178,6 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
   }
 
   dropHandler = (event: any) => {
-    const { localize, locale } = this.context;
-
     event.stopPropagation();
     event.preventDefault();
     event.target.classList.remove("draggedOver");
@@ -195,7 +225,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   removeAllFiles() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, files, deleteFile } = this.props;
+    const { filePackageDelete, files } = this.props;
 
     const filePackage: number[] = [];
 
@@ -227,15 +257,15 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
     const { files } = this.props;
 
     const active = files.length > 0 ? "active" : "not-active";
-    const collection = files.length > 0 ? "collection" : "";
     const disabled = files.length > 0 ? "" : "disabled";
+    const classDisabled = this.getDisabled() ? "disabled" : "";
 
     return (
       <nav className="app-bar-content">
         <ul className="app-bar-items">
           <li className="app-bar-item" style={appBarStyle}><span>{localize("Settings.add_files", locale)}</span></li>
           <li className="right">
-            <a className={"nav-small-btn waves-effect waves-light " + active} onClick={this.addFiles.bind(this)}>
+            <a className={"nav-small-btn waves-effect waves-light " + active + " " + classDisabled} onClick={this.addFiles.bind(this)}>
               <i className="material-icons nav-small-icon">add</i>
             </a>
             <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-set-add-files">
@@ -254,22 +284,28 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   getBody() {
     const { localize, locale } = this.context;
-    const { files, selectingFilesPackage } = this.props;
+    const { loadingFiles, files, selectingFilesPackage } = this.props;
 
     if (selectingFilesPackage) {
       return <ProgressBars />;
     }
 
-    const active = files.length > 0 ? "active" : "not-active";
-    const collection = files.length > 0 ? "collection" : "";
+    const active = files.length > 0 || loadingFiles.length > 0 ? "active" : "not-active";
+    const collection = files.length > 0 || loadingFiles.length > 0 ? "collection" : "";
+    const  disabled = this.getDisabled();
 
     return (
       <div className="add">
-        <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
-          onDrop={(event: any) => this.dropHandler(event)}
-          onDragOver={(event: any) => this.dragOverHandler(event)}
-          onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
-        </div>
+        {
+          disabled ?
+            null
+            :
+            <div id="droppableZone" onDragEnter={(event: any) => this.dragEnterHandler(event)}
+              onDrop={(event: any) => this.dropHandler(event)}
+              onDragOver={(event: any) => this.dragOverHandler(event)}
+              onDragLeave={(event: any) => this.dragLeaveHandler(event)}>
+            </div>
+        }
         <div onDragEnter={this.dropZoneActive.bind(this)}>
           <div className={"add-file-item " + active} id="items-hidden">
             <br />
@@ -289,11 +325,30 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
       </div>
     );
   }
+
+  getDisabled = () => {
+    const { files, loadingFiles } = this.props;
+
+    if (loadingFiles.length) {
+      return true;
+    }
+
+    if (files.length) {
+      for (const file of files) {
+        if (file.socket) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
 }
 
 export default connect((state) => {
   return {
     files: mapToArr(state.files.entities),
+    loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     selectedFilesPackage: state.files.selectedFilesPackage,
     selectingFilesPackage: state.files.selectingFilesPackage,
   };

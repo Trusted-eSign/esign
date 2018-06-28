@@ -1,12 +1,12 @@
-import * as events from "events";
 import * as os from "os";
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
-import { PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM } from "../constants";
+import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT, USER_NAME } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
+import logger from "../winstonLogger";
 import BlockNotElements from "./BlockNotElements";
 import CertificateDelete from "./Certificate/CertificateDelete";
 import CertificateExport from "./Certificate/CertificateExport";
@@ -14,12 +14,14 @@ import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
-import ContainersList from "./ContainersList";
-import CSR from "./CSR";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
+import Dialog from "./Dialog";
 import Modal from "./Modal";
+import PasswordDialog from "./PasswordDialog";
 import ProgressBars from "./ProgressBars";
+import CertificateRequest from "./Request/CertificateRequest";
 import { ToolBarWithSearch } from "./ToolBarWithSearch";
+
+const OS_TYPE = os.type();
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -33,8 +35,25 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      importingCertificate: null,
+      importingCertificatePath: null,
+      password: "",
+      showDialogInstallRootCertificate: false,
+      showModalCertificateRequest: false,
       showModalDeleteCertifiacte: false,
       showModalExportCertifiacte: false,
+    });
+  }
+
+  handleCloseDialogInstallRootCertificate = () => {
+    this.setState({ showDialogInstallRootCertificate: false });
+  }
+
+  handleShowDialogInstallRootCertificate = (path: string, certificate: trusted.pki.Certificate) => {
+    this.setState({
+      importingCertificate: certificate,
+      importingCertificatePath: path,
+      showDialogInstallRootCertificate: true,
     });
   }
 
@@ -54,6 +73,14 @@ class CertWindow extends React.Component<any, any> {
     this.setState({ showModalExportCertifiacte: true });
   }
 
+  handleCloseModalCertificateRequest = () => {
+    this.setState({ showModalCertificateRequest: false });
+  }
+
+  handleShowModalCertificateRequest = () => {
+    this.setState({ showModalCertificateRequest: true });
+  }
+
   handlePasswordChange = (password: string) => {
     this.setState({ password });
   }
@@ -69,6 +96,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleReloadCertificates = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
 
     this.setState({ certificate: null });
@@ -83,6 +111,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleReloadContainers = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllContainers, removeAllContainers } = this.props;
 
     this.setState({
@@ -101,10 +130,11 @@ class CertWindow extends React.Component<any, any> {
 
   handleCertificateImport = (event: any) => {
     const { localize, locale } = this.context;
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
     const path = event[0].path;
     const format: trusted.DataFormat = fileCoding(path);
-    const OS_TYPE = os.type();
+    let container = "";
 
     let certificate: trusted.pki.Certificate;
     let providerType: string = PROVIDER_SYSTEM;
@@ -112,11 +142,13 @@ class CertWindow extends React.Component<any, any> {
     try {
       certificate = trusted.pki.Certificate.load(path, format);
     } catch (e) {
-      $(".toast-cert_load_failed").remove();
-      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+      this.p12Import(event);
 
       return;
     }
+
+    const bCA = certificate.isCA;
+    const selfSigned = certificate.isSelfSigned;
 
     if (OS_TYPE === "Windows_NT") {
       providerType = PROVIDER_MICROSOFT;
@@ -124,28 +156,146 @@ class CertWindow extends React.Component<any, any> {
       providerType = PROVIDER_CRYPTOPRO;
     }
 
-    window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
-      if (err) {
-        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-      } else {
-        removeAllCertificates();
+    try {
+      container = trusted.utils.Csp.getContainerNameByCertificate(certificate);
+    } catch (e) {
+      //
+    }
 
-        if (!isLoading) {
-          loadAllCertificates();
-        }
+    if (container) {
+      try {
+        trusted.utils.Csp.installCertifiacteToContainer(certificate, container, 75);
+        trusted.utils.Csp.installCertifiacteFromContainer(container, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
 
         Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+
+        logger.log({
+          certificate: certificate.subjectName,
+          level: "info",
+          message: "",
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + certificate.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+      } catch (err) {
+        Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+
+        logger.log({
+          certificate: certificate.subjectName,
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + certificate.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+
+        return;
       }
-    });
+    } else if (!bCA) {
+      window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
+        if (err) {
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+        }
+      }, ADDRESS_BOOK);
+
+      Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
+
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Импорт сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    }
+
+    if (selfSigned || bCA) {
+      this.handleShowDialogInstallRootCertificate(path, certificate);
+    } else {
+      removeAllCertificates();
+
+      if (!isLoading) {
+        loadAllCertificates();
+      }
+    }
+  }
+
+  handleInstallTrustedCertificate = () => {
+    const { localize, locale } = this.context;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
+    const { importingCertificate, importingCertificatePath } = this.state;
+
+    this.handleCloseDialogInstallRootCertificate();
+
+    const isSelfSigned = importingCertificate.isSelfSigned;
+
+    if (OS_TYPE === "Windows_NT") {
+      const storeName = isSelfSigned ? ROOT : CA;
+
+      window.PKISTORE.importCertificate(importingCertificate, PROVIDER_MICROSOFT, (err: Error) => {
+        if (err) {
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+        } else {
+          removeAllCertificates();
+
+          if (!isLoading) {
+            loadAllCertificates();
+          }
+
+          Materialize.toast(localize("Certificate.cert_trusted_import_ok", locale), 2000, "toast-cert_trusted_import_ok");
+        }
+      }, storeName);
+    } else if (importingCertificatePath) {
+      let certmgrPath = "";
+
+      if (OS_TYPE === "Darwin") {
+        certmgrPath = "/opt/cprocsp/bin/certmgr";
+      } else {
+        certmgrPath = os.arch() === "ia32" ? "/opt/cprocsp/bin/ia32/certmgr" : "/opt/cprocsp/bin/amd64/certmgr";
+      }
+
+      const storeName = isSelfSigned ? "uROOT" : "uCA";
+
+      // tslint:disable-next-line:quotemark
+      const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store ' + "'" + storeName + "'" + ' -file ' + "'" + importingCertificatePath + "'" + "\"";
+
+      const options = {
+        name: "CryptoARM GOST",
+      };
+
+      window.sudo.exec(cmd, options, function(error: Error) {
+        if (error) {
+          Materialize.toast(localize("Certificate.cert_trusted_import_failed", locale), 2000, "toast-cert_trusted_import_failed");
+        } else {
+          removeAllCertificates();
+
+          if (!isLoading) {
+            loadAllCertificates();
+          }
+
+          Materialize.toast(localize("Certificate.cert_trusted_import_ok", locale), 2000, "toast-cert_trusted_import_ok");
+        }
+      });
+    }
   }
 
   p12Import = (event: any) => {
-    const { certificates } = this.props;
     const { localize, locale } = this.context;
+    const self = this;
 
     const P12_PATH = event[0].path;
-    let p12: trusted.pki.Pkcs12;
-    const certCount = certificates.length;
+    let p12: trusted.pki.Pkcs12 | undefined;
 
     try {
       p12 = trusted.pki.Pkcs12.load(P12_PATH);
@@ -156,23 +306,54 @@ class CertWindow extends React.Component<any, any> {
     if (!p12) {
       $(".toast-cert_load_failed").remove();
       Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+
       return;
     }
 
     $("#get-password").openModal({
       complete() {
-        if (!window.PKISTORE.importPkcs12(P12_PATH, this.state.pass_value)) {
-          $(".toast-cert_import_failed").remove();
-          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
-        } else {
-          if (certCount === certificates.length) {
-            $(".toast-cert_imported").remove();
-            Materialize.toast(localize("Certificate.cert_imported", locale), 2000, ".toast-cert_imported");
-          } else {
-            $(".toast-cert_import_ok").remove();
-            Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_import_ok");
+        try {
+          trusted.utils.Csp.importPkcs12(p12, self.state.password);
+
+          self.handlePasswordChange("");
+
+          self.props.removeAllCertificates();
+
+          if (!self.props.isLoading) {
+            self.props.loadAllCertificates();
           }
 
+          $(".toast-cert_import_ok").remove();
+          Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, ".toast-cert_import_ok");
+
+          logger.log({
+            certificate: "",
+            level: "info",
+            message: "",
+            operation: "Импорт PKCS12",
+            operationObject: {
+              in: path.basename(P12_PATH),
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+        } catch (err) {
+          self.handlePasswordChange("");
+
+          $(".toast-cert_import_failed").remove();
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_failed");
+
+          logger.log({
+            certificate: "",
+            level: "error",
+            message: err.message ? err.message : err,
+            operation: "Импорт PKCS12",
+            operationObject: {
+              in: path.basename(P12_PATH),
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
         }
       },
       dismissible: false,
@@ -183,7 +364,7 @@ class CertWindow extends React.Component<any, any> {
     if (isEncryptedKey(event[0].path)) {
       $("#get-password").openModal({
         complete() {
-          this.importCertKeyHelper(event[0].path, this.state.pass_value);
+          this.importCertKeyHelper(event[0].path, this.state.password);
         },
         dismissible: false,
       });
@@ -255,7 +436,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   getTitle() {
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { certificate } = this.state;
     const { localize, locale } = this.context;
 
     let title: any = null;
@@ -274,7 +455,7 @@ class CertWindow extends React.Component<any, any> {
 
   showModalDeleteCertificate = () => {
     const { localize, locale } = this.context;
-    const { certificate, container, deleteContainer, showModalDeleteCertifiacte } = this.state;
+    const { certificate, showModalDeleteCertifiacte } = this.state;
 
     if (!certificate || !showModalDeleteCertifiacte) {
       return;
@@ -317,16 +498,37 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
+  showModalCertificateRequest = () => {
+    const { localize, locale } = this.context;
+    const { showModalCertificateRequest } = this.state;
+
+    if (!showModalCertificateRequest) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalCertificateRequest}
+        header={localize("CSR.create_request", locale)}
+        onClose={this.handleCloseModalCertificateRequest}>
+
+        <CertificateRequest
+          onCancel={this.handleCloseModalCertificateRequest}
+          selfSigned={false}
+        />
+      </Modal>
+    );
+  }
+
   render() {
     const { certificates, isLoading } = this.props;
-    const { activeTabIsCertInfo, certificate } = this.state;
+    const { certificate } = this.state;
     const { localize, locale } = this.context;
 
     if (isLoading) {
       return <ProgressBars />;
     }
 
-    const CURRENT = certificate ? "not-active" : "active";
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";
@@ -337,19 +539,14 @@ class CertWindow extends React.Component<any, any> {
           <div className="col s6 m6 l6 content-item-height">
             <div className="cert-content-item">
               <div className="content-wrapper z-depth-1">
-                <ToolBarWithSearch operation="certificate" disable="" reloadCertificates={this.handleReloadCertificates} rightBtnAction={
-                  (event: any) => {
-                    this.handleCertificateImport(event.target.files);
-                  }
-                } />
-                <div id="modal-createCertificateRequest" className="modal cert-window">
-                  <div className="add-cert-content">
-                    <HeaderWorkspaceBlock text={localize("CSR.create_selfSigned", locale)} new_class="modal-bar" icon="close" onСlickBtn={() => {
-                      $("#modal-createCertificateRequest").closeModal();
-                    }} />
-                    <CSR />
-                  </div>
-                </div>
+                <ToolBarWithSearch operation="certificate" disable=""
+                  reloadCertificates={this.handleReloadCertificates}
+                  handleShowModalCertificateRequest={this.handleShowModalCertificateRequest}
+                  rightBtnAction={
+                    (event: any) => {
+                      this.handleCertificateImport(event.target.files);
+                    }
+                  } />
                 <div className="add-certs">
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
@@ -388,10 +585,15 @@ class CertWindow extends React.Component<any, any> {
                 {this.getCertificateInfoBody()}
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
+                {this.showModalCertificateRequest()}
               </div>
             </div>
           </div>
         </div>
+        <Dialog isOpen={this.state.showDialogInstallRootCertificate}
+          header="Внимание!" body="Для установки корневых сертификатов требуются права администратора. Продолжить?"
+          onYes={this.handleInstallTrustedCertificate} onNo={this.handleCloseDialogInstallRootCertificate} />
+        <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
   }

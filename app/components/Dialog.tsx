@@ -1,63 +1,77 @@
 import PropTypes from "prop-types";
-import * as React from "react";
-import { DialogBox, dlg } from "../module/global_app";
+import React from "react";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
-const dialog = window.electron.remote.dialog;
+interface IDialogProps {
+  isOpen: boolean;
+  header: string;
+  body?: string;
+  onYes: () => void;
+  onNo: () => void;
+}
 
-class Dialog extends React.Component<any, any> {
+interface IDialogState {
+  active: boolean;
+}
+
+class Dialog extends React.Component<IDialogProps, IDialogState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: any) {
+  constructor(props: IDialogProps) {
     super(props);
-    this.changeSettings = this.changeSettings.bind(this);
+    this.state = {
+      active: props.isOpen,
+    };
   }
 
-  componentDidMount() {
-    dlg.on(DialogBox.SETTINGS, this.changeSettings);
-  }
+  componentWillReceiveProps(newProps: IDialogProps) {
+    const { isOpen } = newProps;
 
-  componentWillUnmount() {
-    dlg.removeListener(DialogBox.SETTINGS, this.changeSettings);
-  }
-
-  changeSettings() {
-    this.setState({});
-  }
-
-  clickYes() {
-    dlg.CloseDialog(true);
-  }
-
-  clickNo() {
-    dlg.CloseDialog(false);
+    if (this.state.active !== isOpen) {
+      this.setState({ active: isOpen });
+    }
   }
 
   render() {
     const { localize, locale } = this.context;
-    let active = "";
+    const { header, body } = this.props;
+    const { active } = this.state;
 
-    if (dlg.get_dlg_open) {
-      active = "active";
+    if (!active) {
+      return null;
     }
 
     return (
-      <div className={"dialog " + active}>
+      <div className={"dialog active"}>
         <div className="dialog-content">
-          <HeaderWorkspaceBlock text={dlg.get_dlg_title} new_class="dialog-bar" />
+          <HeaderWorkspaceBlock text={header} new_class="dialog-bar" />
           <div className="dialog-text">
-            <div className="dialog-message">{dlg.get_dlg_message}</div>
+            <div className="dialog-message">{body}</div>
           </div>
           <div className="dialog-buttons">
-            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickYes.bind(this)}>{localize("Common.yes", locale)}</a>
-            <a className="waves-effect waves-light btn dialog-btn" onClick={this.clickNo.bind(this)}>{localize("Common.no", locale)}</a>
+            <a className="waves-effect waves-light btn dialog-btn" onClick={this.handleYes}>
+              {localize("Common.yes", locale)}
+            </a>
+            <a className="waves-effect waves-light btn dialog-btn" onClick={this.handleNo}>
+              {localize("Common.no", locale)}
+            </a>
           </div>
         </div>
       </div>
     );
+  }
+
+  handleYes = () => {
+    this.props.onYes();
+    this.setState({ active: false });
+  }
+
+  handleNo = () => {
+    this.props.onNo();
+    this.setState({ active: false });
   }
 }
 

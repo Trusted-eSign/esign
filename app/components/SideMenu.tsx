@@ -1,14 +1,21 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import {
+  LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
+  LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP,
+  LOCATION_LICENSE, LOCATION_SIGN,
+} from "../constants";
 
-class SideMenu extends React.PureComponent {
+const remote = window.electron.remote;
+
+class SideMenu extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: { locale: string }) {
+  shouldComponentUpdate(nextContext: { locale: string }) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
@@ -28,23 +35,33 @@ class SideMenu extends React.PureComponent {
           </div>
         </nav>
         <div className="row">
-          <Link to="/sign">
+          <Link to={LOCATION_SIGN}>
             {localize("Sign.Sign", locale)}
             <i className="material-icons left sign">mode_edit</i>
           </Link>
-          <Link to="/encrypt">
+          <Link to={LOCATION_ENCRYPT}>
             {localize("Encrypt.Encrypt", locale)}
             <i className="material-icons left encrypt">enhanced_encryption</i>
           </Link>
 
-          <Link to="/certificate">
+          <Link to={LOCATION_CERTIFICATES}>
             {localize("Certificate.Certificate", locale)}
             <i className="material-icons left cert">library_books</i>
           </Link>
 
-          <Link to="/containers">
-            {localize("Containers.containers", locale)}
+          <Link to={LOCATION_CONTAINERS}>
+            {localize("Containers.Containers", locale)}
             <i className="material-icons left keystore">library_books</i>
+          </Link>
+
+          <Link to={LOCATION_DOCUMENTS}>
+            {localize("Documents.Documents", locale)}
+            <i className="material-icons left keystore">library_books</i>
+          </Link>
+
+          <Link to={LOCATION_EVENTS}>
+            {localize("Events.Operations_log", locale)}
+            <i className="material-icons left journal">help</i>
           </Link>
         </div>
         <div className="row">
@@ -54,15 +71,15 @@ class SideMenu extends React.PureComponent {
                 {localize("About.About", locale)}
                 <i className="material-icons left about">about</i>
               </Link>
-              <Link to="/license">
+              <Link to={LOCATION_LICENSE}>
                 {localize("License.License", locale)}
                 <i className="material-icons left license">license</i>
               </Link>
-              <Link to="/help">
+              <Link to={LOCATION_HELP}>
                 {localize("Help.Help", locale)}
                 <i className="material-icons left help">help</i>
               </Link>
-              <Link to="/" onClick={() => mainWindow.close()}>
+              <Link to="/" onClick={() => remote.getCurrentWindow().close()}>
                 {localize("Common.exit", locale)}
                 <i className="material-icons left exit">exit_to_app</i>
               </Link>

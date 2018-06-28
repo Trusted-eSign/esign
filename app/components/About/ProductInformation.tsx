@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 
-class ProductInformation extends React.PureComponent {
+class ProductInformation extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: {}, nextState: {}, nextContext: {locale: string}) {
+  shouldComponentUpdate(nextContext: {locale: string}) {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 

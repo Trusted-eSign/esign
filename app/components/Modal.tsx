@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 interface IModalProps {
@@ -30,6 +30,10 @@ class Modal extends React.Component<IModalProps, {}> {
     }
   }
 
+  componentWillUnmount() {
+    $("#modal-window").closeModal();
+  }
+
   handleCloseModal = () => {
     const { onClose } = this.props;
 
@@ -41,7 +45,6 @@ class Modal extends React.Component<IModalProps, {}> {
   }
 
   render() {
-    const { localize, locale } = this.context;
     const { isOpen, header } = this.props;
 
     if (!isOpen) {
@@ -49,16 +52,16 @@ class Modal extends React.Component<IModalProps, {}> {
     }
 
     return (
-      <div id="modal-window" className="modal licence-modal">
-        <div className="licence-modal-main">
-          <HeaderWorkspaceBlock
-            text={header}
-            new_class="modal-bar"
-            icon="close"
-            onСlickBtn={() => {
-              this.handleCloseModal();
-            }}
-          />
+      <div id="modal-window" className="modal nooverflow">
+        <HeaderWorkspaceBlock
+          text={header}
+          new_class="modal-bar"
+          icon="close"
+          onСlickBtn={() => {
+            this.handleCloseModal();
+          }}
+        />
+        <div>
           {this.props.children}
         </div>
       </div>

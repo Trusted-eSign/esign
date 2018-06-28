@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
+import { USER_NAME } from "../constants";
 import { lang } from "../module/global_app";
 import { fileCoding, fileExists } from "../utils";
+import logger from "../winstonLogger";
 
 export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], policies: any, format: trusted.DataFormat, folderOut: string): string {
   let cipher: trusted.pki.Cipher;
@@ -39,13 +41,37 @@ export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], poli
     cipher.recipientsCerts = certsCollection;
 
     cipher.encrypt(uri, outURI, format);
-  } catch (e) {
+  } catch (err) {
+    logger.log({
+      certificate: "",
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Шифрование",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
+
     outURI = "";
   }
 
   if (policies.deleteFiles) {
     fs.unlinkSync(uri);
   }
+
+  logger.log({
+    certificate: "",
+    level: "info",
+    message: "",
+    operation: "Шифрование",
+    operationObject: {
+      in: path.basename(uri),
+      out: path.basename(outURI),
+    },
+    userName: USER_NAME,
+  });
 
   return outURI;
 }
@@ -106,7 +132,8 @@ export function decryptFile(uri: string, folderOut: string): string {
     if (!certWithKey) {
       $(".toast-search_decrypt_cert_failed").remove();
       Materialize.toast(lang.get_resource.Encrypt.search_decrypt_cert_failed, 2000, "toast-search_decrypt_cert_failed");
-      return "";
+
+      throw new Error("No have certificate with key");
     }
 
     cipher.recipientCert = certWithKey;
@@ -114,8 +141,32 @@ export function decryptFile(uri: string, folderOut: string): string {
 
     cipher.decrypt(uri, outURI, format);
 
+    logger.log({
+      certificate: "",
+      level: "info",
+      message: "",
+      operation: "Расшифрование",
+      operationObject: {
+        in: path.basename(uri),
+        out: path.basename(outURI),
+      },
+      userName: USER_NAME,
+    });
+
     return outURI;
-  } catch (e) {
+  } catch (err) {
+    logger.log({
+      certificate: "",
+      level: "error",
+      message: err.message ? err.message : err,
+      operation: "Расшифрование",
+      operationObject: {
+        in: path.basename(uri),
+        out: "Null",
+      },
+      userName: USER_NAME,
+    });
+
     return "";
   }
 }

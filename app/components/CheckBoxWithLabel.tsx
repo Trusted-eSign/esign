@@ -1,6 +1,7 @@
-import * as React from "react";
+import React from "react";
 
 interface ICheckBoxWithLabelProps {
+  disabled?: boolean;
   onClickCheckBox: (event: any) => void;
   isChecked: boolean;
   elementId: string;
@@ -9,12 +10,21 @@ interface ICheckBoxWithLabelProps {
 
 class CheckBoxWithLabel extends React.Component<ICheckBoxWithLabelProps, any> {
   render() {
-    const { onClickCheckBox, isChecked, elementId, title } = this.props;
+    const { disabled, isChecked, onClickCheckBox, elementId, title } = this.props;
 
-    return <div className="row settings-item">
-      <div className="col settins-check-title">{title}</div>
+    const classDisabled = disabled ? "disabled" : "";
+
+    return <div className="row settings-item" >
+      <div className={"col settins-check-title " + classDisabled}>{title}</div>
       <div className="col settings-check">
-        <input type="checkbox" id={elementId} className="filled-in" onClick={onClickCheckBox} defaultChecked={isChecked} />
+        <input
+          type="checkbox"
+          id={elementId}
+          className="filled-in"
+          onChange={onClickCheckBox}
+          disabled={disabled}
+          checked={isChecked} />
+
         <label htmlFor={elementId}></label>
       </div>
     </div>;

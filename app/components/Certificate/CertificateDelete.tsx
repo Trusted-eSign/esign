@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
+import { USER_NAME } from "../../constants";
+import logger from "../../winstonLogger";
 
 interface ICertificateDeleteProps {
   certificate: any;
@@ -47,6 +49,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
             name="groupDelCont"
             type="checkbox"
             id="delCont"
+            className="checkbox-red"
             checked={deleteContainer}
             onClick={this.toggleDeleteContainer}
           />
@@ -95,10 +98,34 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
         $(".toast-container_delete_ok").remove();
         Materialize.toast(localize("Containers.container_delete_ok", locale), 2000, "toast-container_delete_ok");
 
+        logger.log({
+          certificate: "",
+          level: "info",
+          message: "",
+          operation: "Удаление контейнера",
+          operationObject: {
+            in: container,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
+
         reloadContainers();
-      } catch (e) {
+      } catch (err) {
         $(".toast-container_delete_failed").remove();
         Materialize.toast(localize("Containers.container_delete_failed", locale), 2000, "toast-container_delete_failed");
+
+        logger.log({
+          certificate: "",
+          level: "error",
+          message: err.message ? err.message : err,
+          operation: "Удаление контейнера",
+          operationObject: {
+            in: container,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
       }
     }
 
@@ -123,7 +150,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
         const x509 = window.PKISTORE.getPkiObject(certificate);
         container = trusted.utils.Csp.getContainerNameByCertificate(x509);
       } catch (e) {
-        console.log("error get container by certificate", e);
+        // console.log("error get container by certificate", e);
       }
     }
 

@@ -1,10 +1,9 @@
 import * as fs from "fs";
 import PropTypes from "prop-types";
-import * as React from "react";
-import { BASE64, DER } from "../../constants";
+import React from "react";
+import { BASE64 } from "../../constants";
 import { fileExists } from "../../utils";
 import EncodingTypeSelector from "../EncodingTypeSelector";
-import PasswordDialog from "../PasswordDialog";
 
 interface ICertificateExportState {
   exportPrivateKey: boolean;
@@ -199,11 +198,27 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
   }
 
   handlePasswordChange = (password: string) => {
-    this.setState({ password });
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z!@#$%^&*]+$/i;
+
+    if (pattern.test(password) || !password) {
+      this.setState({ password });
+    } else {
+      $(".toast-pattern_failed").remove();
+      Materialize.toast(localize("Settings.pattern_failed", locale), 2000, "toast-pattern_failed");
+    }
   }
 
   handlePasswordConfirmChange = (passwordConfirm: string) => {
-    this.setState({ passwordConfirm });
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z!@#$%^&*]+$/i;
+
+    if (pattern.test(passwordConfirm) || !passwordConfirm) {
+      this.setState({ passwordConfirm });
+    } else {
+      $(".toast-pattern_failed").remove();
+      Materialize.toast(localize("Settings.pattern_failed", locale), 2000, "toast-pattern_failed");
+    }
   }
 
   handleEncodingChange = (encoding: string) => {
@@ -219,7 +234,7 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
           const x509 = window.PKISTORE.getPkiObject(certificate);
           exportable = trusted.utils.Csp.isHaveExportablePrivateKey(x509);
         } catch (e) {
-          console.log("error get container by certificate", e);
+          // console.log("error get container by certificate", e);
         }
       }
     }

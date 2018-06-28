@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import * as React from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates } from "../AC";
+import { loadAllCertificates, verifyCertificate } from "../AC";
 import accordion from "../decorators/accordion";
 import { filteredCertificatesSelector } from "../selectors";
 import CertificateListItem from "./CertificateListItem";
@@ -9,7 +9,15 @@ import ProgressBars from "./ProgressBars";
 
 interface ICertificateListProps {
   activeCert: (certificate: any) => void;
+  certificates: any;
+  isLoaded: boolean;
+  isLoading: boolean;
+  loadAllCertificates: () => void;
+  verifyCertificate: (id: number) => void;
 }
+
+let scrollTimer: NodeJS.Timer | null;
+let lastScrollFireTime = 0;
 
 class CertificateList extends React.Component<ICertificateListProps, ICertificateListProps> {
   static contextTypes = {
@@ -18,6 +26,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
   };
 
   componentDidMount() {
+    // tslint:disable-next-line:no-shadowed-variable
     const { isLoaded, isLoading, loadAllCertificates } = this.props;
 
     if (!isLoading && !isLoaded) {
@@ -25,6 +34,51 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     }
 
     $(".collapsible").collapsible();
+
+    const addCerts = $(".add-certs");
+
+    if (addCerts.length) {
+      addCerts[0].addEventListener("scroll", this.fireOnScroll);
+    }
+
+    this.processScroll();
+  }
+
+  fireOnScroll = () => {
+    const minScrollTime = 1000;
+    const now = new Date().getTime();
+    const self = this;
+
+    if (!scrollTimer) {
+      if (now - lastScrollFireTime > (3 * minScrollTime)) {
+        lastScrollFireTime = now;
+      }
+
+      scrollTimer = setTimeout(function() {
+        scrollTimer = null;
+        lastScrollFireTime = new Date().getTime();
+        self.processScroll();
+      }, minScrollTime);
+    }
+  }
+
+  processScroll = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { certificates, verifyCertificate } = this.props;
+
+    certificates.forEach((cert: any) => {
+      let visible = false;
+
+      if ($(`#${cert.id}:visible`).length > 0) {
+        visible = $(`#${cert.id}:visible`).visible();
+      }
+
+      if (visible) {
+        if (!cert.verified) {
+          verifyCertificate(cert.id);
+        }
+      }
+    });
   }
 
   getCollapsibleElement(head: string, name: string, elements: object[], active: boolean = false) {
@@ -36,7 +90,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
 
     return (
       <li>
-        <div className={`collapsible-header color ${activeSection}`}>
+        <div className={`collapsible-header color ${activeSection}`} onClick={this.processScroll}>
           <i className={`material-icons left ${name}`}>
           </i>
           {head}
@@ -110,4 +164,4 @@ export default connect((state, ownProps: IOwnProps) => {
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
   };
-}, { loadAllCertificates }, null, {pure: false})(accordion(CertificateList));
+}, { loadAllCertificates, verifyCertificate }, null, { pure: false })(accordion(CertificateList));
