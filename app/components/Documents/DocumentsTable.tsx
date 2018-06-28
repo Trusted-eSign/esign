@@ -198,7 +198,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
     if (i === 0) {
-      return `${bytes} ${sizes[i]})`;
+      return `${bytes} ${sizes[i]}`;
     }
 
     return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`;
