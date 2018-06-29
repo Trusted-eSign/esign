@@ -1,9 +1,10 @@
+import * as fs from "fs";
 import { OrderedMap, OrderedSet, Record } from "immutable";
 import {
-  LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
+  LOAD_ALL_DOCUMENTS, PACKAGE_DELETE_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
   SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
-import { arrayToMap } from "../utils";
+import { arrayToMap, fileExists } from "../utils";
 
 const DocumentModel = Record({
   atime: null,
@@ -49,6 +50,7 @@ export default (documents = new DefaultReducerState(), action) => {
 
     case UNSELECT_ALL_DOCUMENTS:
       return documents.set("selected", new OrderedSet([]));
+
   }
 
   return documents;
