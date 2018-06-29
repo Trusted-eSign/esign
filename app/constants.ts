@@ -4,6 +4,8 @@ export const REMOVE_ALL_EVENTS = "REMOVE_ALL_EVENTS";
 
 export const LOAD_ALL_DOCUMENTS = "LOAD_ALL_DOCUMENTS";
 export const REMOVE_ALL_DOCUMENTS = "REMOVE_ALL_DOCUMENTS";
+export const SELECT_DOCUMENT = "SELECT_DOCUMENT";
+export const UNSELECT_ALL_DOCUMENTS = "UNSELECT_ALL_DOCUMENTS";
 
 export const CHANGE_SEARCH_VALUE = "CHANGE_SEARCH_VALUE";
 export const EVENTS_CHANGE_FILTER_USER_NAME = "EVENTS_CHANGE_FILTER_USER_NAME";
@@ -23,6 +25,7 @@ export const ENCRYPTED = "ENCRYPTED";
 
 export const ALL = "ALL";
 export const SIGN = "SIGN";
+export const VERIFY = "VERIFY";
 export const UNSIGN = "UNSIGN";
 export const ENCRYPT = "ENCRYPT";
 export const DECRYPT = "DECRYPT";
