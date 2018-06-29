@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { push } from "react-router-redux";
 import {
   ACTIVE_CONTAINER, ACTIVE_FILE, ADD_RECIPIENT_CERTIFICATE,
   CHANGE_ARCHIVE_FILES_BEFORE_ENCRYPT,
@@ -10,7 +11,8 @@ import {
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
   LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
-  REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, SELECT_FILE,
+  REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
+  REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
@@ -18,7 +20,13 @@ import { connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, toBase64, fileExists } from "../utils";
+import { extFile, fileExists, toBase64 } from "../utils";
+
+export function changeLocation(location: string) {
+  return (dispatch) => {
+    dispatch(push(location));
+  };
+}
 
 export function loadLicense() {
   return (dispatch) => {
@@ -347,6 +355,18 @@ export function filePackageDelete(filePackage: number[]) {
   return {
     payload: { filePackage },
     type: PACKAGE_DELETE_FILE,
+  };
+}
+
+export function removeAllFiles() {
+  return {
+    type: REMOVE_ALL_FILES,
+  };
+}
+
+export function removeAllRemoteFiles() {
+  return {
+    type: REMOVE_ALL_REMOTE_FILES,
   };
 }
 

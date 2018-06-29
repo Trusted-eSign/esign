@@ -32,6 +32,10 @@ nav i, nav [class^="mdi-"], nav [class*="mdi-"], nav i.material-icons {
   color: #334294;
 }
 
+.cryptoarm-red {
+  background-color: #bf3817 !important;
+}
+
 .maximize-window-btn, .minimize-window-btn, .close-window-btn, .setting-window-btn, .menu-btn, .cert-setting-btn, .setting-btn  {
     border-radius: 100%;
     overflow: hidden;
@@ -2664,7 +2668,8 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 /*---------cert chain--------------*/
 
-i.material-icons.left {
+i.material-icons.left.chain_1 {
+  background: url(./resources/image/chain_1.svg);
   margin-top: 20px;
   display: block;
   text-indent: -9999px;
@@ -2673,44 +2678,94 @@ i.material-icons.left {
   background-size: 24px 24px;
 }
 
-i.material-icons.left.chain_1 {
-  background: url(./resources/image/chain_1.svg);
-}
-
 i.material-icons.left.chain_2 {
   background: url(./resources/image/chain_2.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_3 {
   background: url(./resources/image/chain_3.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_4 {
   background: url(./resources/image/chain_4.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_5 {
   background: url(./resources/image/chain_5.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_6 {
   background: url(./resources/image/chain_6.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_7 {
   background: url(./resources/image/chain_7.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_8 {
   background: url(./resources/image/chain_8.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_9 {
   background: url(./resources/image/chain_9.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.chain_10 {
   background: url(./resources/image/chain_10.svg);
+  margin-top: 20px;
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background-size: 24px 24px;
 }
 
 i.material-icons.left.line {

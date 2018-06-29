@@ -1,9 +1,10 @@
-import { OrderedMap, Record } from "immutable";
+import * as fs from "fs";
+import { OrderedMap, OrderedSet, Record } from "immutable";
 import {
-  LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
-  START, SUCCESS,
+  LOAD_ALL_DOCUMENTS, PACKAGE_DELETE_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
-import { arrayToMap } from "../utils";
+import { arrayToMap, fileExists } from "../utils";
 
 const DocumentModel = Record({
   atime: null,
@@ -14,12 +15,14 @@ const DocumentModel = Record({
   fullpath: null,
   id: null,
   mtime: null,
+  selected: null,
 });
 
 const DefaultReducerState = Record({
   entities: OrderedMap({}),
   loaded: false,
   loading: false,
+  selected: new OrderedSet([]),
 });
 
 export default (documents = new DefaultReducerState(), action) => {
@@ -33,10 +36,21 @@ export default (documents = new DefaultReducerState(), action) => {
       return documents
         .set("entities", arrayToMap(payload.documents, DocumentModel))
         .set("loading", false)
-        .set("loaded", true);
+        .set("loaded", true)
+        .set("selected", new OrderedSet([]));
 
     case REMOVE_ALL_DOCUMENTS:
       return documents = new DefaultReducerState();
+
+    case SELECT_DOCUMENT:
+      return documents.update("selected", (selected) => selected.has(payload.uid)
+        ? selected.remove(payload.uid)
+        : selected.add(payload.uid),
+      );
+
+    case UNSELECT_ALL_DOCUMENTS:
+      return documents.set("selected", new OrderedSet([]));
+
   }
 
   return documents;

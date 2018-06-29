@@ -24,3 +24,10 @@ export const filteredDocumentsSelector = createSelector(documentsGetter, filters
       );
   });
 });
+
+export const stateSelector = (state: any) => state.documents;
+export const entitiesSelector = createSelector(stateSelector, (state) => state.entities);
+export const selectionSelector = createSelector(stateSelector, (state) => state.selected.toArray());
+export const selectedDocumentsSelector = createSelector(entitiesSelector, selectionSelector, (entities, selection) =>
+  selection.map((uid: any) => entities.get(uid)),
+);

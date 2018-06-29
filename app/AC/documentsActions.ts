@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {
   DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
-  START, SUCCESS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
 import { dirExists } from "../utils";
 
@@ -55,5 +55,18 @@ export function loadAllDocuments() {
 export function removeAllDocuments() {
   return {
     type: REMOVE_ALL_DOCUMENTS,
+  };
+}
+
+export function selectDocument(uid: number) {
+  return {
+    payload: { uid },
+    type: SELECT_DOCUMENT,
+  };
+}
+
+export function unselectAllDocuments() {
+  return {
+    type: UNSELECT_ALL_DOCUMENTS,
   };
 }
