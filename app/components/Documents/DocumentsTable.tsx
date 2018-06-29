@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllDocuments } from "../../AC/documentsActions";
-import { filteredDocumentsSelector } from "../../selectors/documentsSelector";
+import { loadAllDocuments, selectDocument, unselectAllDocuments } from "../../AC/documentsActions";
+import { filteredDocumentsSelector, selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
 import { extFile, mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
@@ -17,16 +17,18 @@ interface IDocumentsTableProps {
   isLoaded: boolean;
   isLoading: boolean;
   searchValue?: string;
+  selectedDocuments: any;
 }
 
 interface IDocumentsTableDispatch {
   loadAllDocuments: () => void;
+  selectDocument: (uid: number) => void;
+  unselectAllDocuments: () => void;
 }
 
 interface IDocumentsTableState {
   disableHeader: boolean;
   foundDocuments: number[];
-  selectedDocuments: number[];
   scrollToIndex: number;
   sortBy: string;
   sortDirection: TSortDirection;
@@ -50,7 +52,6 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
       disableHeader: false,
       foundDocuments: [],
       scrollToIndex: 0,
-      selectedDocuments: [],
       sortBy,
       sortDirection,
       sortedList,
@@ -59,9 +60,9 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { isLoading, loadAllDocuments } = this.props;
+    const { isLoaded, isLoading, loadAllDocuments } = this.props;
 
-    if (!isLoading) {
+    if (!isLoading && !isLoaded) {
       loadAllDocuments();
     }
   }
@@ -79,6 +80,13 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     if (prevProps.searchValue && !this.props.searchValue) {
       this.setState({ foundDocuments: [] });
     }
+  }
+
+  componentWillUnmount() {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { unselectAllDocuments } = this.props;
+
+    unselectAllDocuments();
   }
 
   render() {
@@ -208,16 +216,11 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     return extFile(extname);
   }
 
-  handleOnRowClick = ({ index, rowData }: { index: number, rowData: any }) => {
-    const tdocuments = [...this.state.selectedDocuments];
-    const tid = tdocuments.indexOf(index);
+  handleOnRowClick = ({ rowData }: { rowData: any }) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { selectDocument } = this.props;
 
-    if (tid > -1) {
-      tdocuments.splice(tid, 1);
-      this.setState({ selectedDocuments: tdocuments });
-    } else {
-      this.setState({ selectedDocuments: [...this.state.selectedDocuments, index] });
-    }
+    selectDocument(rowData.id);
   }
 
   handleScrollToBefore = () => {
@@ -255,14 +258,15 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
   }
 
   rowClassName = ({ index }: { index: number }) => {
-    const { foundDocuments, selectedDocuments } = this.state;
+    const { foundDocuments } = this.state;
+    const { selectedDocuments } = this.props;
 
     if (index < 0) {
       return "headerRow";
     } else {
       let rowClassName = index % 2 === 0 ? "evenRow " : "oddRow ";
 
-      if (selectedDocuments.indexOf(index) >= 0) {
+      if (selectedDocuments.includes(this.getDatum(this.state.sortedList, index))) {
         rowClassName += "selectedEvent";
       } else if (foundDocuments.indexOf(index) >= 0) {
         rowClassName += "foundEvent";
@@ -345,4 +349,5 @@ export default connect((state) => ({
   documentsMap: filteredDocumentsSelector(state),
   isLoaded: state.documents.loaded,
   isLoading: state.documents.loading,
-}), { loadAllDocuments })(DocumentTable);
+  selectedDocuments: selectedDocumentsSelector(state),
+}), { loadAllDocuments, selectDocument, unselectAllDocuments })(DocumentTable);

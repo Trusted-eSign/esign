@@ -1,18 +1,28 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { changeLocation, filePackageSelect, removeAllFiles, removeAllRemoteFiles } from "../../AC";
 import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
-import { DEFAULT_DOCUMENTS_PATH } from "../../constants";
+import {
+  DECRYPT, DEFAULT_DOCUMENTS_PATH, ENCRYPT,
+  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN, VERIFY,
+} from "../../constants";
+import { selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import Modal from "../Modal";
 import DocumentsTable from "./DocumentsTable";
 import FilterDocuments from "./FilterDocuments";
 
 interface IDocumentsWindowProps {
+  documents: any;
   documentsLoaded: boolean;
   documentsLoading: boolean;
   isDefaultFilters: boolean;
+  changeLocation: (locaion: string) => void;
   loadAllDocuments: () => void;
+  filePackageSelect: (files: string[]) => void;
   removeAllDocuments: () => void;
+  removeAllFiles: () => void;
+  removeAllRemoteFiles: () => void;
 }
 
 interface IDocumentsWindowState {
@@ -43,13 +53,22 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       inDuration: 300,
       outDuration: 225,
     });
+
+    $(document).ready(function() {
+      $(".tooltipped").tooltip();
+    });
+  }
+
+  componentWillUnmount() {
+    $(".tooltipped").tooltip("remove");
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { isDefaultFilters } = this.props;
+    const { documents, isDefaultFilters } = this.props;
 
     const classDefaultFilters = isDefaultFilters ? "filter_off" : "filter_on";
+    const disabledClass = documents.length ? "" : "disabled";
 
     return (
       <div className="row">
@@ -83,6 +102,48 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
           </ul>
         </div>
         <div className="col s12">
+          <div className="row">
+            <div className="col s1">
+              <a
+                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+                data-position="bottom"
+                data-tooltip={localize("Sign.sign_and_verify", locale)}
+                onClick={this.handleClickSign}>
+                <i className="material-icons">mode_edit</i>
+              </a>
+            </div>
+            <div className="col s1">
+              <a
+                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+                data-position="bottom"
+                data-tooltip={localize("Encrypt.encrypt_and_decrypt", locale)}
+                onClick={this.handleClickEncrypt}
+              >
+                <i className="material-icons">enhanced_encryption</i>
+              </a>
+            </div>
+            <div className="col s1">
+              <a
+                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+                data-position="bottom"
+                data-tooltip="Архивация"
+              >
+                <i className="material-icons">archive</i>
+              </a>
+            </div>
+            <div className="col s1">
+              <a
+                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+                data-position="bottom"
+                data-tooltip="Удаление"
+                onClick={this.handleClickDelete}
+              >
+                <i className="material-icons">delete</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="col s12">
           <DocumentsTable searchValue={this.state.searchValue} />
         </div>
         {this.showModalFilterDocuments()}
@@ -107,6 +168,50 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         <FilterDocuments onCancel={this.handleCloseModalFilterDocuments} />
       </Modal>
     );
+  }
+
+  handleClickSign = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
+
+    removeAllFiles();
+    removeAllRemoteFiles();
+    filePackageSelect(documents);
+    this.openWindow(SIGN);
+  }
+
+  handleClickEncrypt = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
+
+    removeAllFiles();
+    removeAllRemoteFiles();
+    filePackageSelect(documents);
+    this.openWindow(ENCRYPT);
+  }
+
+  handleClickDelete = () => {
+    console.log("--- delete");
+  }
+
+  openWindow = (operation: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeLocation } = this.props;
+
+    switch (operation) {
+      case SIGN:
+      case VERIFY:
+        changeLocation(LOCATION_SIGN);
+        return;
+
+      case ENCRYPT:
+      case DECRYPT:
+        changeLocation(LOCATION_ENCRYPT);
+        return;
+
+      default:
+        return;
+    }
   }
 
   handleSearchValueChange = (ev: any) => {
@@ -138,7 +243,8 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 }
 
 export default connect((state) => ({
+  documents: selectedDocumentsSelector(state),
   documentsLoaded: state.events.loaded,
   documentsLoading: state.events.loading,
   isDefaultFilters: state.filters.documents.isDefaultFilters,
-}), { loadAllDocuments, removeAllDocuments })(DocumentsWindow);
+}), { changeLocation, loadAllDocuments, filePackageSelect, removeAllDocuments, removeAllFiles, removeAllRemoteFiles })(DocumentsWindow);
