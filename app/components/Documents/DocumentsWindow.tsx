@@ -43,6 +43,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       searchValue: "",
       showModalFilterDocments: false,
     };
+    loadAllDocuments();
   }
 
   componentDidMount() {

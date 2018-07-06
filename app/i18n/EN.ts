@@ -75,6 +75,13 @@ export default {
     selected_all: "Selected all",
     signed_files: "Signed files",
     type: "Type",
+    docmenu_sign:"Sign",
+    docmenu_verifysign:"Verify sign",
+    docmenu_removesign:"Remove sign",
+    docmenu_enctypt:"Encrypt",
+    docmenu_dectypt:"Decrypt",
+    docmenu_arhiver:"Arhiver",
+    docmenu_remove:"Remove",
   },
   Events: {
     Operations_log: "OPERATIONS LOG",
