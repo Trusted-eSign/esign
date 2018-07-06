@@ -612,7 +612,7 @@ i.material-icons.left.sign {
   height: 24px;
   background: url(./resources/image/sign_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.encrypt {
@@ -622,7 +622,7 @@ i.material-icons.left.encrypt {
   height: 24px;
   background: url(./resources/image/encrypt_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.cert {
@@ -632,7 +632,7 @@ i.material-icons.left.cert {
   height: 24px;
   background: url(./resources/image/cert_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.about {
@@ -642,7 +642,7 @@ i.material-icons.left.about {
   height: 24px;
   background: url(./resources/image/about_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.agreement{
@@ -652,7 +652,7 @@ i.material-icons.left.agreement{
   height: 24px;
   background: url(./resources/image/agreement_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.help{
@@ -662,7 +662,7 @@ i.material-icons.left.help{
   height: 24px;
   background: url(./resources/image/help_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.keystore{
@@ -672,7 +672,7 @@ i.material-icons.left.keystore{
   height: 24px;
   background: url(./resources/image/key_store_menu_icon.svg);
   background-size: 24px 24px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 i.material-icons.left.license{
@@ -682,7 +682,7 @@ i.material-icons.left.license{
     height: 24px;
     background: url(./resources/image/license_menu_icon.svg);
     background-size: 24px 24px;
-    margin-top: 10px;
+    margin-top: 7px;
   }
 
   i.material-icons.left.exit{
@@ -692,7 +692,7 @@ i.material-icons.left.license{
     height: 24px;
     background: url(./resources/image/exit_menu_icon.svg);
     background-size: 24px 24px;
-    margin-top: 10px;
+    margin-top: 7px;
   }
 
   i.material-icons.left.journal {
@@ -702,7 +702,7 @@ i.material-icons.left.license{
     height: 24px;
     background: url(./resources/image/journal_menu_icon.svg);
     background-size: 24px 24px;
-    margin-top: 10px;
+    margin-top: 7px;
   }
 
   i.material-icons.left.document {
@@ -712,7 +712,7 @@ i.material-icons.left.license{
     height: 24px;
     background: url(./resources/image/document_menu_icon.svg);
     background-size: 24px 24px;
-    margin-top: 10px;
+    margin-top: 7px;
   }
 
 /*-------------------------------Стили списка файлов------------------*/
@@ -1054,7 +1054,6 @@ nav .cert-seacrh label i {
 .certificate-list-item {
   margin-bottom: 0px;
 }
-
 
 .disabled{
   box-shadow: none;
@@ -3505,3 +3504,92 @@ svg:hover {
     line-height: 30px!important;
     padding-top: 2px!important;
 }
+/*-------------Documents---------------*/
+i.material-icons.docmenu_sign {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_sign.svg);
+    background-size: 32px 32px;
+    margin-left: 14px;
+  }
+
+  i.material-icons.docmenu_verifysign {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_verifysign.svg);
+    background-size: 32px 32px;
+    margin-left: 20px;
+  }
+
+  i.material-icons.docmenu_removesign {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_removesign.svg);
+    background-size: 32px 32px;
+    margin-left: 20px;
+  }
+
+  i.material-icons.docmenu_encrypt {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_encrypt.svg);
+    background-size: 32px 32px;
+    margin-left: 22px;
+  }
+
+  i.material-icons.docmenu_decrypt {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_decrypt.svg);
+    background-size: 32px 32px;
+    margin-left: 22px;
+  }
+
+  i.material-icons.docmenu_arhiver {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_arhiver.svg);
+    background-size: 32px 32px;
+    margin-left: 22px;
+  }
+
+  i.material-icons.docmenu_remove {
+    display: block;
+    text-indent: -9999px;
+    width: 32px;
+    height: 32px;
+    background: url(./resources/image/docmenu_remove.svg);
+    background-size: 32px 32px;
+    margin-left: 7px;
+  }
+
+  .col.s10prt{
+     width:12%;   
+  }
+
+  .row.docmenu{
+    margin-bottom: 2px;
+    font-size: 12px;
+    color: black;
+    text-align: center;
+  }
+
+  .disabled_docs{
+    box-shadow: none;
+    color: #9F9F9F !important;
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.3;
+  }

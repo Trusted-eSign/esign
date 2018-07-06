@@ -68,7 +68,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
     const { documents, isDefaultFilters } = this.props;
 
     const classDefaultFilters = isDefaultFilters ? "filter_off" : "filter_on";
-    const disabledClass = documents.length ? "" : "disabled";
+    const disabledClass = documents.length ? "" : "disabled_docs";
 
     return (
       <div className="row">
@@ -80,7 +80,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
             <input
               id="search"
               type="search"
-              placeholder={localize("EventsTable.search_in_table", locale)}
+              placeholder={localize("EventsTable.search_in_doclist", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
             <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? { color: "#444" } : {}}>close</i>
@@ -103,42 +103,55 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         </div>
         <div className="col s12">
           <div className="row">
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+            <div className="col s10prt">
+            <a  className={`waves-effect waves-light  ${disabledClass}`}
+                data-position="bottom"
+                onClick={this.handleClickSign}>
+              <div className="row docmenu"><i className="material-icons docmenu_sign"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_sign", locale)}</div>
+            </a>
+            </div>
+            <div className="col s10prt">
+            <a  className={`waves-effect waves-light  ${disabledClass}`}
                 data-position="bottom"
                 data-tooltip={localize("Sign.sign_and_verify", locale)}
                 onClick={this.handleClickSign}>
-                <i className="material-icons">mode_edit</i>
+              <div className="row docmenu"><i className="material-icons docmenu_verifysign"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_verifysign", locale)}</div>
+            </a>
+            </div>
+            <div className="col s10prt">
+            <a  className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+                onClick={this.handleClickSign}>
+              <div className="row docmenu"><i className="material-icons docmenu_removesign"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_removesign", locale)}</div>
+            </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${disabledClass}`}
+                data-position="bottom" onClick={this.handleClickEncrypt}>
+              <div className="row docmenu"><i className="material-icons docmenu_encrypt"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_enctypt", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+                onClick={this.handleClickEncrypt} >
+              <div className="row docmenu"><i className="material-icons docmenu_decrypt"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_dectypt", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom">
+              <div className="row docmenu"><i className="material-icons docmenu_arhiver"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_arhiver", locale)}</div>  
               </a>
             </div>
             <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip={localize("Encrypt.encrypt_and_decrypt", locale)}
-                onClick={this.handleClickEncrypt}
-              >
-                <i className="material-icons">enhanced_encryption</i>
-              </a>
-            </div>
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip="Архивация"
-              >
-                <i className="material-icons">archive</i>
-              </a>
-            </div>
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip="Удаление"
-                onClick={this.handleClickDelete}
-              >
-                <i className="material-icons">delete</i>
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+                onClick={this.handleClickDelete} >
+              <div className="row docmenu"><i className="material-icons docmenu_remove"></i></div>
+              <div className="row docmenu">{localize("Documents.docmenu_remove", locale)}</div> 
               </a>
             </div>
           </div>

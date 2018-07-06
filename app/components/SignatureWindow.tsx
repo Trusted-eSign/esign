@@ -209,7 +209,12 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
-      const folderOut = settings.outfolder;
+      
+      let folderOut = settings.outfolder;
+      if(folderOut == ""){
+        folderOut = window.DEFAULT_DOCUMENTS_PATH;
+      }
+      
       let format = trusted.DataFormat.PEM;
 
       if (folderOut.length > 0) {
@@ -271,7 +276,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
-      const folderOut = settings.outfolder;
+      let folderOut = settings.outfolder;
+      if(folderOut == ""){
+        folderOut = window.DEFAULT_DOCUMENTS_PATH;
+      }
+
       let format = trusted.DataFormat.PEM;
       let res = true;
 
@@ -391,7 +400,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
-      const folderOut = settings.outfolder;
+      let folderOut = settings.outfolder;
+      if(folderOut == ""){
+        folderOut = window.DEFAULT_DOCUMENTS_PATH;
+      }
+
       let res = true;
 
       files.forEach((file) => {

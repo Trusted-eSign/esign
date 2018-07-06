@@ -57,6 +57,7 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
     localize: PropTypes.func,
   };
 
+
   addDirect() {
     // tslint:disable-next-line:no-shadowed-variable
     const { changeSignatureOutfolder } = this.props;

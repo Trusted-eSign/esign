@@ -108,6 +108,7 @@ export default {
     operation_object: "Operation object",
     operation_result: "Operation result",
     search_in_table: "Search in operations log",
+    search_in_doclist: "Search in documents list",
     status: "Status",
     user_name: "User",
   },
