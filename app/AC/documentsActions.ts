@@ -78,15 +78,12 @@ export function arhiveDocuments(documents: any, arhive_name: string){
   var output = fs.createWriteStream(window.DEFAULT_DOCUMENTS_PATH + '/' + arhive_name);
   archive.pipe(output);
   for (var key in documents) {
+    // console.log(documents[key].fullpath);
+    // console.log(documents[key].filename);
     archive.append(fs.readFileSync(documents[key].fullpath), { name: documents[key].filename});
   }
-  archive.finalize(function(err:string, bytes:number) {
-    if (err) {throw err;}
-    // console.log(bytes + ' total bytes');
-  });
-  output.close();
-  const stat = fs.statSync(window.DEFAULT_DOCUMENTS_PATH + '/' + arhive_name);
-  console.log(stat);
+  archive.finalize();
+  //output.close();
   return {
      type: ARHIVE_DOCUMENTS,
   };
