@@ -1,8 +1,8 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
-  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
+  DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS, SELECT_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS, REMOVE_DOCUMENTS, ARHIVE_DOCUMENTS,
 } from "../constants";
 import { dirExists } from "../utils";
 
@@ -30,7 +30,6 @@ export function loadAllDocuments() {
         fs.readdirSync(DEFAULT_DOCUMENTS_PATH).forEach((file) => {
           const fullpath = path.join(DEFAULT_DOCUMENTS_PATH, file);
           const stat = fs.statSync(fullpath);
-
           documents.push({
             atime: stat.atime,
             birthtime: stat.birthtime,
@@ -65,8 +64,43 @@ export function selectDocument(uid: number) {
   };
 }
 
+export function removeDocuments(documents: any){  
+  for (var key in documents) {
+    fs.unlinkSync(documents[key].fullpath);
+  }
+  return {
+     type: REMOVE_DOCUMENTS,
+  };
+}
+
+export function arhiveDocuments(documents: any, arhive_name: string){   
+  var archive = window.archiver('zip');
+  var output = fs.createWriteStream(window.DEFAULT_DOCUMENTS_PATH + '/' + arhive_name);
+  archive.pipe(output);
+  for (var key in documents) {
+    archive.append(fs.readFileSync(documents[key].fullpath), { name: documents[key].filename});
+  }
+  archive.finalize(function(err:string, bytes:number) {
+    if (err) {throw err;}
+    // console.log(bytes + ' total bytes');
+  });
+  output.close();
+  const stat = fs.statSync(window.DEFAULT_DOCUMENTS_PATH + '/' + arhive_name);
+  console.log(stat);
+  return {
+     type: ARHIVE_DOCUMENTS,
+  };
+}
+
 export function unselectAllDocuments() {
   return {
     type: UNSELECT_ALL_DOCUMENTS,
   };
+}
+
+export function selectAllDocuments() {
+  return {
+    type: SELECT_ALL_DOCUMENTS,
+  };
+  
 }

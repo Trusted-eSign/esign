@@ -2,7 +2,7 @@ import * as fs from "fs";
 import { OrderedMap, OrderedSet, Record } from "immutable";
 import {
   LOAD_ALL_DOCUMENTS, PACKAGE_DELETE_DOCUMENTS, REMOVE_ALL_DOCUMENTS,
-  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS, REMOVE_DOCUMENTS, ARHIVE_DOCUMENTS,
 } from "../constants";
 import { arrayToMap, fileExists } from "../utils";
 
@@ -40,6 +40,12 @@ export default (documents = new DefaultReducerState(), action) => {
         .set("selected", new OrderedSet([]));
 
     case REMOVE_ALL_DOCUMENTS:
+      return documents = new DefaultReducerState();
+
+    case REMOVE_DOCUMENTS:
+      return documents = new DefaultReducerState();
+   
+    case ARHIVE_DOCUMENTS:
       return documents = new DefaultReducerState();
 
     case SELECT_DOCUMENT:

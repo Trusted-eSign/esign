@@ -82,6 +82,9 @@ export default {
     docmenu_dectypt:"Decrypt",
     docmenu_arhiver:"Arhiver",
     docmenu_remove:"Remove",
+    documents_deleted1: "Removed documents ( files: ",
+    documents_deleted2: " )",
+    documents_arhive: "Create arhive of documents is name ",
   },
   Events: {
     Operations_log: "OPERATIONS LOG",

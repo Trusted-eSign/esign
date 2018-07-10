@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllDocuments, selectDocument, unselectAllDocuments } from "../../AC/documentsActions";
+import { loadAllDocuments, selectDocument, unselectAllDocuments, selectAllDocuments } from "../../AC/documentsActions";
 import { filteredDocumentsSelector, selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
 import { extFile, mapToArr } from "../../utils";
@@ -107,7 +107,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
         <Table
           ref="Table"
           disableHeader={disableHeader}
-          height={370}
+          height={390}
           width={780}
           headerHeight={30}
           noRowsRenderer={this.noRowsRenderer}

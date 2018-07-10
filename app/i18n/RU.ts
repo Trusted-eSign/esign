@@ -82,6 +82,9 @@ export default {
     docmenu_dectypt:"Расшифровать",
     docmenu_arhiver:"Архивировать",
     docmenu_remove:"Удалить",
+    documents_deleted1: "Удалены документы ( файлов: ",
+    documents_deleted2: " )",
+    documents_arhive: "Создан архив документов ",
   },
   Events: {
     Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",

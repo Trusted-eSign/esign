@@ -2,22 +2,33 @@
 <!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="48px" height="48px" viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
-<text transform="matrix(1.0072 0 0 1 14.8193 35.3066)" style="fill:#FEF8F9; font-family:'Roboto-Regular'; font-size:30.4134;">F</text>
+	 width="32px" height="40px" viewBox="0 0 32 40" enable-background="new 0 0 32 40" xml:space="preserve">
+<path fill="#44AA58" d="M1.381,15.36v20.807c0,1.484,1.214,2.698,2.698,2.698H28.54c1.484,0,2.698-1.214,2.698-2.698V15.36H1.381z"
+	/>
+<path fill="#44AA58" d="M31.239,16.212v-5.269L21.27,0.864H4.079c-1.484,0-2.698,1.214-2.698,2.698v12.649L31.239,16.212
+	L31.239,16.212z"/>
+<path opacity="0.2" fill="#000204" d="M21.27,0.864l-1.023,9.304c0,1.484,1.214,2.698,2.698,2.698l8.294-1.923L21.27,0.864z"/>
+<path fill="#FFFFFF" d="M21.296,0.864v7.367c0,1.484,1.214,2.698,2.698,2.698h7.245L21.296,0.864z"/>
 <g>
+	
+		<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="67" height="58" xlink:href="25F2D1B3.png"  transform="matrix(0.231 0 0 0.231 4.2192 4.4968)">
+	</image>
 	<g>
-		<circle style="fill:#8FC473;" cx="24" cy="24" r="23"/>
-		<circle style="fill:#76BA55;" cx="24" cy="24" r="21.686"/>
+		<text transform="matrix(1 0 0 1 6.0361 10.9808)" fill="#FFFFFF" font-family="'ArialMT'" font-size="6.2917">XLS</text>
 	</g>
+</g>
+<g>
+	
+		<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="113" height="75" xlink:href="25F2D1B6.png"  transform="matrix(0.2307 0 0 0.2307 4.2677 21.1321)">
+	</image>
 	<g>
 		<g>
-			<polygon style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:10;" points="
-				32.053,33.865 29.629,33.865 15.947,14.135 18.209,14.135 			"/>
-		</g>
-		<g>
-			<polygon style="fill:#FFFFFF;stroke:#FFFFFF;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:10;" points="
-				15.947,33.865 18.371,33.865 32.053,14.135 29.791,14.135 			"/>
+			<rect x="6.604" y="22.884" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="19.38" height="9.654"/>
+			<rect x="6.604" y="22.884" fill="none" stroke="#FFFFFF" stroke-miterlimit="10" width="5.595" height="9.654"/>
+			<line fill="none" stroke="#FFFFFF" stroke-miterlimit="10" x1="7" y1="27.5" x2="26" y2="27.5"/>
+			<line fill="none" stroke="#FFFFFF" stroke-miterlimit="10" x1="7" y1="30.5" x2="26" y2="30.5"/>
 		</g>
 	</g>
 </g>
+<rect x="1.381" y="15.36" fill="#FFFFFF" width="29.858" height="0.852"/>
 </svg>

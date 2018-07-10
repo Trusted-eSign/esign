@@ -3431,10 +3431,10 @@ svg:hover {
 
   .icon_file_type {
     background-size: 100% !important;
-    height: 24px !important;
-    width: 24px !important;
+    height: 40px !important;
+    width: 32px !important;
     position: absolute !important;
-    top: 11px !important;
+    top: 2px !important;
   }
 
   i.material-icons.filter_off {

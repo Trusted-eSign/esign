@@ -2,12 +2,50 @@
 <!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="48px" height="48px" viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
+	 width="32px" height="40px" viewBox="0 0 32 40" enable-background="new 0 0 32 40" xml:space="preserve">
 <g>
+	<path fill="#912B1F" d="M1.25,15.959v20.648c0,1.484,1.215,2.698,2.7,2.698h24.475c1.485,0,2.7-1.214,2.7-2.698V15.959H1.25z"/>
+	<path fill="#912B1F" d="M31.125,16.527v-5.144L21.151,1.305H3.95c-1.485,0-2.7,1.214-2.7,2.698v12.524H31.125z"/>
+	<path opacity="0.2" fill="#000204" enable-background="new    " d="M20.866,1.305l-1.024,9.303c0,1.484,1.215,2.698,2.7,2.698
+		l8.298-1.923L20.866,1.305z"/>
+	<path fill="#FFFFFF" d="M20.892,1.305v7.367c0,1.484,1.215,2.698,2.7,2.698h7.249L20.892,1.305z"/>
 	<g>
-		<circle style="fill:#EFB86C;" cx="23.808" cy="24.28" r="23"/>
-		<circle style="fill:#D2950D;" cx="23.808" cy="24.28" r="21.686"/>
+		
+			<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="75" height="58" xlink:href="5850D4EF.png"  transform="matrix(0.2238 0 0 0.2238 2.5995 5.1443)">
+		</image>
+		<g>
+			<text transform="matrix(1.0006 0 0 1 4.5916 11.4204)" fill="#FFFFFF" font-family="'ArialMT'" font-size="6.2917">FILE</text>
+		</g>
+	</g>
+	<g>
+		
+			<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="92" height="79" xlink:href="5850D4EA.png"  transform="matrix(0.2347 0 0 0.2347 6.2805 20.5572)">
+		</image>
+		<g>
+			<g>
+				<g>
+					<path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" d="M11.069,22.206
+						c-1.136,0-1.989,1.426-1.563,2.913c0.426,1.487-0.142,2.499-0.852,2.588"/>
+					<path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" d="M11.069,33.208
+						c-1.136,0-1.989-1.426-1.563-2.913c0.426-1.487-0.142-2.5-0.852-2.588"/>
+				</g>
+				<g>
+					<path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" d="M21.013,22.206
+						c1.136,0,1.989,1.426,1.563,2.913s0.142,2.499,0.852,2.588"/>
+					<path fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-miterlimit="10" d="M21.013,33.208
+						c1.136,0,1.989-1.426,1.563-2.913s0.142-2.5,0.852-2.588"/>
+				</g>
+			</g>
+		</g>
+	</g>
+	<rect x="1.25" y="16.243" fill="#FFFFFF" width="29.875" height="0.852"/>
+	<g>
+		
+			<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="50" height="83" xlink:href="5850D4E9.png"  transform="matrix(0.2252 0 0 0.2252 10.5231 20.8553)">
+		</image>
+		<g>
+			<text transform="matrix(1.0006 0 0 1 12.7528 31.6099)" fill="#FFFFFF" font-family="'ArialMT'" font-size="11.815">?</text>
+		</g>
 	</g>
 </g>
-<text transform="matrix(1.0072 0 0 1 14.8193 35.3066)" style="fill:#FEF8F9; font-family:'Roboto-Regular'; font-size:30.4134;">F</text>
 </svg>
