@@ -2,13 +2,37 @@
 <!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
-<text transform="matrix(1.0072 0 0 1 14.8192 35.3064)" fill="#FEF8F9" font-family="'Roboto-Regular'" font-size="30.4134">F</text>
+	 width="32px" height="40px" viewBox="0 0 32 40" enable-background="new 0 0 32 40" xml:space="preserve">
 <g>
+	<path fill="#F9B312" d="M1.381,15.203v20.744c0,1.484,1.214,2.698,2.698,2.698H28.54c1.484,0,2.698-1.214,2.698-2.698V15.203H1.381
+		z"/>
+	<path fill="#F9B312" d="M31.239,16.054v-5.331L21.27,0.645H4.079c-1.484,0-2.698,1.214-2.698,2.698v12.711H31.239z"/>
+	<path opacity="0.2" fill="#000204" d="M21.27,0.645l-1.023,9.303c0,1.484,1.214,2.698,2.698,2.698l8.294-1.923L21.27,0.645z"/>
+	<path fill="#FFFFFF" d="M21.296,0.645v7.367c0,1.484,1.214,2.698,2.698,2.698h7.245L21.296,0.645z"/>
 	<g>
-		<ellipse fill="#C1895B" cx="24" cy="24" rx="22.836" ry="23"/>
-		<ellipse fill="#C56D14" cx="24" cy="24" rx="21.531" ry="21.686"/>
+		
+			<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="67" height="58" xlink:href="D18F3244.png"  transform="matrix(0.2186 0 0 0.2186 4.7635 4.6347)">
+		</image>
+		<g>
+			<text transform="matrix(1 0 0 1 6.8871 10.761)" fill="#FFFFFF" font-family="'ArialMT'" font-size="6.2917">ZIP</text>
+		</g>
 	</g>
+	<g>
+		
+			<image display="none" overflow="visible" opacity="0.85" enable-background="new    " width="54" height="92" xlink:href="D18F3243.png"  transform="matrix(0.2288 0 0 0.2288 11.0415 18.8475)">
+		</image>
+		<g>
+			<g>
+				<circle fill="#FFFFFF" cx="16.243" cy="31.671" r="1.398"/>
+				<path fill="none" stroke="#FFFFFF" stroke-miterlimit="10" d="M13.709,31.671c0-0.517,0.439-7.245,0.705-7.646
+					c0.454-0.684,0.947-1.135,1.83-1.135s1.376,0.451,1.83,1.136c0.265,0.401,0.704,7.128,0.704,7.645
+					c0,1.4-1.135,2.534-2.534,2.534C14.844,34.205,13.709,33.071,13.709,31.671z"/>
+				<circle fill="#FFFFFF" cx="16.243" cy="25.141" r="0.684"/>
+				<path fill="none" stroke="#FFFFFF" stroke-miterlimit="10" d="M14.518,24.005l-0.852-2.65c0,0,0.989-1.041,2.577-1.041
+					s2.534,1.041,2.534,1.041l-0.71,2.65"/>
+			</g>
+		</g>
+	</g>
+	<rect x="1.381" y="15.232" fill="#FFFFFF" width="29.858" height="0.852"/>
 </g>
-<text transform="matrix(1 0 0 1 15.4684 35.5849)" fill="#FDF7F8" font-family="'Roboto-Regular'" font-size="30.4134">Z</text>
 </svg>
