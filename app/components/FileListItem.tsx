@@ -82,9 +82,9 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
       <div style={style}>
         <div className={"collection-item avatar files-collection " + active} id={"file-" + this.props.index} onClick={this.props.onClickBtn}>
           <div className="r-iconbox-link">
-            <div className="r-iconbox-icon"><i className={file.extension} id="file-avatar"></i></div>
+            <div className="r-iconbox-icon"><i className={file.extension + " icon_file_type"} id="file-avatar"></i></div>
             <p className="collection-title">{file.filename}</p>
-            <p className="collection-info">{file.lastModifiedDate.toLocaleDateString(locale, {
+            <p className="collection-info-files">{file.lastModifiedDate.toLocaleDateString(locale, {
               year: "numeric",
               month: "long",
               day: "numeric",

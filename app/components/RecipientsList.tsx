@@ -65,8 +65,8 @@ class RecipientsList extends React.Component<any, any> {
              onDoubleClick={() => this.handleDoubleClick(element)}>
               <div className="r-iconbox-link">
                 <div className={"rectangle"} style={rectangleStyle}></div>
-                <div className="collection-title">{element.subjectFriendlyName}</div>
-                <div className="collection-info cert-info ">{element.issuerFriendlyName}
+                <div className="collection-title pad-cert">{element.subjectFriendlyName}</div>
+                <div className="collection-info cert-info pad-cert">{element.issuerFriendlyName}
                   <div className={curKeyStyle}></div>
                   <div className={curStatusStyle}></div>
                 </div>

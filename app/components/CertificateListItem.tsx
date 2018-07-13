@@ -104,7 +104,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
           onClick={this.handleClick}>
           <div className={"rectangle"} style={rectangleStyle}></div>
           <div className="col s11">
-            <div className="collection-title">{cert.subjectFriendlyName}</div>
+            <div className="collection-title ">{cert.subjectFriendlyName}</div>
             <div className="collection-info cert-info ">{cert.issuerFriendlyName}</div>
           </div>
           <div className="col s1">

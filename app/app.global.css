@@ -236,22 +236,22 @@ body {
     line-height: 56px;
 }
 .collection-title, .collection-info {
-    padding-left: 0.75rem;
+    padding-left: 0;
     color: black;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-top: 4px;
+    padding-top: 0px;
 }
 
 .material-icons.secondary-content.file-setting-item {
     border-radius: 100%;
     overflow: hidden;
-    height: 48px;
-    width: 48px;
+    height: 36px;
+    width: 36px;
     text-align: center;
     color: black;
-    line-height: 48px;
+    line-height: 36px;
 }
 .file-setting-item:hover {
     background-color: rgba(0,0,0,0.1);
@@ -312,6 +312,13 @@ body {
 .collection-info {
     font-size: 90%;
 }
+
+.collection-info-files {
+    font-size: 90%;
+    padding-left:40px;
+    opacity: 0.7;
+}
+
 .collection-item {
     cursor: pointer;
 }
@@ -918,23 +925,26 @@ nav .cert-seacrh label i {
     color: #334294;
     /*font-size: 95%;*/
     font-size: 13px;
+    padding-left: 6px;
 }
 
 .chain-info-blue {
     color: #334294;
     /*font-size: 95%;*/
     font-size: 13px;
+    padding-left: 6px;
 }
 
 .chain-status {
     padding-top: 0px;
     padding-bottom: 10px;
+    padding-left: 8px;
     font-size: 14px;
 }
 
 .row.chain-item{
     margin-bottom:0px;
-    height: 64px;
+    height: 45px;
 }
 
 .chain-text{
@@ -958,6 +968,7 @@ nav .cert-seacrh label i {
 .cert-title {
     height: 20px;
     line-height: 20px;
+    padding-left: 10px;
 }
 .cert-title-main {
     height: 48px;
@@ -1633,86 +1644,87 @@ h6.contact-title {
 .file_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/file_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/file_type_icon.png);
+  background-size: 40px 32px;
 }
 
 
 .sign_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/sign_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/sign_type_icon.png);
+  background-size: 40px 32px;
 }
 
 .encrypt_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/encrypt_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/encrypt_type_icon.png);
+  background-size: 40px 32px;
 }
 
 .zip_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/zip_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/zip_type_icon.png);
+  background-size: 40px 32px;
 }
 
 .word_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/word_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/word_type_icon.png);
+  background-size: 40px 32px;
 }
 
 .excel_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/excel_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/excel_type_icon.png);
+  background-size: 40px 32px;
 }
 
 .pdf_type_icon{
   display: block;
   text-indent: -9999px;
-  width: 48px;
-  height: 48px;
-  background: url(./resources/image/pdf_type_icon.svg);
-  background-size: 48px 48px;
+  width: 32px;
+  height: 40px;
+  background: url(./resources/image/pdf_type_icon.png);
+  background-size: 40px 32px;
 }
 
 #file-avatar {
-  height: 48px;
-  width: 48px;
-  line-height: 48px;
+  height: 40px;
+  width: 32px;
+  line-height: 40px;
 }
 
 .collection .collection-item.avatar {
-  min-height: 64px;
+  min-height: 45px;
   position: relative;
 }
 
 .collection .collection-item.avatar .secondary-content {
   position: absolute;
-  top: 8px;
+  top: 4px;
   right: 6px;
 }
 
 p.collection-title {
-  padding-top: 6px;
+  padding-top: 0px;
+  padding-left: 40px;
 }
 
 p.label {
@@ -1727,14 +1739,14 @@ p.label-csr {
 }
 
 .collection-item.files-collection {
-  padding: 5px 50px 5px 10px;
+  padding: 0px 50px 5px 10px;
   color: black;
-  height: 64px;
+  height: 45px;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .collection-item.avatar.files-collection {
-  padding: 5px 50px 5px 10px;
+  padding: 0px 50px 5px 10px;
   color: black;
   min-height: 0;
   border-bottom: 1px solid #e0e0e0;
@@ -2447,28 +2459,31 @@ a.cert-back-btn.waves-effect.waves-light {
 .key {
     background: url(./resources/image/key.svg);
     background-size: 100%;
-    height: 18px;
-    width: 18px;
+    height: 16px;
+    width: 16px;
     position: absolute;
-    margin-left: 331px;
-    top: 40px;
+    margin-left: 340px;
+    top: 26px;
     padding-left: 0px;
-    left: 0px;
+    left: -2px;
 }
 
 .key.short {
-    margin-left: 265px;
+    margin-left: 288px;
 }
 
+.pad-cert{
+    padding-left:10px;
+}
 
 .cert_status_ok {
     background: url(./resources/image/cert_status_ok.svg);
     background-size: 100%;
-    height: 24px;
-    width: 24px;
+    height: 20px;
+    width: 20px;
     position: absolute;
-    margin-left: 326px;
-    top: 7px;
+    margin-left: 336px;
+    top: 2px;
     padding-left: 0px;
     left: 0px;
 }
@@ -2476,21 +2491,21 @@ a.cert-back-btn.waves-effect.waves-light {
 .cert_status_error {
     background: url(./resources/image/cert_status_error.svg);
     background-size: 100%;
-    height: 24px;
-    width: 24px;
+    height: 20px;
+    width: 20px;
     position: absolute;
-    margin-left: 326px;
-    top: 7px;
+    margin-left: 336px;
+    top: 2px;
     padding-left: 0px;
     left: 0px;
 }
 
 .cert_status_ok.short {
-    margin-left: 261px;
+    margin-left: 285px;
 }
 
 .cert_status_error.short {
-    margin-left: 261px;
+    margin-left: 285px;
 }
 
 .cert_status_ok.long{
@@ -2668,8 +2683,8 @@ a.cert-back-btn.waves-effect.waves-light {
 /*---------cert chain--------------*/
 
 i.material-icons.left.chain_1 {
-  background: url(./resources/image/chain_1.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_1.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2678,8 +2693,8 @@ i.material-icons.left.chain_1 {
 }
 
 i.material-icons.left.chain_2 {
-  background: url(./resources/image/chain_2.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_2.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2688,8 +2703,8 @@ i.material-icons.left.chain_2 {
 }
 
 i.material-icons.left.chain_3 {
-  background: url(./resources/image/chain_3.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_3.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2698,8 +2713,8 @@ i.material-icons.left.chain_3 {
 }
 
 i.material-icons.left.chain_4 {
-  background: url(./resources/image/chain_4.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_4.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2708,8 +2723,8 @@ i.material-icons.left.chain_4 {
 }
 
 i.material-icons.left.chain_5 {
-  background: url(./resources/image/chain_5.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_5.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2718,8 +2733,8 @@ i.material-icons.left.chain_5 {
 }
 
 i.material-icons.left.chain_6 {
-  background: url(./resources/image/chain_6.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_6.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2728,8 +2743,8 @@ i.material-icons.left.chain_6 {
 }
 
 i.material-icons.left.chain_7 {
-  background: url(./resources/image/chain_7.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_7.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2738,8 +2753,8 @@ i.material-icons.left.chain_7 {
 }
 
 i.material-icons.left.chain_8 {
-  background: url(./resources/image/chain_8.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_8.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2748,8 +2763,8 @@ i.material-icons.left.chain_8 {
 }
 
 i.material-icons.left.chain_9 {
-  background: url(./resources/image/chain_9.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_9.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2758,8 +2773,8 @@ i.material-icons.left.chain_9 {
 }
 
 i.material-icons.left.chain_10 {
-  background: url(./resources/image/chain_10.svg);
-  margin-top: 20px;
+  background: url(./resources/image/chain_10.png);
+  margin-top: 10px;
   display: block;
   text-indent: -9999px;
   width: 24px;
@@ -2767,17 +2782,8 @@ i.material-icons.left.chain_10 {
   background-size: 24px 24px;
 }
 
-i.material-icons.left.line {
-  display: block;
-  text-indent: -9999px;
-  width: 4px;
-  height: 24px;
-  background: url(./resources/image/chain_vertline.svg);
-  background-size: 4px 24px;
-}
-
 .chain_textblock{
-    padding-top: 11px;
+    padding-top: 2px;
 }
 
 .collection .collection-item.avatar.cs-chain {
@@ -2854,7 +2860,7 @@ i.material-icons.left.line {
 
 .rectangle {
 	width: 3px;
-	height: 63px;
+	height: 45px;
   background: #bf3817;
   float: left;
 }
@@ -2862,11 +2868,11 @@ i.material-icons.left.line {
 .vert_line {
 	position:absolute;
     float:left;
-    background: #334294;
+    background: #0262aa;
     left: 0px;
     margin-left: 21px;
-    margin-top: 47px;
-    height: 34px;
+    margin-top: 36px;
+    height: 18px;
     width: 2px;
     z-index: 2;
 }
@@ -3592,4 +3598,21 @@ i.material-icons.docmenu_sign {
     cursor: default;
     pointer-events: none;
     opacity: 0.3;
+  }
+
+  i.material-icons.key_container {
+    display: block;
+    text-indent: -9999px;
+    width: 36px;
+    height: 36px;
+    background: url(./resources/image/key_container_icon.png);
+    background-size: 36px 36px;
+    margin-left: 2px;
+  }
+
+  .col.s1.key_container{
+      padding-left: 6px;
+      padding-top: 5px;
+      padding-right: 0px;
+      margin-right: 14px;
   }
