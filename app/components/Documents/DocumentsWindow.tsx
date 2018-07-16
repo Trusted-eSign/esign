@@ -279,15 +279,10 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   }
 
   handleSelectAllDocuments = () => {
-    // console.log("--- selectALL");
-    // const { documents_entities, documents_selected } = this.props;
-    // //console.log(documents_entities.entities._map._root.entries[0]);
-    // let arr = [];
-    // for (var key in documents_entities.entities._map._root.entries) {
-    //      console.log(documents_entities.entities._map._root.entries[key][0]);
-    //      selectDocument(documents_entities.entities._map._root.entries[key][0]);
-    //      arr.push(documents_entities.entities._map._root.entries[key][0]);
-    //  }
+    // tslint:disable-next-line:no-shadowed-variable
+    const {selectAllDocuments} = this.props;
+
+    selectAllDocuments();
   }
 
   handleOpenDocumentsFolder = () => {
@@ -301,7 +296,7 @@ export default connect((state) => ({
   documentsLoading: state.events.loading,
   isDefaultFilters: state.filters.documents.isDefaultFilters,
 }), {
-    arhiveDocuments, changeLocation, removeDocuments, selectDocument,
-    loadAllDocuments, filePackageSelect, removeAllDocuments, removeAllFiles,
-    removeAllRemoteFiles, selectAllDocuments,
+    arhiveDocuments, changeLocation, filePackageSelect, loadAllDocuments,
+    removeAllDocuments, removeAllFiles, removeAllRemoteFiles, removeDocuments,
+    selectAllDocuments, selectDocument,
   })(DocumentsWindow);

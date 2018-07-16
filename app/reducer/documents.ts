@@ -2,8 +2,8 @@ import * as fs from "fs";
 import { OrderedMap, OrderedSet, Record } from "immutable";
 import {
   ARHIVE_DOCUMENTS, LOAD_ALL_DOCUMENTS, PACKAGE_DELETE_DOCUMENTS,
-  REMOVE_ALL_DOCUMENTS, REMOVE_DOCUMENTS, SELECT_DOCUMENT, START,
-  SUCCESS, UNSELECT_ALL_DOCUMENTS,
+  REMOVE_ALL_DOCUMENTS, REMOVE_DOCUMENTS, SELECT_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
 import { arrayToMap, fileExists } from "../utils";
 
@@ -54,6 +54,13 @@ export default (documents = new DefaultReducerState(), action) => {
         ? selected.remove(payload.uid)
         : selected.add(payload.uid),
       );
+
+    case SELECT_ALL_DOCUMENTS:
+      const allDocumentsId: number[] = [];
+
+      documents.entities.map((item: any) => allDocumentsId.push(item.id));
+
+      return documents.set("selected", new OrderedSet(allDocumentsId));
 
     case UNSELECT_ALL_DOCUMENTS:
       return documents.set("selected", new OrderedSet([]));

@@ -108,5 +108,4 @@ export function selectAllDocuments() {
   return {
     type: SELECT_ALL_DOCUMENTS,
   };
-
 }
