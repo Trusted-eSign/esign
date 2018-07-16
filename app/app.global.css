@@ -1862,7 +1862,7 @@ a.menuheaderlink:hover {
 .status_ok{
   position: absolute;
   right: 60px;
-  top: 24px;
+  top: 15px;
   display: block;
   text-indent: -9999px;
   width: 16px;
@@ -1875,7 +1875,7 @@ a.menuheaderlink:hover {
 .status_error{
   position: absolute;
   right: 60px;
-  top: 24px;
+  top: 15px;
   display: block;
   text-indent: -9999px;
   width: 16px;
@@ -3582,7 +3582,7 @@ i.material-icons.docmenu_sign {
   }
 
   .col.s10prt{
-     width:12%;   
+     width:12%;
   }
 
   .row.docmenu{
