@@ -281,7 +281,13 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         event.operationObject.in.toLowerCase().match(search) ||
         event.operationObject.out.toLowerCase().match(search) ||
         event.level.toLowerCase().match(search) ||
-        event.timestamp.toLowerCase().match(search) ||
+        (new Date(event.timestamp)).toLocaleDateString(locale, {
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          month: "numeric",
+          year: "numeric",
+        }).toLowerCase().match(search) ||
         event.operation.toLowerCase().match(search)) {
 
         foundEvents.push(index);
