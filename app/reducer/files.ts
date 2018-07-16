@@ -1,6 +1,9 @@
 import * as fs from "fs";
 import { OrderedMap, Record } from "immutable";
-import { ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, SELECT_FILE, START, SUCCESS, VERIFY_SIGNATURE } from "../constants";
+import {
+  ACTIVE_FILE, DELETE_FILE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE,
+  REMOVE_ALL_FILES, SELECT_FILE, START, SUCCESS,
+} from "../constants";
 import { arrayToMap, fileExists } from "../utils";
 
 const FileModel = Record({

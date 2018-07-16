@@ -38,7 +38,7 @@ class EncryptWindow extends React.Component<any, any> {
     if (files.length > 0) {
       const certs = recipients;
       let folderOut = settings.outfolder;
-      if(folderOut == ""){
+      if (folderOut === "") {
         folderOut = window.DEFAULT_DOCUMENTS_PATH;
       }
       const policies = { deleteFiles: false, archiveFiles: false };

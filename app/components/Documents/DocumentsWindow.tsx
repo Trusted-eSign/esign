@@ -2,10 +2,13 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { changeLocation, filePackageSelect, removeAllFiles, removeAllRemoteFiles } from "../../AC";
-import { loadAllDocuments, selectDocument, removeAllDocuments, selectAllDocuments, removeDocuments, arhiveDocuments } from "../../AC/documentsActions";
+import {
+  arhiveDocuments, loadAllDocuments, removeAllDocuments,
+  removeDocuments, selectAllDocuments, selectDocument,
+} from "../../AC/documentsActions";
 import {
   DECRYPT, DEFAULT_DOCUMENTS_PATH, ENCRYPT,
-  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN, VERIFY, REMOVE_DOCUMENTS, ARHIVE_DOCUMENTS,
+  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN, VERIFY,
 } from "../../constants";
 import { selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import Modal from "../Modal";
@@ -108,55 +111,55 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         <div className="col s12">
           <div className="row">
             <div className="col s10prt">
-            <a  className={`waves-effect waves-light  ${disabledClass}`}
+              <a className={`waves-effect waves-light  ${disabledClass}`}
                 data-position="bottom"
                 onClick={this.handleClickSign}>
-              <div className="row docmenu"><i className="material-icons docmenu_sign"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_sign", locale)}</div>
-            </a>
+                <div className="row docmenu"><i className="material-icons docmenu_sign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_sign", locale)}</div>
+              </a>
             </div>
             <div className="col s10prt">
-            <a  className={`waves-effect waves-light  ${disabledClass}`}
+              <a className={`waves-effect waves-light  ${disabledClass}`}
                 data-position="bottom"
                 data-tooltip={localize("Sign.sign_and_verify", locale)}
                 onClick={this.handleClickSign}>
-              <div className="row docmenu"><i className="material-icons docmenu_verifysign"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_verifysign", locale)}</div>
-            </a>
+                <div className="row docmenu"><i className="material-icons docmenu_verifysign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_verifysign", locale)}</div>
+              </a>
             </div>
             <div className="col s10prt">
-            <a  className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
                 onClick={this.handleClickSign}>
-              <div className="row docmenu"><i className="material-icons docmenu_removesign"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_removesign", locale)}</div>
-            </a>
+                <div className="row docmenu"><i className="material-icons docmenu_removesign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_removesign", locale)}</div>
+              </a>
             </div>
             <div className="col s10prt">
               <a className={`waves-effect waves-light ${disabledClass}`}
                 data-position="bottom" onClick={this.handleClickEncrypt}>
-              <div className="row docmenu"><i className="material-icons docmenu_encrypt"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_enctypt", locale)}</div>
+                <div className="row docmenu"><i className="material-icons docmenu_encrypt"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_enctypt", locale)}</div>
               </a>
             </div>
             <div className="col s10prt">
               <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
                 onClick={this.handleClickEncrypt} >
-              <div className="row docmenu"><i className="material-icons docmenu_decrypt"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_dectypt", locale)}</div>
+                <div className="row docmenu"><i className="material-icons docmenu_decrypt"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_dectypt", locale)}</div>
               </a>
             </div>
             <div className="col s10prt">
               <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
-              onClick={this.handleArhiveDocuments} >
-              <div className="row docmenu"><i className="material-icons docmenu_arhiver"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_arhiver", locale)}</div>  
+                onClick={this.handleArhiveDocuments} >
+                <div className="row docmenu"><i className="material-icons docmenu_arhiver"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_arhiver", locale)}</div>
               </a>
             </div>
             <div className="col s1">
               <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
                 onClick={this.handleClickDelete} >
-              <div className="row docmenu"><i className="material-icons docmenu_remove"></i></div>
-              <div className="row docmenu">{localize("Documents.docmenu_remove", locale)}</div> 
+                <div className="row docmenu"><i className="material-icons docmenu_remove"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_remove", locale)}</div>
               </a>
             </div>
           </div>
@@ -208,11 +211,13 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
   handleClickDelete = () => {
     const { localize, locale } = this.context;
-    const { documents} = this.props;
-    let count = documents.length;
+    const { documents } = this.props;
+    const count = documents.length;
+
     removeDocuments(documents);
     this.handleReloadDocuments();
-    let message = localize("Documents.documents_deleted1", locale) + count + localize("Documents.documents_deleted2", locale);
+
+    const message = localize("Documents.documents_deleted1", locale) + count + localize("Documents.documents_deleted2", locale);
     Materialize.toast(message, 2000, "toast-remove_documents");
   }
 
@@ -260,13 +265,12 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   handleArhiveDocuments = () => {
     const { localize, locale } = this.context;
     const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
-    let count = documents.length;
-    let arhive_name : string = "";
+    let arhive_name: string = "";
     // var first_filename = documents[0].filename;
     // var f_name = first_filename.substr(0, first_filename.lastIndexOf('.'));
     // arhive_name = f_name + ".zip";
-    let date = new Date(); 
-    var dateNow = ('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear() + '_' + ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2)+ '.' + ('0' + date.getSeconds()).slice(-2);
+    let date = new Date();
+    var dateNow = ('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear() + '_' + ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2) + '.' + ('0' + date.getSeconds()).slice(-2);
     arhive_name = "arhive_" + dateNow + ".zip";
     arhiveDocuments(documents, arhive_name);
     this.handleReloadDocuments();
@@ -286,7 +290,6 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
     //  }
   }
 
-
   handleOpenDocumentsFolder = () => {
     window.electron.shell.openItem(DEFAULT_DOCUMENTS_PATH);
   }
@@ -297,6 +300,8 @@ export default connect((state) => ({
   documentsLoaded: state.events.loaded,
   documentsLoading: state.events.loading,
   isDefaultFilters: state.filters.documents.isDefaultFilters,
-}), { arhiveDocuments, removeDocuments, selectDocument, changeLocation, 
-  loadAllDocuments, filePackageSelect, removeAllDocuments, removeAllFiles, 
-  removeAllRemoteFiles, selectAllDocuments })(DocumentsWindow);
+}), {
+    arhiveDocuments, changeLocation, removeDocuments, selectDocument,
+    loadAllDocuments, filePackageSelect, removeAllDocuments, removeAllFiles,
+    removeAllRemoteFiles, selectAllDocuments,
+  })(DocumentsWindow);

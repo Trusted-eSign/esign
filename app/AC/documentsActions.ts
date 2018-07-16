@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS, REMOVE_ALL_DOCUMENTS, SELECT_ALL_DOCUMENTS,
-  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS, REMOVE_DOCUMENTS, ARHIVE_DOCUMENTS,
+  ARHIVE_DOCUMENTS, DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS,
+  REMOVE_ALL_DOCUMENTS, REMOVE_DOCUMENTS, SELECT_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
 import { dirExists } from "../utils";
 
@@ -64,28 +65,34 @@ export function selectDocument(uid: number) {
   };
 }
 
-export function removeDocuments(documents: any){  
-  for (var key in documents) {
+export function removeDocuments(documents: any) {
+  // tslint:disable-next-line:forin
+  for (const key in documents) {
     fs.unlinkSync(documents[key].fullpath);
   }
+
   return {
-     type: REMOVE_DOCUMENTS,
+    type: REMOVE_DOCUMENTS,
   };
 }
 
-export function arhiveDocuments(documents: any, arhive_name: string){   
-  var archive = window.archiver('zip');
-  var output = fs.createWriteStream(window.DEFAULT_DOCUMENTS_PATH + '/' + arhive_name);
+// tslint:disable-next-line:variable-name
+export function arhiveDocuments(documents: any, arhive_name: string) {
+  const archive = window.archiver("zip");
+  const output = fs.createWriteStream(window.DEFAULT_DOCUMENTS_PATH + "/" + arhive_name);
+
   archive.pipe(output);
-  for (var key in documents) {
+
+  // tslint:disable-next-line:forin
+  for (const key in documents) {
     // console.log(documents[key].fullpath);
     // console.log(documents[key].filename);
-    archive.append(fs.readFileSync(documents[key].fullpath), { name: documents[key].filename});
+    archive.append(fs.readFileSync(documents[key].fullpath), { name: documents[key].filename });
   }
   archive.finalize();
   //output.close();
   return {
-     type: ARHIVE_DOCUMENTS,
+    type: ARHIVE_DOCUMENTS,
   };
 }
 
@@ -99,5 +106,5 @@ export function selectAllDocuments() {
   return {
     type: SELECT_ALL_DOCUMENTS,
   };
-  
+
 }

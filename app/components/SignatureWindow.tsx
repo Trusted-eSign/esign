@@ -209,12 +209,12 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
-      
+
       let folderOut = settings.outfolder;
-      if(folderOut == ""){
+      if (folderOut === "") {
         folderOut = window.DEFAULT_DOCUMENTS_PATH;
       }
-      
+
       let format = trusted.DataFormat.PEM;
 
       if (folderOut.length > 0) {
