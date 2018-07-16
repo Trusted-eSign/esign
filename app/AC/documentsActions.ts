@@ -31,16 +31,18 @@ export function loadAllDocuments() {
         fs.readdirSync(DEFAULT_DOCUMENTS_PATH).forEach((file) => {
           const fullpath = path.join(DEFAULT_DOCUMENTS_PATH, file);
           const stat = fs.statSync(fullpath);
-          documents.push({
-            atime: stat.atime,
-            birthtime: stat.birthtime,
-            extname: path.extname(file),
-            filename: file,
-            filesize: stat.size,
-            fullpath,
-            id: Math.random(),
-            mtime: stat.mtime,
-          });
+          if (!stat.isDirectory()) {
+            documents.push({
+              atime: stat.atime,
+              birthtime: stat.birthtime,
+              extname: path.extname(file),
+              filename: file,
+              filesize: stat.size,
+              fullpath,
+              id: Math.random(),
+              mtime: stat.mtime,
+            });
+          }
         });
       }
 
