@@ -28,6 +28,10 @@ class DatePicker extends React.Component<IDatePickerProps, {}> {
         this.picker.set("min", false);
       }
     }
+
+    if (prevProps.selected && !this.props.selected) {
+      this.picker.clear();
+    }
   }
 
   componentDidMount() {
