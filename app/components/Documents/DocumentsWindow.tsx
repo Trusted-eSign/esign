@@ -63,7 +63,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       outDuration: 225,
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
   }
@@ -110,7 +110,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
           </ul>
         </div>
         <div className="col s12">
-          <div className="row">
+          <div className="row halfbottom">
             <div className="col s10prt">
               <a className={`waves-effect waves-light  ${this.checkEnableOperationButton(SIGN) ? "" : "disabled_docs"}`}
                 data-position="bottom"
