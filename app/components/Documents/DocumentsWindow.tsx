@@ -8,7 +8,8 @@ import {
 } from "../../AC/documentsActions";
 import {
   DECRYPT, DEFAULT_DOCUMENTS_PATH, ENCRYPT,
-  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN, VERIFY,
+  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN,
+  UNSIGN, VERIFY,
 } from "../../constants";
 import { selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import Modal from "../Modal";
@@ -62,7 +63,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       outDuration: 225,
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
   }
@@ -111,7 +112,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         <div className="col s12">
           <div className="row">
             <div className="col s10prt">
-              <a className={`waves-effect waves-light  ${disabledClass}`}
+              <a className={`waves-effect waves-light  ${this.checkEnableOperationButton(SIGN) ? "" : "disabled_docs"}`}
                 data-position="bottom"
                 onClick={this.handleClickSign}>
                 <div className="row docmenu"><i className="material-icons docmenu_sign"></i></div>
@@ -119,7 +120,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
               </a>
             </div>
             <div className="col s10prt">
-              <a className={`waves-effect waves-light  ${disabledClass}`}
+              <a className={`waves-effect waves-light  ${this.checkEnableOperationButton(VERIFY) ? "" : "disabled_docs"}`}
                 data-position="bottom"
                 data-tooltip={localize("Sign.sign_and_verify", locale)}
                 onClick={this.handleClickSign}>
@@ -128,21 +129,21 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
               </a>
             </div>
             <div className="col s10prt">
-              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(UNSIGN) ? "" : "disabled_docs"}`} data-position="bottom"
                 onClick={this.handleClickSign}>
                 <div className="row docmenu"><i className="material-icons docmenu_removesign"></i></div>
                 <div className="row docmenu">{localize("Documents.docmenu_removesign", locale)}</div>
               </a>
             </div>
             <div className="col s10prt">
-              <a className={`waves-effect waves-light ${disabledClass}`}
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(ENCRYPT) ? "" : "disabled_docs"}`}
                 data-position="bottom" onClick={this.handleClickEncrypt}>
                 <div className="row docmenu"><i className="material-icons docmenu_encrypt"></i></div>
                 <div className="row docmenu">{localize("Documents.docmenu_enctypt", locale)}</div>
               </a>
             </div>
             <div className="col s10prt">
-              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(DECRYPT) ? "" : "disabled_docs"}`} data-position="bottom"
                 onClick={this.handleClickEncrypt} >
                 <div className="row docmenu"><i className="material-icons docmenu_decrypt"></i></div>
                 <div className="row docmenu">{localize("Documents.docmenu_dectypt", locale)}</div>
@@ -170,6 +171,44 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         {this.showModalFilterDocuments()}
       </div>
     );
+  }
+
+  checkEnableOperationButton = (operation: string) => {
+    const { documents } = this.props;
+
+    if (!documents.length) {
+      return false;
+    }
+
+    switch (operation) {
+      case SIGN:
+        return true;
+
+      case VERIFY:
+      case UNSIGN:
+        for (const document of documents) {
+          if (document.extname !== ".sig") {
+            return false;
+          }
+        }
+
+        return true;
+
+      case ENCRYPT:
+        return true;
+
+      case DECRYPT:
+        for (const document of documents) {
+          if (document.extname !== ".enc") {
+            return false;
+          }
+        }
+
+        return true;
+
+      default:
+        return false;
+    }
   }
 
   showModalFilterDocuments = () => {
@@ -280,7 +319,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
   handleSelectAllDocuments = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const {selectAllDocuments} = this.props;
+    const { selectAllDocuments } = this.props;
 
     selectAllDocuments();
   }
