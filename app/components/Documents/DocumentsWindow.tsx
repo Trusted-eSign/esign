@@ -182,6 +182,12 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
     switch (operation) {
       case SIGN:
+        for (const document of documents) {
+          if (document.extname === ".enc") {
+            return false;
+          }
+        }
+
         return true;
 
       case VERIFY:
@@ -195,6 +201,12 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         return true;
 
       case ENCRYPT:
+        for (const document of documents) {
+          if (document.extname === ".enc") {
+            return false;
+          }
+        }
+
         return true;
 
       case DECRYPT:
