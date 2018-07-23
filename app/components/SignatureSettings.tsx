@@ -5,6 +5,7 @@ import {
   changeSignatureDetached, changeSignatureEncoding,
   changeSignatureOutfolder, changeSignatureTimestamp,
 } from "../AC";
+import {  DEFAULT_DOCUMENTS_PATH } from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
@@ -56,6 +57,7 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
+
 
   addDirect() {
     // tslint:disable-next-line:no-shadowed-variable
@@ -122,7 +124,7 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
             title={localize("Sign.sign_time", locale)} />
           <SelectFolder
             disabled={disabled}
-            directory={settings.outfolder}
+            directory={settings.outfolder ? settings.outfolder : DEFAULT_DOCUMENTS_PATH}
             viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
         </div>

@@ -58,6 +58,6 @@
   z-index: 1000 !important;
 }
 
-.ReactVirtualized__Grid, .ReactVirtualized__Table__headerColumn {
+.ReactVirtualized__Grid, .ReactVirtualized__Table__headerColumn, .ReactVirtualized__Table__row {
   outline: none;
 }

@@ -44,7 +44,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
   constructor(props: IDocumentsTableProps & IDocumentsTableDispatch) {
     super(props);
 
-    const sortBy = "timestamp";
+    const sortBy = "mtime";
     const sortDirection = SortDirection.DESC;
     const sortedList = this.sortList({ sortBy, sortDirection });
 
@@ -107,7 +107,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
         <Table
           ref="Table"
           disableHeader={disableHeader}
-          height={475}
+          height={400}
           width={780}
           headerHeight={30}
           noRowsRenderer={this.noRowsRenderer}
@@ -129,7 +129,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
                 <div className="row nobottom">
                   <div className="valign-wrapper">
                     <div className="col s12" title={cellData}>
-                      <i className={this.getFileIconByExtname(cellData) + " icon_file_type"} />
+                      <i className={this.getFileIconByExtname(cellData) + " icon_file_type"} style={{left: "10px"}} />
                     </div>
                   </div>
                 </div>

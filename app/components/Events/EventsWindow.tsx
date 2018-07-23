@@ -1,7 +1,9 @@
+import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllEvents, loadArchiveLogFile, removeAllEvents } from "../../AC/eventsActions";
+import { APP_LOG_FILE } from "../../constants";
 import Modal from "../Modal";
 import EventTable from "./EventTable";
 import FilterEvents from "./FilterEvents";
@@ -148,6 +150,7 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
 
     if (!window.framework_NW) {
       const file = dialog.showOpenDialog({
+        defaultPath: path.dirname(APP_LOG_FILE),
         filters: [
           { name: localize("Events.operations_log", locale), extensions: ["log"] },
         ],

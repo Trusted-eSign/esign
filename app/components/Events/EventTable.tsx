@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllEvents } from "../../AC/eventsActions";
+import { loadAllEvents, removeAllEvents } from "../../AC/eventsActions";
 import { filteredEventsSelector } from "../../selectors/eventsSelectors";
 import "../../table.global.css";
 import { mapToArr } from "../../utils";
@@ -21,6 +21,7 @@ interface IEventTableProps {
 
 interface IEventTableDispatch {
   loadAllEvents: () => void;
+  removeAllEvents: () => void;
 }
 
 interface IEventTableState {
@@ -57,7 +58,9 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { isLoading, loadAllEvents } = this.props;
+    const { isLoading, loadAllEvents, removeAllEvents } = this.props;
+
+    removeAllEvents();
 
     if (!isLoading) {
       loadAllEvents();
@@ -281,7 +284,13 @@ class EventTable extends React.Component<IEventTableProps & IEventTableDispatch,
         event.operationObject.in.toLowerCase().match(search) ||
         event.operationObject.out.toLowerCase().match(search) ||
         event.level.toLowerCase().match(search) ||
-        event.timestamp.toLowerCase().match(search) ||
+        (new Date(event.timestamp)).toLocaleDateString(locale, {
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          month: "numeric",
+          year: "numeric",
+        }).toLowerCase().match(search) ||
         event.operation.toLowerCase().match(search)) {
 
         foundEvents.push(index);
@@ -333,4 +342,4 @@ export default connect((state) => ({
   eventsMap: filteredEventsSelector(state),
   isLoaded: state.events.loaded,
   isLoading: state.events.loading,
-}), { loadAllEvents })(EventTable);
+}), { loadAllEvents, removeAllEvents })(EventTable);

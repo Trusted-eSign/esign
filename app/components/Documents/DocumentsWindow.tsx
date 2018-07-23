@@ -2,10 +2,14 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { changeLocation, filePackageSelect, removeAllFiles, removeAllRemoteFiles } from "../../AC";
-import { loadAllDocuments, removeAllDocuments } from "../../AC/documentsActions";
+import {
+  arhiveDocuments, loadAllDocuments, removeAllDocuments,
+  removeDocuments, selectAllDocuments, selectDocument,
+} from "../../AC/documentsActions";
 import {
   DECRYPT, DEFAULT_DOCUMENTS_PATH, ENCRYPT,
-  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN, VERIFY,
+  LOCATION_ENCRYPT, LOCATION_SIGN, SIGN,
+  UNSIGN, VERIFY,
 } from "../../constants";
 import { selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import Modal from "../Modal";
@@ -23,6 +27,10 @@ interface IDocumentsWindowProps {
   removeAllDocuments: () => void;
   removeAllFiles: () => void;
   removeAllRemoteFiles: () => void;
+  selectAllDocuments: () => void;
+  selectDocument: (uid: number) => void;
+  removeDocuments: (documents: any) => void;
+  arhiveDocuments: (documents: any, arhive_name: string) => void;
 }
 
 interface IDocumentsWindowState {
@@ -43,6 +51,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       searchValue: "",
       showModalFilterDocments: false,
     };
+    loadAllDocuments();
   }
 
   componentDidMount() {
@@ -66,9 +75,8 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   render() {
     const { localize, locale } = this.context;
     const { documents, isDefaultFilters } = this.props;
-
     const classDefaultFilters = isDefaultFilters ? "filter_off" : "filter_on";
-    const disabledClass = documents.length ? "" : "disabled";
+    const disabledClass = documents.length ? "" : "disabled_docs";
 
     return (
       <div className="row">
@@ -80,7 +88,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
             <input
               id="search"
               type="search"
-              placeholder={localize("EventsTable.search_in_table", locale)}
+              placeholder={localize("EventsTable.search_in_doclist", locale)}
               value={this.state.searchValue}
               onChange={this.handleSearchValueChange} />
             <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? { color: "#444" } : {}}>close</i>
@@ -97,48 +105,62 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
           </a>
           <ul id="dropdown-btn-for-documents" className="dropdown-content">
             <li><a onClick={this.handleReloadDocuments}>{localize("Common.update", locale)}</a></li>
-            <li><a onClick={() => console.log("selected_all")}>{localize("Documents.selected_all", locale)}</a></li>
+            <li><a onClick={this.handleSelectAllDocuments}>{localize("Documents.selected_all", locale)}</a></li>
             <li><a onClick={this.handleOpenDocumentsFolder}>{localize("Documents.go_to_documents_folder", locale)}</a></li>
           </ul>
         </div>
         <div className="col s12">
-          <div className="row">
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
+          <div className="row halfbottom">
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light  ${this.checkEnableOperationButton(SIGN) ? "" : "disabled_docs"}`}
+                data-position="bottom"
+                onClick={this.handleClickSign}>
+                <div className="row docmenu"><i className="material-icons docmenu_sign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_sign", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light  ${this.checkEnableOperationButton(VERIFY) ? "" : "disabled_docs"}`}
                 data-position="bottom"
                 data-tooltip={localize("Sign.sign_and_verify", locale)}
                 onClick={this.handleClickSign}>
-                <i className="material-icons">mode_edit</i>
+                <div className="row docmenu"><i className="material-icons docmenu_verifysign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_verifysign", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(UNSIGN) ? "" : "disabled_docs"}`} data-position="bottom"
+                onClick={this.handleClickSign}>
+                <div className="row docmenu"><i className="material-icons docmenu_removesign"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_removesign", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(ENCRYPT) ? "" : "disabled_docs"}`}
+                data-position="bottom" onClick={this.handleClickEncrypt}>
+                <div className="row docmenu"><i className="material-icons docmenu_encrypt"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_enctypt", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${this.checkEnableOperationButton(DECRYPT) ? "" : "disabled_docs"}`} data-position="bottom"
+                onClick={this.handleClickEncrypt} >
+                <div className="row docmenu"><i className="material-icons docmenu_decrypt"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_dectypt", locale)}</div>
+              </a>
+            </div>
+            <div className="col s10prt">
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+                onClick={this.handleArhiveDocuments} >
+                <div className="row docmenu"><i className="material-icons docmenu_arhiver"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_arhiver", locale)}</div>
               </a>
             </div>
             <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip={localize("Encrypt.encrypt_and_decrypt", locale)}
-                onClick={this.handleClickEncrypt}
-              >
-                <i className="material-icons">enhanced_encryption</i>
-              </a>
-            </div>
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip="Архивация"
-              >
-                <i className="material-icons">archive</i>
-              </a>
-            </div>
-            <div className="col s1">
-              <a
-                className={`btn-floating btn waves-effect waves-light cryptoarm-red ${disabledClass} tooltipped`}
-                data-position="bottom"
-                data-tooltip="Удаление"
-                onClick={this.handleClickDelete}
-              >
-                <i className="material-icons">delete</i>
+              <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
+                onClick={this.handleClickDelete} >
+                <div className="row docmenu"><i className="material-icons docmenu_remove"></i></div>
+                <div className="row docmenu">{localize("Documents.docmenu_remove", locale)}</div>
               </a>
             </div>
           </div>
@@ -149,6 +171,56 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         {this.showModalFilterDocuments()}
       </div>
     );
+  }
+
+  checkEnableOperationButton = (operation: string) => {
+    const { documents } = this.props;
+
+    if (!documents.length) {
+      return false;
+    }
+
+    switch (operation) {
+      case SIGN:
+        for (const document of documents) {
+          if (document.extname === ".enc") {
+            return false;
+          }
+        }
+
+        return true;
+
+      case VERIFY:
+      case UNSIGN:
+        for (const document of documents) {
+          if (document.extname !== ".sig") {
+            return false;
+          }
+        }
+
+        return true;
+
+      case ENCRYPT:
+        for (const document of documents) {
+          if (document.extname === ".enc") {
+            return false;
+          }
+        }
+
+        return true;
+
+      case DECRYPT:
+        for (const document of documents) {
+          if (document.extname !== ".enc") {
+            return false;
+          }
+        }
+
+        return true;
+
+      default:
+        return false;
+    }
   }
 
   showModalFilterDocuments = () => {
@@ -173,7 +245,6 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   handleClickSign = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
-
     removeAllFiles();
     removeAllRemoteFiles();
     filePackageSelect(documents);
@@ -183,7 +254,6 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   handleClickEncrypt = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
-
     removeAllFiles();
     removeAllRemoteFiles();
     filePackageSelect(documents);
@@ -191,7 +261,15 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   }
 
   handleClickDelete = () => {
-    console.log("--- delete");
+    const { localize, locale } = this.context;
+    const { documents } = this.props;
+    const count = documents.length;
+
+    removeDocuments(documents);
+    this.handleReloadDocuments();
+
+    const message = localize("Documents.documents_deleted1", locale) + count + localize("Documents.documents_deleted2", locale);
+    Materialize.toast(message, 2000, "toast-remove_documents");
   }
 
   openWindow = (operation: string) => {
@@ -229,12 +307,33 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
   handleReloadDocuments = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { documentsLoading, loadAllDocuments, removeAllDocuments } = this.props;
-
     removeAllDocuments();
-
     if (!documentsLoading) {
       loadAllDocuments();
     }
+  }
+
+  handleArhiveDocuments = () => {
+    const { localize, locale } = this.context;
+    const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
+    let arhive_name: string = "";
+    // var first_filename = documents[0].filename;
+    // var f_name = first_filename.substr(0, first_filename.lastIndexOf('.'));
+    // arhive_name = f_name + ".zip";
+    let date = new Date();
+    var dateNow = ('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear() + '_' + ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2) + '.' + ('0' + date.getSeconds()).slice(-2);
+    arhive_name = "arhive_" + dateNow + ".zip";
+    arhiveDocuments(documents, arhive_name);
+    this.handleReloadDocuments();
+    let message = localize("Documents.documents_arhive", locale) + arhive_name;
+    Materialize.toast(message, 2000, "toast-arhive_documents");
+  }
+
+  handleSelectAllDocuments = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { selectAllDocuments } = this.props;
+
+    selectAllDocuments();
   }
 
   handleOpenDocumentsFolder = () => {
@@ -247,4 +346,8 @@ export default connect((state) => ({
   documentsLoaded: state.events.loaded,
   documentsLoading: state.events.loading,
   isDefaultFilters: state.filters.documents.isDefaultFilters,
-}), { changeLocation, loadAllDocuments, filePackageSelect, removeAllDocuments, removeAllFiles, removeAllRemoteFiles })(DocumentsWindow);
+}), {
+    arhiveDocuments, changeLocation, filePackageSelect, loadAllDocuments,
+    removeAllDocuments, removeAllFiles, removeAllRemoteFiles, removeDocuments,
+    selectAllDocuments, selectDocument,
+  })(DocumentsWindow);

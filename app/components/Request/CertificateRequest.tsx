@@ -9,6 +9,7 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
+import * as jwt from "../../trusted/jwt";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import logger from "../../winstonLogger";
 import HeaderTabs from "./HeaderTabs";
@@ -65,6 +66,8 @@ interface ICertificateRequestState {
 interface ICertificateRequestProps {
   onCancel?: () => void;
   certificateLoading: boolean;
+  lic_error: number;
+  licenseStatus: number;
   loadAllCertificates: () => void;
   removeAllCertificates: () => void;
 }
@@ -323,6 +326,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     const { localize, locale } = this.context;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
       keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, selfSigned, snils, title } = this.state;
+    const { licenseStatus, lic_error } = this.props;
 
     const key = new trusted.pki.Key();
     const exts = new trusted.pki.ExtensionCollection();
@@ -334,6 +338,24 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     let keyPair;
     let oid;
     let ext;
+
+    if (licenseStatus !== 1) {
+      $(".toast-jwtErrorLicense").remove();
+      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
+
+      logger.log({
+        level: "error",
+        message: "No correct license",
+        operation: "Генерация сертификата",
+        operationObject: {
+          in: "License",
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
+      return;
+    }
 
     if (!this.verifyFields()) {
       $(".toast-required_fields").remove();
@@ -750,5 +772,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 export default connect((state) => {
   return {
     certificateLoading: state.certificates.loading,
+    lic_error: state.license.lic_error,
+    licenseStatus: state.license.status,
   };
 }, { loadAllCertificates, removeAllCertificates })(CertificateRequest);

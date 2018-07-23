@@ -29,7 +29,10 @@ class ContainerListItem extends React.Component<any, any> {
       <div>
         <div className="row certificate-list-item" onClick={this.handleClick}>
           <div className={"collection-item avatar certs-collection " + active}>
-            <div className="col s12">
+            <div className="col s1 key_container">
+              <i className="material-icons key_container"> </i>
+            </div>
+            <div className="col s10"> 
               <div className="collection-title">{container.friendlyName}</div>
               <div className="collection-info cert-info ">{container.reader}</div>
             </div>

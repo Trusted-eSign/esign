@@ -95,7 +95,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
         height={427}
         width={377}
         overscanRowCount={5}
-        rowHeight={64}
+        rowHeight={45}
         rowRenderer={this.rowRenderer}
         files={loadingFiles.concat(files)}
         style={{ outline: "none" }}
