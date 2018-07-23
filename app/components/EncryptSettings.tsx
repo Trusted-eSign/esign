@@ -5,6 +5,7 @@ import {
   changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt,
   changeEncryptEncoding, changeEncryptOutfolder,
 } from "../AC";
+import {  DEFAULT_DOCUMENTS_PATH } from "../constants";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
@@ -80,7 +81,7 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
       <div id="encode-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Encrypt.encrypt_setting", locale)} />
         <div className="settings-content">
-          <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange}/>
+          <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange} />
           <CheckBoxWithLabel onClickCheckBox={this.handleDeleteClick}
             isChecked={settings.delete}
             elementId="delete_files"
@@ -89,8 +90,11 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
             isChecked={settings.archive}
             elementId="archive_files"
             title={localize("Encrypt.archive_files_before", locale)} />
-          <SelectFolder directory={settings.outfolder} viewDirect={this.handleOutfolderChange}
-            openDirect={this.addDirect.bind(this)} />
+          <SelectFolder
+            directory={settings.outfolder ? settings.outfolder : DEFAULT_DOCUMENTS_PATH}
+            viewDirect={this.handleOutfolderChange}
+            openDirect={this.addDirect.bind(this)}
+          />
         </div>
       </div>
     );
@@ -99,4 +103,4 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
 
 export default connect((state) => ({
   settings: state.settings.encrypt,
-}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder }, null, {pure: false})(EncryptSettings);
+}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder }, null, { pure: false })(EncryptSettings);
