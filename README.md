@@ -27,3 +27,9 @@
 
 ## Документация
 [Руководство пользователя.pdf](https://github.com/TrustedRu/CryptoARMGOST/blob/master/docs/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F.pdf)
+
+## Обратная связь
+Если у вас есть вопросы по технической поддержке, то напишите нам на support@trusted.ru или откройте обращение на странице [GitHub Issues](https://github.com/TrustedRu/CryptoARMGOST/issues)
+
+Также, с нами можно связаться через форму в самом приложении:
+![default](https://user-images.githubusercontent.com/16474118/43139583-cdbf4c84-8f5a-11e8-9432-f88c39c39f62.png)
