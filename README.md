@@ -1,29 +1,17 @@
-# Trusted eSign
-<p align="center">
-  <img alt="Trusted eSign in action" src="https://user-images.githubusercontent.com/16474118/32882951-f8d799fc-cac6-11e7-83f0-24fc70953963.png">
-</p>
+# КриптоАРМ ГОСТ
 
-## Install dependencies
+## Описание
 
-```
-> npm install -g typescript
-> npm install
+**КриптоАРМ ГОСТ** - это новый уровень развития знакомой многим программы КриптоАРМ. Новое приложение обеспечивает возможность создания и проверки электронной подписи файлов с произвольным расширением на операционных системах Windows, Linux и macOS.
 
-```
+КриптоАРМ ГОСТ работает с сертификатами и ключами усиленной квалифицированной электронной подписи и полностью совместим с криптопровайдером СКЗИ КриптоПро CSP начиная с версии 4.0.
 
-## Build for dev
-⚠️ Before run dev need manualy add trusted-crypto in /app/node_modules/ Will fixed in future
-```bash
-git clone https://github.com/TrustedPlus/esign.git
-cd esign && npm install
-cd app && npm install
-cd ..
-npm run dev
+В приложении поддержаны стандарты для электронной подписи и хеширования ГОСТ Р 34.10-2012 и ГОСТ Р 34.11-2012, которые с 01 января 2019 года должны заменить прекращающие свое действие стандарты ГОСТ Р 34.10-2001 и ГОСТ Р 34.11-94. 
 
-# Run tslint
-yarn lint
-```
+## Функциональные возможности
 
-**NOTE:**
-* on Windows need have openssl [prebuild binaries](https://wiki.openssl.org/index.php/Binaries) or build from [sources](https://github.com/openssl/openssl/tree/OpenSSL_1_0_2k) in first time (for [trusted-crypto](https://github.com/TrustedPlus/crypto/blob/master/binding.gyp#L57))
-* on Linux install openssl devel package
+* Электронная подпись. Создание (формирование) электронной подписи в двух вариантах: совмещенной и отделенной. Формат подписи CMS (PKCS#7). Проверка электронной подписи с учетом списков отозванных сертификатов. Добавление электронной подписи к уже существующей.
+
+* Шифрование. Шифрование файлов в адрес нескольких получателей. Расшифрование данных. Архивирование результатов после шифрования.
+
+* Управление сертификатами. Импорт и экспорт сертификатов. Удаление выбранных сертификатов и ключей. Установка сертификатов с токенов (с контейнеров, расположенных на отчуждаемых носителях). Автоматическое построение и проверка цепочки сертификатов. 
