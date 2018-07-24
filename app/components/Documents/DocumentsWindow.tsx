@@ -51,7 +51,6 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       searchValue: "",
       showModalFilterDocments: false,
     };
-    loadAllDocuments();
   }
 
   componentDidMount() {
@@ -63,7 +62,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       outDuration: 225,
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
   }

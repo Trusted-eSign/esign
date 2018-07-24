@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Column, Table } from "react-virtualized";
-import { loadAllDocuments, selectDocument, unselectAllDocuments } from "../../AC/documentsActions";
+import { loadAllDocuments, removeAllDocuments, selectDocument, unselectAllDocuments } from "../../AC/documentsActions";
 import { filteredDocumentsSelector, selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
 import { extFile, mapToArr } from "../../utils";
@@ -22,6 +22,7 @@ interface IDocumentsTableProps {
 
 interface IDocumentsTableDispatch {
   loadAllDocuments: () => void;
+  removeAllDocuments: () => void;
   selectDocument: (uid: number) => void;
   unselectAllDocuments: () => void;
 }
@@ -60,9 +61,11 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
 
   componentDidMount() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { isLoaded, isLoading, loadAllDocuments } = this.props;
+    const { isLoaded, isLoading, loadAllDocuments, removeAllDocuments } = this.props;
 
-    if (!isLoading && !isLoaded) {
+    removeAllDocuments();
+
+    if (!isLoading) {
       loadAllDocuments();
     }
   }
@@ -350,4 +353,4 @@ export default connect((state) => ({
   isLoaded: state.documents.loaded,
   isLoading: state.documents.loading,
   selectedDocuments: selectedDocumentsSelector(state),
-}), { loadAllDocuments, selectDocument, unselectAllDocuments })(DocumentTable);
+}), { loadAllDocuments, removeAllDocuments, selectDocument, unselectAllDocuments })(DocumentTable);
