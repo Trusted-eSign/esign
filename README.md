@@ -1,29 +1,35 @@
-# Trusted eSign
-<p align="center">
-  <img alt="Trusted eSign in action" src="https://user-images.githubusercontent.com/16474118/32882951-f8d799fc-cac6-11e7-83f0-24fc70953963.png">
-</p>
+# КриптоАРМ ГОСТ
 
-## Install dependencies
+## Описание
 
-```
-> npm install -g typescript
-> npm install
+**КриптоАРМ ГОСТ** - это новый уровень развития знакомой многим программы КриптоАРМ. Новое приложение обеспечивает возможность создания и проверки электронной подписи файлов с произвольным расширением на операционных системах Windows, Linux и macOS.
 
-```
+КриптоАРМ ГОСТ работает с сертификатами и ключами усиленной квалифицированной электронной подписи и полностью совместим с криптопровайдером СКЗИ КриптоПро CSP начиная с версии 4.0.
 
-## Build for dev
-⚠️ Before run dev need manualy add trusted-crypto in /app/node_modules/ Will fixed in future
-```bash
-git clone https://github.com/TrustedPlus/esign.git
-cd esign && npm install
-cd app && npm install
-cd ..
-npm run dev
+В приложении поддержаны стандарты для электронной подписи и хеширования ГОСТ Р 34.10-2012 и ГОСТ Р 34.11-2012, которые с 01 января 2019 года должны заменить прекращающие свое действие стандарты ГОСТ Р 34.10-2001 и ГОСТ Р 34.11-94.
 
-# Run tslint
-yarn lint
-```
+![default](https://user-images.githubusercontent.com/16474118/43135566-808af96a-8f4e-11e8-9870-9d64294ebc4a.png)
 
-**NOTE:**
-* on Windows need have openssl [prebuild binaries](https://wiki.openssl.org/index.php/Binaries) or build from [sources](https://github.com/openssl/openssl/tree/OpenSSL_1_0_2k) in first time (for [trusted-crypto](https://github.com/TrustedPlus/crypto/blob/master/binding.gyp#L57))
-* on Linux install openssl devel package
+
+## Функциональные возможности
+
+* **Электронная подпись** - создание (формирование) электронной подписи в двух вариантах: совмещенной и отделенной. Формат подписи CMS (PKCS#7). Проверка электронной подписи с учетом списков отозванных сертификатов. Добавление электронной подписи к уже существующей.
+
+* **Шифрование** - шифрование файлов в адрес нескольких получателей. Расшифрование данных. Архивирование результатов после шифрования.
+
+* **Управление сертификатами** - импорт и экспорт сертификатов. Удаление выбранных сертификатов и ключей. Установка сертификатов с токенов (с контейнеров, расположенных на отчуждаемых носителях). Автоматическое построение и проверка цепочки сертификатов.
+
+* **Журнал операций** - журналирование выполненных пользователем операций
+
+* **Документы** - быстрый доступ к документам, с возможностью выполнения операций (подпись, шифрование, архивация и т.д.)
+
+![default](https://user-images.githubusercontent.com/16474118/43135569-84ef2e5e-8f4e-11e8-95be-fa5cfb15d2dd.png)
+
+## Документация
+[Руководство пользователя.pdf](https://github.com/TrustedRu/CryptoARMGOST/blob/master/docs/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F.pdf)
+
+## Обратная связь
+Если у вас есть вопросы по технической поддержке, то напишите нам на support@trusted.ru или откройте обращение на странице [GitHub Issues](https://github.com/TrustedRu/CryptoARMGOST/issues)
+
+Также, с нами можно связаться через форму в самом приложении:
+![default](https://user-images.githubusercontent.com/16474118/43139583-cdbf4c84-8f5a-11e8-9432-f88c39c39f62.png)
