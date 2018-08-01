@@ -263,6 +263,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
         onClose={this.handleCloseModalDeleteDocuments}>
 
         <DeleteDocuments
+          onCancel={this.handleCloseModalDeleteDocuments}
           removeDocuments={this.handleClickDelete} />
       </Modal>
     );
