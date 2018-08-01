@@ -13,6 +13,7 @@ import {
 } from "../../constants";
 import { selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import Modal from "../Modal";
+import DeleteDocuments from "./DeleteDocuments";
 import DocumentsTable from "./DocumentsTable";
 import FilterDocuments from "./FilterDocuments";
 
@@ -35,6 +36,7 @@ interface IDocumentsWindowProps {
 
 interface IDocumentsWindowState {
   searchValue: string;
+  showModalDeleteDocuments: boolean;
   showModalFilterDocments: boolean;
 }
 
@@ -49,6 +51,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
     this.state = {
       searchValue: "",
+      showModalDeleteDocuments: false,
       showModalFilterDocments: false,
     };
   }
@@ -62,7 +65,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       outDuration: 225,
     });
 
-    $(document).ready(function() {
+    $(document).ready(function () {
       $(".tooltipped").tooltip();
     });
   }
@@ -158,7 +161,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
               </div>
               <div className="col s1">
                 <a className={`waves-effect waves-light ${disabledClass}`} data-position="bottom"
-                  onClick={this.handleClickDelete} >
+                  onClick={this.handleShowModalDeleteDocuments} >
                   <div className="row docmenu"><i className="material-icons docmenu_remove"></i></div>
                   <div className="row docmenu">{localize("Documents.docmenu_remove", locale)}</div>
                 </a>
@@ -169,6 +172,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
             <DocumentsTable searchValue={this.state.searchValue} />
           </div>
           {this.showModalFilterDocuments()}
+          {this.showModalDeleteDocuments()}
         </div>
       </div>
     );
@@ -243,6 +247,27 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
     );
   }
 
+  showModalDeleteDocuments = () => {
+    const { localize, locale } = this.context;
+    const { documents } = this.props;
+    const { showModalDeleteDocuments } = this.state;
+
+    if (!documents || !showModalDeleteDocuments) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalDeleteDocuments}
+        header={localize("Documents.delete_documents", locale)}
+        onClose={this.handleCloseModalDeleteDocuments}>
+
+        <DeleteDocuments
+          removeDocuments={this.handleClickDelete} />
+      </Modal>
+    );
+  }
+
   handleClickSign = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
@@ -271,6 +296,8 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
     const message = localize("Documents.documents_deleted1", locale) + count + localize("Documents.documents_deleted2", locale);
     Materialize.toast(message, 2000, "toast-remove_documents");
+
+    this.handleCloseModalDeleteDocuments();
   }
 
   openWindow = (operation: string) => {
@@ -303,6 +330,14 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
   handleCloseModalFilterDocuments = () => {
     this.setState({ showModalFilterDocments: false });
+  }
+
+  handleShowModalDeleteDocuments = () => {
+    this.setState({ showModalDeleteDocuments: true });
+  }
+
+  handleCloseModalDeleteDocuments = () => {
+    this.setState({ showModalDeleteDocuments: false });
   }
 
   handleReloadDocuments = () => {
