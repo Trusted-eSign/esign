@@ -62,39 +62,41 @@ class EventsWindow extends React.Component<IEventsWindowProps & IEventsWindowDis
     const classDefaultFilters = isDefaultFilters ? "filter_off" : "filter_on";
 
     return (
-      <div className="row">
-        <div className="row halfbottom" />
+      <div className="content">
+        <div className="row">
+          <div className="row halfbottom" />
 
-        <div className="col s10">
-          <div className="input-field input-field-csr col s12 border_element find_box">
-            <i className="material-icons prefix">search</i>
-            <input
-              id="search"
-              type="search"
-              placeholder={localize("EventsTable.search_in_table", locale)}
-              value={this.state.searchValue}
-              onChange={this.handleSearchValueChange} />
-            <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? {color : "#444"} : {}}>close</i>
+          <div className="col s10">
+            <div className="input-field input-field-csr col s12 border_element find_box">
+              <i className="material-icons prefix">search</i>
+              <input
+                id="search"
+                type="search"
+                placeholder={localize("EventsTable.search_in_table", locale)}
+                value={this.state.searchValue}
+                onChange={this.handleSearchValueChange} />
+              <i className="material-icons close" onClick={() => this.setState({ searchValue: "" })} style={this.state.searchValue ? { color: "#444" } : {}}>close</i>
+            </div>
           </div>
+          <div className="col s1">
+            <a className={"btn-small waves-effect waves-light"} onClick={this.handleShowModalFilterEvents}>
+              <i className={"material-icons " + classDefaultFilters}>filter_list</i>
+            </a>
+          </div>
+          <div className="col s1">
+            <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events" style={{ margin: 0 }}>
+              <i className="nav-small-icon material-icons context_menu">more_vert</i>
+            </a>
+            <ul id="dropdown-btn-for-events" className="dropdown-content">
+              <li><a onClick={this.handleReloadEvents}>{isArchiveLogFile ? localize("EventsTable.goto_current_logfile", locale) : localize("Common.update", locale)}</a></li>
+              <li><a onClick={this.handleLoadArchiveLogFile}>{localize("EventsTable.load_archive_logfile", locale)}</a></li>
+            </ul>
+          </div>
+          <div className="col s12">
+            <EventTable searchValue={this.state.searchValue} />
+          </div>
+          {this.showModalCertificateRequest()}
         </div>
-        <div className="col s1">
-          <a className={"btn-small waves-effect waves-light"} onClick={this.handleShowModalFilterEvents}>
-            <i className={"material-icons " + classDefaultFilters}>filter_list</i>
-          </a>
-        </div>
-        <div className="col s1">
-          <a className={"nav-small-btn waves-effect waves-light"} data-activates="dropdown-btn-for-events" style={{margin: 0}}>
-            <i className="nav-small-icon material-icons context_menu">more_vert</i>
-          </a>
-          <ul id="dropdown-btn-for-events" className="dropdown-content">
-            <li><a onClick={this.handleReloadEvents}>{isArchiveLogFile ? localize("EventsTable.goto_current_logfile", locale) : localize("Common.update", locale)}</a></li>
-            <li><a onClick={this.handleLoadArchiveLogFile}>{localize("EventsTable.load_archive_logfile", locale)}</a></li>
-          </ul>
-        </div>
-        <div className="col s12">
-          <EventTable searchValue={this.state.searchValue} />
-        </div>
-        {this.showModalCertificateRequest()}
       </div>
     );
   }
