@@ -425,7 +425,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     if (files.length > 0) {
       let folderOut = settings.outfolder;
-      if(folderOut == ""){
+      if (folderOut === "") {
         folderOut = window.DEFAULT_DOCUMENTS_PATH;
       }
 

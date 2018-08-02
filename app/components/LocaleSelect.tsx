@@ -8,6 +8,7 @@ class LocaleSelect extends React.Component {
     const { locale, changeLocale } = this.props;
 
     locale === RU ? changeLocale(EN) : changeLocale(RU);
+    window.locale = locale === RU ? EN : RU;
   }
 
   render() {

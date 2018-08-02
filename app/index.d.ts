@@ -24,6 +24,7 @@ interface Window {
     async: any;
     path: any;
     sudo: any;
+    locale: string;
     logger: trusted.utils.Logger;
 }
 

@@ -1,7 +1,32 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { localizeAlgorithm } from "../i18n/localize";
-import { IX509Certificate } from "../module/global_app";
+
+export interface IX509Certificate {
+  format: string;
+  type: string;
+  category: string;
+  provider: string;
+  uri: string;
+  version: string;
+  hash: string;
+  serial: string;
+  serialNumber: string;
+  notAfter: Date;
+  notBefore: string;
+  subjectName: string;
+  issuerName: string;
+  subjectFriendlyName: string;
+  issuerFriendlyName: string;
+  organizationName: string;
+  status: boolean;
+  signatureAlgorithm: string;
+  signatureDigestAlgorithm: string;
+ publicKeyAlgorithm: string;
+  privateKey: boolean;
+  active: boolean;
+  key: string;
+}
 
 interface ICertificateInfoProps {
   certificate: IX509Certificate;
