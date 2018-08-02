@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { USER_NAME } from "../constants";
-import { lang } from "../module/global_app";
+import localize from "../i18n/localize";
 import { fileCoding, fileExists } from "../utils";
 import logger from "../winstonLogger";
 
@@ -94,6 +94,9 @@ export function decryptFile(uri: string, folderOut: string): string {
     outURI = uri.substring(0, uri.lastIndexOf("."));
   }
 
+  $(".toast-search_decrypt_cert_failed").remove();
+      Materialize.toast(localize("Encrypt.search_decrypt_cert_failed", window.locale), 2000, "toast-search_decrypt_cert_failed");
+
   let indexFile: number = 1;
   let newOutUri: string = outURI;
   while (fileExists(newOutUri)) {
@@ -131,7 +134,7 @@ export function decryptFile(uri: string, folderOut: string): string {
 
     if (!certWithKey) {
       $(".toast-search_decrypt_cert_failed").remove();
-      Materialize.toast(lang.get_resource.Encrypt.search_decrypt_cert_failed, 2000, "toast-search_decrypt_cert_failed");
+      Materialize.toast(localize("Encrypt.search_decrypt_cert_failed", window.locale), 2000, "toast-search_decrypt_cert_failed");
 
       throw new Error("No have certificate with key");
     }

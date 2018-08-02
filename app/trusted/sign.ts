@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { USER_NAME } from "../constants";
-import { lang } from "../module/global_app";
+import localize from "../i18n/localize";
 import { fileCoding, fileExists } from "../utils";
 import logger from "../winstonLogger";
 
@@ -20,7 +20,7 @@ export function loadSign(uri: string): trusted.cms.SignedData {
     return cms;
   } catch (e) {
     $(".toast-load_sign_failed").remove();
-    Materialize.toast(lang.get_resource.Sign.load_sign_failed, 2000, "toast-load_sign_failed");
+    Materialize.toast(localize("Sign.load_sign_failed", window.locale), 2000, "toast-load_sign_failed");
 
     return undefined;
   }
@@ -32,7 +32,7 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
       let tempURI: string;
       tempURI = uri.substring(0, uri.lastIndexOf("."));
       if (!fileExists(tempURI)) {
-        tempURI = dialog.showOpenDialog(null, { title: lang.get_resource.Sign.sign_content_file + path.basename(uri), properties: ["openFile"] });
+        tempURI = dialog.showOpenDialog(null, { title: localize("Sign.sign_content_file", window.locale) + path.basename(uri), properties: ["openFile"] });
 
         if (tempURI) {
           tempURI = tempURI[0];
@@ -40,7 +40,8 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
 
         if (!tempURI || !fileExists(tempURI)) {
           $(".toast-verify_get_content_failed").remove();
-          Materialize.toast(lang.get_resource.Sign.verify_get_content_failed, 2000, "toast-verify_get_content_failed");
+          Materialize.toast(localize("Sign.verify_get_content_failed", window.locale), 2000, "toast-verify_get_content_failed");
+
           return undefined;
         }
       }
@@ -54,7 +55,7 @@ export function setDetachedContent(cms: trusted.cms.SignedData, uri: string): tr
     return cms;
   } catch (e) {
     $(".toast-set_content_failed").remove();
-    Materialize.toast(lang.get_resource.Sign.set_content_failed, 2000, "toast-set_content_failed");
+    Materialize.toast(localize("Sign.set_content_failed", window.locale), 2000, "toast-set_content_failed");
 
     return undefined;
   }
@@ -247,7 +248,7 @@ export function unSign(uri: string, folderOut: string): any {
       }
     } else {
       $(".toast-files_unsigned_detached").remove();
-      Materialize.toast(lang.get_resource.Sign.files_unsigned_detached, 2000, "toast-files_unsigned_detached");
+      Materialize.toast(localize("Sign.files_unsigned_detached", window.locale), 2000, "toast-files_unsigned_detached");
       return "";
     }
   } catch (err) {
@@ -306,7 +307,7 @@ export function verifySign(cms: trusted.cms.SignedData): boolean {
     return res;
   } catch (e) {
     $(".toast-verify_sign_failed").remove();
-    Materialize.toast(lang.get_resource.Sign.verify_sign_failed, 2000, "toast-verify_sign_failed");
+    Materialize.toast(localize("Sign.verify_sign_failed", window.locale), 2000, "toast-verify_sign_failed");
     return res;
   }
 }
@@ -369,7 +370,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
 
       if (!signer.certificate) {
         $(".toast-signercert_not_found").remove();
-        Materialize.toast(lang.get_resource.Sign.signercert_not_found, 2000, "toast-signercert_not_found");
+        Materialize.toast(localize("Sign.signercert_not_found", window.locale), 2000, "toast-signercert_not_found");
       }
     }
 
@@ -396,7 +397,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
       if (!ch || !ch.length || ch.length === 0) {
         certificatesSignStatus = false;
         $(".toast-build_chain_failed").remove();
-        Materialize.toast(lang.get_resource.Sign.build_chain_failed, 2000, "toast-build_chain_failed");
+        Materialize.toast(localize("Sign.build_chain_failed", window.locale), 2000, "toast-build_chain_failed");
         certSign.push({
           active: false,
           serial: cert.serialNumber,
@@ -456,7 +457,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
         signerStatus = signer.signedAttributes().length > 0 ? signer.verify() && signer.verifyContent(cms.content) : signer.verifyContent(cms.content);
       } catch (e) {
         $(".toast-verify_signercontent_founds_errors").remove();
-        Materialize.toast(lang.get_resource.Sign.verify_signercontent_founds_errors, 2000, "toast-verify_signercontent_founds_errors");
+        Materialize.toast(localize("Sign.verify_signercontent_founds_errors", window.locale), 2000, "toast-verify_signercontent_founds_errors");
       }
 
       curRes.status_verify = certificatesSignStatus && signerStatus,
@@ -467,7 +468,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
     return result;
   } catch (e) {
     $(".toast-verify_signers_failed").remove();
-    Materialize.toast(lang.get_resource.Sign.verify_signers_failed, 2000, "toast-verify_signers_failed");
+    Materialize.toast(localize("Sign.verify_signers_failed", window.locale), 2000, "toast-verify_signers_failed");
 
     return undefined;
   }

@@ -43,6 +43,8 @@ class App extends React.Component<IAppProps, {}> {
 
   componentDidMount() {
     store.dispatch(push("/"));
+
+    window.locale = this.props.locale;
   }
 
   render() {
