@@ -469,6 +469,7 @@ class CertWindow extends React.Component<any, any> {
 
         <CertificateDelete
           certificate={certificate}
+          onCancel={this.handleCloseModalDeleteCertificate}
           reloadCertificates={this.handleReloadCertificates}
           reloadContainers={this.handleReloadContainers} />
       </Modal>

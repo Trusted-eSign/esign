@@ -7,7 +7,7 @@ import {
   ROOT,
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
-import { lang } from "../module/global_app";
+import localize from "../i18n/localize";
 import { fileCoding } from "../utils";
 import logger from "../winstonLogger";
 
@@ -88,14 +88,14 @@ export class Store {
         key = trusted.pki.Key.readPrivateKey(keyPath, FORMAT, pass);
       } catch (e) {
         $(".toast-key_load_failed").remove();
-        Materialize.toast(lang.get_resource.Key.key_load_failed, 2000, "toast-key_load_failed");
+        Materialize.toast(localize("Key.key_load_failed", window.locale), 2000, "toast-key_load_failed");
 
-        return undefined;
+        return false;
       }
 
       return this.addKeyToStore(key, "");
     } catch (e) {
-      return undefined;
+      return false;
     }
   }
 

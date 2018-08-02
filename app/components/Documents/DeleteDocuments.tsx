@@ -4,6 +4,7 @@ import { USER_NAME } from "../../constants";
 import logger from "../../winstonLogger";
 
 interface IDeleteDocumentsProps {
+  onCancel?: () => void;
   removeDocuments: () => void;
 }
 
@@ -12,6 +13,10 @@ class DeleteDocuments extends React.Component<IDeleteDocumentsProps, {}> {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
+
+  componentWillUnmount() {
+    this.handelCancel();
+  }
 
   render() {
     const { removeDocuments } = this.props;
@@ -26,13 +31,26 @@ class DeleteDocuments extends React.Component<IDeleteDocumentsProps, {}> {
             </span>
           </div>
         </div>
-        <div className="row">
-          <div className="col s1 offset-s9">
-            <a className="waves-effect waves-light btn modal-close" onClick={removeDocuments}>{localize("Common.delete", locale)}</a>
+        <div className="col s5 offset-s7">
+          <div className="row">
+            <div className="col s6">
+              <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+            </div>
+            <div className="col s6">
+              <a className="waves-effect waves-light btn modal-close" onClick={removeDocuments}>{localize("Common.delete", locale)}</a>
+            </div>
           </div>
         </div>
       </div>
     );
+  }
+
+  handelCancel = () => {
+    const { onCancel } = this.props;
+
+    if (onCancel) {
+      onCancel();
+    }
   }
 }
 
