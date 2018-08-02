@@ -242,7 +242,7 @@ export default {
     files_resigned_exist: "The file is already re-signed. Select another certificate",
     files_resigned: "The file is re-signed",
     files_unsigned_failed: "Signature removal error",
-    files_unsigned_detached: "A detached signature",
+    files_unsigned_detached: "Cannot unsign a detached signature",
     files_unsigned_ok: "The signature is successfully removed",
     verify_sign_ok: "The signature is successfully verified",
     verify_sign_founds_errors: "Errors were detected while verifying",

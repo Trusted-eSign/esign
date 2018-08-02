@@ -37,10 +37,7 @@ class EncryptWindow extends React.Component<any, any> {
 
     if (files.length > 0) {
       const certs = recipients;
-      let folderOut = settings.outfolder;
-      if (folderOut === "") {
-        folderOut = window.DEFAULT_DOCUMENTS_PATH;
-      }
+      const folderOut = settings.outfolder;
       const policies = { deleteFiles: false, archiveFiles: false };
 
       let format = trusted.DataFormat.PEM;
@@ -181,10 +178,7 @@ class EncryptWindow extends React.Component<any, any> {
     }
 
     if (files.length > 0) {
-      let folderOut = settings.outfolder;
-      if(folderOut == ""){
-        folderOut = window.DEFAULT_DOCUMENTS_PATH;
-      }
+      const folderOut = settings.outfolder;
       let res = true;
 
       if (folderOut.length > 0) {
