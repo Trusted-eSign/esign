@@ -91,6 +91,7 @@
     }
   },
   "devDependencies": {
+    "@types/archiver": "^2.1.2",
     "@types/async": "^2.0.40",
     "@types/classnames": "0.0.32",
     "@types/electron": "^1.4.38",
@@ -103,6 +104,7 @@
     "@types/node": "^7.0.21",
     "@types/nouislider": "^9.0.1",
     "@types/orchestrator": "0.0.30",
+    "@types/prop-types": "^15.5.4",
     "@types/q": "1.0.0",
     "@types/react": "^16.0.34",
     "@types/react-dom": "^16.0.3",
@@ -111,9 +113,13 @@
     "@types/react-router": "^4.0.9",
     "@types/react-router-dom": "^4.0.4",
     "@types/react-router-redux": "^5.0.1",
+    "@types/react-scroll": "^1.5.3",
     "@types/react-test-renderer": "^15.5.0",
+    "@types/react-virtualized": "^9.18.5",
     "@types/redux": "^3.6.0",
     "@types/redux-logger": "^3.0.0",
+    "@types/socket.io": "^1.4.36",
+    "@types/systeminformation": "^3.23.0",
     "@types/webpack-env": "^1.13.0",
     "babel-loader": "^7.1.5",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -175,12 +181,6 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "@types/archiver": "^2.0.1",
-    "@types/prop-types": "^15.5.2",
-    "@types/react-scroll": "^1.5.2",
-    "@types/react-virtualized": "^9.7.12",
-    "@types/socket.io": "^1.4.31",
-    "@types/systeminformation": "^3.23.0",
     "babelify": "^7.3.0",
     "browserify": "^14.4.0",
     "electron-debug": "^1.1.0",
