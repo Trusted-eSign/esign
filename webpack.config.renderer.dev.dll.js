@@ -17,7 +17,7 @@ export default merge.smart(baseConfig, {
 
   target: 'electron-renderer',
 
-  externals: ['fsevents', 'crypto-browserify'],
+  externals: ['fsevents', 'crypto-browserify', 'JSONStream', 'path-platform', 'react-router-dom'],
 
   /**
    * @HACK: Copy and pasted from renderer dev config. Consider merging these
