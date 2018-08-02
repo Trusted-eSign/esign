@@ -22,8 +22,9 @@ export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], poli
   indexFile = 1;
   newOutUri = outURI;
   while (fileExists(newOutUri)) {
-    newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")"
-      + path.basename(outURI));
+    const parsed = path.parse(outURI);
+
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
     indexFile++;
   }
 
@@ -100,7 +101,9 @@ export function decryptFile(uri: string, folderOut: string): string {
   let indexFile: number = 1;
   let newOutUri: string = outURI;
   while (fileExists(newOutUri)) {
-    newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
+    const parsed = path.parse(outURI);
+
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
     indexFile++;
   }
 

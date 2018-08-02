@@ -79,7 +79,10 @@ class SideMenu extends React.Component<{}, {}> {
                 {localize("Help.Help", locale)}
                 <i className="material-icons left help">help</i>
               </Link>
-              <Link to="/" onClick={() => remote.getCurrentWindow().close()}>
+              <Link to="/" onClick={() => {
+                remote.getGlobal("sharedObject").isQuiting = true;
+                remote.getCurrentWindow().close();
+              }}>
                 {localize("Common.exit", locale)}
                 <i className="material-icons left exit">exit_to_app</i>
               </Link>

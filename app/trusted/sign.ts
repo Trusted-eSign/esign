@@ -73,7 +73,9 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
   let indexFile: number = 1;
   let newOutUri: string = outURI;
   while (fileExists(newOutUri)) {
-    newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
+    const parsed = path.parse(outURI);
+
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
     indexFile++;
   }
 
@@ -207,7 +209,9 @@ export function unSign(uri: string, folderOut: string): any {
   let indexFile: number = 1;
   let newOutUri: string = outURI;
   while (fileExists(newOutUri)) {
-    newOutUri = path.join(path.parse(outURI).dir, "(" + indexFile + ")" + path.basename(outURI));
+    const parsed = path.parse(outURI);
+
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
     indexFile++;
   }
 

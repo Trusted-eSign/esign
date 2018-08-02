@@ -5,7 +5,6 @@ import {
   changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt,
   changeEncryptEncoding, changeEncryptOutfolder,
 } from "../AC";
-import {  DEFAULT_DOCUMENTS_PATH } from "../constants";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
@@ -91,7 +90,7 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
             elementId="archive_files"
             title={localize("Encrypt.archive_files_before", locale)} />
           <SelectFolder
-            directory={settings.outfolder ? settings.outfolder : DEFAULT_DOCUMENTS_PATH}
+            directory={settings.outfolder}
             viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)}
           />
