@@ -5,6 +5,7 @@ import logger from "../../winstonLogger";
 
 interface ICertificateDeleteProps {
   certificate: any;
+  onCancel?: () => void;
   reloadCertificates: () => void;
   reloadContainers: () => void;
 }
@@ -36,6 +37,10 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
       const container = this.getContainerByCertificate(certificate);
       this.setState({ container });
     }
+  }
+
+  componentWillUnmount() {
+    this.handelCancel();
   }
 
   render() {
@@ -70,12 +75,27 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
           {body}
         </div>
         <div className="row">
-          <div className="col s1 offset-s9">
-            <a className="waves-effect waves-light btn modal-close" onClick={this.handleDeleteCertificateAndContainer}>{localize("Common.delete", locale)}</a>
+          <div className="col s5 offset-s7">
+            <div className="row nobottom">
+              <div className="col s6">
+                <a className={"waves-effect waves-light btn modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+              </div>
+              <div className="col s6">
+                <a className="waves-effect waves-light btn modal-close" onClick={this.handleDeleteCertificateAndContainer}>{localize("Common.delete", locale)}</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     );
+  }
+
+  handelCancel = () => {
+    const { onCancel } = this.props;
+
+    if (onCancel) {
+      onCancel();
+    }
   }
 
   toggleDeleteContainer = () => {
