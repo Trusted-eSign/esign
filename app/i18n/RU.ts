@@ -242,7 +242,7 @@ export default {
     files_resigned_exist: "Подпись уже существует. Выберите другой сертификат",
     files_resigned: "Подпись добавлена",
     files_unsigned_failed: "При снятии подписи произошла ошибка",
-    files_unsigned_detached: "Открепленная подпись",
+    files_unsigned_detached: "Невозможно снять подпись, так как подпись открепленная",
     files_unsigned_ok: "Снятие подписи закончено успешно",
     verify_sign_ok: "Проверка подписей прошла успешно",
     verify_sign_founds_errors: "При проверке подписи обнаружены ошибки",
