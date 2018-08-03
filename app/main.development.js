@@ -119,7 +119,13 @@ app.on('ready', async () => {
   const trayMenuTemplate = [
     {
       label: lang === 'ru' ? 'Открыть приложение' : 'Open Application',
-      click: function () { mainWindow.show(); }
+      click: function () {
+        mainWindow.show();
+
+        if (process.platform === "darwin") {
+          app.dock.show();
+        }
+      }
     },
     {
       label: lang === 'ru' ? 'Выйти' : 'Close',
@@ -133,6 +139,9 @@ app.on('ready', async () => {
   var trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
   trayIcon.setContextMenu(trayMenu);
 
+  if (process.platform === "darwin") {
+    app.dock.setMenu(trayMenu);
+  }
 
   var startMinimized = (process.argv || []).indexOf('--service') !== -1;
 
@@ -162,6 +171,7 @@ app.on('ready', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
+
     preloader.close();
     if (!startMinimized) {
       mainWindow.show();
@@ -173,6 +183,10 @@ app.on('ready', async () => {
     if (!global.sharedObject.isQuiting) {
       event.preventDefault();
       mainWindow.hide();
+
+      if (process.platform === "darwin") {
+        app.dock.hide();
+      }
     }
 
     return false;
