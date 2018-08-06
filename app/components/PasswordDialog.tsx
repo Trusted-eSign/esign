@@ -64,7 +64,7 @@ class PasswordDialog extends React.Component<any, any> {
                 <label htmlFor="input_password" className={active}>{localize("Settings.password", locale)}</label>
               </div>
               <div className="col s4">
-                <a className="waves-effect waves-light btn modal-close" id="enter-pass">{localize("License.Entered", locale)}</a>
+                <a className="waves-effect waves-light btn modal-close" id="enter-pass">{localize("Common.entered", locale)}</a>
               </div>
             </div>
           </div>

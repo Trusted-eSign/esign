@@ -434,6 +434,7 @@ export default {
     goOver: "Go over",
     cancel: "Cancel",
     ready: "Ready",
+    entered: "ENTER",
   },
   Csp: {
     cpcspPKZIVersion: "CryptoPro CSP product version",
