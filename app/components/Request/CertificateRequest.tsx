@@ -9,7 +9,6 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
-import * as jwt from "../../trusted/jwt";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import logger from "../../winstonLogger";
 import HeaderTabs from "./HeaderTabs";
@@ -338,24 +337,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     let keyPair;
     let oid;
     let ext;
-
-    if (licenseStatus !== 1) {
-      $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-
-      logger.log({
-        level: "error",
-        message: "No correct license",
-        operation: "Генерация сертификата",
-        operationObject: {
-          in: "License",
-          out: "Null",
-        },
-        userName: USER_NAME,
-      });
-
-      return;
-    }
 
     if (!this.verifyFields()) {
       $(".toast-required_fields").remove();

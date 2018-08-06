@@ -92,7 +92,7 @@
     window.DEFAULT_DOCUMENTS_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
-    window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
+    // window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
     window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
     window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "trusted_esign.log");
     window.APP_LOG_FILE = path.join(HOME_DIR, ".Trusted", "trusted_esign_operations.log");

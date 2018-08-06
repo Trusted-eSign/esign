@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import {
   LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
   LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP,
-  LOCATION_LICENSE, LOCATION_SIGN,
+  LOCATION_SIGN,
 } from "../constants";
 
 const remote = window.electron.remote;
@@ -70,10 +70,6 @@ class SideMenu extends React.Component<{}, {}> {
               <Link className={"bordered--top"} to="/about">
                 {localize("About.About", locale)}
                 <i className="material-icons left about">about</i>
-              </Link>
-              <Link to={LOCATION_LICENSE}>
-                {localize("License.License", locale)}
-                <i className="material-icons left license">license</i>
               </Link>
               <Link to={LOCATION_HELP}>
                 {localize("Help.Help", locale)}

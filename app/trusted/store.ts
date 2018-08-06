@@ -407,12 +407,6 @@ export class Store {
         try {
           keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
         } catch (err) {
-          // const JWT_RES: number = jwt.checkLicense();
-          // if (JWT_RES) {
-          //   $(".toast-jwt_error").remove();
-          //   Materialize.toast(jwt.getErrorMessage(JWT_RES), 4000, "toast-jwt_error");
-          //   return;
-          // }
         }
 
         if (!keyItem) {
@@ -426,12 +420,6 @@ export class Store {
         try {
           keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
         } catch (err) {
-          // const JWT_RES: number = jwt.checkLicense();
-          // if (JWT_RES) {
-          //   $(".toast-jwt_error").remove();
-          //   Materialize.toast(jwt.getErrorMessage(JWT_RES), 4000, "toast-jwt_error");
-          //   return;
-          // }
         }
 
         if (!keyItem) {

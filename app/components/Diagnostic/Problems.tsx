@@ -1,9 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import {
-  ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
-  ERROR_LOAD_TRUSTED_CRYPTO,
-  NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
+  ERROR_CHECK_CSP_PARAMS, ERROR_LOAD_TRUSTED_CRYPTO,
   NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP,
 } from "../../errors";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
@@ -29,23 +27,23 @@ class Problems extends React.Component<IProblemsProps, {}> {
     switch (error) {
       case ERROR_LOAD_TRUSTED_CRYPTO:
         return "Problems.problem_6";
-      case NOT_INSTALLED_CSP:
-        return "Problems.problem_1";
-      case ERROR_CHECK_CSP_LICENSE:
-        return "Problems.problem_2";
-      case NO_GOST_2001:
-        return "Csp.noProvider2001";
+      // case NOT_INSTALLED_CSP:
+      //   return "Problems.problem_1";
+      // case ERROR_CHECK_CSP_LICENSE:
+      //   return "Problems.problem_2";
+      // case NO_GOST_2001:
+      //   return "Csp.noProvider2001";
       case ERROR_CHECK_CSP_PARAMS:
         return "Csp.cspErr";
-      case NO_CRYPTOARM_LICENSE:
-        return "Problems.problem_3";
-      case NO_CORRECT_CRYPTOARM_LICENSE:
-        return "Problems.problem_3";
+      // case NO_CRYPTOARM_LICENSE:
+      //   return "Problems.problem_3";
+      // case NO_CORRECT_CRYPTOARM_LICENSE:
+      //   return "Problems.problem_3";
       case NO_HAVE_CERTIFICATES_WITH_KEY:
         return "Problems.problem_5";
 
       default:
-        return "License.jwtErrorCode";
+        return "Problems.problem_6";
     }
   }
 

@@ -2,11 +2,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { loadAllCertificates, loadLicense } from "../../AC";
+import { loadAllCertificates } from "../../AC";
 import {
-  BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
-  ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
-  NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP, WARNING,
+  BUG, ERROR_CHECK_CSP_PARAMS,
+  ERROR_LOAD_TRUSTED_CRYPTO, NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP, WARNING,
 } from "../../errors";
 import { filteredCertificatesSelector } from "../../selectors";
 import DiagnosticModal from "../Diagnostic/DiagnosticModal";
@@ -41,54 +40,54 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     });
   }
 
-  checkCPCSP = () => {
-    const { localize, locale } = this.context;
+  // checkCPCSP = () => {
+  //   const { localize, locale } = this.context;
 
-    try {
-      if (!trusted.utils.Csp.isGost2001CSPAvailable()) {
-        $(".toast-noProvider2001").remove();
-        Materialize.toast(localize("Csp.noProvider2001", locale), 5000, "toast-noProvider2001");
+  //   try {
+  //     if (!trusted.utils.Csp.isGost2001CSPAvailable()) {
+  //       $(".toast-noProvider2001").remove();
+  //       Materialize.toast(localize("Csp.noProvider2001", locale), 5000, "toast-noProvider2001");
 
-        this.setState({
-          errors: [...this.state.errors, {
-            important: BUG,
-            type: NO_GOST_2001,
-          }],
-        });
-        this.setState({ criticalError: true });
-        return false;
-      }
+  //       this.setState({
+  //         errors: [...this.state.errors, {
+  //           important: BUG,
+  //           type: NO_GOST_2001,
+  //         }],
+  //       });
+  //       this.setState({ criticalError: true });
+  //       return false;
+  //     }
 
-      if (!trusted.utils.Csp.checkCPCSPLicense()) {
-        $(".toast-noCPLicense").remove();
-        Materialize.toast(localize("Csp.noCPLicense", locale), 5000, "toast-noCPLicense");
+  //     if (!trusted.utils.Csp.checkCPCSPLicense()) {
+  //       $(".toast-noCPLicense").remove();
+  //       Materialize.toast(localize("Csp.noCPLicense", locale), 5000, "toast-noCPLicense");
 
-        this.setState({
-          errors: [...this.state.errors, {
-            important: WARNING,
-            type: ERROR_CHECK_CSP_LICENSE,
-          }],
-        });
+  //       this.setState({
+  //         errors: [...this.state.errors, {
+  //           important: WARNING,
+  //           type: ERROR_CHECK_CSP_LICENSE,
+  //         }],
+  //       });
 
-        return false;
-      }
-    } catch (e) {
-      $(".toast-cspErr").remove();
-      Materialize.toast(localize("Csp.cspErr", locale), 2000, "toast-cspErr");
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     $(".toast-cspErr").remove();
+  //     Materialize.toast(localize("Csp.cspErr", locale), 2000, "toast-cspErr");
 
-      this.setState({
-        errors: [...this.state.errors, {
-          type: ERROR_CHECK_CSP_PARAMS,
-        }],
-      });
+  //     this.setState({
+  //       errors: [...this.state.errors, {
+  //         type: ERROR_CHECK_CSP_PARAMS,
+  //       }],
+  //     });
 
-      this.setState({ criticalError: true });
+  //     this.setState({ criticalError: true });
 
-      return false;
-    }
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
   checkTrustedCryptoLoadedErr = () => {
     if (window.tcerr) {
@@ -123,32 +122,32 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   }
 
   componentWillReceiveProps(nextProps: any) {
-    const { certificatesLoaded, loadingLicense } = this.props;
+    const { certificatesLoaded } = this.props;
 
-    if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
-      this.setState({
-        errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CRYPTOARM_LICENSE,
-        }],
-      });
-    }
-    if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
-      this.setState({
-        errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CORRECT_CRYPTOARM_LICENSE,
-        }],
-      });
-    }
-    if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
-      this.setState({
-        errors: [...this.state.errors, {
-          important: WARNING,
-          type: NO_CORRECT_CRYPTOARM_LICENSE,
-        }],
-      });
-    }
+    // if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
+    //   this.setState({
+    //     errors: [...this.state.errors, {
+    //       important: WARNING,
+    //       type: NO_CRYPTOARM_LICENSE,
+    //     }],
+    //   });
+    // }
+    // if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    //   this.setState({
+    //     errors: [...this.state.errors, {
+    //       important: WARNING,
+    //       type: NO_CORRECT_CRYPTOARM_LICENSE,
+    //     }],
+    //   });
+    // }
+    // if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    //   this.setState({
+    //     errors: [...this.state.errors, {
+    //       important: WARNING,
+    //       type: NO_CORRECT_CRYPTOARM_LICENSE,
+    //     }],
+    //   });
+    // }
 
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length === 0)) {
       this.setState({
@@ -163,13 +162,13 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   componentDidMount() {
     const { certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { loadAllCertificates, loadLicense } = this.props;
+    const { loadAllCertificates } = this.props;
 
-    if (this.checkTrustedCryptoLoadedErr()) {
-      this.checkCPCSP();
-    }
+    // if (this.checkTrustedCryptoLoadedErr()) {
+    //   this.checkCPCSP();
+    // }
 
-    loadLicense();
+    // loadLicense();
 
     if (!certificatesLoading) {
       loadAllCertificates();
@@ -186,13 +185,14 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
           <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
         </Link>
       );
-    } else if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
-      return (
-        <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-        </Link>
-      );
     } else {
+    // } else if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
+    //   return (
+    //     <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
+    //       <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
+    //     </Link>
+    //   );
+    // } else {
       return (
         <a className="waves-effect waves-light btn modal-close" onClick={this.handleMaybeCloseApp}>{localize("Diagnostic.close", locale)}</a>
       );
@@ -209,12 +209,12 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
     const cspErrors: IError[] = [];
 
-    for (const error of errors) {
-      if (error.type === NO_GOST_2001 ||
-        error.type === ERROR_CHECK_CSP_PARAMS) {
-        cspErrors.push(error);
-      }
-    }
+    // for (const error of errors) {
+    //   if (error.type === NO_GOST_2001 ||
+    //     error.type === ERROR_CHECK_CSP_PARAMS) {
+    //     cspErrors.push(error);
+    //   }
+    // }
 
     if (cspErrors.length) {
       if (!this.state.activeError) {
@@ -283,12 +283,12 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "sign" }),
     certificatesLoaded: state.certificates.loaded,
     certificatesLoading: state.certificates.loading,
-    dataLicense: state.license.data,
-    lic_error: state.license.lic_error,
-    lic_format: state.license.lic_format,
-    loadedLicense: state.license.loaded,
-    loadingLicense: state.license.loading,
-    statusLicense: state.license.status,
-    verifiedLicense: state.license.verified,
+    // dataLicense: state.license.data,
+    // lic_error: state.license.lic_error,
+    // lic_format: state.license.lic_format,
+    // loadedLicense: state.license.loaded,
+    // loadingLicense: state.license.loading,
+    // statusLicense: state.license.status,
+    // verifiedLicense: state.license.verified,
   };
-}, { loadAllCertificates, loadLicense })(Diagnostic);
+}, { loadAllCertificates })(Diagnostic);

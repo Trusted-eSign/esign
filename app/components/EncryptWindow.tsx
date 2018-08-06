@@ -8,7 +8,6 @@ import { HOME_DIR, USER_NAME } from "../constants";
 import { activeFilesSelector, connectedSelector } from "../selectors";
 import { DECRYPTED, ENCRYPTED } from "../server/constants";
 import * as encrypts from "../trusted/encrypt";
-import * as jwt from "../trusted/jwt";
 import { dirExists, mapToArr } from "../utils";
 import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
@@ -156,26 +155,8 @@ class EncryptWindow extends React.Component<any, any> {
   }
 
   decrypt = () => {
-    const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error } = this.props;
+    const { connectedList, connections, files, settings, deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
-
-    if (licenseStatus !== 1) {
-      $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-
-      logger.log({
-        level: "error",
-        message: "No correct license",
-        operation: "Расшифрование",
-        operationObject: {
-          in: "License",
-          out: "Null",
-        },
-        userName: USER_NAME,
-      });
-
-      return;
-    }
 
     if (files.length > 0) {
       const folderOut = settings.outfolder;
@@ -262,10 +243,6 @@ export default connect((state) => {
     connectedList: connectedSelector(state, { connected: true }),
     connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
-    licenseLoaded: state.license.loaded,
-    licenseStatus: state.license.status,
-    lic_error: state.license.lic_error,
-    licenseToken: state.license.data,
     recipients: mapToArr(state.recipients.entities).map((recipient) => state.certificates.getIn(["entities", recipient.certId])),
     settings: state.settings.encrypt,
   };

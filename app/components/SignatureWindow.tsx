@@ -6,7 +6,6 @@ import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignatu
 import { USER_NAME } from "../constants";
 import { activeFilesSelector, connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED } from "../server/constants";
-import * as jwt from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { dirExists, mapToArr } from "../utils";
 import logger from "../winstonLogger";
@@ -42,10 +41,6 @@ interface ISignatureWindowProps {
   connectedList: IConnection[];
   deleteFile: (file: string) => void;
   selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
-  licenseLoaded: boolean;
-  licenseStatus: number;
-  licenseToken: string;
-  lic_error: number;
   loadAllCertificates: () => void;
   files: Array<{
     id: string,
@@ -176,28 +171,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   signed = () => {
-    const { files, settings, signer, licenseStatus, lic_error } = this.props;
+    const { files, settings, signer } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { packageSign } = this.props;
     const { localize, locale } = this.context;
-
-    if (licenseStatus !== 1) {
-      $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-
-      logger.log({
-        level: "error",
-        message: "No correct license",
-        operation: "Подпись",
-        operationObject: {
-          in: "License",
-          out: "Null",
-        },
-        userName: USER_NAME,
-      });
-
-      return;
-    }
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -250,29 +227,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   resign = () => {
-    const { connections, connectedList, files, settings,
-      signer, licenseStatus, uploader, lic_error } = this.props;
+    const { connections, connectedList, files, settings, signer } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile } = this.props;
     const { localize, locale } = this.context;
-
-    if (licenseStatus !== 1) {
-      $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-
-      logger.log({
-        level: "error",
-        message: "No correct license",
-        operation: "Подпись",
-        operationObject: {
-          in: "License",
-          out: "Null",
-        },
-        userName: USER_NAME,
-      });
-
-      return;
-    }
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
@@ -513,10 +471,6 @@ export default connect((state) => {
     connectedList: connectedSelector(state, { connected: true }),
     connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
-    licenseLoaded: state.license.loaded,
-    licenseStatus: state.license.status,
-    lic_error: state.license.lic_error,
-    licenseToken: state.license.data,
     packageSignResult: state.signatures.packageSignResult,
     settings: state.settings.sign,
     signatures,

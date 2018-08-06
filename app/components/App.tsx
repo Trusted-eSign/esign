@@ -6,7 +6,7 @@ import { ConnectedRouter as Router, push } from "react-router-redux";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS,
   LOCATION_DOCUMENTS, LOCATION_ENCRYPT, LOCATION_EVENTS,
-  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
+  LOCATION_HELP, LOCATION_SIGN,
 } from "../constants";
 import history from "../history";
 import localize from "../i18n/localize";
@@ -18,7 +18,6 @@ import DocumentsWindow from "./Documents/DocumentsWindow";
 import EncryptWindow from "./EncryptWindow";
 import EventsWindow from "./Events/EventsWindow";
 import HelpWindow from "./Help/HelpWindow";
-import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
 import SignatureWindow from "./SignatureWindow";
@@ -57,7 +56,6 @@ class App extends React.Component<IAppProps, {}> {
           <Route path={LOCATION_ENCRYPT} component={EncryptWindow} />
           <Route path={LOCATION_CERTIFICATES} component={CertWindow} />
           <Route path={LOCATION_CONTAINERS} component={ContainersWindow} />
-          <Route path={LOCATION_LICENSE} component={LicenseWindow} />
           <Route path={LOCATION_ABOUT} component={AboutWindow} />
           <Route path={LOCATION_HELP} component={HelpWindow} />
           <Route path={LOCATION_DOCUMENTS} component={DocumentsWindow} />

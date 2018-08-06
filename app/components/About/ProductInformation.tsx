@@ -11,22 +11,6 @@ class ProductInformation extends React.Component<{}, {}> {
     return (this.context.locale !== nextContext.locale) ? true : false;
   }
 
-  getCPCSPVersionPKZI = () => {
-    try {
-      return trusted.utils.Csp.getCPCSPVersion() + "." + trusted.utils.Csp.getCPCSPVersionPKZI();
-    } catch (e) {
-      return "";
-    }
-  }
-
-  getCPCSPVersionSKZI = () => {
-    try {
-      return trusted.utils.Csp.getCPCSPVersion() + "." + trusted.utils.Csp.getCPCSPVersionSKZI() + " " + trusted.utils.Csp.getCPCSPSecurityLvl();
-    } catch (e) {
-      return "";
-    }
-  }
-
   render() {
     const { localize, locale } = this.context;
 
@@ -60,13 +44,6 @@ class ProductInformation extends React.Component<{}, {}> {
               </span>
               <span className="card-infos min">
                 <p>{localize("About.Compatible", locale)}</p>
-              </span>
-            </div>
-            <div className="row">
-              <span className="card-title sub">{localize("About.CspVersion", locale)}</span>
-              <span className="card-infos sub">
-                <p>{localize("Csp.cpcspPKZIVersion", locale)} {this.getCPCSPVersionPKZI()}</p>
-                <p>{localize("Csp.cpcspSKZIVersion", locale)} {this.getCPCSPVersionSKZI()}</p>
               </span>
             </div>
           </div>
