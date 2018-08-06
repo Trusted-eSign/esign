@@ -2,8 +2,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
-  ADDRESS_BOOK, CA, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
+  ADDRESS_BOOK, CA, MY, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
   ROOT,
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
@@ -16,7 +15,6 @@ const OS_TYPE = os.type();
 export class Store {
   _items: any[];
   _providerSystem: trusted.pkistore.Provider_System;
-  _providerCryptopro: trusted.pkistore.ProviderCryptopro;
   _providerMicrosoft: trusted.pkistore.ProviderMicrosoft;
   _store: trusted.pkistore.PkiStore;
   _rv: trusted.pki.Revocation;
@@ -29,7 +27,7 @@ export class Store {
     this._rv = new trusted.pki.Revocation();
 
     this._items = this._items.concat(this._store.find({
-      provider: ["CRYPTOPRO", "MICROSOFT"],
+      provider: ["MICROSOFT"],
       type: ["CERTIFICATE"],
     }));
   }
@@ -42,14 +40,7 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
       this._store.addProvider(this._providerMicrosoft.handle);
-    } else {
-      try {
-        this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
-        this._store.addProvider(this._providerCryptopro.handle);
-      } catch (e) {
-        console.log(`Error init CryptoPro \n ${e}`);
-      }
-    }
+    } 
   }
 
   get items(): trusted.pkistore.PkiItem[] {
@@ -142,7 +133,7 @@ export class Store {
     this._store.cash.import(TEMP_PKI_ITEMS);
 
     this._items = this._items.concat(this._store.find({
-      provider: ["CRYPTOPRO", "MICROSOFT"],
+      provider: ["MICROSOFT"],
       type: ["CERTIFICATE"],
     }));
 
@@ -158,9 +149,6 @@ export class Store {
         break;
       case PROVIDER_MICROSOFT:
         provider = this._providerMicrosoft;
-        break;
-      case PROVIDER_CRYPTOPRO:
-        provider = this._providerCryptopro;
         break;
       default:
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
@@ -188,9 +176,6 @@ export class Store {
         break;
       case "MICROSOFT":
         provider = this._providerMicrosoft;
-        break;
-      case "CRYPTOPRO":
-        provider = this._providerCryptopro;
         break;
       default:
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
