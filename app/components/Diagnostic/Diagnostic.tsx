@@ -123,32 +123,6 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
   componentWillReceiveProps(nextProps: any) {
     const { certificatesLoaded } = this.props;
-
-    // if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
-    //   this.setState({
-    //     errors: [...this.state.errors, {
-    //       important: WARNING,
-    //       type: NO_CRYPTOARM_LICENSE,
-    //     }],
-    //   });
-    // }
-    // if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
-    //   this.setState({
-    //     errors: [...this.state.errors, {
-    //       important: WARNING,
-    //       type: NO_CORRECT_CRYPTOARM_LICENSE,
-    //     }],
-    //   });
-    // }
-    // if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
-    //   this.setState({
-    //     errors: [...this.state.errors, {
-    //       important: WARNING,
-    //       type: NO_CORRECT_CRYPTOARM_LICENSE,
-    //     }],
-    //   });
-    // }
-
     if (certificatesLoaded === false && nextProps.certificatesLoaded && (nextProps.certificates.length === 0)) {
       this.setState({
         errors: [...this.state.errors, {
@@ -163,13 +137,6 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { loadAllCertificates } = this.props;
-
-    // if (this.checkTrustedCryptoLoadedErr()) {
-    //   this.checkCPCSP();
-    // }
-
-    // loadLicense();
-
     if (!certificatesLoading) {
       loadAllCertificates();
     }

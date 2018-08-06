@@ -9,8 +9,8 @@ import {
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
-  GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
-  LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
+  GET_CERTIFICATE_FROM_CONTAINER, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
+  PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
@@ -25,142 +25,6 @@ import { extFile, fileExists, toBase64 } from "../utils";
 export function changeLocation(location: string) {
   return (dispatch) => {
     dispatch(push(location));
-  };
-}
-
-export function loadLicense() {
-  return (dispatch) => {
-    dispatch({ type: LOAD_LICENSE + START });
-
-    setTimeout(() => {
-      let data = "";
-      let licenseStatus = 1;
-      let parsedLicense;
-      let buffer;
-      let lic;
-      let lic_format = "NONE"; // Type license: MTX - old license, JWT - license of jwt roken, TRIAL - триальная лицензия, NONE - license epsent
-      let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-      // Шаблон информации о лицензии для заполнения
-      lic = {
-        aud: "-",
-        sub: "CryptoARM GOST",
-        core: 65535,
-        iss: 'ООО "Цифровые технологии"',
-        exp: 0,
-        iat: 0,
-        jti: "",
-        desc: "CryptoARM GOST",
-      };
-      if (fs.existsSync(LICENSE_PATH)) {
-        data = fs.readFileSync(LICENSE_PATH, "utf8");
-      }
-      if (data && data.length) {
-        // Проверка на наличие основной лицензии старого формата
-        const result = data.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig);
-        if (result != null) {
-          lic_format = "MTX";
-          const expirationTime = trusted.utils.Jwt.getExpirationTime(data);
-          if (expirationTime == 0) { // лицензия корректна
-            lic.exp = expirationTime;
-            lic.iat = 0;
-            licenseStatus = 1;
-            const loaded = true;
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
-            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
-          } else if (expirationTime > 900 && expirationTime <= 912) { // Возвратился код ошибки
-            lic.exp = expirationTime;
-            lic.iat = 0;
-            licenseStatus = 0;
-            lic_error = expirationTime;
-            let verified = true;
-            dispatch({ payload: { data, lic_format, licenseStatus, lic_error, verified }, type: LOAD_LICENSE + FAIL });
-          }else{
-            lic.exp = expirationTime;
-            lic.iat = 0;
-            licenseStatus = 1;
-            const loaded = true;
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
-            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
-          }
-        } else {
-          let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
-          if (result != null) {
-            lic_format = "JWT";
-            const check = trusted.utils.Jwt.checkLicense(data);
-            if (check == 0) licenseStatus = 1;
-            else{
-              lic_error = check;
-              licenseStatus = 0;
-            }
-            const splitLicense = data.split(".");
-            if (splitLicense[1]) {
-              try {
-                buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-                parsedLicense = JSON.parse(buffer);
-                if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-                  && parsedLicense.jti && parsedLicense.sub) {
-                  lic = parsedLicense;
-                }
-                const loaded = true;
-                if(check == 0) lic_error = 900;//CTLICENSE_R_NO_ERROR
-                dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
-              } catch (e) {
-                lic_format = "NONE"; // Лицензия отсутствует
-                licenseStatus = 0; // Статуст лицензии: 0 - не действует
-                data = "";
-                let loaded = false;
-                let verified = true;
-                dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
-              }
-            }
-          } else {
-            // Проверка на наличие и истечение временной лицензии
-            let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
-            if (status_trial === 1) {
-              lic_format = "TRIAL"; // Работает триальная лицензия
-              let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
-              lic.exp = expirationTimeTrial;
-              lic.iat = expirationTimeTrial - 14 * 86400;
-              data = "";
-              let loaded = true;
-              licenseStatus = 1; // Статуст лицензии: 1 - действует
-              lic_error = 900;//CTLICENSE_R_NO_ERROR
-              dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error}, type: LOAD_LICENSE + SUCCESS });
-            } else {
-              lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
-              licenseStatus = 0; // Статуст лицензии: 0 - не действует
-              data = "";
-              let loaded = false;
-              let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-              let verified = true;
-              dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
-            }
-          }
-        }
-      }else{
-          // // Проверка на наличие и истечение временной лицензии
-          let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
-          if (status_trial === 1) {
-            lic_format = "TRIAL"; // Работает триальная лицензия
-            let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
-            lic.exp = expirationTimeTrial;
-            lic.iat = expirationTimeTrial - 14 * 86400;
-            data = "";
-            let loaded = true;
-            licenseStatus = 1; // Статуст лицензии: 1 - действует
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
-            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
-          } else {
-            lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
-            licenseStatus = 0; // Статуст лицензии: 0 - не действует
-            data = "";
-            let loaded = false;
-            let verified = true;
-            let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-            dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
-          }
-      }
-    }, 0);
   };
 }
 
