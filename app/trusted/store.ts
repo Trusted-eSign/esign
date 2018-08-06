@@ -402,34 +402,6 @@ export class Store {
   findKey(objectWithKey: any) {
     let keyItem: any;
 
-    if (OS_TYPE === "Windows_NT") {
-      if (objectWithKey.provider === "MICROSOFT") {
-        try {
-          keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
-        } catch (err) {
-        }
-
-        if (!keyItem) {
-          return;
-        } else {
-          return keyItem;
-        }
-      }
-    } else {
-      if (objectWithKey.provider === "CRYPTOPRO") {
-        try {
-          keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
-        } catch (err) {
-        }
-
-        if (!keyItem) {
-          return;
-        } else {
-          return keyItem;
-        }
-      }
-    }
-
     for (let i: number = 0, c: number = this._items.length; i < c; i++) {
       let result: number = 1;
 

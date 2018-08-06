@@ -4,7 +4,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
@@ -80,7 +80,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     this.state = {
       activeSubjectNameInfoTab: true,
-      algorithm: ALG_GOST12_256,
+      algorithm: ALG_RSA,
       cn: "",
       containerName: uuid(),
       country: "RU",
