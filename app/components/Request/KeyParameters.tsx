@@ -2,8 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001,
-  KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT,
+  ALG_RSA, KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT,
 } from "../../constants";
 
 interface IKeyUsage {
@@ -87,9 +86,10 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
         <div className="row">
           <div className="input-field input-field-csr col s6">
             <select className="select" ref="algorithmSelect" value={algorithm} onChange={handleAlgorithmChange} >>
-              <option value={ALG_GOST2001}>{localize("Algorithm.id_GostR3410_2001", locale)}</option>
+              <option value={ALG_RSA}>{ALG_RSA}</option>
+              {/* <option value={ALG_GOST2001}>{localize("Algorithm.id_GostR3410_2001", locale)}</option>
               <option value={ALG_GOST12_256}>{localize("Algorithm.id_tc26_gost3410_12_256", locale)}</option>
-              <option value={ALG_GOST12_512}>{localize("Algorithm.id_tc26_gost3410_12_512", locale)}</option>
+              <option value={ALG_GOST12_512}>{localize("Algorithm.id_tc26_gost3410_12_512", locale)}</option> */}
             </select>
             <label>{localize("CSR.algorithm", locale)}</label>
           </div>
