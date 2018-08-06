@@ -295,7 +295,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         }
       }
 
-      if (algorithm === ALG_GOST2001 || algorithm === ALG_GOST12_256 || algorithm === ALG_GOST12_512) {
+      if (algorithm === ALG_RSA) {
         if (!containerName.length) {
           return false;
         }
@@ -430,12 +430,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           pkeyopt.push(`rsa_keygen_bits:${keyLength}`);
           keyPair = key.generate(algorithm, pkeyopt);
           break;
-        case ALG_GOST2001:
-        case ALG_GOST12_256:
-        case ALG_GOST12_512:
-          pkeyopt.push(`container:${containerName}`);
-          keyPair = key.generate(algorithm, pkeyopt);
-          break;
         default:
           return;
       }
@@ -493,8 +487,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       if (algorithm !== ALG_RSA) {
         if (OS_TYPE === "Windows_NT") {
           providerType = PROVIDER_MICROSOFT;
-        } else {
-          providerType = PROVIDER_CRYPTOPRO;
         }
       }
 
@@ -533,10 +525,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       }
 
       try {
-        if (algorithm !== ALG_RSA) {
-          trusted.utils.Csp.installCertifiacteToContainer(cert, containerName, 75);
-          trusted.utils.Csp.installCertifiacteFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-        } else {
           window.PKISTORE.importCertificate(cert, PROVIDER_SYSTEM, (err: Error) => {
             if (err) {
               Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
@@ -544,7 +532,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           }, MY);
 
           window.PKISTORE.addKeyToStore(keyPair);
-        }
 
         this.handleReloadCertificates();
 
@@ -593,8 +580,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     if (algorithm !== ALG_RSA) {
       if (OS_TYPE === "Windows_NT") {
         providerType = PROVIDER_MICROSOFT;
-      } else {
-        providerType = PROVIDER_CRYPTOPRO;
       }
     }
 
