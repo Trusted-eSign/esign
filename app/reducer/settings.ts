@@ -3,7 +3,7 @@ import {
   CHANGE_ECRYPT_ENCODING, CHANGE_ENCRYPT_OUTFOLDER,
   CHANGE_LOCALE, CHANGE_SIGNATURE_DETACHED,
   CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER, CHANGE_SIGNATURE_TIMESTAMP,
-  RU,
+  EN,
 } from "../constants";
 
 const defaultSettings = {
@@ -13,7 +13,7 @@ const defaultSettings = {
     encoding: BASE64,
     outfolder: "",
   },
-  locale: RU,
+  locale: EN,
   sign: {
     detached: false,
     encoding: BASE64,
