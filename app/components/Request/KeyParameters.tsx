@@ -77,7 +77,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { algorithm, containerName, exportableKey, extKeyUsage, keyUsage, keyUsageGroup,
+    const { algorithm, containerName, exportableKey, extKeyUsage, keyLength, keyUsage, keyUsageGroup,
       handleAlgorithmChange, handleExtendedKeyUsageChange,
       handleInputChange, handleKeyUsageChange, handleKeyUsageGroupChange, toggleExportableKey } = this.props;
 
@@ -94,17 +94,19 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
             <label>{localize("CSR.algorithm", locale)}</label>
           </div>
           <div className="input-field input-field-csr col s6">
-            <input
-              id="containerName"
-              type="text"
-              className={!this.props.formVerified ? "validate" : containerName.length > 0 ? "valid" : "invalid"}
-              name="containerName"
-              value={containerName}
-              onChange={handleInputChange}
-            />
-            <label htmlFor="containerName">
-              {localize("CSR.container", locale) + " *"}
-            </label>
+            <div className="row nobottom">
+              <div className="valign-wrapper">
+                <div className="col s5">
+                  <p className="label">{localize("CSR.key_length", locale)}</p>
+                </div>
+                <div className="col s4">
+                  <div id="key-length-slider"></div>
+                </div>
+                <div className="col s3">
+                  <div id="key-length-value">{keyLength}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="input-field input-field-csr col s6">
@@ -116,17 +118,7 @@ class KeyParameters extends React.Component<IKeyParametersProps, {}> {
           <label>{localize("CSR.key_usage_group", locale)}</label>
         </div>
         <div className="col s6 input-radio input-field-csr">
-          <input
-            name="exportableKey"
-            className="filled-in"
-            type="checkbox"
-            id="exportableKey"
-            checked={exportableKey}
-            onChange={toggleExportableKey}
-          />
-          <label htmlFor="exportableKey" className="truncate tooltipped" data-position="right" data-tooltip={localize("CSR.exportable_key", locale)}>
-            {localize("CSR.exportable_key", locale)}
-          </label>
+
         </div>
 
         <div className="row nobottom">
