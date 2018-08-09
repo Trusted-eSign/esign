@@ -1,17 +1,17 @@
 @echo off
 
-if not exist "%UserProfile%\AppData\Local\Trusted\CryptoARM GOST" mkdir "%UserProfile%\AppData\Local\Trusted\CryptoARM GOST"
+if not exist "%UserProfile%\AppData\Local\Trusted\Trusted eSign GOST" mkdir "%UserProfile%\AppData\Local\Trusted\Trusted eSign"
 
 
 setlocal
 
-@echo Installing "CryptoARM Local CA" certificate
+@echo Installing "eSign Local CA" certificate
 certutil -addstore -Enterprise root "%~dp0\root.pem"
 
 REM ####Current user
 setlocal ENABLEDELAYEDEXPANSION
 set certpath=%~dp0root.pem
-set certName=CryptoARM Local CA
+set certName=eSign Local CA
 
 FOR /D %%P IN ("%appdata%\Mozilla\Firefox\Profiles\*") DO (
 "%~dp0certutil\win32\certutil.exe" -D -n "!certName!" -d sql:"%%P"

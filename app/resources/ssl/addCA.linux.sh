@@ -1,12 +1,12 @@
 #!/bin/sh
 #Add directory for license
 mkdir "/etc/opt/Trusted"
-mkdir "/etc/opt/Trusted/CryptoARM GOST"
-chmod 777 "/etc/opt/Trusted/CryptoARM GOST"
+mkdir "/etc/opt/Trusted/Trusted eSign"
+chmod 777 "/etc/opt/Trusted/Trusted eSign"
 
 CUR_DIR=`dirname $0`
 certPath=${CUR_DIR}/root.pem
-certificateName="CryptoARM Local CA"
+certificateName="eSign Local CA"
 
 echo -e "certificateName: ${certificateName}"
 echo -e "certPath: ${certPath}"
