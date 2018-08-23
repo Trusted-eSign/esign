@@ -495,6 +495,11 @@ export default {
     App_Functions: "НЕСКОЛЬКО ПОЛЕЗНЫХ ФУНКЦИИ ПРИЛОЖЕНИЯ",
     Empowerment: "РАСШИРЕНИЕ ВОЗМОЖНОСТЕЙ С ПОДКЛЮЧЕНИЕМ К СЕРВИСУ TRUSTED NET",
   },
+  CloudCSP: {
+    auth: "Сервер авторизации",
+    cloudCSP: "Облачный провайдер",
+    rest: "Сервер DSS",
+  },
   Common: {
     apply: "Применить",
     clear: "Очистить",

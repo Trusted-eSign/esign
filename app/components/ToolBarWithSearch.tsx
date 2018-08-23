@@ -8,6 +8,7 @@ interface IToolBarWithSearchProps {
   reloadCertificates?: () => void;
   handleShowModalCertificateRequest?: () => void;
   handleShowModalSelfSigned?: () => void;
+  handleShowModalCloudCSP?: () => void;
   operation: string;
 }
 
@@ -44,6 +45,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
           <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
           <li><a onClick={this.props.reloadCertificates}>{localize("Common.update", locale)}</a></li>
           <li><a onClick={this.props.handleShowModalCertificateRequest}>{localize("CSR.create_request", locale)}</a></li>
+          <li><a onClick={this.props.handleShowModalCloudCSP}>{localize("CloudCSP.cloudCSP", locale)}</a></li>
         </ul>
       </li>;
     } else if (this.props.operation === "containers") {

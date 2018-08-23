@@ -493,6 +493,11 @@ export default {
     App_Functions: "SEVERAL USEFUL APPLICATION FUNCTIONS",
     Empowerment: "FUNCTIONAL EXTENSIONS WITH CONNECTION TO TRUSTED NET SERVICE",
   },
+  CloudCSP: {
+    auth: "Authorization server",
+    cloudCSP: "Cloud CSP",
+    rest: "DSS server",
+  },
   Common: {
     apply: "Apply",
     clear: "Clear",

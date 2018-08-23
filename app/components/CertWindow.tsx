@@ -14,6 +14,7 @@ import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateInfo from "./CertificateInfo";
 import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
+import CloudCSP from "./CloudCSP/CloudCSP";
 import Dialog from "./Dialog";
 import Modal from "./Modal";
 import PasswordDialog from "./PasswordDialog";
@@ -40,6 +41,7 @@ class CertWindow extends React.Component<any, any> {
       password: "",
       showDialogInstallRootCertificate: false,
       showModalCertificateRequest: false,
+      showModalCloudCSP: false,
       showModalDeleteCertifiacte: false,
       showModalExportCertifiacte: false,
     });
@@ -79,6 +81,14 @@ class CertWindow extends React.Component<any, any> {
 
   handleShowModalCertificateRequest = () => {
     this.setState({ showModalCertificateRequest: true });
+  }
+
+  handleCloseModalCloudCSP = () => {
+    this.setState({ showModalCloudCSP: false });
+  }
+
+  handleShowModalCloudCSP = () => {
+    this.setState({ showModalCloudCSP: true });
   }
 
   handlePasswordChange = (password: string) => {
@@ -521,6 +531,25 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
+  showModalCloudCSP = () => {
+    const { localize, locale } = this.context;
+    const { showModalCloudCSP } = this.state;
+
+    if (!showModalCloudCSP) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalCloudCSP}
+        header={localize("CloudCSP.cloudCSP", locale)}
+        onClose={this.handleCloseModalCloudCSP}>
+
+        <CloudCSP onCancel={this.handleCloseModalCloudCSP}/>
+      </Modal>
+    );
+  }
+
   render() {
     const { certificates, isLoading } = this.props;
     const { certificate } = this.state;
@@ -543,6 +572,7 @@ class CertWindow extends React.Component<any, any> {
                 <ToolBarWithSearch operation="certificate" disable=""
                   reloadCertificates={this.handleReloadCertificates}
                   handleShowModalCertificateRequest={this.handleShowModalCertificateRequest}
+                  handleShowModalCloudCSP={this.handleShowModalCloudCSP}
                   rightBtnAction={
                     (event: any) => {
                       this.handleCertificateImport(event.target.files);
@@ -587,6 +617,7 @@ class CertWindow extends React.Component<any, any> {
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
                 {this.showModalCertificateRequest()}
+                {this.showModalCloudCSP()}
               </div>
             </div>
           </div>
