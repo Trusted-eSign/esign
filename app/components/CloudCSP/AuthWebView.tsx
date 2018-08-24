@@ -5,6 +5,7 @@ import ProgressBars from "../ProgressBars";
 interface IAuthWebViewProps {
   auth: string;
   onCancel: () => void;
+  onTokenGet: (token: string) => void;
 }
 
 interface IAuthWebViewState {
@@ -54,13 +55,15 @@ class AuthWebView extends React.PureComponent<IAuthWebViewProps, IAuthWebViewSta
   }
 
   redirect = (details) => {
-    console.log("redirect", details);
-
     const regex = /^https:\/\/net.trusted.ru\/idp\/sso\/authorize\?auth_type=dss&access_token=([^&]*)/;
     const mathes = regex.exec(details.newURL);
     if (mathes) {
       const token = mathes[1];
-      console.log("token: ", token);
+
+      if (token && token.length) {
+        this.props.onTokenGet(token);
+      }
+
       this.props.onCancel();
     }
   }

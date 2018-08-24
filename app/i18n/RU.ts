@@ -498,6 +498,7 @@ export default {
   CloudCSP: {
     auth: "Сервер авторизации",
     cloudCSP: "Облачный провайдер",
+    request_error: "Ошибка запроса",
     rest: "Сервер DSS",
   },
   Common: {

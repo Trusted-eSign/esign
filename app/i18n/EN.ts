@@ -496,6 +496,7 @@ export default {
   CloudCSP: {
     auth: "Authorization server",
     cloudCSP: "Cloud CSP",
+    request_error: "Request error",
     rest: "DSS server",
   },
   Common: {

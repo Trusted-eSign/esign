@@ -12,13 +12,17 @@ interface ICloudCSPState {
   rest: string;
 }
 
-class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
+interface ICloudCSPDispatch {
+  getCertificatesFromDSS?: (rest: string, token: string) => void;
+}
+
+class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, ICloudCSPState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: ICloudCSPProps) {
+  constructor(props: ICloudCSPProps & ICloudCSPDispatch) {
     super(props);
 
     this.state = ({
@@ -87,7 +91,7 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
                     </div>
                   </div>
                   :
-                  <AuthWebView onCancel={this.handelCancel} auth={auth} />
+                  <AuthWebView onCancel={this.handelCancel} onTokenGet={this.onTokenGet} auth={auth} />
               }
             </div>
           </div>
@@ -127,6 +131,31 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
 
   handleRestChange = (ev: any) => {
     this.setState({ rest: ev.target.value });
+  }
+
+  onTokenGet = (token: string) => {
+    const { localize, locale } = this.context;
+
+    if (!token || !token.length) {
+      return;
+    }
+
+    window.request.get(`${this.state.rest}/api/certificates`, {
+      auth: {
+        bearer: token,
+      },
+    }, (error, response, body) => {
+      if (error) {
+        Materialize.toast(localize("CloudCSP.request_error", locale), 2000, "toast-request_error");
+      }
+      const statusCode = response.statusCode;
+
+      if (statusCode !== 200) {
+        Materialize.toast(`${localize("CloudCSP.request_error", locale)} : ${statusCode}`, 2000, "toast-request_error");
+      } else {
+        console.log("body: ", body);
+      }
+    });
   }
 }
 
