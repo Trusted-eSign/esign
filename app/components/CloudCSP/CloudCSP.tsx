@@ -22,6 +22,8 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
     localize: PropTypes.func,
   };
 
+
+
   constructor(props: ICloudCSPProps & ICloudCSPDispatch) {
     super(props);
 
@@ -144,7 +146,7 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
       auth: {
         bearer: token,
       },
-    }, (error, response, body) => {
+    }, (error: any, response: any, body: any) => {
       if (error) {
         Materialize.toast(localize("CloudCSP.request_error", locale), 2000, "toast-request_error");
       }
@@ -153,9 +155,35 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
       if (statusCode !== 200) {
         Materialize.toast(`${localize("CloudCSP.request_error", locale)} : ${statusCode}`, 2000, "toast-request_error");
       } else {
-        console.log("body: ", body);
+        if (body && body.length) {
+          const certificates = JSON.parse(body);
+          for (const certificate of certificates) {
+            const hcert = this.createX509FromString(certificate.CertificateBase64);
+            console.log("hcert:", hcert);
+          }
+        }
       }
     });
+  }
+
+  createX509FromString = (certificateBase64: string): trusted.pki.Certificate | undefined => {
+    const raw = `-----BEGIN CERTIFICATE-----\n${certificateBase64}\n-----END CERTIFICATE-----\n`;
+    const rawLength = raw.length * 2;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+    let hcert;
+
+    for (let j = 0; j < rawLength; j++) {
+      array[j] = raw.charCodeAt(j);
+    }
+
+    try {
+      hcert = trusted.pki.Certificate.import(array, trusted.DataFormat.PEM);
+      return hcert;
+    } catch (e) {
+      // error
+    }
+
+    return undefined;
   }
 }
 
