@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { USER_NAME } from "../../constants";
+import logger from "../../winstonLogger";
 import AuthWebView from "./AuthWebView";
 
 interface ICloudCSPProps {
@@ -174,7 +176,33 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
             const hcert = this.createX509FromString(certificate.CertificateBase64);
 
             if (hcert) {
-              trusted.utils.Csp.installCertificateFromCloud(hcert, auth, rest, certificate.ID);
+              try {
+                trusted.utils.Csp.installCertificateFromCloud(hcert, auth, rest, certificate.ID);
+
+                logger.log({
+                  certificate: hcert.subjectName,
+                  level: "info",
+                  message: "",
+                  operation: "Импорт сертификата",
+                  operationObject: {
+                    in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
+                    out: "Null",
+                  },
+                  userName: USER_NAME,
+                });
+              } catch (err) {
+                logger.log({
+                  certificate: hcert.subjectName,
+                  level: "error",
+                  message: err.message ? err.message : err,
+                  operation: "Импорт сертификата",
+                  operationObject: {
+                    in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
+                    out: "Null",
+                  },
+                  userName: USER_NAME,
+                });
+              }
             }
           }
         }
