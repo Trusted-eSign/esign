@@ -3485,6 +3485,11 @@ svg:hover {
     height: 352px;
 }
 
+.border_group_cloud{
+  box-shadow: 0 0 0 1px rgb(227, 227, 228);
+  height: 400px;
+}
+
 .operations_group{
     box-shadow: 0 0 0 1px #b5b5b5;
     height: 288px;
@@ -3502,6 +3507,10 @@ svg:hover {
 
 .filter_setting_modal{
     height: 410px;
+}
+
+.cloudCSP_modal{
+  height: 460px;
 }
 
 .btn_modal{

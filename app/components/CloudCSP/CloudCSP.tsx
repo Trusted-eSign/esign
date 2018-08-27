@@ -49,15 +49,22 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
     const { activeSettingsTab, auth, rest } = this.state;
 
     return (
-      <div className="filter_setting_modal">
+      <div className="cloudCSP_modal">
         <div className="row halftop">
           <div className="col s12">
-            <div className="content-wrapper tbody border_group">
+            <div className="content-wrapper tbody border_group_cloud">
               {
                 activeSettingsTab ?
                   <div className="row">
-                    <div className="row" />
                     <div className="row">
+                      <div className="col s12">
+                        <span className="card-infos sub">
+                          Для установки сертификатов из КриптоПро DSS укажите используемые адреса и нажмите кнопку "Далее".
+
+                          В открывшемся окне аутентификации потребуется ввести логин и пароль пользователя DSS
+                        </span>
+                      </div>
+                      <div className="row" />
                       <div className="input-field input-field-csr col s12">
                         <input
                           id="auth"
@@ -100,14 +107,21 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
         <div className="row halbottom" />
 
         <div className="row">
-          <div className="col s5 offset-s7">
-            <div className="col s6">
-              <a className={"waves-effect waves-light btn btn_modal modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
-            </div>
-            <div className="col s6">
-              <a className="waves-effect waves-light btn btn_modal" onClick={this.handleNext}>{localize("Common.next", locale)}</a>
-            </div>
-          </div>
+          {
+            activeSettingsTab ?
+              <div className="col s5 offset-s7">
+                <div className="col s6">
+                  <a className={"waves-effect waves-light btn btn_modal modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+                </div>
+                <div className="col s6">
+                  <a className="waves-effect waves-light btn btn_modal" onClick={this.handleNext}>{localize("Common.next", locale)}</a>
+                </div>
+              </div>
+              :
+              <div className="col s3 offset-s9">
+                <a className={"waves-effect waves-light btn btn_modal modal-close"} onClick={this.handelCancel}>{localize("Common.cancel", locale)}</a>
+              </div>
+          }
         </div>
       </div >
     );

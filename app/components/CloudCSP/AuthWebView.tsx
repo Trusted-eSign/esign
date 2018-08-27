@@ -41,7 +41,7 @@ class AuthWebView extends React.PureComponent<IAuthWebViewProps, IAuthWebViewSta
         {
           isLoading ? <ProgressBars /> : null
         }
-        <webview src={this.state.url} autosize={true} style={{ height: "320px" }}></webview>
+        <webview src={this.state.url} autosize={true} style={{ height: "400px" }}></webview>
       </div>
     );
   }
