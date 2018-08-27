@@ -159,3 +159,6 @@ export const REQUEST_TEMPLATE_DEFAULT = "default";
 export const REQUEST_TEMPLATE_KEP_IP = "kepIp";
 export const REQUEST_TEMPLATE_KEP_FIZ = "kepFiz";
 export const REQUEST_TEMPLATE_ADDITIONAL = "additional";
+
+export const CHANGE_DSS_AUTH_URL = "CHANGE_DSS_AUTH_URL";
+export const CHANGE_DSS_REST_URL = "CHANGE_DSS_REST_URL";

@@ -1,36 +1,38 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import {
+  changeAuthURL, changeRestURL,
+} from "../../AC/cloudCspActions";
 import { USER_NAME } from "../../constants";
 import logger from "../../winstonLogger";
 import AuthWebView from "./AuthWebView";
 
 interface ICloudCSPProps {
+  changeAuthURL: (authURL: string) => void;
+  changeRestURL: (restURL: string) => void;
   onCancel?: () => void;
+  settings: {
+    authURL: string,
+    restURL: string,
+  };
 }
 
 interface ICloudCSPState {
   activeSettingsTab: boolean;
-  auth: string;
-  rest: string;
 }
 
-interface ICloudCSPDispatch {
-  getCertificatesFromDSS?: (rest: string, token: string) => void;
-}
-
-class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, ICloudCSPState> {
+class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: ICloudCSPProps & ICloudCSPDispatch) {
+  constructor(props: ICloudCSPProps) {
     super(props);
 
     this.state = ({
       activeSettingsTab: true,
-      auth: "https://dss.cryptopro.ru/STS/oauth",
-      rest: "https://dss.cryptopro.ru/SignServer/rest",
     });
   }
 
@@ -48,7 +50,8 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
 
   render() {
     const { localize, locale } = this.context;
-    const { activeSettingsTab, auth, rest } = this.state;
+    const { activeSettingsTab } = this.state;
+    const { settings } = this.props;
 
     return (
       <div className="cloudCSP_modal">
@@ -73,7 +76,7 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
                           type="text"
                           className={"validate"}
                           name="auth"
-                          value={auth}
+                          value={settings.authURL}
                           placeholder={localize("CloudCSP.auth", locale)}
                           onChange={this.handleAuthChange}
                         />
@@ -89,7 +92,7 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
                           type="text"
                           className={"validate"}
                           name="rest"
-                          value={rest}
+                          value={settings.restURL}
                           placeholder={localize("CloudCSP.rest", locale)}
                           onChange={this.handleRestChange}
                         />
@@ -100,7 +103,7 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
                     </div>
                   </div>
                   :
-                  <AuthWebView onCancel={this.handelCancel} onTokenGet={this.onTokenGet} auth={auth} />
+                  <AuthWebView onCancel={this.handelCancel} onTokenGet={this.onTokenGet} auth={settings.authURL} />
               }
             </div>
           </div>
@@ -142,22 +145,22 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
   }
 
   handleAuthChange = (ev: any) => {
-    this.setState({ auth: ev.target.value });
+    this.props.changeAuthURL(ev.target.value);
   }
 
   handleRestChange = (ev: any) => {
-    this.setState({ rest: ev.target.value });
+    this.props.changeRestURL(ev.target.value);
   }
 
   onTokenGet = (token: string) => {
     const { localize, locale } = this.context;
-    const { auth, rest } = this.state;
+    const { settings } = this.props;
 
     if (!token || !token.length) {
       return;
     }
 
-    window.request.get(`${rest}/api/certificates`, {
+    window.request.get(`${settings.restURL}/api/certificates`, {
       auth: {
         bearer: token,
       },
@@ -180,7 +183,7 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
 
             if (hcert) {
               try {
-                trusted.utils.Csp.installCertificateFromCloud(hcert, auth, rest, certificate.ID);
+                trusted.utils.Csp.installCertificateFromCloud(hcert, settings.authURL, settings.restURL, certificate.ID);
 
                 testCount++;
 
@@ -249,4 +252,6 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
   }
 }
 
-export default CloudCSP;
+export default connect((state) => ({
+  settings: state.settings.cloudCSP,
+}), { changeAuthURL, changeRestURL })(CloudCSP);
