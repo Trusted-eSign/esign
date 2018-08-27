@@ -22,8 +22,6 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
     localize: PropTypes.func,
   };
 
-
-
   constructor(props: ICloudCSPProps & ICloudCSPDispatch) {
     super(props);
 
@@ -137,12 +135,13 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
 
   onTokenGet = (token: string) => {
     const { localize, locale } = this.context;
+    const { auth, rest } = this.state;
 
     if (!token || !token.length) {
       return;
     }
 
-    window.request.get(`${this.state.rest}/api/certificates`, {
+    window.request.get(`${rest}/api/certificates`, {
       auth: {
         bearer: token,
       },
@@ -159,13 +158,23 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
           const certificates = JSON.parse(body);
           for (const certificate of certificates) {
             const hcert = this.createX509FromString(certificate.CertificateBase64);
-            console.log("hcert:", hcert);
+
+            if (hcert) {
+              trusted.utils.Csp.installCertificateFromCloud(hcert, auth, rest, certificate.ID);
+            }
           }
         }
       }
     });
   }
 
+  /**
+   * Create x509 certificate (trusted-crypto implementation) from string
+   *
+   * @param {string} certificateBase64 certificate content in base64 without headers
+   * @returns {(trusted.pki.Certificate | undefined)} trusted.pki.Certificate or undefined if cannot create
+   * @memberof CloudCSP
+   */
   createX509FromString = (certificateBase64: string): trusted.pki.Certificate | undefined => {
     const raw = `-----BEGIN CERTIFICATE-----\n${certificateBase64}\n-----END CERTIFICATE-----\n`;
     const rawLength = raw.length * 2;
