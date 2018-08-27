@@ -495,6 +495,8 @@ export default {
   },
   CloudCSP: {
     auth: "Authorization server",
+    certificates_import_fail: "One or more certificates was not imported",
+    certificates_import_success: "Certificates successfully imported",
     cloudCSP: "Cloud CSP",
     request_error: "Request error",
     rest: "DSS server",

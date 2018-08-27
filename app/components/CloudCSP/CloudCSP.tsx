@@ -171,13 +171,18 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
         Materialize.toast(`${localize("CloudCSP.request_error", locale)} : ${statusCode}`, 2000, "toast-request_error");
       } else {
         if (body && body.length) {
-          const certificates = JSON.parse(body);
+          const certificates: any[] = JSON.parse(body);
+          const countOfCertificates = certificates.length;
+          let testCount = 0;
+
           for (const certificate of certificates) {
             const hcert = this.createX509FromString(certificate.CertificateBase64);
 
             if (hcert) {
               try {
                 trusted.utils.Csp.installCertificateFromCloud(hcert, auth, rest, certificate.ID);
+
+                testCount++;
 
                 logger.log({
                   certificate: hcert.subjectName,
@@ -204,6 +209,12 @@ class CloudCSP extends React.Component<ICloudCSPProps & ICloudCSPDispatch, IClou
                 });
               }
             }
+          }
+
+          if (countOfCertificates && countOfCertificates === testCount) {
+            Materialize.toast(localize("CloudCSP.certificates_import_success", locale), 2000, "toast-certificates_import_success");
+          } else {
+            Materialize.toast(localize("CloudCSP.certificates_import_fail", locale), 2000, "toast-certificates_import_fail");
           }
         }
       }
