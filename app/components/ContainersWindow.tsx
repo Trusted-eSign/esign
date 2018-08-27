@@ -27,8 +27,8 @@ class ContainersWindow extends React.Component<any, any> {
     }
 
     try {
-      trusted.utils.Csp.installCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+      trusted.utils.Csp.installCertificateFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+      const certificate = trusted.utils.Csp.getCertificateFromContainer(container.name, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
 
       logger.log({
         certificate: certificate.subjectName,

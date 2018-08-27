@@ -174,8 +174,8 @@ class CertWindow extends React.Component<any, any> {
 
     if (container) {
       try {
-        trusted.utils.Csp.installCertifiacteToContainer(certificate, container, 75);
-        trusted.utils.Csp.installCertifiacteFromContainer(container, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+        trusted.utils.Csp.installCertificateToContainer(certificate, container, 75);
+        trusted.utils.Csp.installCertificateFromContainer(container, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
 
         Materialize.toast(localize("Certificate.cert_import_ok", locale), 2000, "toast-cert_imported");
 

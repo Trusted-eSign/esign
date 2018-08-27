@@ -490,7 +490,7 @@ export function getCertificateFromContainer(container: number) {
     setTimeout(() => {
       const { containers } = getState();
       const cont = containers.getIn(["entities", container]);
-      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(cont.name, 75);
+      const certificate = trusted.utils.Csp.getCertificateFromContainer(cont.name, 75);
       const certificateItem = {
         hash: certificate.thumbprint,
         issuerFriendlyName: certificate.issuerFriendlyName,

@@ -556,8 +556,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
       try {
         if (algorithm !== ALG_RSA) {
-          trusted.utils.Csp.installCertifiacteToContainer(cert, containerName, 75);
-          trusted.utils.Csp.installCertifiacteFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+          trusted.utils.Csp.installCertificateToContainer(cert, containerName, 75);
+          trusted.utils.Csp.installCertificateFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
         } else {
           window.PKISTORE.importCertificate(cert, PROVIDER_SYSTEM, (err: Error) => {
             if (err) {
