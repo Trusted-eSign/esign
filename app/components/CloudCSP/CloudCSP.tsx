@@ -62,13 +62,6 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
                 activeSettingsTab ?
                   <div className="row">
                     <div className="row">
-                      <div className="col s12">
-                        <span className="card-infos sub">
-                          Для установки сертификатов из КриптоПро DSS укажите используемые адреса и нажмите кнопку "Далее".
-
-                          В открывшемся окне аутентификации потребуется ввести логин и пароль пользователя DSS
-                        </span>
-                      </div>
                       <div className="row" />
                       <div className="input-field input-field-csr col s12">
                         <input
@@ -101,6 +94,28 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
                         </label>
                       </div>
                     </div>
+
+                    <div className="col s12">
+                      <span className="card-infos sub">
+                        1. Укажите адреса сервера авторизации и сервера подписи DSS. Для получения правильных адресов обратитесь в службу поддержки сервиса DSS.
+                        </span>
+                    </div>
+                    <div className="col s12">
+                      <span className="card-infos sub">
+                        2. Нажмите кнопку «Далее»
+                        </span>
+                    </div>
+                    <div className="col s12">
+                      <span className="card-infos sub">
+                        3. В появившемся окне введите логин и пароль от сервиса DSS
+                        </span>
+                    </div>
+                    <div className="col s12">
+                      <span className="card-infos sub">
+                        4. Нажмите кнопку «Войти»
+                        </span>
+                    </div>
+
                   </div>
                   :
                   <AuthWebView onCancel={this.handelCancel} onTokenGet={this.onTokenGet} auth={settings.authURL} />
