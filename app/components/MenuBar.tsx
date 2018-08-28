@@ -33,11 +33,12 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { encSettings, recipients, signSettings, signer } = this.props;
+    const { cloudCSPSettings, encSettings, recipients, signSettings, signer } = this.props;
 
     const state = ({
       recipients,
       settings: {
+        cloudCSP: cloudCSPSettings,
         encrypt: encSettings,
         locale,
         sign: signSettings,
@@ -186,6 +187,7 @@ class MenuBar extends React.Component<any, any> {
 
 export default connect((state, ownProps) => {
   return {
+    cloudCSPSettings: state.settings.cloudCSP,
     encSettings: state.settings.encrypt,
     eventsDateFrom: state.events.dateFrom,
     eventsDateTo: state.events.dateTo,
