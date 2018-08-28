@@ -33,7 +33,7 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { cloudCSPSettings, encSettings, recipients, signSettings, signer } = this.props;
+    const { cloudCSPSettings, encSettings, recipients, saveToDocuments, signSettings, signer } = this.props;
 
     const state = ({
       recipients,
@@ -41,6 +41,7 @@ class MenuBar extends React.Component<any, any> {
         cloudCSP: cloudCSPSettings,
         encrypt: encSettings,
         locale,
+        saveToDocuments,
         sign: signSettings,
       },
       signers: {
@@ -196,6 +197,7 @@ export default connect((state, ownProps) => {
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     location: ownProps.location,
     recipients: mapToArr(state.recipients.entities),
+    saveToDocuments: state.settings.saveToDocuments,
     signSettings: state.settings.sign,
     signer: state.signers.signer,
   };

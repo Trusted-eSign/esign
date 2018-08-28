@@ -88,6 +88,7 @@ export default {
     documents_arhive: "Create arhive of documents is name ",
     delete_documents: "Delete documents",
     realy_delete_documents: "You really want delete selected documents?",
+    save_to_documents: "Save to Documents CryptoARM",
   },
   Events: {
     Operations_log: "OPERATIONS LOG",

@@ -3,7 +3,7 @@ import {
   CHANGE_DSS_AUTH_URL, CHANGE_DSS_REST_URL, CHANGE_ECRYPT_ENCODING, CHANGE_ENCRYPT_OUTFOLDER,
   CHANGE_LOCALE, CHANGE_SIGNATURE_DETACHED,
   CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER, CHANGE_SIGNATURE_TIMESTAMP,
-  RU,
+  RU, TOGGLE_SAVE_TO_DOCUMENTS,
 } from "../constants";
 
 const defaultSettings = {
@@ -18,6 +18,7 @@ const defaultSettings = {
     outfolder: "",
   },
   locale: RU,
+  saveToDocuments: false,
   sign: {
     detached: false,
     encoding: BASE64,
@@ -30,6 +31,9 @@ export default (settings = defaultSettings, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case TOGGLE_SAVE_TO_DOCUMENTS:
+      return { ...settings, saveToDocuments: payload.saveToDocuments };
+
     case CHANGE_SIGNATURE_DETACHED:
       return { ...settings, sign: { ...settings.sign, detached: payload.detached } };
 

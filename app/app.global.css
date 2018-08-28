@@ -177,7 +177,6 @@ body {
     height: calc(100% - 48px);
     white-space: nowrap;
     font-size: 75%;
-    padding: 0.75rem;
     width: 100%;
 }
 

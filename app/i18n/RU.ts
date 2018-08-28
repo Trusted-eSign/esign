@@ -88,6 +88,7 @@ export default {
     documents_arhive: "Создан архив документов ",
     delete_documents: "Удаление документов",
     realy_delete_documents : "Вы действительно хотите удалить выбранные документы?",
+    save_to_documents: "Сохранить в Документы КриптоАРМ",
   },
   Events: {
     Operations_log: "ЖУРНАЛ ОПЕРАЦИЙ",

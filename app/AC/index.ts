@@ -13,7 +13,7 @@ import {
   LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
-  SELECT_SIGNER_CERTIFICATE, START, SUCCESS,
+  SELECT_SIGNER_CERTIFICATE, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
@@ -639,6 +639,13 @@ export function changeSignatureTimestamp(timestamp: boolean) {
   return {
     payload: { timestamp },
     type: CHANGE_SIGNATURE_TIMESTAMP,
+  };
+}
+
+export function toggleSaveToDocuments(saveToDocuments: boolean) {
+  return {
+    payload: { saveToDocuments },
+    type: TOGGLE_SAVE_TO_DOCUMENTS,
   };
 }
 
