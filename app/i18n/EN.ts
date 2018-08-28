@@ -43,6 +43,7 @@ export default {
     cert_export_ok: "The certificate is successfully exported",
     cert_export_cancel: "Cancel the certificate export",
     cert_export_failed: "The certificate export failed",
+    cert_import_from_file: "Import from file",
     cert_import_ok: "The certificate is successfully imported",
     cert_import_failed: "The certificate import failed",
     cert_trusted_import_ok: "The trusted certificate is successfully imported",
@@ -155,7 +156,7 @@ export default {
   CSR: {
     algorithm: "Algorithm",
     container: "Сontainer (will generated)",
-    create_request: "Create certificate request",
+    create_request: "Create request",
     create_request_created: "Certificate request was successfully created",
     create_selfSigned: "Create self-signed certificate",
     template_label: "Certificate template",
@@ -495,6 +496,7 @@ export default {
   },
   CloudCSP: {
     auth: "Authorization server",
+    cert_import_from_cloudCSP: "Import from DSS",
     certificates_import_fail: "One or more certificates from DSS was not imported",
     certificates_import_success: "Certificates from DSS successfully imported",
     cloudCSP: "Cloud CSP",
@@ -523,6 +525,7 @@ export default {
     next: "Next",
     error: "ERROR",
     update: "Update",
+    update_list: "Update list",
     delete: "Delete",
     exit: "EXIT",
     goOver: "Go over",

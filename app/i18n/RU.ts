@@ -43,6 +43,7 @@ export default {
     cert_export_ok: "Сертификат успешно экспортирован",
     cert_export_cancel: "Отмена экспорта сертификата",
     cert_export_failed: "Не удалось экспортировать сертификат",
+    cert_import_from_file: "Импорт из файла",
     cert_import_ok: "Сертификат успешно импортирован",
     cert_import_failed: "Не удалось импортировать сертификат",
     cert_trusted_import_ok: "Корневой сертификат успешно импортирован",
@@ -155,7 +156,7 @@ export default {
   CSR: {
     algorithm: "Алгоритм",
     container: "Контейнер (будет создан новый)",
-    create_request: "Создание запроса на сертификат",
+    create_request: "Создать запрос",
     create_request_created: "Запрос на сертификат успешно создан",
     create_selfSigned: "Создать самоподписанный сертификат",
     template_label: "Шаблон сертификата",
@@ -497,6 +498,7 @@ export default {
   },
   CloudCSP: {
     auth: "Сервер авторизации",
+    cert_import_from_cloudCSP: "Импорт из DSS",
     certificates_import_fail: "При импорте одного или нескольих сертификатов из DSS произошла ошибка",
     certificates_import_success: "Сертификаты из DSS успешно импортированы",
     cloudCSP: "Облачный провайдер",
@@ -525,6 +527,7 @@ export default {
     next: "Далее",
     error: "ОШИБКА",
     update: "Обновить",
+    update_list: "Обновить список",
     delete: "Удалить",
     exit: "ВЫХОД",
     goOver: "Перейти",

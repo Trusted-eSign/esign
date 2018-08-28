@@ -42,10 +42,10 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
           <i className="nav-small-icon material-icons cert-settings">more_vert</i>
         </a>
         <ul id="dropdown-btn-import" className="dropdown-content">
-          <li><a onClick={this.certImport}>{localize("Certificate.cert_import", locale)}</a></li>
-          <li><a onClick={this.props.reloadCertificates}>{localize("Common.update", locale)}</a></li>
+          <li><a onClick={this.props.reloadCertificates}>{localize("Common.update_list", locale)}</a></li>
+          <li><a onClick={this.certImport}>{localize("Certificate.cert_import_from_file", locale)}</a></li>
+          <li><a onClick={this.props.handleShowModalCloudCSP}>{localize("CloudCSP.cert_import_from_cloudCSP", locale)}</a></li>
           <li><a onClick={this.props.handleShowModalCertificateRequest}>{localize("CSR.create_request", locale)}</a></li>
-          <li><a onClick={this.props.handleShowModalCloudCSP}>{localize("CloudCSP.cloudCSP", locale)}</a></li>
         </ul>
       </li>;
     } else if (this.props.operation === "containers") {
