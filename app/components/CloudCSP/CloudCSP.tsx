@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import {
-  changeAuthURL, changeRestURL,
+  changeAuthURL, changeRestURL, getCertificates,
 } from "../../AC/cloudCspActions";
 import { USER_NAME } from "../../constants";
 import logger from "../../winstonLogger";
@@ -154,104 +154,17 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
 
   onTokenGet = (token: string) => {
     const { localize, locale } = this.context;
-    const { settings } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { getCertificates, settings } = this.props;
 
     if (!token || !token.length) {
       return;
     }
 
-    window.request.get(`${settings.restURL}/api/certificates`, {
-      auth: {
-        bearer: token,
-      },
-    }, (error: any, response: any, body: any) => {
-      if (error) {
-        Materialize.toast(localize("CloudCSP.request_error", locale), 2000, "toast-request_error");
-      }
-      const statusCode = response.statusCode;
-
-      if (statusCode !== 200) {
-        Materialize.toast(`${localize("CloudCSP.request_error", locale)} : ${statusCode}`, 2000, "toast-request_error");
-      } else {
-        if (body && body.length) {
-          const certificates: any[] = JSON.parse(body);
-          const countOfCertificates = certificates.length;
-          let testCount = 0;
-
-          for (const certificate of certificates) {
-            const hcert = this.createX509FromString(certificate.CertificateBase64);
-
-            if (hcert) {
-              try {
-                trusted.utils.Csp.installCertificateFromCloud(hcert, settings.authURL, settings.restURL, certificate.ID);
-
-                testCount++;
-
-                logger.log({
-                  certificate: hcert.subjectName,
-                  level: "info",
-                  message: "",
-                  operation: "Импорт сертификата",
-                  operationObject: {
-                    in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
-                    out: "Null",
-                  },
-                  userName: USER_NAME,
-                });
-              } catch (err) {
-                logger.log({
-                  certificate: hcert.subjectName,
-                  level: "error",
-                  message: err.message ? err.message : err,
-                  operation: "Импорт сертификата",
-                  operationObject: {
-                    in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
-                    out: "Null",
-                  },
-                  userName: USER_NAME,
-                });
-              }
-            }
-          }
-
-          if (countOfCertificates && countOfCertificates === testCount) {
-            Materialize.toast(localize("CloudCSP.certificates_import_success", locale), 2000, "toast-certificates_import_success");
-          } else {
-            Materialize.toast(localize("CloudCSP.certificates_import_fail", locale), 2000, "toast-certificates_import_fail");
-          }
-        }
-      }
-    });
-  }
-
-  /**
-   * Create x509 certificate (trusted-crypto implementation) from string
-   *
-   * @param {string} certificateBase64 certificate content in base64 without headers
-   * @returns {(trusted.pki.Certificate | undefined)} trusted.pki.Certificate or undefined if cannot create
-   * @memberof CloudCSP
-   */
-  createX509FromString = (certificateBase64: string): trusted.pki.Certificate | undefined => {
-    const raw = `-----BEGIN CERTIFICATE-----\n${certificateBase64}\n-----END CERTIFICATE-----\n`;
-    const rawLength = raw.length * 2;
-    const array = new Uint8Array(new ArrayBuffer(rawLength));
-    let hcert;
-
-    for (let j = 0; j < rawLength; j++) {
-      array[j] = raw.charCodeAt(j);
-    }
-
-    try {
-      hcert = trusted.pki.Certificate.import(array, trusted.DataFormat.PEM);
-      return hcert;
-    } catch (e) {
-      // error
-    }
-
-    return undefined;
+    getCertificates(settings.authURL, settings.restURL, token);
   }
 }
 
 export default connect((state) => ({
   settings: state.settings.cloudCSP,
-}), { changeAuthURL, changeRestURL })(CloudCSP);
+}), { changeAuthURL, changeRestURL, getCertificates })(CloudCSP);

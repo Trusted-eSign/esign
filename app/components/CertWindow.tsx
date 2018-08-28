@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
+import { resetCloudCSP } from "../AC/cloudCspActions";
 import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT, USER_NAME } from "../constants";
 import { filteredCertificatesSelector } from "../selectors";
 import { fileCoding } from "../utils";
@@ -284,7 +285,7 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function(error: Error) {
+      window.sudo.exec(cmd, options, function (error: Error) {
         if (error) {
           Materialize.toast(localize("Certificate.cert_trusted_import_failed", locale), 2000, "toast-cert_trusted_import_failed");
         } else {
@@ -545,18 +546,38 @@ class CertWindow extends React.Component<any, any> {
         header={localize("CloudCSP.cloudCSP", locale)}
         onClose={this.handleCloseModalCloudCSP}>
 
-        <CloudCSP onCancel={this.handleCloseModalCloudCSP}/>
+        <CloudCSP onCancel={this.handleCloseModalCloudCSP} />
       </Modal>
     );
   }
 
   render() {
-    const { certificates, isLoading } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { resetCloudCSP } = this.props;
+    const { certificates, cloudCSPState, isLoading, isLoadingFromDSS } = this.props;
     const { certificate } = this.state;
     const { localize, locale } = this.context;
 
-    if (isLoading) {
+    if (isLoading || isLoadingFromDSS) {
       return <ProgressBars />;
+    }
+
+    if (cloudCSPState.loaded) {
+      if (cloudCSPState.error) {
+        Materialize.toast(localize("CloudCSP.request_error", locale), 2000, "toast-request_error");
+      }
+
+      if (cloudCSPState.statusCode !== 200) {
+        Materialize.toast(`${localize("CloudCSP.request_error", locale)} : ${cloudCSPState.statusCode}`, 2000, "toast-request_error");
+      } else {
+        if (cloudCSPState.allCertificatesInstalled) {
+          Materialize.toast(localize("CloudCSP.certificates_import_success", locale), 2000, "toast-certificates_import_success");
+        } else {
+          Materialize.toast(localize("CloudCSP.certificates_import_fail", locale), 2000, "toast-certificates_import_fail");
+        }
+      }
+
+      resetCloudCSP();
     }
 
     const NAME = certificates.length < 1 ? "active" : "not-active";
@@ -634,7 +655,9 @@ class CertWindow extends React.Component<any, any> {
 export default connect((state) => {
   return {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
+    cloudCSPState: state.cloudCSP,
     containersLoading: state.containers.loading,
     isLoading: state.certificates.loading,
+    isLoadingFromDSS: state.cloudCSP.loading,
   };
-}, { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers })(CertWindow);
+}, { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers, resetCloudCSP })(CertWindow);
