@@ -122,7 +122,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
           certificate: "",
           level: "info",
           message: "",
-          operation: "Удаление контейнера",
+          operation: localize("Events.container_delete", locale), 
           operationObject: {
             in: container,
             out: "Null",
@@ -139,7 +139,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
           certificate: "",
           level: "error",
           message: err.message ? err.message : err,
-          operation: "Удаление контейнера",
+          operation: localize("Events.container_delete", locale), 
           operationObject: {
             in: container,
             out: "Null",

@@ -34,7 +34,7 @@ class ContainersWindow extends React.Component<any, any> {
         certificate: certificate.subjectName,
         level: "info",
         message: "",
-        operation: "Импорт сертификата",
+        operation: localize("Events.cert_import", locale),
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -47,7 +47,7 @@ class ContainersWindow extends React.Component<any, any> {
       logger.log({
         level: "error",
         message: err.message ? err.message : err,
-        operation: "Импорт сертификата",
+        operation: localize("Events.cert_import", locale),
         operationObject: {
           in: "Null",
           out: "Null",

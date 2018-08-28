@@ -173,7 +173,7 @@ class CertWindow extends React.Component<any, any> {
           certificate: certificate.subjectName,
           level: "info",
           message: "",
-          operation: "Импорт сертификата",
+          operation: localize("Events.cert_import", locale), 
           operationObject: {
             in: "CN=" + certificate.subjectFriendlyName,
             out: "Null",
@@ -187,7 +187,7 @@ class CertWindow extends React.Component<any, any> {
           certificate: certificate.subjectName,
           level: "error",
           message: err.message ? err.message : err,
-          operation: "Импорт сертификата",
+          operation: localize("Events.cert_import", locale), 
           operationObject: {
             in: "CN=" + certificate.subjectFriendlyName,
             out: "Null",
@@ -210,7 +210,7 @@ class CertWindow extends React.Component<any, any> {
         certificate: certificate.subjectName,
         level: "info",
         message: "",
-        operation: "Импорт сертификата",
+        operation: localize("Events.cert_import", locale), 
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -271,7 +271,7 @@ class CertWindow extends React.Component<any, any> {
       const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store ' + "'" + storeName + "'" + ' -file ' + "'" + importingCertificatePath + "'" + "\"";
 
       const options = {
-        name: "CryptoARM GOST",
+        name: "Trusted eSign",
       };
 
       window.sudo.exec(cmd, options, function(error: Error) {
@@ -330,7 +330,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "info",
             message: "",
-            operation: "Импорт PKCS12",
+            operation: localize("Events.PKCS12_import", locale), 
             operationObject: {
               in: path.basename(P12_PATH),
               out: "Null",
@@ -347,7 +347,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "error",
             message: err.message ? err.message : err,
-            operation: "Импорт PKCS12",
+            operation: localize("Events.PKCS12_import", locale), 
             operationObject: {
               in: path.basename(P12_PATH),
               out: "Null",

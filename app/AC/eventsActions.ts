@@ -5,7 +5,7 @@ import { APP_LOG_FILE, LOAD_ALL_EVENTS, REMOVE_ALL_EVENTS, START, SUCCESS } from
 import { fileExists } from "../utils";
 
 const incFile = () => {
-  const fileName = "cryptoarm_gost_operations";
+  const fileName = "trusted_esign_operations";
 
   let indexFile: number = 1;
   let newLogFilePath: string = APP_LOG_FILE;

@@ -476,7 +476,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         certificate: cert.subjectName,
         level: "info",
         message: "",
-        operation: "Генерация сертификата",
+        operation: localize("Events.cert_generation", locale), 
         operationObject: {
           in: "CN=" + cert.subjectFriendlyName,
           out: "Null",
@@ -502,7 +502,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
             certificate: cert.subjectName,
             level: "info",
             message: "",
-            operation: "Импорт сертификата",
+            operation: localize("Events.cert_import", locale),
             operationObject: {
               in: "CN=" + cert.subjectFriendlyName,
               out: "Null",
@@ -515,7 +515,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           certificate: cert.subjectName,
           level: "error",
           message: err.message ? err.message : err,
-          operation: "Импорт сертификата",
+          operation: localize("Events.cert_import", locale),
           operationObject: {
             in: "CN=" + cert.subjectFriendlyName,
             out: "Null",
@@ -541,7 +541,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           certificate: cert.subjectName,
           level: "info",
           message: "",
-          operation: "Импорт сертификата",
+          operation: localize("Events.cert_import", locale),
           operationObject: {
             in: "CN=" + cert.subjectFriendlyName,
             out: "Null",
@@ -555,7 +555,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           certificate: cert.subjectName,
           level: "error",
           message: err.message ? err.message : err,
-          operation: "Импорт сертификата",
+          operation: localize("Events.cert_import", locale),
           operationObject: {
             in: "CN=" + cert.subjectFriendlyName,
             out: "Null",

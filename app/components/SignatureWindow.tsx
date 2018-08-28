@@ -185,7 +185,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         logger.log({
           level: "error",
           message: "Key not found",
-          operation: "Подпись",
+          operation: localize("Events.sign", locale), 
           operationObject: {
             in: "Key",
             out: "Null",
@@ -241,7 +241,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         logger.log({
           level: "error",
           message: "Key not found",
-          operation: "Подпись",
+          operation: localize("Events.sign", locale), 
           operationObject: {
             in: "Key",
             out: "Null",
