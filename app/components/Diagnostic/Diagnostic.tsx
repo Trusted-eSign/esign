@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { loadAllCertificates, loadLicense } from "../../AC";
 import {
   BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
-  ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
+  ERROR_LOAD_TRUSTED_CRYPTO,  NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
   NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP, WARNING,
 } from "../../errors";
 import { filteredCertificatesSelector } from "../../selectors";
@@ -180,13 +180,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { localize, locale } = this.context;
     const { activeError, criticalError } = this.state;
 
-    if (!criticalError && activeError === NO_HAVE_CERTIFICATES_WITH_KEY) {
-      return (
-        <Link to={"/containers"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
-          <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>
-        </Link>
-      );
-    } else if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
+    if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
       return (
         <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
           <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>

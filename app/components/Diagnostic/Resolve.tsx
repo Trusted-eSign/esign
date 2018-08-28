@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { Link } from "react-router-dom";
+import { LOCATION_CERTIFICATES, LOCATION_CONTAINERS } from "../../constants";
 import {
   ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
   ERROR_LOAD_TRUSTED_CRYPTO, NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
@@ -131,7 +133,18 @@ class Resolve extends React.Component<IResolveProps, {}> {
                 {localize("Help.link_user_guide_name", locale)}
               </a>
             </p>
-            <p className="help_paragraf">{localize("Problems.resolve_5_3", locale)}</p>
+            <p className="help_paragraf">
+              {localize("Problems.resolve_5_3", locale)}
+              <Link to={LOCATION_CONTAINERS} onClick={() => $("#modal-window-diagnostic").closeModal()}>
+                {localize("Containers.Containers", locale)}
+              </Link>
+            </p>
+            <p className="help_paragraf">
+              {localize("Problems.resolve_5_4", locale)}
+              <Link to={LOCATION_CERTIFICATES} onClick={() => $("#modal-window-diagnostic").closeModal()}>
+                {localize("Certificate.Certificate", locale)}
+              </Link>
+            </p>
           </div>
         );
 
