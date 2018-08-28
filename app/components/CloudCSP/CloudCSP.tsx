@@ -156,7 +156,13 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
   }
 
   handleNext = () => {
-    this.setState({ activeSettingsTab: false });
+    const { localize, locale } = this.context;
+
+    if (Number(this.getCPCSPVersion().charAt(0)) < 5) {
+      Materialize.toast(localize("CloudCSP.no_installed_csp5", locale), 2000, "toast-no_installed_csp5");
+    } else {
+      this.setState({ activeSettingsTab: false });
+    }
   }
 
   handleAuthChange = (ev: any) => {
@@ -177,6 +183,14 @@ class CloudCSP extends React.Component<ICloudCSPProps, ICloudCSPState> {
     }
 
     getCertificates(settings.authURL, settings.restURL, token);
+  }
+
+  getCPCSPVersion = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPVersion();
+    } catch (e) {
+      return "";
+    }
   }
 }
 

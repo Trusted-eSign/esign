@@ -500,6 +500,7 @@ export default {
     certificates_import_fail: "One or more certificates from DSS was not imported",
     certificates_import_success: "Certificates from DSS successfully imported",
     cloudCSP: "Cloud CSP",
+    no_installed_csp5: "Only for CryptoPro CSP 5",
     request_error: "Request error",
     rest: "DSS server",
   },

@@ -502,6 +502,7 @@ export default {
     certificates_import_fail: "При импорте одного или нескольих сертификатов из DSS произошла ошибка",
     certificates_import_success: "Сертификаты из DSS успешно импортированы",
     cloudCSP: "Облачный провайдер",
+    no_installed_csp5: "Функция доступна только для КриптоПро CSP 5",
     request_error: "Ошибка запроса",
     rest: "Сервер DSS",
   },
