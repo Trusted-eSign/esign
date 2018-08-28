@@ -575,6 +575,8 @@ class CertWindow extends React.Component<any, any> {
         } else {
           Materialize.toast(localize("CloudCSP.certificates_import_fail", locale), 2000, "toast-certificates_import_fail");
         }
+
+        this.handleReloadCertificates();
       }
 
       resetCloudCSP();
