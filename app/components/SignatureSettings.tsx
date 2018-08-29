@@ -91,7 +91,14 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
 
   handleSaveToDocumentsClick = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { toggleSaveToDocuments, saveToDocuments } = this.props;
+    const { changeSignatureOutfolder, toggleSaveToDocuments, saveToDocuments } = this.props;
+
+    if (!saveToDocuments) {
+      changeSignatureOutfolder(DEFAULT_DOCUMENTS_PATH);
+    } else {
+      changeSignatureOutfolder("");
+    }
+
     toggleSaveToDocuments(!saveToDocuments);
   }
 

@@ -78,7 +78,14 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
 
   handleSaveToDocumentsClick = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { toggleSaveToDocuments, saveToDocuments } = this.props;
+    const { changeEncryptOutfolder, toggleSaveToDocuments, saveToDocuments } = this.props;
+
+    if (!saveToDocuments) {
+      changeEncryptOutfolder(DEFAULT_DOCUMENTS_PATH);
+    } else {
+      changeEncryptOutfolder("");
+    }
+
     toggleSaveToDocuments(!saveToDocuments);
   }
 
