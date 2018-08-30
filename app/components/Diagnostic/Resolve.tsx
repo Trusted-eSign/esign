@@ -140,7 +140,7 @@ class Resolve extends React.Component<IResolveProps, {}> {
               </Link>
             </p>
             <p className="help_paragraf">
-              {localize("Problems.resolve_5_4", locale)}
+              {Number(this.getCPCSPVersion().charAt(0)) < 5 ? localize("Problems.resolve_5_4_1", locale) : localize("Problems.resolve_5_4", locale) }
               <Link to={LOCATION_CERTIFICATES} onClick={() => $("#modal-window-diagnostic").closeModal()}>
                 {localize("Certificate.Certificate", locale)}
               </Link>
@@ -181,6 +181,14 @@ class Resolve extends React.Component<IResolveProps, {}> {
         {this.getResolve()}
       </div>
     );
+  }
+
+  getCPCSPVersion = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPVersion();
+    } catch (e) {
+      return "";
+    }
   }
 }
 

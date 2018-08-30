@@ -573,6 +573,7 @@ export default {
     resolve_5_2: "To resolve this issue, install personal certificates in the steps described in the product documentation that is available by reference ",
     resolve_5_3: "If you have certificates on a token, you can set them with a link to the key container on the page ",
     resolve_5_4: "It is also possible to install certificates from DSS or generate self-signed certificates ones on the page ",
+    resolve_5_4_1: "It is also possible generate self-signed certificates ones on the page ",
     problem_6: "Trusted Crypto module is not loaded",
     resolve_6_1: "When you run Crypto ARM GOST, the Trusted Crypto module is not loaded.",
     resolve_6_2: "To solve this problem, open the application control panel and forward error messages displayed on the Console tab to the technical support.",

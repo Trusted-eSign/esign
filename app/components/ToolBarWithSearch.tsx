@@ -44,7 +44,7 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
         <ul id="dropdown-btn-import" className="dropdown-content">
           <li><a onClick={this.props.reloadCertificates}>{localize("Common.update_list", locale)}</a></li>
           <li><a onClick={this.certImport}>{localize("Certificate.cert_import_from_file", locale)}</a></li>
-          <li><a onClick={this.props.handleShowModalCloudCSP}>{localize("CloudCSP.cert_import_from_cloudCSP", locale)}</a></li>
+          {(Number(this.getCPCSPVersion().charAt(0)) < 5) ? null : <li><a onClick={this.props.handleShowModalCloudCSP}>{localize("CloudCSP.cert_import_from_cloudCSP", locale)}</a></li>}
           <li><a onClick={this.props.handleShowModalCertificateRequest}>{localize("CSR.create_request", locale)}</a></li>
         </ul>
       </li>;
@@ -70,5 +70,13 @@ export class ToolBarWithSearch extends React.Component<IToolBarWithSearchProps, 
         {btn}
       </ul>
     </nav>;
+  }
+
+  getCPCSPVersion = () => {
+    try {
+      return trusted.utils.Csp.getCPCSPVersion();
+    } catch (e) {
+      return "";
+    }
   }
 }
