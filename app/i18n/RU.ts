@@ -431,6 +431,7 @@ export default {
     Enter_Key: "ВВЕСТИ КЛЮЧ",
     Buy_license: "КУПИТЬ ЛИЦЕНЗИЮ",
     link_buy_license: "https://cryptoarm.ru/shop/cryptoarm-gost",
+    link_buy_license_csp: "https://cryptoarm.ru/shop/skzi-cryptopro-csp-4-0",
     entered_the_key: "Выполните ввод ключа",
     key_file_name: "desktopkey.lic",
     failed_key_find: "Лицензионный ключ отсутствует",

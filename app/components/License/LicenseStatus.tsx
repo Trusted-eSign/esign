@@ -88,12 +88,12 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
         messageExpired = localize("License.license_overtimes_expired", locale);
       }
     } else if (lic_format === "MTX") {
-      if (status === 1  && lic_error !== 903 && lic_error !== 907) {
+      if (status === 1 && lic_error !== 903 && lic_error !== 907) {
         viewStatus = "correct";
         if (license.exp == 0) {
-            messageExpired = localize("License.lic_key_correct_unlimited", locale);
-        }else{
-            messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
+          messageExpired = localize("License.lic_key_correct_unlimited", locale);
+        } else {
+          messageExpired = localize("License.lic_key_correct", locale) + fullDays + ")";
         }
       } else {
         viewStatus = "incorrect";
@@ -123,17 +123,13 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
                 <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} />
               </div>
             </div>
-            <div className="col s6">
-              <div className="row">
-                <div className="col s5">
-                  <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                    {localize("License.Enter_Key", locale)}
-                  </a>
-                </div>
-                <div className="col s6">
-                  <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
-                </div>
-              </div>
+            <div className="col s3">
+              <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                {localize("License.Enter_Key", locale)}
+              </a>
+            </div>
+            <div className="col s3">
+              <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
             </div>
           </div>
         </div>
@@ -148,7 +144,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
               <div style={styleRow}>
                 <div className="desktoplic_text_item topitem" style={style}>{messageStatus}</div>
                 <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
-             </div>
+              </div>
             </div>
             <div className="col s6">
               <div className="row">
@@ -182,7 +178,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
 export default connect((state) => {
   return {
     data: state.license.data,
-    lic_error : state.license.lic_error,
+    lic_error: state.license.lic_error,
     lic_format: state.license.lic_format,
     license: state.license.info,
     loaded: state.license.loaded,

@@ -61,7 +61,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
     let productAutor: string;
     let productIssue: string;
 
-    if (lic_format === "NONE" || lic_format == null ) {
+    if (lic_format === "NONE" || lic_format == null) {
       notAfter = "-";
       notBefore = "-";
       productAutor = "-";

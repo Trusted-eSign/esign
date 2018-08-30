@@ -27,6 +27,7 @@ class LicenseWindow extends React.Component<{}, {}> {
             <div className="row nobottom">
                 <LicenseStatus />
             </div>
+            <div className="row" />
             <LicenseInfoCSP />
           </div>
         </div>

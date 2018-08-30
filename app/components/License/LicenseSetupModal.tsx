@@ -97,7 +97,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     } else {
       let parsedLicense;
       let buffer;
-      const result = key.match( /[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig );
+      const result = key.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig);
 
       if (result != null) {
         lic_format = "MTX";
@@ -106,24 +106,24 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
           status = 907;
           data = "-";
         } else {
-          let expirationTime =  trusted.utils.Jwt.getExpirationTime(key);
+          let expirationTime = trusted.utils.Jwt.getExpirationTime(key);
           let dateExp = new Date(expirationTime * 1000).getTime();
           let dateNow = new Date().getTime();
           let dateDif = dateExp - dateNow;
-          if((dateDif < 0) && (dateExp != 0)) {status = 908} else status = 1;
+          if ((dateDif < 0) && (dateExp != 0)) { status = 908 } else status = 1;
           //validate
           data = {
-              aud : "-",
-              sub : "CryptoARM GOST",
-              core: 65535,
-              iss : 'ООО "Цифровые технологии"',
-              exp : expirationTime,
-              iat : "",
-              jti : "",
-              desc : "CryptoARM GOST",
+            aud: "-",
+            sub: "CryptoARM GOST",
+            core: 65535,
+            iss: 'ООО "Цифровые технологии"',
+            exp: expirationTime,
+            iat: "",
+            jti: "",
+            desc: "CryptoARM GOST",
           };
         }
-      }else{
+      } else {
         const splitLicense = key.split(".");
         if (splitLicense[1]) {
           try {
@@ -134,7 +134,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               && parsedLicense.jti && parsedLicense.sub) {
               data = parsedLicense;
               lic_format = "JWT";
-              if(data.sub !== "CryptoARM GOST") {
+              if (data.sub !== "CryptoARM GOST") {
                 status = 907;
                 data = data.sub = "-";
               }
@@ -156,7 +156,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
           command = command + " printf " + key.trim() + " > " + "'" + LICENSE_PATH + "'" + " && ";
           command = command + " chmod 777 " + "'" + LICENSE_PATH + "'" + "\"";
         }
-        window.sudo.exec(command, options, function(error: any) {
+        window.sudo.exec(command, options, function (error: any) {
           if (!error) {
             trusted.common.OpenSSL.stop();
             trusted.common.OpenSSL.run();
@@ -212,7 +212,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             <div className="license-key">
               <div className="input-field col s6 input-field-licence">
                 <i className="material-icons prefix key-prefix">vpn_key</i>
-                <textarea id="input_key" className="materialize-textarea" value={this.state.license_key} onChange={function(e: any) {
+                <textarea id="input_key" className="materialize-textarea" value={this.state.license_key} onChange={function (e: any) {
                   self.setState({ license_file: self.state.license_file, license_key: e.target.value });
                 }} />
                 <label htmlFor="input_key">{localize("License.entered_the_key", locale)}</label>
@@ -227,7 +227,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
             <div className="license-file">
               <div className="input-field col s6 input-field-licence">
                 <i className="material-icons prefix key-prefix">vpn_key</i>
-                <input id="input_file" type="text" value={this.state.license_file} onChange={function(e: any) {
+                <input id="input_file" type="text" value={this.state.license_file} onChange={function (e: any) {
                   self.setState({ license_file: e.target.value, license_key: self.state.license_key });
                 }} />
                 <label htmlFor="input_file">{localize("License.lic_file_choose", locale)}</label>
@@ -251,4 +251,4 @@ export default connect((state) => {
     loading: state.license.loading,
     status: state.license.status,
   };
-}, {loadLicense})(LicenseSetupModal);
+}, { loadLicense })(LicenseSetupModal);
