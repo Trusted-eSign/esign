@@ -47,7 +47,7 @@ export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], poli
       certificate: "",
       level: "error",
       message: err.message ? err.message : err,
-      operation: "Шифрование",
+      operation: localize("Events.encrypt", window.locale), 
       operationObject: {
         in: path.basename(uri),
         out: "Null",
@@ -66,7 +66,7 @@ export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], poli
     certificate: "",
     level: "info",
     message: "",
-    operation: "Шифрование",
+    operation: localize("Events.encrypt", window.locale), 
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
@@ -151,7 +151,7 @@ export function decryptFile(uri: string, folderOut: string): string {
       certificate: "",
       level: "info",
       message: "",
-      operation: "Расшифрование",
+      operation: localize("Events.decrypt", window.locale), 
       operationObject: {
         in: path.basename(uri),
         out: path.basename(outURI),
@@ -165,7 +165,7 @@ export function decryptFile(uri: string, folderOut: string): string {
       certificate: "",
       level: "error",
       message: err.message ? err.message : err,
-      operation: "Расшифрование",
+      operation: localize("Events.decrypt", window.locale), 
       operationObject: {
         in: path.basename(uri),
         out: "Null",

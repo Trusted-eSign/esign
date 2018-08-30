@@ -181,7 +181,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       if (!key) {
         $(".toast-key_not_found").remove();
         Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
-
         logger.log({
           level: "error",
           message: "Key not found",
@@ -237,7 +236,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       if (!key) {
         $(".toast-key_not_found").remove();
         Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
-
+        console.log("++++2");
+        console.log(localize("Events.sign", locale));
         logger.log({
           level: "error",
           message: "Key not found",

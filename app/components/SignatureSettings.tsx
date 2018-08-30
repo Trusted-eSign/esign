@@ -3,8 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   changeSignatureDetached, changeSignatureEncoding,
-  changeSignatureOutfolder, changeSignatureTimestamp,
+  changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments,
 } from "../AC";
+import { DEFAULT_DOCUMENTS_PATH } from "../constants";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
@@ -43,12 +44,15 @@ interface ISignatureSettingsProps {
   changeSignatureDetached: (detached: boolean) => void;
   loadingFiles: IRemoteFile[];
   files: IFileRedux[];
+  saveToDocuments: boolean;
   settings: {
     detached: boolean,
     encoding: string,
     outfolder: string,
+    saveToDocuments: boolean,
     timestamp: boolean,
   };
+  toggleSaveToDocuments: (saveToDocuments: boolean) => void;
 }
 
 class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
@@ -86,6 +90,19 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
     changeSignatureTimestamp(!settings.timestamp);
   }
 
+  handleSaveToDocumentsClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeSignatureOutfolder, toggleSaveToDocuments, saveToDocuments } = this.props;
+
+    if (!saveToDocuments) {
+      changeSignatureOutfolder(DEFAULT_DOCUMENTS_PATH);
+    } else {
+      changeSignatureOutfolder("");
+    }
+
+    toggleSaveToDocuments(!saveToDocuments);
+  }
+
   handleOutfolderChange = (ev: any) => {
     ev.preventDefault();
     // tslint:disable-next-line:no-shadowed-variable
@@ -100,7 +117,7 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
   }
 
   render() {
-    const { settings } = this.props;
+    const { saveToDocuments, settings } = this.props;
     const { localize, locale } = this.context;
 
     const disabled = this.getDisabled();
@@ -121,9 +138,14 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
             isChecked={settings.timestamp}
             elementId="sign-time"
             title={localize("Sign.sign_time", locale)} />
+ 		  <CheckBoxWithLabel onClickCheckBox={this.handleSaveToDocumentsClick}
+            disabled={disabled}
+            isChecked={saveToDocuments}
+            elementId="saveToDocuments"
+            title={localize("Documents.save_to_documents", locale)} />
           <SelectFolder
             disabled={disabled}
-            directory={settings.outfolder}
+            directory={saveToDocuments ? DEFAULT_DOCUMENTS_PATH : settings.outfolder}
             viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)} />
         </div>
@@ -153,5 +175,6 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
 export default connect((state) => ({
   files: mapToArr(state.files.entities),
   loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
+  saveToDocuments: state.settings.saveToDocuments,
   settings: state.settings.sign,
-}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp }, null, { pure: false })(SignatureSettings);
+}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments  }, null, { pure: false })(SignatureSettings);

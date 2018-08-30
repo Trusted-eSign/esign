@@ -3,8 +3,9 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt,
-  changeEncryptEncoding, changeEncryptOutfolder,
+  changeEncryptEncoding, changeEncryptOutfolder, toggleSaveToDocuments,
 } from "../AC";
+import { DEFAULT_DOCUMENTS_PATH } from "../constants";
 import CheckBoxWithLabel from "./CheckBoxWithLabel";
 import EncodingTypeSelector from "./EncodingTypeSelector";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
@@ -17,12 +18,15 @@ interface IEncryptSettingsProps {
   changeEncryptOutfolder: (path: string) => void;
   changeEncryptEncoding: (encoding: string) => void;
   changeArchiveFilesBeforeEncrypt: (archive: boolean) => void;
+  saveToDocuments: boolean;
   settings: {
     archive: boolean,
     delete: boolean,
     encoding: string,
     outfolder: string,
+    saveToDocuments: boolean,
   };
+  toggleSaveToDocuments: (saveToDocuments: boolean) => void;
 }
 
 class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
@@ -72,8 +76,21 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
     changeEncryptEncoding(encoding);
   }
 
+  handleSaveToDocumentsClick = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeEncryptOutfolder, toggleSaveToDocuments, saveToDocuments } = this.props;
+
+    if (!saveToDocuments) {
+      changeEncryptOutfolder(DEFAULT_DOCUMENTS_PATH);
+    } else {
+      changeEncryptOutfolder("");
+    }
+
+    toggleSaveToDocuments(!saveToDocuments);
+  }
+
   render() {
-    const { settings } = this.props;
+    const { saveToDocuments, settings } = this.props;
     const { localize, locale } = this.context;
 
     return (
@@ -89,8 +106,12 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
             isChecked={settings.archive}
             elementId="archive_files"
             title={localize("Encrypt.archive_files_before", locale)} />
+ 		  <CheckBoxWithLabel onClickCheckBox={this.handleSaveToDocumentsClick}
+            isChecked={saveToDocuments}
+            elementId="saveToDocuments"
+            title={localize("Documents.save_to_documents", locale)} />
           <SelectFolder
-            directory={settings.outfolder}
+            directory={saveToDocuments ? DEFAULT_DOCUMENTS_PATH : settings.outfolder}
             viewDirect={this.handleOutfolderChange}
             openDirect={this.addDirect.bind(this)}
           />
@@ -101,5 +122,6 @@ class EncryptSettings extends React.Component<IEncryptSettingsProps, {}> {
 }
 
 export default connect((state) => ({
+  saveToDocuments: state.settings.saveToDocuments,
   settings: state.settings.encrypt,
-}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder }, null, { pure: false })(EncryptSettings);
+}), { changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt, changeEncryptEncoding, changeEncryptOutfolder, toggleSaveToDocuments }, null, { pure: false })(EncryptSettings);

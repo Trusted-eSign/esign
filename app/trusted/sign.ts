@@ -98,7 +98,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
       certificate: cert.subjectName,
       level: "error",
       message: err.message ? err.message : err,
-      operation: "Подпись",
+      operation: localize("Events.sign", window.locale), 
       operationObject: {
         in: path.basename(uri),
         out: "Null",
@@ -113,7 +113,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     certificate: cert.subjectName,
     level: "info",
     message: "",
-    operation: "Подпись",
+    operation: localize("Events.sign", window.locale), 
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
@@ -169,7 +169,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
       certificate: cert.subjectName,
       level: "error",
       message: err.message ? err.message : err,
-      operation: "Подпись",
+      operation: localize("Events.sign", window.locale), 
       operationObject: {
         in: path.basename(uri),
         out: "Null",
@@ -183,8 +183,8 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   logger.log({
     certificate: cert.subjectName,
     level: "info",
-    message: "Добавление подписи",
-    operation: "Подпись",
+    message: localize("Events.add_sign", window.locale), 
+    operation: localize("Events.sign", window.locale), 
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
@@ -228,7 +228,7 @@ export function unSign(uri: string, folderOut: string): any {
         logger.log({
           level: "info",
           message: "",
-          operation: "Снятие подписи",
+          operation: localize("Events.remove_sign", window.locale), 
           operationObject: {
             in: path.basename(uri),
             out: path.basename(outURI),
@@ -240,7 +240,7 @@ export function unSign(uri: string, folderOut: string): any {
           certificate: "",
           level: "error",
           message: err.message ? err.message : err,
-          operation: "Снятие подписи",
+          operation: localize("Events.remove_sign", window.locale),
           operationObject: {
             in: path.basename(uri),
             out: "Null",
@@ -260,7 +260,7 @@ export function unSign(uri: string, folderOut: string): any {
       certificate: "",
       level: "error",
       message: err.message ? err.message : err,
-      operation: "Снятие подписи",
+      operation: localize("Events.remove_sign", window.locale),
       operationObject: {
         in: path.basename(uri),
         out: "Null",

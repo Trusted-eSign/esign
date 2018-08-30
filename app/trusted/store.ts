@@ -190,7 +190,7 @@ export class Store {
         certificate: certificate.subjectName,
         level: "info",
         message: "",
-        operation: "Удаление сертификата",
+        operation:  localize("Events.cert_delete", window.locale), 
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -202,7 +202,7 @@ export class Store {
         certificate: certificate.subjectName,
         level: "error",
         message: err.message ? err.message : err,
-        operation: "Удаление сертификата",
+        operation: localize("Events.cert_delete", window.locale), 
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
