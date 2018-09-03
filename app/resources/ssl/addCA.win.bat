@@ -1,6 +1,6 @@
 @echo off
 
-if not exist "%UserProfile%\AppData\Local\Trusted\Trusted eSign GOST" mkdir "%UserProfile%\AppData\Local\Trusted\Trusted eSign"
+if not exist "%UserProfile%\AppData\Local\Trusted\Trusted eSign" mkdir "%UserProfile%\AppData\Local\Trusted\Trusted eSign"
 
 
 setlocal

@@ -4,7 +4,7 @@ mkdir "/etc/opt/Trusted"
 mkdir "/etc/opt/Trusted/Trusted eSign"
 chmod 777 "/etc/opt/Trusted/Trusted eSign"
 
-#FILE="/opt/cryptoarm_gost/ssl/log.txt"
+#FILE="/opt/trusted_esign/ssl/log.txt"
 #echo "Start: `date`" > $FILE
 #echo "" >> $FILE
 

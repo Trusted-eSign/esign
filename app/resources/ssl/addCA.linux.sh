@@ -53,12 +53,12 @@ fi
 if [ -n "$BROWSER_PATH" ] ;then
 	echo "Firefox was found"
 
-	cp $CUR_DIR/firefox/cryptoarm-firefox-preferences.cfg "$BROWSER_PATH/"
+	cp $CUR_DIR/firefox/esign-firefox-preferences.cfg "$BROWSER_PATH/"
 	if [ -d "$BROWSER_PATH/defaults/pref" ] ;then
-		cp $CUR_DIR/firefox/cryptoarm-firefox-preferences.js "$BROWSER_PATH/defaults/pref/"
+		cp $CUR_DIR/firefox/esign-firefox-preferences.js "$BROWSER_PATH/defaults/pref/"
 	else
 		if [ -d "$BROWSER_PATH/defaults/preferences" ] ;then
-			cp $CUR_DIR/firefox/cryptoarm-firefox-preferences.js "$BROWSER_PATH/defaults/preferences/"
+			cp $CUR_DIR/firefox/esign-firefox-preferences.js "$BROWSER_PATH/defaults/preferences/"
 		fi
 	fi
 else
