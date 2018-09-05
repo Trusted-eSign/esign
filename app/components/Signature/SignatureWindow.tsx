@@ -10,10 +10,10 @@ import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
-import BtnsForOperation from "../BtnsForOperation";
 import CertificateBlockForSignature from "../CertificateBlockForSignature";
 import FileSelector from "../FileSelector";
 import ProgressBars from "../ProgressBars";
+import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 
@@ -146,16 +146,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         <div className="content">
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
-            <BtnsForOperation
-              btn_name_first={localize("Sign.sign", locale)}
-              btn_name_second={localize("Sign.verify", locale)}
-              btn_resign={localize("Sign.resign", locale)}
-              btn_unsign={localize("Sign.unsign", locale)}
-              operation_first={this.signed}
-              operation_second={this.verifySign}
-              operation_unsign={this.unSign}
-              operation_resign={this.resign}
-              operation="sign" />
+            <SignatureButtons
+              onSign={this.signed}
+              onVerifySignature={this.verifySign}
+              onUnsign={this.unSign}
+              onResign={this.resign} />
             <FileSelector operation="sign" />
           </div>
         </div>
