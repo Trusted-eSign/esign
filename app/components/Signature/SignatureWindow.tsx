@@ -147,10 +147,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
             <SignatureButtons
-              onSign={this.signed}
+              onSign={this.handleSign}
               onVerifySignature={this.verifySign}
-              onUnsign={this.unSign}
-              onResign={this.resign} />
+              onUnsign={this.unSign} />
             <FileSelector operation="sign" />
           </div>
         </div>
@@ -170,10 +169,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     this.setState({ signerCertificate: null });
   }
 
-  signed = () => {
-    const { files, settings, signer, licenseStatus, lic_error } = this.props;
-    // tslint:disable-next-line:no-shadowed-variable
-    const { packageSign } = this.props;
+  handleSign = () => {
+    const { files, signer, licenseStatus, lic_error } = this.props;
     const { localize, locale } = this.context;
 
     if (licenseStatus !== 1) {
@@ -196,6 +193,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     if (files.length > 0) {
       const key = window.PKISTORE.findKey(signer);
+
       if (!key) {
         $(".toast-key_not_found").remove();
         Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
@@ -215,6 +213,35 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       }
 
       const cert = window.PKISTORE.getPkiObject(signer);
+
+      const filesForSign = [];
+      const filesForResign = [];
+
+      for (const file of files) {
+        if (file.fullpath.split(".").pop() === "sig") {
+          filesForResign.push(file);
+        } else {
+          filesForSign.push(file);
+        }
+      }
+
+      if (filesForSign && filesForSign.length) {
+        this.sign(filesForSign, cert, key);
+      }
+
+      if (filesForResign && filesForResign.length) {
+        this.resign(filesForResign, cert, key);
+      }
+    }
+  }
+
+  sign = (files: IFile[], cert: any, key: any) => {
+    const { settings, signer } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { packageSign } = this.props;
+    const { localize, locale } = this.context;
+
+    if (files.length > 0) {
       const policies = ["noAttributes"];
 
       const folderOut = settings.outfolder;
@@ -244,52 +271,13 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
   }
 
-  resign = () => {
-    const { connections, connectedList, files, settings,
-      signer, licenseStatus, uploader, lic_error } = this.props;
+  resign = (files: IFile[], cert: any, key: any) => {
+    const { connections, connectedList, settings, uploader } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile } = this.props;
     const { localize, locale } = this.context;
 
-    if (licenseStatus !== 1) {
-      $(".toast-jwtErrorLicense").remove();
-      Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
-
-      logger.log({
-        level: "error",
-        message: "No correct license",
-        operation: "Подпись",
-        operationObject: {
-          in: "License",
-          out: "Null",
-        },
-        userName: USER_NAME,
-      });
-
-      return;
-    }
-
     if (files.length > 0) {
-      const key = window.PKISTORE.findKey(signer);
-      if (!key) {
-        $(".toast-key_not_found").remove();
-        Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
-
-        logger.log({
-          level: "error",
-          message: "Key not found",
-          operation: "Подпись",
-          operationObject: {
-            in: "Key",
-            out: "Null",
-          },
-          userName: USER_NAME,
-        });
-
-        return;
-      }
-
-      const cert = window.PKISTORE.getPkiObject(signer);
       const policies = ["noAttributes"];
       const folderOut = settings.outfolder;
       let format = trusted.DataFormat.PEM;

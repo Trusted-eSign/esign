@@ -20,7 +20,6 @@ interface ISignatureButtonsProps {
   onSign: () => void;
   onVerifySignature: () => void;
   onUnsign: () => void;
-  onResign: () => void;
   activeFiles: Array<{
     id: string,
     filename: string,
@@ -101,8 +100,6 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
           disabledUnsign = "";
         }
       } else {
-        disabledSign = j > 0 ? "disabled" : "";
-
         if (haveFilesFromSocket) {
           if (method === VERIFY) {
             disabledSign = "disabled";
@@ -119,8 +116,8 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
     if (!disabledUnsign || (haveFilesFromSocket && method === SIGN && j === activeFiles.length)) {
       return (
         <div className={"btns-for-operation " + active}>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onResign}>
-            {localize("Sign.resign", locale)}
+          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
+            {localize("Sign.sign", locale)}
           </a>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
             {localize("Sign.verify", locale)}
