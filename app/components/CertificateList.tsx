@@ -113,6 +113,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     const intermediate: object[] = [];
     const other: object[] = [];
     const token: object[] = [];
+    const request: object[] = [];
 
     certificates.forEach((cert) => {
       const element = (
@@ -137,6 +138,8 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
           return other.push(element);
         case "TOKEN":
           return token.push(element);
+        case "Request":
+          return request.push(element);
       }
     });
 
@@ -148,6 +151,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
           {this.getCollapsibleElement(localize("Certificate.certs_intermediate", locale), "intermediate", intermediate)}
           {this.getCollapsibleElement(localize("Certificate.certs_root", locale), "root", root)}
           {this.getCollapsibleElement(localize("Certificate.certs_token", locale), "token", token)}
+          {this.getCollapsibleElement(localize("Certificate.certs_request", locale), "request", request)}
         </ul>
       </div>
     );

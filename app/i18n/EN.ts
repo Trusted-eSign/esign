@@ -61,6 +61,7 @@ export default {
     certs_intermediate: "Intermediate certificates",
     certs_root: "Trusted Root Certificates",
     certs_token: "External token/card certificates",
+    certs_request: "Certificate Enrollment Request",
   },
   Documents: {
     Documents: "DOCUMENTS",

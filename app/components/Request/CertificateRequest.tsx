@@ -6,7 +6,7 @@ import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST_TEMPLATE_DEFAULT,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_DEFAULT,
   REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
 import * as jwt from "../../trusted/jwt";
@@ -494,6 +494,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       keyPair.writePrivateKey(outputDirectory + "/generated.key", trusted.DataFormat.PEM, "");
     }
 
+    if (algorithm !== ALG_RSA) {
+      if (OS_TYPE === "Windows_NT") {
+        providerType = PROVIDER_MICROSOFT;
+      } else {
+        providerType = PROVIDER_CRYPTOPRO;
+      }
+    }
+
     if (selfSigned) {
       const cert = new trusted.pki.Certificate(certReq);
       cert.serialNumber = randomSerial();
@@ -511,14 +519,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         },
         userName: USER_NAME,
       });
-
-      if (algorithm !== ALG_RSA) {
-        if (OS_TYPE === "Windows_NT") {
-          providerType = PROVIDER_MICROSOFT;
-        } else {
-          providerType = PROVIDER_CRYPTOPRO;
-        }
-      }
 
       try {
         if (OS_TYPE === "Windows_NT") {
@@ -558,6 +558,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         if (algorithm !== ALG_RSA) {
           trusted.utils.Csp.installCertificateToContainer(cert, containerName, 75);
           trusted.utils.Csp.installCertificateFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
+          // window.PKISTORE.importCertificate(cert, providerType, (err: Error) => {
+          //   if (err) {
+          //     Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+          //   }
+          // }, MY, containerName);
         } else {
           window.PKISTORE.importCertificate(cert, PROVIDER_SYSTEM, (err: Error) => {
             if (err) {
@@ -599,13 +604,24 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         });
       }
     } else {
+      const cert = new trusted.pki.Certificate(certReq);
+      cert.serialNumber = randomSerial();
+      cert.notAfter = 60; // 60 sec
+      cert.sign(keyPair);
+
+      window.PKISTORE.importCertificate(cert, providerType, (err: Error) => {
+        if (err) {
+          Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
+        }
+      }, REQUEST, containerName);
+
       Materialize.toast(localize("CSR.create_request_created", locale), 2000, "toast-csr_created");
     }
 
     this.handelCancel();
   }
 
-  handleCertificateImport = (certificate: trusted.pki.Certificate) => {
+  handleImportCertificationRequest = (csr: trusted.pki.CertificationRequest, contName: string) => {
     const { localize, locale } = this.context;
     const { algorithm } = this.state;
     const OS_TYPE = os.type();
@@ -620,23 +636,11 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       }
     }
 
-    window.PKISTORE.importCertificate(certificate, providerType, (err: Error) => {
+    window.PKISTORE.importCertificationRequest(csr, providerType, contName, (err: Error) => {
       if (err) {
         Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
       }
-    }, MY);
-
-    try {
-      if (OS_TYPE === "Windows_NT") {
-        window.PKISTORE.importCertificate(certificate, PROVIDER_MICROSOFT, (err: Error) => {
-          if (err) {
-            Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-          }
-        }, ROOT);
-      }
-    } catch (e) {
-      // e
-    }
+    });
   }
 
   handleReloadCertificates = () => {

@@ -1217,6 +1217,16 @@ i.material-icons.left.token {
   margin-top: 10px;
 }
 
+i.material-icons.left.request {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_request.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
 /*-----------------Главная страница--------------------*/
 .header{
     margin-top: 1px;

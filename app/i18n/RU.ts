@@ -61,6 +61,7 @@ export default {
     certs_intermediate: "Промежуточные сертификаты",
     certs_root: "Доверенные корневые сертификаты",
     certs_token: "Сертификаты внешних носителей",
+    certs_request: "Запросы заявок на сертификат",
   },
   Documents: {
     Documents: "ДОКУМЕНТЫ",
