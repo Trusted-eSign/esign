@@ -21,7 +21,7 @@ import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
 import MainWindow from "./MainWindow";
 import MenuBar from "./MenuBar";
-import SignatureWindow from "./SignatureWindow";
+import SignatureWindow from "./Signature/SignatureWindow";
 
 interface IAppProps {
   locale: string;

@@ -4,14 +4,14 @@ import { connect } from "react-redux";
 import {
   changeSignatureDetached, changeSignatureEncoding,
   changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments,
-} from "../AC";
-import { DEFAULT_DOCUMENTS_PATH } from "../constants";
-import { loadingRemoteFilesSelector } from "../selectors";
-import { mapToArr } from "../utils";
-import CheckBoxWithLabel from "./CheckBoxWithLabel";
-import EncodingTypeSelector from "./EncodingTypeSelector";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import SelectFolder from "./SelectFolder";
+} from "../../AC";
+import { DEFAULT_DOCUMENTS_PATH } from "../../constants";
+import { loadingRemoteFilesSelector } from "../../selectors";
+import { mapToArr } from "../../utils";
+import CheckBoxWithLabel from "../CheckBoxWithLabel";
+import EncodingTypeSelector from "../EncodingTypeSelector";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import SelectFolder from "../SelectFolder";
 
 const dialog = window.electron.remote.dialog;
 

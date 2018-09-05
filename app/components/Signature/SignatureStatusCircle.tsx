@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { mapToArr } from "../utils";
+import { mapToArr } from "../../utils";
 
 interface ISignatureStatusCircleProps {
   fileId: number;

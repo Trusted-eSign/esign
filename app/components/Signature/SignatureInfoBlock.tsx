@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import SignerCertificateInfo from "../SignerCertificateInfo";
 import SignatureStatus from "./SignatureStatus";
-import SignerCertificateInfo from "./SignerCertificateInfo";
 
 class SignatureInfoBlock extends React.Component<any, any> {
   static contextTypes = {
@@ -24,7 +24,7 @@ class SignatureInfoBlock extends React.Component<any, any> {
       );
     }
 
-    const elements = signatures.map((signature) => {
+    const elements = signatures.map((signature: any) => {
       return <SignatureStatus key={signature.id} signature={signature} handleActiveCert={handleActiveCert} />;
     });
 
