@@ -16,6 +16,7 @@ interface IFileRedux {
   fullpath: string;
   id: number;
   lastModifiedDate: Date;
+  socket: string;
 }
 
 export interface IRemoteFile {
