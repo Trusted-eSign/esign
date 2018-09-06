@@ -7,7 +7,7 @@ import {
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
+  CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE,
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LICENSE_PATH, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
   LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
@@ -74,7 +74,7 @@ export function loadLicense() {
             lic_error = expirationTime;
             let verified = true;
             dispatch({ payload: { data, lic_format, licenseStatus, lic_error, verified }, type: LOAD_LICENSE + FAIL });
-          }else{
+          } else {
             lic.exp = expirationTime;
             lic.iat = 0;
             licenseStatus = 1;
@@ -88,7 +88,7 @@ export function loadLicense() {
             lic_format = "JWT";
             const check = trusted.utils.Jwt.checkLicense(data);
             if (check == 0) licenseStatus = 1;
-            else{
+            else {
               lic_error = check;
               licenseStatus = 0;
             }
@@ -102,7 +102,7 @@ export function loadLicense() {
                   lic = parsedLicense;
                 }
                 const loaded = true;
-                if(check == 0) lic_error = 900;//CTLICENSE_R_NO_ERROR
+                if (check == 0) lic_error = 900;//CTLICENSE_R_NO_ERROR
                 dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
               } catch (e) {
                 lic_format = "NONE"; // Лицензия отсутствует
@@ -125,7 +125,7 @@ export function loadLicense() {
               let loaded = true;
               licenseStatus = 1; // Статуст лицензии: 1 - действует
               lic_error = 900;//CTLICENSE_R_NO_ERROR
-              dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error}, type: LOAD_LICENSE + SUCCESS });
+              dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
             } else {
               lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
               licenseStatus = 0; // Статуст лицензии: 0 - не действует
@@ -137,28 +137,28 @@ export function loadLicense() {
             }
           }
         }
-      }else{
-          // // Проверка на наличие и истечение временной лицензии
-          let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
-          if (status_trial === 1) {
-            lic_format = "TRIAL"; // Работает триальная лицензия
-            let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
-            lic.exp = expirationTimeTrial;
-            lic.iat = expirationTimeTrial - 14 * 86400;
-            data = "";
-            let loaded = true;
-            licenseStatus = 1; // Статуст лицензии: 1 - действует
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
-            dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
-          } else {
-            lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
-            licenseStatus = 0; // Статуст лицензии: 0 - не действует
-            data = "";
-            let loaded = false;
-            let verified = true;
-            let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-            dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
-          }
+      } else {
+        // // Проверка на наличие и истечение временной лицензии
+        let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+        if (status_trial === 1) {
+          lic_format = "TRIAL"; // Работает триальная лицензия
+          let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
+          lic.exp = expirationTimeTrial;
+          lic.iat = expirationTimeTrial - 14 * 86400;
+          data = "";
+          let loaded = true;
+          licenseStatus = 1; // Статуст лицензии: 1 - действует
+          lic_error = 900;//CTLICENSE_R_NO_ERROR
+          dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
+        } else {
+          lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
+          licenseStatus = 0; // Статуст лицензии: 0 - не действует
+          data = "";
+          let loaded = false;
+          let verified = true;
+          let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
+          dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
+        }
       }
     }, 0);
   };
@@ -314,7 +314,7 @@ export function packageSign(
 }
 
 export function filePackageSelect(files: IFilePath[]) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: PACKAGE_SELECT_FILE + START,
     });
@@ -339,6 +339,63 @@ export function filePackageSelect(files: IFilePath[]) {
           size: stat.size,
           socket,
         };
+
+        if (fileProps.filename.split(".").pop() === "sig") {
+          const state = getState();
+          const { connections } = state;
+          let signaruteStatus = false;
+          let signatureInfo;
+          let cms: trusted.cms.SignedData;
+
+          try {
+            cms = signs.loadSign(fileProps.fullpath);
+
+            if (cms.isDetached()) {
+              if (!(cms = signs.setDetachedContent(cms, fileProps.fullpath))) {
+                throw new Error(("err"));
+              }
+            }
+
+            signaruteStatus = signs.verifySign(cms);
+            signatureInfo = signs.getSignPropertys(cms);
+
+            if (fileProps.socket) {
+              const connectedList = connectedSelector(state, { connected: true });
+              const connection = connections.getIn(["entities", fileProps.socket]);
+
+              if (connection && connection.connected && connection.socket) {
+                connection.socket.emit(VERIFIED, signatureInfo);
+              } else if (connectedList.length) {
+                const connectedSocket = connectedList[0].socket;
+
+                connectedSocket.emit(VERIFIED, signatureInfo);
+                connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
+              }
+            }
+
+            signatureInfo = signatureInfo.map((info) => {
+              return {
+                fileId: fileProps.id,
+                ...info,
+                id: fileProps.id,
+              };
+            });
+
+          } catch (error) {
+            dispatch({
+              payload: { error, fileId: fileProps.id },
+              type: VERIFY_SIGNATURE + FAIL,
+            });
+          }
+
+          if (signatureInfo) {
+            dispatch({
+              generateId: true,
+              payload: { fileId: fileProps.id, signaruteStatus, signatureInfo },
+              type: VERIFY_SIGNATURE + SUCCESS,
+            });
+          }
+        }
 
         filePackage.push(fileProps);
       });
@@ -383,9 +440,9 @@ export function loadAllCertificates() {
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
+      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
         if (!item.id) {
-          item.id = item.provider + "_" + item.category + "_" +  item.hash;
+          item.id = item.provider + "_" + item.category + "_" + item.hash;
         }
         return item.type === "CERTIFICATE";
       });
@@ -458,12 +515,12 @@ export function loadAllContainers() {
       const filteredContainers = [];
 
       for (const cont of enumedContainers) {
-          filteredContainers.push({
-            friendlyName: cont.container,
-            id: Math.random(),
-            name: cont.unique,
-            reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
-          });
+        filteredContainers.push({
+          friendlyName: cont.container,
+          id: Math.random(),
+          name: cont.unique,
+          reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
+        });
       }
 
       dispatch({
@@ -602,7 +659,7 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-          id: Date.now() + Math.random(),
+          id: fileId,
         };
       });
 
@@ -613,11 +670,13 @@ export function verifySignature(fileId: string) {
       });
     }
 
-    dispatch({
-      generateId: true,
-      payload: { fileId, signaruteStatus, signatureInfo },
-      type: VERIFY_SIGNATURE + SUCCESS,
-    });
+    if (signatureInfo) {
+      dispatch({
+        generateId: true,
+        payload: { fileId, signaruteStatus, signatureInfo },
+        type: VERIFY_SIGNATURE + SUCCESS,
+      });
+    }
   };
 }
 
@@ -702,5 +761,64 @@ export function changeLocale(locale: string) {
   return {
     payload: { locale },
     type: CHANGE_LOCALE,
+  };
+}
+
+function _verifySignature(file: any) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const { connections } = state;
+    let signaruteStatus = false;
+    let signatureInfo;
+    let cms: trusted.cms.SignedData;
+
+    try {
+      cms = signs.loadSign(file.fullpath);
+
+      if (cms.isDetached()) {
+        if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
+          throw new Error(("err"));
+        }
+      }
+
+      signaruteStatus = signs.verifySign(cms);
+      signatureInfo = signs.getSignPropertys(cms);
+
+      if (file.socket) {
+        const connectedList = connectedSelector(state, { connected: true });
+        const connection = connections.getIn(["entities", file.socket]);
+
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit(VERIFIED, signatureInfo);
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
+
+          connectedSocket.emit(VERIFIED, signatureInfo);
+          connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
+        }
+      }
+
+      signatureInfo = signatureInfo.map((info) => {
+        return {
+          fileId: file.id,
+          ...info,
+          id: file.id,
+        };
+      });
+
+    } catch (error) {
+      dispatch({
+        payload: { error, fileId: file.id },
+        type: VERIFY_SIGNATURE + FAIL,
+      });
+    }
+
+    if (signatureInfo) {
+      dispatch({
+        generateId: true,
+        payload: { fileId: file.id, signaruteStatus, signatureInfo },
+        type: VERIFY_SIGNATURE + SUCCESS,
+      });
+    }
   };
 }

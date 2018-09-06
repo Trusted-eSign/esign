@@ -5,13 +5,15 @@ import * as path from "path";
 import { push } from "react-router-redux";
 import {
   ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE,
-  LOCATION_ENCRYPT, LOCATION_SIGN, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
-  REMOVE_CONNECTION, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
+  CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE, FAIL, LOCATION_ENCRYPT,
+  LOCATION_SIGN, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES, REMOVE_CONNECTION,
+  SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
+  VERIFY_SIGNATURE,
 } from "../constants";
 import store from "../store/index";
+import * as signs from "../trusted/sign";
 import { extFile } from "../utils";
-import { CONNECTION, DECRYPT, DISCONNECT, ENCRYPT, SIGN, UNAVAILABLE, VERIFY } from "./constants";
+import { CONNECTION, DECRYPT, DISCONNECT, ENCRYPT, SIGN, UNAVAILABLE, VERIFIED, VERIFY } from "./constants";
 import io from "./socketIO";
 
 // tslint:disable-next-line:no-var-requires
@@ -133,14 +135,59 @@ const downloadFiles = (data: ISignRequest | IEncryptRequest, socket: SocketIO.So
             type: PACKAGE_SELECT_FILE + START,
           });
 
+          const fileId = Date.now() + Math.random();
+
           setTimeout(() => {
+            if (fileProps.filename.split(".").pop() === "sig") {
+              let signaruteStatus = false;
+              let signatureInfo;
+              let cms: trusted.cms.SignedData;
+
+              try {
+                cms = signs.loadSign(fileProps.fullpath);
+
+                if (cms.isDetached()) {
+                  if (!(cms = signs.setDetachedContent(cms, fileProps.fullpath))) {
+                    throw new Error(("err"));
+                  }
+                }
+
+                signaruteStatus = signs.verifySign(cms);
+                signatureInfo = signs.getSignPropertys(cms);
+
+                socket.emit(VERIFIED, signatureInfo);
+
+                signatureInfo = signatureInfo.map((info) => {
+                  return {
+                    fileId,
+                    ...info,
+                    id: fileId,
+                  };
+                });
+
+              } catch (error) {
+                store.dispatch({
+                  payload: { error, fileId },
+                  type: VERIFY_SIGNATURE + FAIL,
+                });
+              }
+
+              if (signatureInfo) {
+                store.dispatch({
+                  generateId: true,
+                  payload: { fileId, signaruteStatus, signatureInfo },
+                  type: VERIFY_SIGNATURE + SUCCESS,
+                });
+              }
+            }
+
             store.dispatch({
               payload: {
                 filePackage: [{
                   ...fileProps,
                   active: true,
                   extra,
-                  id: Date.now() + Math.random(),
+                  id: fileId,
                   remoteId: file.id,
                   socket: socket.id,
                 }],
