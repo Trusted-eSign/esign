@@ -177,4 +177,4 @@ export default connect((state) => ({
   loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
   saveToDocuments: state.settings.saveToDocuments,
   settings: state.settings.sign,
-}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments }, null, { pure: false })(SignatureSettings);
+}), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments  }, null, { pure: false })(SignatureSettings);

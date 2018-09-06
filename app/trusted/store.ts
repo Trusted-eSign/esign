@@ -386,10 +386,32 @@ export class Store {
    */
   findKey(objectWithKey: any) {
     let keyItem: any;
+    if (OS_TYPE === "Windows_NT") {   
+      if (objectWithKey.provider === "MICROSOFT") {
+        try {
+          console.log(this._store.getItem(objectWithKey));
+          keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
+          console.log(keyItem);
+        } catch (err) {
+          // const JWT_RES: number = jwt.checkLicense();
+          // if (JWT_RES) {
+          //   $(".toast-jwt_error").remove();
+          //   Materialize.toast(jwt.getErrorMessage(JWT_RES), 4000, "toast-jwt_error");
+          //   return;
+          // }
+        }
+        if (!keyItem) {
+          return;
+        } else {
+          return keyItem;
+        }
+      }
+    }
+
 
     for (let i: number = 0, c: number = this._items.length; i < c; i++) {
       let result: number = 1;
-
+      console.log(this._items[i]);
       if (this._items[i].hash === objectWithKey.hash) {
         result = 1;
       } else {
@@ -416,7 +438,7 @@ export class Store {
         break;
       }
     }
-
+    console.log(keyItem);
     return this._store.getItem(keyItem);
   }
 
