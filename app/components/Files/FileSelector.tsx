@@ -2,11 +2,11 @@ import { is } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../AC";
-import { loadingRemoteFilesSelector } from "../selectors";
-import { mapToArr } from "../utils";
+import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../../AC";
+import { loadingRemoteFilesSelector } from "../../selectors";
+import { mapToArr } from "../../utils";
+import ProgressBars from "../ProgressBars";
 import FileList from "./FileList";
-import ProgressBars from "./ProgressBars";
 
 const dialog = window.electron.remote.dialog;
 

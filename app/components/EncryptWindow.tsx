@@ -14,7 +14,7 @@ import logger from "../winstonLogger";
 import BtnsForOperation from "./BtnsForOperation";
 import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
 import EncryptSettings from "./EncryptSettings";
-import FileSelector from "./FileSelector";
+import FileSelector from "./Files/FileSelector";
 import ProgressBars from "./ProgressBars";
 
 class EncryptWindow extends React.Component<any, any> {

@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
-import { activeFile, deleteFile } from "../AC";
-import { loadingRemoteFilesSelector } from "../selectors";
-import { mapToArr } from "../utils";
+import { activeFile, deleteFile } from "../../AC";
+import { loadingRemoteFilesSelector } from "../../selectors";
+import { mapToArr } from "../../utils";
 import FileListItem from "./FileListItem";
 import RemoteFileListItem from "./RemoteFileListItem";
 

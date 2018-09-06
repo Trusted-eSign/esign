@@ -11,7 +11,7 @@ import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../CertificateBlockForSignature";
-import FileSelector from "../FileSelector";
+import FileSelector from "../Files/FileSelector";
 import ProgressBars from "../ProgressBars";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";

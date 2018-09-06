@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import SignatireStatusCicrcle from "./Signature/SignatureStatusCircle";
+import SignatireStatusCicrcle from "../Signature/SignatureStatusCircle";
 
 interface IFileRedux {
   active: boolean;
