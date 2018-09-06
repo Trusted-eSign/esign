@@ -2,7 +2,7 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature } from "../../AC";
+import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, selectFile, verifySignature } from "../../AC";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { ERROR, SIGNED, UPLOADED } from "../../server/constants";
@@ -149,7 +149,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
             <SignatureButtons
               onSign={this.handleSign}
               onVerifySignature={this.verifySign}
-              onUnsign={this.unSign} />
+              onUnsign={this.unSign}
+              onCancelSign={this.onCancelSign} />
             <FileSelector operation="sign" />
           </div>
         </div>
@@ -233,6 +234,23 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         this.resign(filesForResign, cert, key);
       }
     }
+  }
+
+  onCancelSign = () => {
+    this.removeAllFiles();
+  }
+
+  removeAllFiles = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { filePackageDelete, files } = this.props;
+
+    const filePackage: number[] = [];
+
+    for (const file of files) {
+      filePackage.push(file.id);
+    }
+
+    filePackageDelete(filePackage);
   }
 
   sign = (files: IFile[], cert: any, key: any) => {
@@ -509,4 +527,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, loadAllCertificates, packageSign, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, selectFile, verifySignature })(SignatureWindow);

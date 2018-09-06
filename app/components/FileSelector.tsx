@@ -268,7 +268,7 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
             <a className={"nav-small-btn waves-effect waves-light " + active + " " + classDisabled} onClick={this.addFiles.bind(this)}>
               <i className="material-icons nav-small-icon">add</i>
             </a>
-            <a className={"nav-small-btn waves-effect waves-light " + disabled} data-activates="dropdown-btn-set-add-files">
+            <a className={"nav-small-btn waves-effect waves-light " + disabled + classDisabled} data-activates="dropdown-btn-set-add-files">
               <i className="nav-small-icon material-icons">more_vert</i>
             </a>
             <ul id="dropdown-btn-set-add-files" className="dropdown-content">

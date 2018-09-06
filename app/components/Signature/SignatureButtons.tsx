@@ -17,6 +17,7 @@ interface IRemoteFile {
 }
 
 interface ISignatureButtonsProps {
+  onCancelSign?: () => void;
   onSign: () => void;
   onVerifySignature: () => void;
   onUnsign: () => void;
@@ -119,12 +120,20 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
             {localize("Sign.sign", locale)}
           </a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
-            {localize("Sign.verify", locale)}
-          </a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.onUnsign}>
-            {localize("Sign.unsign", locale)}
-          </a>
+          {this.isFilesFromSocket() ?
+            <a className={"waves-effect waves-light btn-large operation-btn "} onClick={this.props.onCancelSign}>
+              {localize("Common.cancel", locale)}
+            </a>
+            :
+            <React.Fragment>
+              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                {localize("Sign.verify", locale)}
+              </a>
+              <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.onUnsign}>
+                {localize("Sign.unsign", locale)}
+              </a>
+            </React.Fragment>
+          }
         </div>
       );
     } else {

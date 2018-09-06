@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
-import { activeFile, deleteFile} from "../AC";
+import { activeFile, deleteFile } from "../AC";
 import { loadingRemoteFilesSelector } from "../selectors";
 import { mapToArr } from "../utils";
 import FileListItem from "./FileListItem";
@@ -129,7 +129,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
       return (
         <FileListItem
           removeFiles={() => this.removeFile(files[index].id)}
-          onClickBtn={() => this.toggleActive(files[index])}
+          onClickBtn={() => this.onClick(files[index])}
           file={files[index]}
           operation={operation}
           key={key}
@@ -137,6 +137,12 @@ class FileList extends React.Component<IFilelistProps, {}> {
           style={style}
         />
       );
+    }
+  }
+
+  onClick = (file: IFileRedux) => {
+    if (!file.socket) {
+      this.toggleActive(file);
     }
   }
 
