@@ -7,7 +7,7 @@ import {
   ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE,
   LOCATION_ENCRYPT, LOCATION_SIGN, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES,
-  REMOVE_CONNECTION, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS,
+  REMOVE_CONNECTION, SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
 } from "../constants";
 import store from "../store/index";
 import { extFile } from "../utils";
@@ -61,6 +61,7 @@ io.on(CONNECTION, (socket) => {
     store.dispatch({ type: CHANGE_SIGNATURE_DETACHED, payload: { detached: false } });
     store.dispatch({ type: CHANGE_SIGNATURE_TIMESTAMP, payload: { timestamp: true } });
     store.dispatch({ type: CHANGE_SIGNATURE_OUTFOLDER, payload: { outfolder: "" } });
+    store.dispatch({ type: TOGGLE_SAVE_TO_DOCUMENTS, payload: { saveToDocuments: false } });
   });
 
   socket.on(VERIFY, (data: ISignRequest) => {
@@ -71,6 +72,7 @@ io.on(CONNECTION, (socket) => {
     store.dispatch({ type: CHANGE_SIGNATURE_DETACHED, payload: { detached: false } });
     store.dispatch({ type: CHANGE_SIGNATURE_TIMESTAMP, payload: { timestamp: true } });
     store.dispatch({ type: CHANGE_SIGNATURE_OUTFOLDER, payload: { outfolder: "" } });
+    store.dispatch({ type: TOGGLE_SAVE_TO_DOCUMENTS, payload: { saveToDocuments: false } });
   });
 
   socket.on(ENCRYPT, (data: IEncryptRequest) => {
