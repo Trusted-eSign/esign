@@ -2,6 +2,7 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { filePackageDelete } from "../AC";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
   LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
@@ -34,6 +35,10 @@ class MenuBar extends React.Component<any, any> {
   closeWindow() {
     const { localize, locale } = this.context;
     const { cloudCSPSettings, encSettings, recipients, saveToDocuments, signSettings, signer } = this.props;
+
+    if (this.isFilesFromSocket()) {
+      this.removeAllFiles();
+    }
 
     const state = ({
       recipients,
@@ -123,7 +128,7 @@ class MenuBar extends React.Component<any, any> {
   }
 
   render() {
-    const disabledNavigate = this.getDisabled();
+    const disabledNavigate = this.isFilesFromSocket();
     const dataActivates = disabledNavigate ? "" : "slide-out";
     const classDisabled = disabledNavigate ? "disabled" : "";
 
@@ -167,7 +172,7 @@ class MenuBar extends React.Component<any, any> {
     );
   }
 
-  getDisabled = () => {
+  isFilesFromSocket = () => {
     const { files, loadingFiles } = this.props;
 
     if (loadingFiles.length) {
@@ -183,6 +188,19 @@ class MenuBar extends React.Component<any, any> {
     }
 
     return false;
+  }
+
+  removeAllFiles = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { filePackageDelete, files } = this.props;
+
+    const filePackage: number[] = [];
+
+    for (const file of files) {
+      filePackage.push(file.id);
+    }
+
+    filePackageDelete(filePackage);
   }
 }
 
@@ -201,4 +219,4 @@ export default connect((state, ownProps) => {
     signSettings: state.settings.sign,
     signer: state.signers.signer,
   };
-})(MenuBar);
+}, {filePackageDelete})(MenuBar);
