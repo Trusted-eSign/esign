@@ -1,15 +1,15 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../AC";
-import { USER_NAME } from "../constants";
-import { filteredContainersSelector } from "../selectors";
-import logger from "../winstonLogger";
-import BlockNotElements from "./BlockNotElements";
-import CertificateInfo from "./CertificateInfo";
+import { getCertificateFromContainer, loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../../AC";
+import { USER_NAME } from "../../constants";
+import { filteredContainersSelector } from "../../selectors";
+import logger from "../../winstonLogger";
+import BlockNotElements from "../BlockNotElements";
+import CertificateInfo from "../CertificateInfo";
+import ProgressBars from "../ProgressBars";
+import { ToolBarWithSearch } from "../ToolBarWithSearch";
 import ContainersList from "./ContainersList";
-import ProgressBars from "./ProgressBars";
-import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class ContainersWindow extends React.Component<any, any> {
   static contextTypes = {

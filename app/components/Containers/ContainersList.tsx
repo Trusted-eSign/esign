@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { activeContainer, loadAllContainers } from "../AC";
-import { filteredContainersSelector } from "../selectors";
+import { activeContainer, loadAllContainers } from "../../AC";
+import { filteredContainersSelector } from "../../selectors";
+import ProgressBars from "../ProgressBars";
 import ContainerListItem from "./ContainerListItem";
-import ProgressBars from "./ProgressBars";
 
 class ContainersList extends React.Component<any, any> {
   static contextTypes = {
