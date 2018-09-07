@@ -114,7 +114,7 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
       disabledVerify = "disabled";
     }
 
-    if (!disabledUnsign || (haveFilesFromSocket && method === SIGN && j === activeFiles.length)) {
+    if (!disabledUnsign || (haveFilesFromSocket && method === SIGN)) {
       return (
         <div className={"btns-for-operation " + active}>
           <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
