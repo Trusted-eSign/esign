@@ -139,12 +139,25 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
     } else {
       return (
         <div className={"btns-for-operation " + active}>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
-            {localize("Sign.sign", locale)}
-          </a>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
-            {localize("Sign.verify", locale)}
-          </a>
+          {this.isFilesFromSocket() && method === VERIFY ?
+            <React.Fragment>
+              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                {localize("Sign.verify", locale)}
+              </a>
+              <a className={"waves-effect waves-light btn-large operation-btn "} onClick={this.props.onCancelSign}>
+                {localize("Common.cancel", locale)}
+              </a>
+            </React.Fragment> :
+            <React.Fragment>
+              <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
+                {localize("Sign.sign", locale)}
+              </a>
+              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                {localize("Sign.verify", locale)}
+              </a>
+            </React.Fragment>
+          }
+
         </div>
       );
     }
