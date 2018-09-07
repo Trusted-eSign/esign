@@ -505,7 +505,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     if (selfSigned) {
       const cert = new trusted.pki.Certificate(certReq);
       cert.serialNumber = randomSerial();
-      cert.notAfter = 60 * 60 * 24 * 180; // 180 days in sec
+      cert.notAfter = 60 * 60 * 24 * 365; // 365 days in sec
       cert.sign(keyPair);
 
       logger.log({
