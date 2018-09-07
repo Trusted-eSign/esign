@@ -15,7 +15,7 @@ import AboutWindow from "./About/AboutWindow";
 import CertWindow from "./CertWindow";
 import ContainersWindow from "./ContainersWindow";
 import DocumentsWindow from "./Documents/DocumentsWindow";
-import EncryptWindow from "./EncryptWindow";
+import EncryptWindow from "./Encrypt/EncryptWindow";
 import EventsWindow from "./Events/EventsWindow";
 import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
