@@ -19,7 +19,7 @@ import EncryptWindow from "./Encrypt/EncryptWindow";
 import EventsWindow from "./Events/EventsWindow";
 import HelpWindow from "./Help/HelpWindow";
 import LicenseWindow from "./License/LicenseWindow";
-import MainWindow from "./MainWindow";
+import MainWindow from "./MainWindow/MainWindow";
 import MenuBar from "./MenuBar";
 import SignatureWindow from "./Signature/SignatureWindow";
 

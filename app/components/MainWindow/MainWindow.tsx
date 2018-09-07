@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import Footer from "./Footer";
+import Footer from "../Footer";
 import MainWindowOperation from "./MainWindowOperation";
 
 class MainWindow extends React.Component<{}, {}> {
