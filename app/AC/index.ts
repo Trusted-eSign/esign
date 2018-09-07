@@ -219,7 +219,9 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({ fullpath: newPath });
+          if (!file.socket) {
+            signedFilePackage.push({ fullpath: newPath });
+          }
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
@@ -291,6 +293,11 @@ export function packageSign(
                     connectedSocket.emit(UPLOADED, { id: file.remoteId });
                     connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
                   }
+
+                  dispatch({
+                    payload: { id: file.id },
+                    type: DELETE_FILE,
+                  });
                 }
               },
               );

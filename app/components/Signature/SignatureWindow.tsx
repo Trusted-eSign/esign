@@ -2,10 +2,10 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, selectFile, verifySignature } from "../../AC";
+import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
-import { CANCELLED, ERROR, SIGNED, UPLOADED } from "../../server/constants";
+import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
 import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
@@ -16,6 +16,8 @@ import ProgressBars from "../ProgressBars";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
+
+const remote = window.electron.remote;
 
 interface IFile {
   id: string;
@@ -47,6 +49,7 @@ interface ISignatureWindowProps {
   licenseToken: string;
   lic_error: number;
   loadAllCertificates: () => void;
+  method: string;
   files: Array<{
     id: string,
     filename: string,
@@ -59,6 +62,7 @@ interface ISignatureWindowProps {
     socket?: string;
   }>;
   verifySignature: (file: string) => void;
+  removeAllRemoteFiles: () => void;
   signatures: any;
   signer: any;
   settings: any;
@@ -93,6 +97,13 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     if (!certificatesLoading && !certificatesLoaded) {
       loadAllCertificates();
+    }
+  }
+
+  componentDidUpdate(prevProps: ISignatureWindowProps) {
+    if (this.props.method === SIGN && prevProps.files && prevProps.files.length && (!this.props.files || !this.props.files.length)) {
+      this.props.removeAllRemoteFiles();
+      remote.getCurrentWindow().close();
     }
   }
 
@@ -530,6 +541,7 @@ export default connect((state) => {
     licenseStatus: state.license.status,
     lic_error: state.license.lic_error,
     licenseToken: state.license.data,
+    method: state.remoteFiles.method,
     packageSignResult: state.signatures.packageSignResult,
     settings: state.settings.sign,
     signatures,
@@ -539,4 +551,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature })(SignatureWindow);
