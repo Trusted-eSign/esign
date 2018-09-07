@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { localizeAlgorithm } from "../i18n/localize";
+import { localizeAlgorithm } from "../../i18n/localize";
 
 export interface IX509Certificate {
   format: string;

@@ -12,7 +12,7 @@ import * as jwt from "../../trusted/jwt";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
 import BtnsForOperation from "../BtnsForOperation";
-import CertificateBlockForEncrypt from "../CertificateBlockForEncrypt";
+import CertificateBlockForEncrypt from "../Certificate/CertificateBlockForEncrypt";
 import FileSelector from "../Files/FileSelector";
 import ProgressBars from "../ProgressBars";
 import EncryptSettings from "./EncryptSettings";

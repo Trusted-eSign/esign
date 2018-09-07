@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { verifyCertificate } from "../AC";
+import { verifyCertificate } from "../../AC";
 
 const rectangleValidStyle = {
   background: "#4caf50",

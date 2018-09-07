@@ -1,14 +1,14 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { selectSignerCertificate, verifyCertificate } from "../AC";
-import { filteredCertificatesSelector } from "../selectors";
-import BlockNotElements from "./BlockNotElements";
+import { selectSignerCertificate, verifyCertificate } from "../../AC";
+import { filteredCertificatesSelector } from "../../selectors";
+import BlockNotElements from "../BlockNotElements";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import ProgressBars from "../ProgressBars";
+import { ToolBarWithSearch } from "../ToolBarWithSearch";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import ProgressBars from "./ProgressBars";
-import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class CertificateBlockForSignature extends React.Component<any, any> {
   static contextTypes = {

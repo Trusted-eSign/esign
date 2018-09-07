@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { loadAllCertificates, verifyCertificate } from "../AC";
-import accordion from "../decorators/accordion";
-import { filteredCertificatesSelector } from "../selectors";
+import { loadAllCertificates, verifyCertificate } from "../../AC";
+import accordion from "../../decorators/accordion";
+import { filteredCertificatesSelector } from "../../selectors";
+import ProgressBars from "../ProgressBars";
 import CertificateListItem from "./CertificateListItem";
-import ProgressBars from "./ProgressBars";
 
 interface ICertificateListProps {
   activeCert: (certificate: any) => void;

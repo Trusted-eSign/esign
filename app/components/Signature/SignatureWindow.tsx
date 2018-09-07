@@ -10,7 +10,7 @@ import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
-import CertificateBlockForSignature from "../CertificateBlockForSignature";
+import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import FileSelector from "../Files/FileSelector";
 import ProgressBars from "../ProgressBars";
 import SignatureButtons from "./SignatureButtons";

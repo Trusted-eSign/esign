@@ -6,7 +6,7 @@ import { USER_NAME } from "../../constants";
 import { filteredContainersSelector } from "../../selectors";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
-import CertificateInfo from "../CertificateInfo";
+import CertificateInfo from "../Certificate/CertificateInfo";
 import ProgressBars from "../ProgressBars";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 import ContainersList from "./ContainersList";

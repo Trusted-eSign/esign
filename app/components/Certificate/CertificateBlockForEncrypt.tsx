@@ -1,17 +1,17 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { addRecipientCertificate, deleteRecipient, verifyCertificate } from "../AC";
-import { filteredCertificatesSelector } from "../selectors";
-import { mapToArr } from "../utils";
-import BlockNotElements from "./BlockNotElements";
+import { addRecipientCertificate, deleteRecipient, verifyCertificate } from "../../AC";
+import { filteredCertificatesSelector } from "../../selectors";
+import { mapToArr } from "../../utils";
+import BlockNotElements from "../BlockNotElements";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import ProgressBars from "../ProgressBars";
+import RecipientsList from "../RecipientsList";
+import ToolBarForEncryptCertificateBlock from "../ToolBarForEncryptCertificateBlock";
+import { ToolBarWithSearch } from "../ToolBarWithSearch";
 import CertificateInfo from "./CertificateInfo";
 import CertificateList from "./CertificateList";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import ProgressBars from "./ProgressBars";
-import RecipientsList from "./RecipientsList";
-import ToolBarForEncryptCertificateBlock from "./ToolBarForEncryptCertificateBlock";
-import { ToolBarWithSearch } from "./ToolBarWithSearch";
 
 class CertificateBlockForEncrypt extends React.Component<any, any> {
   static contextTypes = {

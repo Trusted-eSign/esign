@@ -12,7 +12,7 @@ import history from "../history";
 import localize from "../i18n/localize";
 import store from "../store/index";
 import AboutWindow from "./About/AboutWindow";
-import CertWindow from "./CertWindow";
+import CertWindow from "./Certificate/CertWindow";
 import ContainersWindow from "./Containers/ContainersWindow";
 import DocumentsWindow from "./Documents/DocumentsWindow";
 import EncryptWindow from "./Encrypt/EncryptWindow";
