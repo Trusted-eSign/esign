@@ -12,7 +12,7 @@ import history from "../history";
 import localize from "../i18n/localize";
 import store from "../store/index";
 import AboutWindow from "./About/AboutWindow";
-import CertWindow from "./Certificate/CertWindow";
+import CertificateWindow from "./Certificate/CertificateWindow";
 import ContainersWindow from "./Containers/ContainersWindow";
 import DocumentsWindow from "./Documents/DocumentsWindow";
 import EncryptWindow from "./Encrypt/EncryptWindow";
@@ -55,7 +55,7 @@ class App extends React.Component<IAppProps, {}> {
           <Route exact path="/" component={MainWindow} />
           <Route path={LOCATION_SIGN} component={SignatureWindow} />
           <Route path={LOCATION_ENCRYPT} component={EncryptWindow} />
-          <Route path={LOCATION_CERTIFICATES} component={CertWindow} />
+          <Route path={LOCATION_CERTIFICATES} component={CertificateWindow} />
           <Route path={LOCATION_CONTAINERS} component={ContainersWindow} />
           <Route path={LOCATION_LICENSE} component={LicenseWindow} />
           <Route path={LOCATION_ABOUT} component={AboutWindow} />
