@@ -4,12 +4,12 @@ import { connect } from "react-redux";
 import {
   changeArchiveFilesBeforeEncrypt, changeDeleteFilesAfterEncrypt,
   changeEncryptEncoding, changeEncryptOutfolder, toggleSaveToDocuments,
-} from "../AC";
-import { DEFAULT_DOCUMENTS_PATH } from "../constants";
-import CheckBoxWithLabel from "./CheckBoxWithLabel";
-import EncodingTypeSelector from "./EncodingTypeSelector";
-import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
-import SelectFolder from "./SelectFolder";
+} from "../../AC";
+import { DEFAULT_DOCUMENTS_PATH } from "../../constants";
+import CheckBoxWithLabel from "../CheckBoxWithLabel";
+import EncodingTypeSelector from "../EncodingTypeSelector";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import SelectFolder from "../SelectFolder";
 
 const dialog = window.electron.remote.dialog;
 

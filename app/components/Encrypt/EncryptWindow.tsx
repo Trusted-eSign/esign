@@ -3,19 +3,19 @@ import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { deleteFile, loadAllCertificates, selectFile } from "../AC";
-import { HOME_DIR, USER_NAME } from "../constants";
-import { activeFilesSelector, connectedSelector } from "../selectors";
-import { DECRYPTED, ENCRYPTED } from "../server/constants";
-import * as encrypts from "../trusted/encrypt";
-import * as jwt from "../trusted/jwt";
-import { dirExists, mapToArr } from "../utils";
-import logger from "../winstonLogger";
-import BtnsForOperation from "./BtnsForOperation";
-import CertificateBlockForEncrypt from "./CertificateBlockForEncrypt";
+import { deleteFile, loadAllCertificates, selectFile } from "../../AC";
+import { HOME_DIR, USER_NAME } from "../../constants";
+import { activeFilesSelector, connectedSelector } from "../../selectors";
+import { DECRYPTED, ENCRYPTED } from "../../server/constants";
+import * as encrypts from "../../trusted/encrypt";
+import * as jwt from "../../trusted/jwt";
+import { dirExists, mapToArr } from "../../utils";
+import logger from "../../winstonLogger";
+import BtnsForOperation from "../BtnsForOperation";
+import CertificateBlockForEncrypt from "../CertificateBlockForEncrypt";
+import FileSelector from "../Files/FileSelector";
+import ProgressBars from "../ProgressBars";
 import EncryptSettings from "./EncryptSettings";
-import FileSelector from "./Files/FileSelector";
-import ProgressBars from "./ProgressBars";
 
 class EncryptWindow extends React.Component<any, any> {
   static contextTypes = {
