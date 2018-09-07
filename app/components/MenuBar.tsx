@@ -8,7 +8,8 @@ import {
   LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
   SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
 } from "../constants";
-import { loadingRemoteFilesSelector } from "../selectors";
+import { connectedSelector, loadingRemoteFilesSelector } from "../selectors";
+import { CANCELLED } from "../server/constants";
 import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
@@ -192,12 +193,25 @@ class MenuBar extends React.Component<any, any> {
 
   removeAllFiles = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, files } = this.props;
+    const { connections, connectedList, filePackageDelete, files } = this.props;
 
     const filePackage: number[] = [];
 
     for (const file of files) {
       filePackage.push(file.id);
+
+      if (file.socket) {
+        const connection = connections.getIn(["entities", file.socket]);
+
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit(CANCELLED, { id: file.remoteId });
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
+
+          connectedSocket.emit(CANCELLED, { id: file.remoteId });
+          connectedSocket.broadcast.emit(CANCELLED, { id: file.remoteId });
+        }
+      }
     }
 
     filePackageDelete(filePackage);
@@ -207,6 +221,8 @@ class MenuBar extends React.Component<any, any> {
 export default connect((state, ownProps) => {
   return {
     cloudCSPSettings: state.settings.cloudCSP,
+    connectedList: connectedSelector(state, { connected: true }),
+    connections: state.connections,
     encSettings: state.settings.encrypt,
     eventsDateFrom: state.events.dateFrom,
     eventsDateTo: state.events.dateTo,

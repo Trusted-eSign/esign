@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, selectFile, verifySignature } from "../../AC";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
-import { ERROR, SIGNED, UPLOADED } from "../../server/constants";
+import { CANCELLED, ERROR, SIGNED, UPLOADED } from "../../server/constants";
 import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
@@ -242,12 +242,24 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   removeAllFiles = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, files } = this.props;
-
+    const { connections, connectedList, filePackageDelete, files } = this.props;
     const filePackage: number[] = [];
 
     for (const file of files) {
       filePackage.push(file.id);
+
+      if (file.socket) {
+        const connection = connections.getIn(["entities", file.socket]);
+
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit(CANCELLED, { id: file.remoteId });
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
+
+          connectedSocket.emit(CANCELLED, { id: file.remoteId });
+          connectedSocket.broadcast.emit(CANCELLED, { id: file.remoteId });
+        }
+      }
     }
 
     filePackageDelete(filePackage);

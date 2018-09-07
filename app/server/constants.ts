@@ -14,5 +14,6 @@ export const DECRYPTED = "decrypted";
 
 export const UPLOADED = "uploaded";
 
+export const CANCELLED = "cancelled";
 export const UNAVAILABLE = "unavailable";
 export const ERROR = "error";
