@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { activeFilesSelector, loadingRemoteFilesSelector } from "../selectors";
-import { ENCRYPT, SIGN, VERIFY } from "../server/constants";
-import { mapToArr } from "../utils";
+import { activeFilesSelector, loadingRemoteFilesSelector } from "../../selectors";
+import { ENCRYPT, SIGN, VERIFY } from "../../server/constants";
+import { mapToArr } from "../../utils";
 
 interface IRemoteFile {
   extra: any;

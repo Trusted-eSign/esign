@@ -11,10 +11,10 @@ import * as encrypts from "../../trusted/encrypt";
 import * as jwt from "../../trusted/jwt";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
-import BtnsForOperation from "../BtnsForOperation";
 import CertificateBlockForEncrypt from "../Certificate/CertificateBlockForEncrypt";
 import FileSelector from "../Files/FileSelector";
 import ProgressBars from "../ProgressBars";
+import EncryptButtons from "./EncryptButtons";
 import EncryptSettings from "./EncryptSettings";
 
 class EncryptWindow extends React.Component<any, any> {
@@ -241,7 +241,7 @@ class EncryptWindow extends React.Component<any, any> {
             </div>
           </div>
           <div className="col s6 m6 l6 content-item-height">
-            <BtnsForOperation
+            <EncryptButtons
               btn_name_first={localize("Encrypt.encrypt", locale)}
               btn_name_second={localize("Encrypt.decrypt", locale)}
               operation_first={this.encrypt}
