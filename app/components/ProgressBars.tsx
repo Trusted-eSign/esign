@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-export default function ProgressBars({}, context: { localize: (str: string, locale: string) => string; locale: string; }) {
+export default function ProgressBars({ }, context: { localize: (str: string, locale: string) => string; locale: string; }) {
   const { localize, locale } = context;
 
   return (

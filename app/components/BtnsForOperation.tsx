@@ -105,7 +105,7 @@ class BtnsForOperation extends React.Component<IBtnsForOperationProps, any> {
         } else {
           disabledSecond = "";
           disabledUnsign = "";
-       }
+        }
       } else {
         if (this.props.operation === "sign" && certsOperation) {
           j > 0 ? disabledFirst = "disabled" : disabledFirst = "";

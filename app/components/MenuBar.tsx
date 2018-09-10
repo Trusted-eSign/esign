@@ -23,7 +23,7 @@ if (remote.getGlobal("sharedObject").logcrypto) {
   window.logger = trusted.utils.Logger.start(TRUSTED_CRYPTO_LOG);
 }
 
-class MenuBar extends React.Component<any, any> {
+class MenuBar extends React.Component<any, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -58,8 +58,10 @@ class MenuBar extends React.Component<any, any> {
     const sstate = JSON.stringify(state, null, 4);
     fs.writeFile(SETTINGS_JSON, sstate, (err: any) => {
       if (err) {
+        // tslint:disable-next-line:no-console
         console.log(localize("Settings.write_file_failed", locale));
       }
+      // tslint:disable-next-line:no-console
       console.log(localize("Settings.write_file_ok", locale));
       remote.getCurrentWindow().close();
     });
@@ -235,4 +237,4 @@ export default connect((state, ownProps) => {
     signSettings: state.settings.sign,
     signer: state.signers.signer,
   };
-}, {filePackageDelete})(MenuBar);
+}, { filePackageDelete })(MenuBar);

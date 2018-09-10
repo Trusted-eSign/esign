@@ -3,8 +3,14 @@ import { connect } from "react-redux";
 import { changeLocale } from "../AC";
 import { EN, RU } from "../constants";
 
-class LocaleSelect extends React.Component {
+interface ILocaleSelectProps {
+  changeLocale: (locale: string) => void;
+  locale: string;
+}
+
+class LocaleSelect extends React.Component<ILocaleSelectProps, {}> {
   handleChange = () => {
+    // tslint:disable-next-line:no-shadowed-variable
     const { locale, changeLocale } = this.props;
 
     locale === RU ? changeLocale(EN) : changeLocale(RU);
