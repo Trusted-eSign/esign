@@ -242,11 +242,8 @@ class EncryptWindow extends React.Component<any, any> {
           </div>
           <div className="col s6 m6 l6 content-item-height">
             <EncryptButtons
-              btn_name_first={localize("Encrypt.encrypt", locale)}
-              btn_name_second={localize("Encrypt.decrypt", locale)}
-              operation_first={this.encrypt}
-              operation_second={this.decrypt}
-              operation="encrypt" />
+              onEncrypt={this.encrypt}
+              onDecrypt={this.decrypt} />
             <FileSelector operation="encrypt" />
           </div>
         </div>
