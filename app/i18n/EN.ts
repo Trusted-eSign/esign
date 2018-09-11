@@ -511,6 +511,7 @@ export default {
     apply: "Apply",
     clear: "Clear",
     close: "Close",
+    copy: "Copy",
     reset: "Reset",
     yes: "Yes",
     no: "No",

@@ -513,6 +513,7 @@ export default {
     apply: "Применить",
     clear: "Очистить",
     close: "Закрыть",
+    copy: "Копировать",
     reset: "Сбросить",
     yes: "Да",
     no: "Нет",
