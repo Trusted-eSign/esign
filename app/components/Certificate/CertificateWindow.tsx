@@ -647,7 +647,10 @@ class CertWindow extends React.Component<any, any> {
                 {this.showModalCertificateRequest()}
                 {this.showModalCloudCSP()}
               </div>
-              <RequestButtons onCopy={() => this.handleShowModalCertificateRequest()} />
+              {
+                certificate && certificate.category === REQUEST ?
+                  <RequestButtons onCopy={() => this.handleShowModalCertificateRequest()} /> : null
+              }
             </div>
           </div>
         </div>
