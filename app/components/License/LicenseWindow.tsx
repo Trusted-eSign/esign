@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import React from "react";
+
 import LicenseInfo from "./LicenseInfo";
 import LicenseInfoCSP from "./LicenseInfoCSP";
 import LicenseSetupModal from "./LicenseSetupModal";
 import LicenseStatus from "./LicenseStatus";
 
-// tslint:disable-next-line:max-classes-per-file
 class LicenseWindow extends React.Component<{}, {}> {
   static contextTypes = {
     locale: PropTypes.string,
@@ -25,7 +25,7 @@ class LicenseWindow extends React.Component<{}, {}> {
           <div className="row card">
             <LicenseInfo />
             <div className="row nobottom">
-                <LicenseStatus />
+              <LicenseStatus />
             </div>
             <div className="row" />
             <LicenseInfoCSP />
@@ -33,7 +33,7 @@ class LicenseWindow extends React.Component<{}, {}> {
         </div>
         <div className="onlinelic_area">
         </div>
-        <LicenseSetupModal text_info={localize("License.entered_the_key", locale)} closeWindow={function() {
+        <LicenseSetupModal text_info={localize("License.entered_the_key", locale)} closeWindow={function () {
           $("#add-licence-key").closeModal();
         }} icon="" />
       </div>

@@ -146,29 +146,15 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
                 <LicenseInfoField title={localize("License.lic_status", locale)} info={messageExpired} style={style} styleRow={styleRow} />
               </div>
             </div>
-            <div className="col s6">
-              <div className="row">
-                <div className="col s5">
-                  <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
-                    {localize("License.Enter_Key", locale)}
-                  </a>
-                </div>
-                <div className="col s6">
-                  <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
-                </div>
-              </div>
+            <div className="col s3">
+              <a className="waves-effect waves-light btn add-licence-modal-btn" href="#add-licence-key" {...settings}>
+                {localize("License.Enter_Key", locale)}
+              </a>
+            </div>
+            <div className="col s3">
+              <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
             </div>
           </div>
-          {/* <div className="row">
-              <div className="col s6">
-                <p className="desctoplic_text">{localize("License.overtimes_license", locale)}</p>
-              </div>
-              <div className="col s6">
-                <a className="waves-effect waves-light btn licence-temporary-modal-btn left" href="#licence-temporary-modal" {...settings}>
-                  {localize("License.License_request", locale)}
-                </a>
-              </div>
-          </div> */}
         </div>
       );
     }
