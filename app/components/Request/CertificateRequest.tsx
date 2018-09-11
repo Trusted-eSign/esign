@@ -6,8 +6,8 @@ import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
-  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_DEFAULT,
-  REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_ADDITIONAL,
+  REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
 import * as jwt from "../../trusted/jwt";
 import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
@@ -64,6 +64,7 @@ interface ICertificateRequestState {
 }
 
 interface ICertificateRequestProps {
+  certificateTemplate: any;
   onCancel?: () => void;
   certificateLoading: boolean;
   lic_error: number;
@@ -81,13 +82,15 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   constructor(props: any) {
     super(props);
 
+    const template = getTemplateByCertificate(props.certificateTemplate);
+
     this.state = {
       activeSubjectNameInfoTab: true,
       algorithm: ALG_GOST12_256,
-      cn: "",
+      cn: template.CN,
       containerName: uuid(),
-      country: "RU",
-      email: "",
+      country: template.C,
+      email: template.emailAddress,
       exportableKey: false,
       extKeyUsage: {
         "1.3.6.1.5.5.7.3.1": false,
@@ -96,7 +99,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         "1.3.6.1.5.5.7.3.4": true,
       },
       formVerified: false,
-      inn: "",
+      inn: template.inn,
       keyLength: 1024,
       keyUsage: {
         cRLSign: false,
@@ -110,16 +113,17 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         nonRepudiation: true,
       },
       keyUsageGroup: KEY_USAGE_SIGN_AND_ENCIPHERMENT,
-      locality: "",
-      ogrnip: "",
-      organization: "",
-      organizationUnitName: "",
+      locality: template.localityName,
+      ogrnip: template.ogrnip,
+      organization: template.O,
+      organizationUnitName: template.OU,
       outputDirectory: window.HOME_DIR,
-      province: "",
+      province: template.stateOrProvinceName,
       selfSigned: false,
-      snils: "",
-      template: "default",
-      title: "",
+      snils: template.snils,
+      template: template.snils || template.ogrnip || template.inn
+        || template.OU || template.title ? REQUEST_TEMPLATE_ADDITIONAL : REQUEST_TEMPLATE_DEFAULT,
+      title: template.title,
     };
   }
 
@@ -772,6 +776,88 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     });
   }
 }
+
+const oidsName = [
+  "C",
+  "CN",
+  "emailAddress",
+  "localityName",
+  "stateOrProvinceName",
+  "O",
+  "OU",
+  "title",
+  "snils",
+  "inn",
+  "ogrn",
+  "ogrnip",
+];
+
+const oidValues: { [index: string]: string } = {
+  CN: "2.5.4.3",
+  SN: "2.5.4.4",
+  serialNumber: "2.5.4.5",
+  // tslint:disable-next-line:object-literal-sort-keys
+  C: "2.5.4.6",
+  localityName: "2.5.4.7",
+  stateOrProvinceName: "2.5.4.8",
+  streetAddress: "2.5.4.9",
+  O: "2.5.4.10",
+  OU: "2.5.4.11",
+  title: "2.5.4.12",
+  postalCode: "2.5.4.17",
+  GN: "2.5.4.42",
+  initials: "2.5.4.43",
+  emailAddress: "1.2.840.113549.1.9.1",
+  snils: "1.2.643.100.3",
+  inn: "1.2.643.3.131.1.1",
+  ogrn: "1.2.643.100.1",
+  ogrnip: "1.2.643.100.5",
+};
+
+const getTemplateByCertificate = (certificate: any) => {
+  const template: {
+    [index: string]: string,
+    C: string,
+    CN: string,
+    emailAddress: string,
+    localityName: string,
+    stateOrProvinceName: string,
+    O: string,
+    OU: string,
+    title: string,
+    snils: string,
+    inn: string,
+    ogrn: string,
+    ogrnip: string,
+  } = {
+    C: "",
+    CN: "",
+    emailAddress: "",
+    localityName: "",
+    stateOrProvinceName: "",
+    // tslint:disable-next-line:object-literal-sort-keys
+    O: "",
+    OU: "",
+    title: "",
+    snils: "",
+    inn: "",
+    ogrn: "",
+    ogrnip: "",
+  };
+
+  if (certificate) {
+    const subjectName = certificate.subjectName + "/";
+
+    oidsName.map((oidName: string) => {
+      const oidValue = subjectName.match(`/${oidValues[oidName]}=([^\/]*)/`);
+      if (oidValue) {
+        template[oidName] = oidValue[1];
+      }
+    });
+  }
+
+  return template;
+};
 
 export default connect((state) => {
   return {

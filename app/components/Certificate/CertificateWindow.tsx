@@ -4,7 +4,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../../AC";
 import { resetCloudCSP } from "../../AC/cloudCspActions";
-import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, ROOT, USER_NAME } from "../../constants";
+import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, ROOT, USER_NAME } from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
 import { fileCoding } from "../../utils";
 import logger from "../../winstonLogger";
@@ -15,6 +15,7 @@ import Modal from "../Modal";
 import PasswordDialog from "../PasswordDialog";
 import ProgressBars from "../ProgressBars";
 import CertificateRequest from "../Request/CertificateRequest";
+import RequestButtons from "../Request/RequestButtons";
 import { ToolBarWithSearch } from "../ToolBarWithSearch";
 import CertificateChainInfo from "./CertificateChainInfo";
 import CertificateDelete from "./CertificateDelete";
@@ -512,11 +513,13 @@ class CertWindow extends React.Component<any, any> {
 
   showModalCertificateRequest = () => {
     const { localize, locale } = this.context;
-    const { showModalCertificateRequest } = this.state;
+    const { certificate, showModalCertificateRequest } = this.state;
 
     if (!showModalCertificateRequest) {
       return;
     }
+
+    const certificateTemplate = certificate && certificate.category === REQUEST ? certificate : undefined;
 
     return (
       <Modal
@@ -525,6 +528,7 @@ class CertWindow extends React.Component<any, any> {
         onClose={this.handleCloseModalCertificateRequest}>
 
         <CertificateRequest
+          certificateTemplate={certificateTemplate}
           onCancel={this.handleCloseModalCertificateRequest}
           selfSigned={false}
         />
@@ -582,6 +586,7 @@ class CertWindow extends React.Component<any, any> {
       resetCloudCSP();
     }
 
+    const ACTIVE_CERTIFICATE_REQUEST = certificate && certificate.category === REQUEST ? "active" : "not-active";
     const NAME = certificates.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";
@@ -618,7 +623,7 @@ class CertWindow extends React.Component<any, any> {
             </div>
           </div>
           <div className="col s6 m6 l6 content-item-height">
-            <div className="cert-content-item-height">
+            <div className={"cert-content-item-height " + ACTIVE_CERTIFICATE_REQUEST}>
               <div className="content-wrapper z-depth-1">
                 <nav className="app-bar-cert">
                   <ul className="app-bar-items">
@@ -642,6 +647,7 @@ class CertWindow extends React.Component<any, any> {
                 {this.showModalCertificateRequest()}
                 {this.showModalCloudCSP()}
               </div>
+              <RequestButtons onCopy={() => this.handleShowModalCertificateRequest()} />
             </div>
           </div>
         </div>
