@@ -42,20 +42,20 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
     const { localize, locale } = this.context;
     const { license } = this.state;
 
-    const disabledClass = license ? "" : "disabled";
+    const disabledClass = license && this.validateLicense(license) ? "" : "disabled";
 
     return (
-      <div className="filter_setting_modal">
+      <div className="modal_license_csp">
         <div className="row halftop">
           <div className="col s12">
-            <div className="content-wrapper tbody border_group">
+            <div className="content-wrapper">
               <div className="row" />
               <div className="row">
                 <div className="input-field input-field-csr col s12">
                   <input
                     id="license"
                     type="text"
-                    className={"validate"}
+                    className={license ? (this.validateLicense(license) ? "valid" : "invalid") : "validate"}
                     name="license"
                     value={license}
                     placeholder={localize("License.entered_the_key", locale)}
@@ -94,9 +94,18 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
     this.setState({ license: ev.target.value });
   }
 
+  validateLicense = (license: string) => {
+    if (license && license.length === 29 && license.match(/^[0-9A-Z]{5}-[0-9A-Z]{5}-[0-9A-Z]{5}-[0-9A-Z]{5}-[0-9A-Z]{5}/)) {
+      return true;
+    }
+
+    return false;
+  }
+
   handleApplyLicense = () => {
     const { license } = this.state;
     const { localize, locale } = this.context;
+    const self = this;
 
     let cpconfigPath = "";
     let cmnd = "";
@@ -108,7 +117,7 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
     }
 
     if (OS_TYPE === "Windows_NT") {
-      if ((this.getCPCSPVersion().charAt(0)) < 5) {
+      if (parseInt((this.getCPCSPVersion().charAt(0)), 10) < 5) {
         // tslint:disable-next-line:max-line-length
         cmnd = "reg add HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData\\S-1-5-18\\Products\\7AB5E7046046FB044ACD63458B5F481C\\InstallProperties /v ProductID /t REG_SZ /f /d " + license;
       } else {
@@ -116,6 +125,7 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
         cmnd = "reg add HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\UserData\\S-1-5-18\\Products\\08F19F05793DC7340B8C2621D83E5BE5\\InstallProperties /v ProductID /t REG_SZ /f /d " + license;
       }
     } else {
+      // tslint:disable-next-line:quotemark
       cmnd = "sh -c " + "\"" + cpconfigPath + ' -license -set ' + "'" + license + "'" + "\"";
     }
 
@@ -128,6 +138,7 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
         Materialize.toast(localize("License.lic_key_setup_fail", locale), 2000, "toast-lic_key_setup_fail");
       } else {
         Materialize.toast(localize("License.lic_key_setup", locale), 2000, "toast-lic_key_setup");
+        self.handelCancel();
       }
     });
 

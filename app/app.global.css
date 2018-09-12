@@ -3518,6 +3518,10 @@ svg:hover {
     height: 410px;
 }
 
+.modal_license_csp{
+  height: 150px;
+}
+
 .cloudCSP_modal{
   height: 460px;
 }

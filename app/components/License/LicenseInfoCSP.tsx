@@ -91,7 +91,12 @@ class LicenseInfoCSP extends React.Component<{}, ILicenseInfoCSPState> {
       <Modal
         isOpen={showModalLicenseCSPSetup}
         header={localize("License.enter_key_csp", locale)}
-        onClose={this.closeModalLicenseCSPSetup}>
+        onClose={() => {
+          this.closeModalLicenseCSPSetup();
+          this.forceUpdate();
+        }}
+        style={{ height: "200px" }}
+      >
 
         <LicenseCSPSetup onCancel={this.closeModalLicenseCSPSetup} />
       </Modal>
