@@ -48,15 +48,27 @@ interface ISignatureButtonsProps {
   signer: string;
 }
 
-class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
+interface ISignatureButtonsState {
+  documentsReviewed: boolean;
+}
+
+class SignatureButtons extends React.Component<ISignatureButtonsProps, ISignatureButtonsState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
+  constructor(props: ISignatureButtonsProps) {
+    super(props);
+    this.state = ({
+      documentsReviewed: false,
+    });
+  }
+
   render() {
     const { allFiles, activeFiles, method, signer } = this.props;
     const { localize, locale } = this.context;
+    const { documentsReviewed } = this.state;
 
     const active = allFiles.length > 0 ? "active" : "";
     const haveFilesFromSocket: boolean = this.isFilesLoading() || this.isFilesFromSocket();
@@ -114,51 +126,94 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
       disabledVerify = "disabled";
     }
 
+    if (!documentsReviewed) {
+      disabledSign = "disabled";
+    }
+
     if (!disabledUnsign || (haveFilesFromSocket && method === SIGN)) {
       return (
-        <div className={"btns-for-operation " + active}>
-          <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
-            {localize("Sign.sign", locale)}
-          </a>
-          {this.isFilesFromSocket() ?
-            <a className={"waves-effect waves-light btn-large operation-btn "} onClick={this.props.onCancelSign}>
-              {localize("Common.cancel", locale)}
+        <React.Fragment>
+          <div className="row">
+            <div className="row" />
+            <div className="col s12">
+              <div className="input-checkbox">
+                <input
+                  name={"filesview"}
+                  type="checkbox"
+                  id={"filesview"}
+                  className="filled-in"
+                  checked={documentsReviewed}
+                  onClick={this.toggleDocumentsReviewed}
+                />
+                <label htmlFor={"filesview"} className="truncate">
+                  {localize("Sign.documents_reviewed", locale)}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className={"btns-for-operation " + active}>
+            <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
+              {localize("Sign.sign", locale)}
             </a>
-            :
-            <React.Fragment>
-              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
-                {localize("Sign.verify", locale)}
-              </a>
-              <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.onUnsign}>
-                {localize("Sign.unsign", locale)}
-              </a>
-            </React.Fragment>
-          }
-        </div>
-      );
-    } else {
-      return (
-        <div className={"btns-for-operation " + active}>
-          {this.isFilesFromSocket() && method === VERIFY ?
-            <React.Fragment>
-              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
-                {localize("Sign.verify", locale)}
-              </a>
+            {this.isFilesFromSocket() ?
               <a className={"waves-effect waves-light btn-large operation-btn "} onClick={this.props.onCancelSign}>
                 {localize("Common.cancel", locale)}
               </a>
-            </React.Fragment> :
-            <React.Fragment>
-              <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
-                {localize("Sign.sign", locale)}
-              </a>
-              <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
-                {localize("Sign.verify", locale)}
-              </a>
-            </React.Fragment>
-          }
-
-        </div>
+              :
+              <React.Fragment>
+                <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                  {localize("Sign.verify", locale)}
+                </a>
+                <a className={"waves-effect waves-light btn-large operation-btn " + disabledUnsign} onClick={this.props.onUnsign}>
+                  {localize("Sign.unsign", locale)}
+                </a>
+              </React.Fragment>
+            }
+          </div>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <div className="row">
+            <div className="row" />
+            <div className="col s12">
+              <div className="input-checkbox">
+                <input
+                  name={"filesview"}
+                  type="checkbox"
+                  id={"filesview"}
+                  className="filled-in"
+                  checked={documentsReviewed}
+                  onClick={this.toggleDocumentsReviewed}
+                />
+                <label htmlFor={"filesview"} className="truncate">
+                  {localize("Sign.documents_reviewed", locale)}
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className={"btns-for-operation " + active}>
+            {this.isFilesFromSocket() && method === VERIFY ?
+              <React.Fragment>
+                <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                  {localize("Sign.verify", locale)}
+                </a>
+                <a className={"waves-effect waves-light btn-large operation-btn "} onClick={this.props.onCancelSign}>
+                  {localize("Common.cancel", locale)}
+                </a>
+              </React.Fragment> :
+              <React.Fragment>
+                <a className={"waves-effect waves-light btn-large operation-btn " + disabledSign} onClick={this.props.onSign}>
+                  {localize("Sign.sign", locale)}
+                </a>
+                <a className={"waves-effect waves-light btn-large operation-btn " + disabledVerify} onClick={this.props.onVerifySignature}>
+                  {localize("Sign.verify", locale)}
+                </a>
+              </React.Fragment>
+            }
+          </div>
+        </React.Fragment>
       );
     }
   }
@@ -185,6 +240,10 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
     }
 
     return false;
+  }
+
+  toggleDocumentsReviewed = () => {
+    this.setState({ documentsReviewed: !this.state.documentsReviewed });
   }
 }
 

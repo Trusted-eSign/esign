@@ -588,7 +588,9 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
   let stat;
 
   if (!fileExists(fullpath)) {
-    return;
+    return {
+      type: SELECT_FILE + FAIL,
+    };
   }
 
   if (!lastModifiedDate || !size) {

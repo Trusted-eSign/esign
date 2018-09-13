@@ -157,12 +157,12 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         <div className="content">
           {this.getSignatureInfo()}
           <div className="col s6 m6 l6 content-item-height">
+            <FileSelector operation="SIGN" />
             <SignatureButtons
               onSign={this.handleSign}
               onVerifySignature={this.verifySign}
               onUnsign={this.unSign}
               onCancelSign={this.onCancelSign} />
-            <FileSelector operation="sign" />
           </div>
         </div>
       </div>

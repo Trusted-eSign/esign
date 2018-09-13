@@ -4,10 +4,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
 import { activeFile, deleteFile } from "../../AC";
+import { ENCRYPT, SIGN } from "../../constants";
 import { loadingRemoteFilesSelector } from "../../selectors";
 import { mapToArr } from "../../utils";
 import FileListItem from "./FileListItem";
 import RemoteFileListItem from "./RemoteFileListItem";
+
+const HEIGHT_FOR_SIGN = 377;
+const HEIGHT_FOR_ENCRYPT = 427;
 
 interface IFileRedux {
   active: boolean;
@@ -34,6 +38,7 @@ interface IFilelistProps {
   activeFile: (id: number, active?: boolean) => void;
   deleteFile: (fileId: number) => void;
   loadingFiles: IRemoteFile[];
+  location: any;
   files: IFileRedux[];
   operation: string;
   selectedFilesPackage: boolean;
@@ -93,7 +98,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
     return (
       <List
         rowCount={files.length + loadingFiles.length}
-        height={427}
+        height={this.getListHeight()}
         width={377}
         overscanRowCount={5}
         rowHeight={45}
@@ -137,6 +142,19 @@ class FileList extends React.Component<IFilelistProps, {}> {
           style={style}
         />
       );
+    }
+  }
+
+  getListHeight = () => {
+    const { operation } = this.props;
+
+    switch (operation) {
+      case SIGN:
+        return HEIGHT_FOR_SIGN;
+
+      case ENCRYPT:
+      default:
+        return HEIGHT_FOR_ENCRYPT;
     }
   }
 

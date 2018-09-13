@@ -275,6 +275,9 @@ body {
 .file-content-height.active {
     height: 90%;
 }
+.file-content-height.active.operation_sign {
+  height: 82%;
+}
 .btns-for-operation {
     display: flex;
     top: 90%;

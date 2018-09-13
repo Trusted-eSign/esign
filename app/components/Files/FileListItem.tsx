@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { SIGN } from "../../constants";
 import SignatireStatusCicrcle from "../Signature/SignatureStatusCircle";
 
 interface IFileRedux {
@@ -59,7 +60,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
   getSignatureStatusCicrcle() {
     const { operation, file } = this.props;
 
-    if (operation !== "sign") {
+    if (operation !== SIGN) {
       return null;
     }
 

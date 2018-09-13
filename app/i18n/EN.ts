@@ -231,6 +231,7 @@ export default {
     search_decrypt_cert_failed: "The decryption certificate is not found",
   },
   Sign: {
+    documents_reviewed: "Documents were reviewed before sign",
     sign_and_verify: "Sign / Verify the signature",
     sign: "Sign",
     resign: "Re-sign",

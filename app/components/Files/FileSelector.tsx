@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { activeFile, deleteFile, filePackageDelete, filePackageSelect, selectFile } from "../../AC";
+import { SIGN } from "../../constants";
 import { loadingRemoteFilesSelector } from "../../selectors";
 import { mapToArr } from "../../utils";
 import ProgressBars from "../ProgressBars";
@@ -238,12 +239,13 @@ class FileSelector extends React.Component<IFileSelectorProps, {}> {
 
   render() {
     // tslint:disable-next-line:no-shadowed-variable
-    const { files } = this.props;
+    const { files, operation } = this.props;
 
     const active = files.length > 0 ? "active" : "not-active";
+    const operationSign = operation === SIGN ? "operation_sign" : "";
 
     return (
-      <div className={"file-content-height " + active}>
+      <div className={`file-content-height ${active} ${operationSign}`}>
         <div id="file-content" className="content-wrapper z-depth-1">
           {this.getHeader()}
           {this.getBody()}

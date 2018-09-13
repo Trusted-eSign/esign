@@ -231,6 +231,7 @@ export default {
     search_decrypt_cert_failed: "Не удается найти сертификат расшифровывания",
   },
   Sign: {
+    documents_reviewed: "Документы просмотрены перед их подписанием",
     sign_and_verify: "Подписать / Проверить подпись",
     sign: "Подписать",
     resign: "Добавить",
