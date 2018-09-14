@@ -1662,13 +1662,61 @@ h6.contact-title {
 }
 
 
-.sign_type_icon{
+.sign_type_icon {
   display: block;
   text-indent: -9999px;
   width: 32px;
   height: 40px;
   background: url(./resources/image/sign_type_icon.png);
   background-size: 40px 32px;
+}
+
+.type_icon {
+  display: block;
+  text-indent: -9999px;
+  width: 40px;
+  height: 40px;
+  background: url(./resources/image/files/file_unknown.png) no-repeat;
+}
+
+.type_icon.sig{
+  background: url(./resources/image/files/file_sig.png) no-repeat;
+}
+
+.type_icon.sig.ok{
+  background: url(./resources/image/files/file_sig_ok.png) no-repeat;
+}
+
+.type_icon.sig.error{
+  background: url(./resources/image/files/file_sig_error.png) no-repeat;
+}
+
+.type_icon.sig.any{
+  background: url(./resources/image/files/file_sig_any.png) no-repeat;
+}
+
+.type_icon.enc{
+  background: url(./resources/image/files/file_enc.png) no-repeat;
+}
+
+.type_icon.zip{
+  background: url(./resources/image/files/file_zip.png) no-repeat;
+}
+
+.type_icon.doc{
+  background: url(./resources/image/files/file_doc.png) no-repeat;
+}
+
+.type_icon.docx{
+  background: url(./resources/image/files/file_docx.png) no-repeat;
+}
+
+.type_icon.pdf{
+  background: url(./resources/image/files/file_pdf.png) no-repeat;
+}
+
+.type_icon.file{
+  background: url(./resources/image/files/file_file.png) no-repeat;
 }
 
 .encrypt_type_icon{
@@ -3449,7 +3497,7 @@ svg:hover {
   .icon_file_type {
     background-size: 100% !important;
     height: 40px !important;
-    width: 32px !important;
+    width: 40px !important;
     position: absolute !important;
     top: 2px !important;
   }

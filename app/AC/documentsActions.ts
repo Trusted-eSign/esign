@@ -1,10 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  ARHIVE_DOCUMENTS, DEFAULT_DOCUMENTS_PATH, DOCUMENTS_REVIEWED, LOAD_ALL_DOCUMENTS,
+  ARHIVE_DOCUMENTS, DEFAULT_DOCUMENTS_PATH, DOCUMENTS_REVIEWED,
+  FAIL, LOAD_ALL_DOCUMENTS,
   REMOVE_ALL_DOCUMENTS, REMOVE_DOCUMENTS, SELECT_ALL_DOCUMENTS,
-  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
+  SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS, VERIFY_SIGNATURE,
 } from "../constants";
+import * as signs from "../trusted/sign";
 import { dirExists } from "../utils";
 
 interface IDocument {
@@ -114,5 +116,53 @@ export function documentsReviewed(reviewed: boolean) {
   return {
     payload: { reviewed },
     type: DOCUMENTS_REVIEWED,
+  };
+}
+
+export function verifySignature(documentId: string) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const { documents } = state;
+    const document = documents.getIn(["entities", documentId]);
+    let signaruteStatus = false;
+    let signatureInfo;
+    let cms: trusted.cms.SignedData;
+
+    try {
+      cms = signs.loadSign(document.fullpath);
+
+      if (cms.isDetached()) {
+        dispatch({
+          payload: { fileId: documentId },
+          type: VERIFY_SIGNATURE + FAIL,
+        });
+        return;
+      }
+
+      signaruteStatus = signs.verifySign(cms);
+      signatureInfo = signs.getSignPropertys(cms);
+
+      signatureInfo = signatureInfo.map((info) => {
+        return {
+          fileId: documentId,
+          ...info,
+          id: documentId,
+        };
+      });
+
+    } catch (error) {
+      dispatch({
+        payload: { error, fileId: documentId },
+        type: VERIFY_SIGNATURE + FAIL,
+      });
+    }
+
+    if (signatureInfo) {
+      dispatch({
+        generateId: true,
+        payload: { fileId: documentId, signaruteStatus, signatureInfo },
+        type: VERIFY_SIGNATURE + SUCCESS,
+      });
+    }
   };
 }
