@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { documentsReviewed } from "../../AC/documentsActions";
 import { activeFilesSelector, loadingRemoteFilesSelector } from "../../selectors";
 import { ENCRYPT, SIGN, VERIFY } from "../../server/constants";
 import { mapToArr } from "../../utils";
@@ -44,31 +45,21 @@ interface ISignatureButtonsProps {
     remoteId?: string;
     socket?: string;
   }>;
+  documentsReviewed: (reviwed: boolean) => void;
+  isDocumentsReviewed: boolean;
   method?: string;
   signer: string;
 }
 
-interface ISignatureButtonsState {
-  documentsReviewed: boolean;
-}
-
-class SignatureButtons extends React.Component<ISignatureButtonsProps, ISignatureButtonsState> {
+class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: ISignatureButtonsProps) {
-    super(props);
-    this.state = ({
-      documentsReviewed: false,
-    });
-  }
-
   render() {
-    const { allFiles, activeFiles, method, signer } = this.props;
+    const { allFiles, activeFiles, isDocumentsReviewed, method, signer } = this.props;
     const { localize, locale } = this.context;
-    const { documentsReviewed } = this.state;
 
     const active = allFiles.length > 0 ? "active" : "";
     const haveFilesFromSocket: boolean = this.isFilesLoading() || this.isFilesFromSocket();
@@ -142,7 +133,7 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, ISignatur
                   type="checkbox"
                   id={"filesview"}
                   className="filled-in"
-                  checked={documentsReviewed}
+                  checked={isDocumentsReviewed}
                   onClick={this.toggleDocumentsReviewed}
                 />
                 <label htmlFor={"filesview"} className="truncate">
@@ -184,7 +175,7 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, ISignatur
                   type="checkbox"
                   id={"filesview"}
                   className="filled-in"
-                  checked={documentsReviewed}
+                  checked={isDocumentsReviewed}
                   onClick={this.toggleDocumentsReviewed}
                 />
                 <label htmlFor={"filesview"} className="truncate">
@@ -243,7 +234,10 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, ISignatur
   }
 
   toggleDocumentsReviewed = () => {
-    this.setState({ documentsReviewed: !this.state.documentsReviewed });
+    // tslint:disable-next-line:no-shadowed-variable
+    const { documentsReviewed, isDocumentsReviewed } = this.props;
+
+    documentsReviewed(!isDocumentsReviewed);
   }
 }
 
@@ -251,8 +245,9 @@ export default connect((state) => {
   return {
     activeFiles: activeFilesSelector(state, { active: true }),
     allFiles: mapToArr(state.files.entities),
+    isDocumentsReviewed: state.files.documentsReviewed,
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     method: state.remoteFiles.method,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-})(SignatureButtons);
+}, { documentsReviewed })(SignatureButtons);

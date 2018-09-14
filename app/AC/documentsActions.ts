@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import {
-  ARHIVE_DOCUMENTS, DEFAULT_DOCUMENTS_PATH, LOAD_ALL_DOCUMENTS,
+  ARHIVE_DOCUMENTS, DEFAULT_DOCUMENTS_PATH, DOCUMENTS_REVIEWED, LOAD_ALL_DOCUMENTS,
   REMOVE_ALL_DOCUMENTS, REMOVE_DOCUMENTS, SELECT_ALL_DOCUMENTS,
   SELECT_DOCUMENT, START, SUCCESS, UNSELECT_ALL_DOCUMENTS,
 } from "../constants";
@@ -107,5 +107,12 @@ export function unselectAllDocuments() {
 export function selectAllDocuments() {
   return {
     type: SELECT_ALL_DOCUMENTS,
+  };
+}
+
+export function documentsReviewed(reviewed: boolean) {
+  return {
+    payload: { reviewed },
+    type: DOCUMENTS_REVIEWED,
   };
 }
