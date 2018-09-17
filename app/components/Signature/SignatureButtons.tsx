@@ -117,7 +117,7 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
       disabledVerify = "disabled";
     }
 
-    if (!documentsReviewed) {
+    if (!isDocumentsReviewed) {
       disabledSign = "disabled";
     }
 
