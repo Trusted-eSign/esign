@@ -11,24 +11,7 @@ export function mapToArr(obj) {
 }
 
 export function extFile(filename: string) {
-  const ext = filename.split(".").pop();
-  let file_type: string;
-  if (ext === "sig") {
-    file_type = "sign_type_icon";
-  } else if (ext === "enc") {
-    file_type = "encrypt_type_icon";
-  } else if (ext === "zip") {
-    file_type = "zip_type_icon";
-  } else if (ext === "docx" || ext === "doc") {
-    file_type = "word_type_icon";
-  } else if (ext === "xlsx" || ext === "xls") {
-    file_type = "excel_type_icon";
-  } else if (ext === "pdf") {
-    file_type = "pdf_type_icon";
-  } else {
-    file_type = "file_type_icon";
-  }
-  return file_type;
+  return filename.split(".").pop();
 }
 
 function padString(input: string): string {

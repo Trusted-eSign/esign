@@ -137,7 +137,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
                 <div className="row nobottom">
                   <div className="valign-wrapper">
                     <div className="col s12" title={cellData}>
-                      <i className={this.getFileIconByExtname(cellData, rowData) + " icon_file_type"} style={{ left: "10px" }} />
+                      <i className={this.getFileIconByExtname(cellData, rowData) + " icon_file_type"} />
                     </div>
                   </div>
                 </div>
