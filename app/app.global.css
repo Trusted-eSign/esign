@@ -1679,6 +1679,18 @@ h6.contact-title {
   background: url(./resources/image/files/file_unknown.png) no-repeat;
 }
 
+.type_icon.avi{
+  background: url(./resources/image/files/file_avi.png) no-repeat;
+}
+
+.type_icon.csr{
+  background: url(./resources/image/files/file_csr.png) no-repeat;
+}
+
+.type_icon.jpg{
+  background: url(./resources/image/files/file_jpg.png) no-repeat;
+}
+
 .type_icon.sig{
   background: url(./resources/image/files/file_sig.png) no-repeat;
 }
@@ -1711,9 +1723,26 @@ h6.contact-title {
   background: url(./resources/image/files/file_docx.png) no-repeat;
 }
 
+.type_icon.xls{
+  background: url(./resources/image/files/file_xls.png) no-repeat;
+}
+
 .type_icon.pdf{
   background: url(./resources/image/files/file_pdf.png) no-repeat;
 }
+
+.type_icon.pfx{
+  background: url(./resources/image/files/file_pfx.png) no-repeat;
+}
+
+.type_icon.ppt{
+  background: url(./resources/image/files/file_ppt.png) no-repeat;
+}
+
+.type_icon.txt{
+  background: url(./resources/image/files/file_txt.png) no-repeat;
+}
+
 
 .type_icon.file{
   background: url(./resources/image/files/file_file.png) no-repeat;
@@ -3496,6 +3525,7 @@ svg:hover {
 
   .icon_file_type {
     background-size: 100% !important;
+    left: 5px;
     height: 40px !important;
     width: 40px !important;
     position: absolute !important;
