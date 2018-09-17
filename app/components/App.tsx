@@ -17,6 +17,7 @@ import ContainersWindow from "./Containers/ContainersWindow";
 import DocumentsWindow from "./Documents/DocumentsWindow";
 import EncryptWindow from "./Encrypt/EncryptWindow";
 import EventsWindow from "./Events/EventsWindow";
+import * as fileManager from "./Files/fileManager";
 import HelpWindow from "./Help/HelpWindow";
 import MainWindow from "./MainWindow/MainWindow";
 import MenuBar from "./MenuBar";
