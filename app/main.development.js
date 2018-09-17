@@ -17,6 +17,8 @@ const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
 
     mainWindow.show();
     mainWindow.focus();
+
+    mainWindow.webContents.send("cmdArgs", commandLine);
   }
 });
 
@@ -38,7 +40,6 @@ if (options.indexOf('logcrypto') !== -1) {
 }
 
 global.sharedObject.isQuiting = false;
-
 
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
@@ -177,6 +178,8 @@ app.on('ready', async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+
+    mainWindow.webContents.send("cmdArgs", options);
   });
 
   mainWindow.on('close', function (event) {
