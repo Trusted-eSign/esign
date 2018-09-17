@@ -177,7 +177,6 @@ body {
     height: calc(100% - 48px);
     white-space: nowrap;
     font-size: 75%;
-    padding: 0.75rem;
     width: 100%;
 }
 
@@ -275,6 +274,9 @@ body {
 }
 .file-content-height.active {
     height: 90%;
+}
+.file-content-height.active.operation_sign {
+  height: 82%;
 }
 .btns-for-operation {
     display: flex;
@@ -1218,6 +1220,16 @@ i.material-icons.left.token {
   margin-top: 10px;
 }
 
+i.material-icons.left.request {
+  display: block;
+  text-indent: -9999px;
+  width: 24px;
+  height: 24px;
+  background: url(./resources/image/cert_category_request.svg);
+  background-size: 24px 24px;
+  margin-top: 10px;
+}
+
 /*-----------------Главная страница--------------------*/
 .header{
     margin-top: 1px;
@@ -1650,13 +1662,90 @@ h6.contact-title {
 }
 
 
-.sign_type_icon{
+.sign_type_icon {
   display: block;
   text-indent: -9999px;
   width: 32px;
   height: 40px;
   background: url(./resources/image/sign_type_icon.png);
   background-size: 40px 32px;
+}
+
+.type_icon {
+  display: block;
+  text-indent: -9999px;
+  width: 40px;
+  height: 40px;
+  background: url(./resources/image/files/file_unknown.png) no-repeat;
+}
+
+.type_icon.avi{
+  background: url(./resources/image/files/file_avi.png) no-repeat;
+}
+
+.type_icon.csr{
+  background: url(./resources/image/files/file_csr.png) no-repeat;
+}
+
+.type_icon.jpg{
+  background: url(./resources/image/files/file_jpg.png) no-repeat;
+}
+
+.type_icon.sig{
+  background: url(./resources/image/files/file_sig.png) no-repeat;
+}
+
+.type_icon.sig.ok{
+  background: url(./resources/image/files/file_sig_ok.png) no-repeat;
+}
+
+.type_icon.sig.error{
+  background: url(./resources/image/files/file_sig_error.png) no-repeat;
+}
+
+.type_icon.sig.any{
+  background: url(./resources/image/files/file_sig_any.png) no-repeat;
+}
+
+.type_icon.enc{
+  background: url(./resources/image/files/file_enc.png) no-repeat;
+}
+
+.type_icon.zip{
+  background: url(./resources/image/files/file_zip.png) no-repeat;
+}
+
+.type_icon.doc{
+  background: url(./resources/image/files/file_doc.png) no-repeat;
+}
+
+.type_icon.docx{
+  background: url(./resources/image/files/file_docx.png) no-repeat;
+}
+
+.type_icon.xls{
+  background: url(./resources/image/files/file_xls.png) no-repeat;
+}
+
+.type_icon.pdf{
+  background: url(./resources/image/files/file_pdf.png) no-repeat;
+}
+
+.type_icon.pfx{
+  background: url(./resources/image/files/file_pfx.png) no-repeat;
+}
+
+.type_icon.ppt{
+  background: url(./resources/image/files/file_ppt.png) no-repeat;
+}
+
+.type_icon.txt{
+  background: url(./resources/image/files/file_txt.png) no-repeat;
+}
+
+
+.type_icon.file{
+  background: url(./resources/image/files/file_file.png) no-repeat;
 }
 
 .encrypt_type_icon{
@@ -3436,8 +3525,9 @@ svg:hover {
 
   .icon_file_type {
     background-size: 100% !important;
+    left: 5px;
     height: 40px !important;
-    width: 32px !important;
+    width: 40px !important;
     position: absolute !important;
     top: 2px !important;
   }
@@ -3485,6 +3575,11 @@ svg:hover {
     height: 352px;
 }
 
+.border_group_cloud{
+  box-shadow: 0 0 0 1px rgb(227, 227, 228);
+  height: 400px;
+}
+
 .operations_group{
     box-shadow: 0 0 0 1px #b5b5b5;
     height: 288px;
@@ -3502,6 +3597,14 @@ svg:hover {
 
 .filter_setting_modal{
     height: 410px;
+}
+
+.modal_license_csp{
+  height: 150px;
+}
+
+.cloudCSP_modal{
+  height: 460px;
 }
 
 .btn_modal{

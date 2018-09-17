@@ -35,10 +35,16 @@ class SideMenu extends React.Component<{}, {}> {
           </div>
         </nav>
         <div className="row">
+          <Link to={LOCATION_DOCUMENTS}>
+            {localize("Documents.Documents", locale)}
+            <i className="material-icons left document">library_books</i>
+          </Link>
+
           <Link to={LOCATION_SIGN}>
             {localize("Sign.Sign", locale)}
             <i className="material-icons left sign">mode_edit</i>
           </Link>
+
           <Link to={LOCATION_ENCRYPT}>
             {localize("Encrypt.Encrypt", locale)}
             <i className="material-icons left encrypt">enhanced_encryption</i>
@@ -52,11 +58,6 @@ class SideMenu extends React.Component<{}, {}> {
           <Link to={LOCATION_CONTAINERS}>
             {localize("Containers.Containers", locale)}
             <i className="material-icons left keystore">library_books</i>
-          </Link>
-
-          <Link to={LOCATION_DOCUMENTS}>
-            {localize("Documents.Documents", locale)}
-            <i className="material-icons left document">library_books</i>
           </Link>
 
           <Link to={LOCATION_EVENTS}>

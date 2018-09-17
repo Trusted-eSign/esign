@@ -1,6 +1,7 @@
 import {routerReducer as router} from "react-router-redux";
 import {combineReducers} from "redux";
 import certificates from "./certificates";
+import cloudCSP from "./cloudCSP";
 import connections from "./connections";
 import containers from "./containers";
 import documents from "./documents";
@@ -16,6 +17,7 @@ import signers from "./signers";
 export default combineReducers({
   router,
   certificates,
+  cloudCSP,
   connections,
   containers,
   documents,

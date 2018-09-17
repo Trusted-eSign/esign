@@ -9,3 +9,4 @@
 *.exe binary
 *.dll binary
 *.dylib binary
+*.pdf binary

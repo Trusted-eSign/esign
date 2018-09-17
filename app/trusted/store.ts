@@ -2,8 +2,9 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
-  ADDRESS_BOOK, CA, MY, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
-  ROOT,
+  ADDRESS_BOOK, CA, MY,
+  PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
+  REQUEST, ROOT,
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
 import localize from "../i18n/localize";
@@ -40,7 +41,7 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
       this._store.addProvider(this._providerMicrosoft.handle);
-    } 
+    }
   }
 
   get items(): trusted.pkistore.PkiItem[] {
@@ -140,7 +141,7 @@ export class Store {
     return res;
   }
 
-  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string): void {
+  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string,  contName?: string): void {
     let provider;
 
     switch (providerType) {
@@ -164,7 +165,7 @@ export class Store {
       } else {
         done();
       }
-    }, category);
+    }, category, contName);
   }
 
   deleteCertificate(certificate: trusted.pkistore.PkiItem): boolean {
@@ -190,7 +191,7 @@ export class Store {
         certificate: certificate.subjectName,
         level: "info",
         message: "",
-        operation:  localize("Events.cert_delete", window.locale), 
+        operation:  localize("Events.cert_delete", window.locale),
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -202,7 +203,7 @@ export class Store {
         certificate: certificate.subjectName,
         level: "error",
         message: err.message ? err.message : err,
-        operation: localize("Events.cert_delete", window.locale), 
+        operation: localize("Events.cert_delete", window.locale),
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -252,7 +253,7 @@ export class Store {
     return true;
   }
 
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string, contName?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
@@ -283,15 +284,15 @@ export class Store {
       const hasKey = provider.hasPrivateKey(cert);
 
       if (category) {
-        store.addCert(provider.handle, category, cert);
+        store.addCert(provider.handle, category, cert, contName, 75);
       } else {
         if (hasKey) {
-          store.addCert(provider.handle, MY, cert);
+          store.addCert(provider.handle, MY, cert, contName, 75);
         } else if (!hasKey && !bCA) {
-          store.addCert(provider.handle, ADDRESS_BOOK, cert);
+          store.addCert(provider.handle, ADDRESS_BOOK, cert, contName, 75);
         } else if (bCA) {
           if (OS_TYPE === "Windows_NT") {
-            selfSigned ? store.addCert(provider.handle, ROOT, cert) : store.addCert(provider.handle, CA, cert);
+            selfSigned ? store.addCert(provider.handle, ROOT, cert, contName, 75) : store.addCert(provider.handle, CA, cert, contName, 75);
           }
         }
       }
@@ -386,7 +387,7 @@ export class Store {
    */
   findKey(objectWithKey: any) {
     let keyItem: any;
-    if (OS_TYPE === "Windows_NT") {   
+    if (OS_TYPE === "Windows_NT") {
       if (objectWithKey.provider === "MICROSOFT") {
         try {
           console.log(this._store.getItem(objectWithKey));

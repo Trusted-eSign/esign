@@ -15,7 +15,6 @@ class ToolBarForEncryptCertificateBlock extends React.Component<any, any> {
     const { localize, locale } = this.context;
     const { certificates, recipients, handleCleanRecipientsList, onСlickBtn } = this.props;
 
-    const DISABLED = certificates.length > 0 ? "" : "disabled";
     const ACTIVE = recipients.length > 0 ? "" : "not-active";
 
     return <nav className="app-bar-content">

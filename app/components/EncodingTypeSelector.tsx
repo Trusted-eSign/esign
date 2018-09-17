@@ -35,7 +35,7 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {
     const { localize, locale } = this.context;
 
     return (
-      <div className="row settings-item">
+      <div className="row settings-item nobottom">
         <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
         <div className="col input-field">
           <select id="encoding" defaultValue={this.props.EncodingValue}>

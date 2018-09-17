@@ -7,7 +7,7 @@ import {
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP,  DELETE_FILE,
+  CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE,
   DELETE_RECIPIENT_CERTIFICATE, FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
   PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
@@ -83,7 +83,9 @@ export function packageSign(
         const newPath = signs.signFile(file.fullpath, cert, key, policies, format, folderOut);
         if (newPath) {
           signedFileIdPackage.push(file.id);
-          signedFilePackage.push({ fullpath: newPath });
+          if (!file.socket) {
+            signedFilePackage.push({ fullpath: newPath });
+          }
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
@@ -155,6 +157,11 @@ export function packageSign(
                     connectedSocket.emit(UPLOADED, { id: file.remoteId });
                     connectedSocket.broadcast.emit(UPLOADED, { id: file.remoteId });
                   }
+
+                  dispatch({
+                    payload: { id: file.id },
+                    type: DELETE_FILE,
+                  });
                 }
               },
               );
@@ -178,7 +185,7 @@ export function packageSign(
 }
 
 export function filePackageSelect(files: IFilePath[]) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({
       type: PACKAGE_SELECT_FILE + START,
     });
@@ -203,6 +210,63 @@ export function filePackageSelect(files: IFilePath[]) {
           size: stat.size,
           socket,
         };
+
+        if (fileProps.filename.split(".").pop() === "sig") {
+          const state = getState();
+          const { connections } = state;
+          let signaruteStatus = false;
+          let signatureInfo;
+          let cms: trusted.cms.SignedData;
+
+          try {
+            cms = signs.loadSign(fileProps.fullpath);
+
+            if (cms.isDetached()) {
+              if (!(cms = signs.setDetachedContent(cms, fileProps.fullpath))) {
+                throw new Error(("err"));
+              }
+            }
+
+            signaruteStatus = signs.verifySign(cms);
+            signatureInfo = signs.getSignPropertys(cms);
+
+            if (fileProps.socket) {
+              const connectedList = connectedSelector(state, { connected: true });
+              const connection = connections.getIn(["entities", fileProps.socket]);
+
+              if (connection && connection.connected && connection.socket) {
+                connection.socket.emit(VERIFIED, signatureInfo);
+              } else if (connectedList.length) {
+                const connectedSocket = connectedList[0].socket;
+
+                connectedSocket.emit(VERIFIED, signatureInfo);
+                connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
+              }
+            }
+
+            signatureInfo = signatureInfo.map((info) => {
+              return {
+                fileId: fileProps.id,
+                ...info,
+                id: fileProps.id,
+              };
+            });
+
+          } catch (error) {
+            dispatch({
+              payload: { error, fileId: fileProps.id },
+              type: VERIFY_SIGNATURE + FAIL,
+            });
+          }
+
+          if (signatureInfo) {
+            dispatch({
+              generateId: true,
+              payload: { fileId: fileProps.id, signaruteStatus, signatureInfo },
+              type: VERIFY_SIGNATURE + SUCCESS,
+            });
+          }
+        }
 
         filePackage.push(fileProps);
       });
@@ -247,9 +311,9 @@ export function loadAllCertificates() {
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function(item: trusted.pkistore.PkiItem) {
+      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
         if (!item.id) {
-          item.id = item.provider + "_" + item.category + "_" +  item.hash;
+          item.id = item.provider + "_" + item.category + "_" + item.hash;
         }
         return item.type === "CERTIFICATE";
       });
@@ -322,12 +386,12 @@ export function loadAllContainers() {
       const filteredContainers = [];
 
       for (const cont of enumedContainers) {
-          filteredContainers.push({
-            friendlyName: cont.container,
-            id: Math.random(),
-            name: cont.unique,
-            reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
-          });
+        filteredContainers.push({
+          friendlyName: cont.container,
+          id: Math.random(),
+          name: cont.unique,
+          reader: cont.fqcnA.substring(4, cont.fqcnA.lastIndexOf("\\")),
+        });
       }
 
       dispatch({
@@ -354,7 +418,7 @@ export function getCertificateFromContainer(container: number) {
     setTimeout(() => {
       const { containers } = getState();
       const cont = containers.getIn(["entities", container]);
-      const certificate = trusted.utils.Csp.getCertifiacteFromContainer(cont.name, 75);
+      const certificate = trusted.utils.Csp.getCertificateFromContainer(cont.name, 75);
       const certificateItem = {
         hash: certificate.thumbprint,
         issuerFriendlyName: certificate.issuerFriendlyName,
@@ -388,7 +452,9 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
   let stat;
 
   if (!fileExists(fullpath)) {
-    return;
+    return {
+      type: SELECT_FILE + FAIL,
+    };
   }
 
   if (!lastModifiedDate || !size) {
@@ -466,7 +532,7 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-          id: Date.now() + Math.random(),
+          id: fileId,
         };
       });
 
@@ -477,11 +543,13 @@ export function verifySignature(fileId: string) {
       });
     }
 
-    dispatch({
-      generateId: true,
-      payload: { fileId, signaruteStatus, signatureInfo },
-      type: VERIFY_SIGNATURE + SUCCESS,
-    });
+    if (signatureInfo) {
+      dispatch({
+        generateId: true,
+        payload: { fileId, signaruteStatus, signatureInfo },
+        type: VERIFY_SIGNATURE + SUCCESS,
+      });
+    }
   };
 }
 
@@ -566,5 +634,64 @@ export function changeLocale(locale: string) {
   return {
     payload: { locale },
     type: CHANGE_LOCALE,
+  };
+}
+
+function _verifySignature(file: any) {
+  return (dispatch, getState) => {
+    const state = getState();
+    const { connections } = state;
+    let signaruteStatus = false;
+    let signatureInfo;
+    let cms: trusted.cms.SignedData;
+
+    try {
+      cms = signs.loadSign(file.fullpath);
+
+      if (cms.isDetached()) {
+        if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
+          throw new Error(("err"));
+        }
+      }
+
+      signaruteStatus = signs.verifySign(cms);
+      signatureInfo = signs.getSignPropertys(cms);
+
+      if (file.socket) {
+        const connectedList = connectedSelector(state, { connected: true });
+        const connection = connections.getIn(["entities", file.socket]);
+
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit(VERIFIED, signatureInfo);
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
+
+          connectedSocket.emit(VERIFIED, signatureInfo);
+          connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
+        }
+      }
+
+      signatureInfo = signatureInfo.map((info) => {
+        return {
+          fileId: file.id,
+          ...info,
+          id: file.id,
+        };
+      });
+
+    } catch (error) {
+      dispatch({
+        payload: { error, fileId: file.id },
+        type: VERIFY_SIGNATURE + FAIL,
+      });
+    }
+
+    if (signatureInfo) {
+      dispatch({
+        generateId: true,
+        payload: { fileId: file.id, signaruteStatus, signatureInfo },
+        type: VERIFY_SIGNATURE + SUCCESS,
+      });
+    }
   };
 }

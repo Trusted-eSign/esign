@@ -6,6 +6,7 @@ interface IModalProps {
   isOpen: boolean;
   header: string;
   onClose?: () => void;
+  style?: any;
 }
 
 class Modal extends React.Component<IModalProps, {}> {
@@ -26,7 +27,7 @@ class Modal extends React.Component<IModalProps, {}> {
     const { isOpen } = this.props;
 
     if (isOpen) {
-      $("#modal-window").openModal({dismissible: false});
+      $("#modal-window").openModal({ dismissible: false });
     }
   }
 
@@ -52,7 +53,7 @@ class Modal extends React.Component<IModalProps, {}> {
     }
 
     return (
-      <div id="modal-window" className="modal nooverflow">
+      <div id="modal-window" className="modal nooverflow" style={this.props.style}>
         <HeaderWorkspaceBlock
           text={header}
           new_class="modal-bar"

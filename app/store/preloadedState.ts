@@ -30,6 +30,13 @@ if (fileExists(SETTINGS_JSON)) {
       }
 
       odata.recipients = recipientsMap;
+
+      if (odata.settings && !odata.settings.cloudCSP) {
+        odata.settings.cloudCSP = {
+          authURL: "https://dss.cryptopro.ru/STS/oauth",
+          restURL: "https://dss.cryptopro.ru/SignServer/rest",
+        };
+      }
     } catch (e) {
       odata = {};
     }

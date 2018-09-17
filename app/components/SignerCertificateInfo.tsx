@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 import BlockNotElements from "./BlockNotElements";
-import CertificateChainInfo from "./CertificateChainInfo";
-import CertificateInfo from "./CertificateInfo";
+import CertificateChainInfo from "./Certificate/CertificateChainInfo";
+import CertificateInfo from "./Certificate/CertificateInfo";
 import HeaderWorkspaceBlock from "./HeaderWorkspaceBlock";
 
 class SignerCertificateInfo extends React.Component<any, any> {

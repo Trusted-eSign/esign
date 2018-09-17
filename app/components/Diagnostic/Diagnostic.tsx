@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { loadAllCertificates } from "../../AC";
 import {
-  BUG, ERROR_CHECK_CSP_PARAMS,
-  ERROR_LOAD_TRUSTED_CRYPTO, NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP, WARNING,
+  BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
+  ERROR_LOAD_TRUSTED_CRYPTO,  NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
+  NO_GOST_2001, NO_HAVE_CERTIFICATES_WITH_KEY, NOT_INSTALLED_CSP, WARNING,
 } from "../../errors";
 import { filteredCertificatesSelector } from "../../selectors";
 import DiagnosticModal from "../Diagnostic/DiagnosticModal";

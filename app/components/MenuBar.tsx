@@ -2,12 +2,14 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { filePackageDelete } from "../AC";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
   LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
   SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
 } from "../constants";
-import { loadingRemoteFilesSelector } from "../selectors";
+import { connectedSelector, loadingRemoteFilesSelector } from "../selectors";
+import { CANCELLED } from "../server/constants";
 import { mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
@@ -21,7 +23,7 @@ if (remote.getGlobal("sharedObject").logcrypto) {
   window.logger = trusted.utils.Logger.start(TRUSTED_CRYPTO_LOG);
 }
 
-class MenuBar extends React.Component<any, any> {
+class MenuBar extends React.Component<any, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -33,13 +35,19 @@ class MenuBar extends React.Component<any, any> {
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { encSettings, recipients, signSettings, signer } = this.props;
+    const { cloudCSPSettings, encSettings, recipients, saveToDocuments, signSettings, signer } = this.props;
+
+    if (this.isFilesFromSocket()) {
+      this.removeAllFiles();
+    }
 
     const state = ({
       recipients,
       settings: {
+        cloudCSP: cloudCSPSettings,
         encrypt: encSettings,
         locale,
+        saveToDocuments,
         sign: signSettings,
       },
       signers: {
@@ -50,8 +58,10 @@ class MenuBar extends React.Component<any, any> {
     const sstate = JSON.stringify(state, null, 4);
     fs.writeFile(SETTINGS_JSON, sstate, (err: any) => {
       if (err) {
+        // tslint:disable-next-line:no-console
         console.log(localize("Settings.write_file_failed", locale));
       }
+      // tslint:disable-next-line:no-console
       console.log(localize("Settings.write_file_ok", locale));
       remote.getCurrentWindow().close();
     });
@@ -121,7 +131,7 @@ class MenuBar extends React.Component<any, any> {
   }
 
   render() {
-    const disabledNavigate = this.getDisabled();
+    const disabledNavigate = this.isFilesFromSocket();
     const dataActivates = disabledNavigate ? "" : "slide-out";
     const classDisabled = disabledNavigate ? "disabled" : "";
 
@@ -165,7 +175,7 @@ class MenuBar extends React.Component<any, any> {
     );
   }
 
-  getDisabled = () => {
+  isFilesFromSocket = () => {
     const { files, loadingFiles } = this.props;
 
     if (loadingFiles.length) {
@@ -182,10 +192,39 @@ class MenuBar extends React.Component<any, any> {
 
     return false;
   }
+
+  removeAllFiles = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { connections, connectedList, filePackageDelete, files } = this.props;
+
+    const filePackage: number[] = [];
+
+    for (const file of files) {
+      filePackage.push(file.id);
+
+      if (file.socket) {
+        const connection = connections.getIn(["entities", file.socket]);
+
+        if (connection && connection.connected && connection.socket) {
+          connection.socket.emit(CANCELLED, { id: file.remoteId });
+        } else if (connectedList.length) {
+          const connectedSocket = connectedList[0].socket;
+
+          connectedSocket.emit(CANCELLED, { id: file.remoteId });
+          connectedSocket.broadcast.emit(CANCELLED, { id: file.remoteId });
+        }
+      }
+    }
+
+    filePackageDelete(filePackage);
+  }
 }
 
 export default connect((state, ownProps) => {
   return {
+    cloudCSPSettings: state.settings.cloudCSP,
+    connectedList: connectedSelector(state, { connected: true }),
+    connections: state.connections,
     encSettings: state.settings.encrypt,
     eventsDateFrom: state.events.dateFrom,
     eventsDateTo: state.events.dateTo,
@@ -194,7 +233,8 @@ export default connect((state, ownProps) => {
     loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
     location: ownProps.location,
     recipients: mapToArr(state.recipients.entities),
+    saveToDocuments: state.settings.saveToDocuments,
     signSettings: state.settings.sign,
     signer: state.signers.signer,
   };
-})(MenuBar);
+}, { filePackageDelete })(MenuBar);
