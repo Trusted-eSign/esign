@@ -1652,25 +1652,6 @@ h6.contact-title {
   margin-top: 3px;
 }
 
-.file_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/file_type_icon.png);
-  background-size: 40px 32px;
-}
-
-
-.sign_type_icon {
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/sign_type_icon.png);
-  background-size: 40px 32px;
-}
-
 .type_icon {
   display: block;
   text-indent: -9999px;
@@ -1743,54 +1724,8 @@ h6.contact-title {
   background: url(./resources/image/files/file_txt.png) no-repeat;
 }
 
-
 .type_icon.file{
   background: url(./resources/image/files/file_file.png) no-repeat;
-}
-
-.encrypt_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/encrypt_type_icon.png);
-  background-size: 40px 32px;
-}
-
-.zip_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/zip_type_icon.png);
-  background-size: 40px 32px;
-}
-
-.word_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/word_type_icon.png);
-  background-size: 40px 32px;
-}
-
-.excel_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/excel_type_icon.png);
-  background-size: 40px 32px;
-}
-
-.pdf_type_icon{
-  display: block;
-  text-indent: -9999px;
-  width: 32px;
-  height: 40px;
-  background: url(./resources/image/pdf_type_icon.png);
-  background-size: 40px 32px;
 }
 
 #file-avatar {
