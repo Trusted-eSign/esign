@@ -1,7 +1,5 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { SIGN } from "../../constants";
-import SignatireStatusCicrcle from "../Signature/SignatureStatusCircle";
 import FileIcon from "./FileIcon";
 
 interface IFileRedux {
