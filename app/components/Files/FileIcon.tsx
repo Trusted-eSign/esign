@@ -19,17 +19,43 @@ interface IFileIconProps {
 }
 
 class FileIcon extends React.Component<IFileIconProps, {}> {
+  timerHandle: NodeJS.Timer | null;
+
   componentDidMount() {
     const { file } = this.props;
 
-    if (file.extension === "sig") {
-      const signs = this.props.signatures.getIn(["entities", file.id]);
+    this.timerHandle = setTimeout(() => {
+      if (file.extension === "sig") {
+        const signs = this.props.signatures.getIn(["entities", file.id]);
 
-      if (!signs) {
-        this.props.verifySignature(file.id);
-        return;
+        if (!signs) {
+          this.props.verifySignature(file.id);
+        }
       }
+
+      this.timerHandle = null;
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    if (this.timerHandle) {
+      clearTimeout(this.timerHandle);
+      this.timerHandle = null;
     }
+  }
+
+  timer = () => {
+    const { file } = this.props;
+
+    setTimeout(() => {
+      if (this.mounted && file.extension === "sig") {
+        const signs = this.props.signatures.getIn(["entities", file.id]);
+
+        if (!signs) {
+          this.props.verifySignature(file.id);
+        }
+      }
+    }, 1000);
   }
 
   render() {
