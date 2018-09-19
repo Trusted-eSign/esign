@@ -44,20 +44,6 @@ class FileIcon extends React.Component<IFileIconProps, {}> {
     }
   }
 
-  timer = () => {
-    const { file } = this.props;
-
-    setTimeout(() => {
-      if (this.mounted && file.extension === "sig") {
-        const signs = this.props.signatures.getIn(["entities", file.id]);
-
-        if (!signs) {
-          this.props.verifySignature(file.id);
-        }
-      }
-    }, 1000);
-  }
-
   render() {
     const { file } = this.props;
 
