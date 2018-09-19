@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { verifySignature } from "../../AC/documentsActions";
 import { mapToArr } from "../../utils";
 
 interface IFileRedux {
@@ -14,9 +15,23 @@ interface IFileRedux {
 
 interface IFileIconProps {
   file: IFileRedux;
+  verifySignature: (id: number) => void;
 }
 
 class FileIcon extends React.Component<IFileIconProps, {}> {
+  componentDidMount() {
+    const { file } = this.props;
+
+    if (file.extension === "sig") {
+      const signs = this.props.signatures.getIn(["entities", file.id]);
+
+      if (!signs) {
+        this.props.verifySignature(file.id);
+        return;
+      }
+    }
+  }
+
   render() {
     const { file } = this.props;
 
@@ -61,4 +76,4 @@ export default connect((state) => {
   return {
     signatures: state.signatures,
   };
-})(FileIcon);
+}, { verifySignature })(FileIcon);
