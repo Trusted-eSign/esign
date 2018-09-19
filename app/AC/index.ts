@@ -248,7 +248,7 @@ export function filePackageSelect(files: IFilePath[]) {
               return {
                 fileId: fileProps.id,
                 ...info,
-                id: fileProps.id,
+                id: Math.random(),
               };
             });
 
@@ -532,7 +532,7 @@ export function verifySignature(fileId: string) {
         return {
           fileId,
           ...info,
-          id: fileId,
+          id: Math.random(),
         };
       });
 
@@ -634,64 +634,5 @@ export function changeLocale(locale: string) {
   return {
     payload: { locale },
     type: CHANGE_LOCALE,
-  };
-}
-
-function _verifySignature(file: any) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const { connections } = state;
-    let signaruteStatus = false;
-    let signatureInfo;
-    let cms: trusted.cms.SignedData;
-
-    try {
-      cms = signs.loadSign(file.fullpath);
-
-      if (cms.isDetached()) {
-        if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
-          throw new Error(("err"));
-        }
-      }
-
-      signaruteStatus = signs.verifySign(cms);
-      signatureInfo = signs.getSignPropertys(cms);
-
-      if (file.socket) {
-        const connectedList = connectedSelector(state, { connected: true });
-        const connection = connections.getIn(["entities", file.socket]);
-
-        if (connection && connection.connected && connection.socket) {
-          connection.socket.emit(VERIFIED, signatureInfo);
-        } else if (connectedList.length) {
-          const connectedSocket = connectedList[0].socket;
-
-          connectedSocket.emit(VERIFIED, signatureInfo);
-          connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
-        }
-      }
-
-      signatureInfo = signatureInfo.map((info) => {
-        return {
-          fileId: file.id,
-          ...info,
-          id: file.id,
-        };
-      });
-
-    } catch (error) {
-      dispatch({
-        payload: { error, fileId: file.id },
-        type: VERIFY_SIGNATURE + FAIL,
-      });
-    }
-
-    if (signatureInfo) {
-      dispatch({
-        generateId: true,
-        payload: { fileId: file.id, signaruteStatus, signatureInfo },
-        type: VERIFY_SIGNATURE + SUCCESS,
-      });
-    }
   };
 }

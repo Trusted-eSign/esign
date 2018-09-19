@@ -161,7 +161,7 @@ const downloadFiles = (data: ISignRequest | IEncryptRequest, socket: SocketIO.So
                   return {
                     fileId,
                     ...info,
-                    id: fileId,
+                    id: Math.random(),
                   };
                 });
 

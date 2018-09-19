@@ -9,10 +9,10 @@ import {
 import { filteredDocumentsSelector, selectedDocumentsSelector } from "../../selectors/documentsSelector";
 import "../../table.global.css";
 import { extFile, mapToArr } from "../../utils";
+import FileIcon from "../Files/FileIcon";
 import ProgressBars from "../ProgressBars";
 import SortDirection from "../Sort/SortDirection";
 import SortIndicator from "../Sort/SortIndicator";
-import DocumentSignatureStatus from "./DocumentSignatureStatus";
 
 type TSortDirection = "ASC" | "DESC" | undefined;
 
@@ -134,13 +134,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           <Column
             cellRenderer={({ cellData, rowData }) => {
               return (
-                <div className="row nobottom">
-                  <div className="valign-wrapper">
-                    <div className="col s12" title={cellData}>
-                      <i className={this.getFileIconByExtname(cellData, rowData) + " icon_file_type"} />
-                    </div>
-                  </div>
-                </div>
+                <FileIcon file={{extension: extFile(rowData.filename), id: rowData.id}} />
               );
             }}
             dataKey="extname"
@@ -174,15 +168,9 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           />
           <Column
             cellRenderer={({ cellData, rowData }) => {
-              let status;
-              if (rowData && rowData.extname && rowData.extname === ".sig") {
-                status = <DocumentSignatureStatus documentId={rowData.id} />;
-              }
-
               return (
                 <div className="row nobottom">
                   <div className="col s12">
-                    {status}
                     <div className="truncate">{this.bytesToSize(cellData)}</div>
                   </div>
                 </div>
@@ -224,35 +212,6 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     }
 
     return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizes[i]}`;
-  }
-
-  getFileIconByExtname = (extname: string, rowData?: any) => {
-    const ext = extname.split(".").pop();
-
-    if (extname === ".sig") {
-      if (rowData && rowData.id) {
-        let res = true;
-
-        const signs = this.props.signatures.getIn(["entities", rowData.id]);
-
-        if (signs) {
-          const arrSigns = mapToArr(signs);
-
-          for (const element of arrSigns) {
-            if (!element.status_verify) {
-              res = false;
-              break;
-            }
-          }
-
-          return res ? "type_icon sig ok" : "type_icon sig error";
-        } else {
-          return "type_icon sig any";
-        }
-      }
-    }
-
-    return `type_icon ${ext}`;
   }
 
   handleOnRowClick = ({ rowData }: { rowData: any }) => {
