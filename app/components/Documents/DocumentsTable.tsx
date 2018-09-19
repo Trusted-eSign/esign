@@ -13,7 +13,6 @@ import FileIcon from "../Files/FileIcon";
 import ProgressBars from "../ProgressBars";
 import SortDirection from "../Sort/SortDirection";
 import SortIndicator from "../Sort/SortIndicator";
-import DocumentSignatureStatus from "./DocumentSignatureStatus";
 
 type TSortDirection = "ASC" | "DESC" | undefined;
 
@@ -169,15 +168,9 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           />
           <Column
             cellRenderer={({ cellData, rowData }) => {
-              let status;
-              if (rowData && rowData.extname && rowData.extname === ".sig") {
-                status = <DocumentSignatureStatus documentId={rowData.id} />;
-              }
-
               return (
                 <div className="row nobottom">
                   <div className="col s12">
-                    {status}
                     <div className="truncate">{this.bytesToSize(cellData)}</div>
                   </div>
                 </div>
