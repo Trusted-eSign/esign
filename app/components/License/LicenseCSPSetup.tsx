@@ -51,7 +51,7 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
             <div className="content-wrapper">
               <div className="row" />
               <div className="row">
-                <div className="input-field input-field-csr col s12">
+                <div className="input-field input-field-csr col s11">
                   <input
                     id="license"
                     type="text"
@@ -65,6 +65,11 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
                     {localize("License.key", locale)}
                   </label>
                 </div>
+                <div className="col s1">
+                  <a className="nav-small-btn waves-effect" onClick={this.paste}>
+                    <i className="nav-small-icon material-icons">content_copy</i>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -73,21 +78,20 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
         <div className="row halfbottom" />
 
         <div className="row">
-          <div className="col s5 offset-s7">
-            <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal " + disabledClass} onClick={this.handleApplyLicense}>
-                {localize("Common.apply", locale)}
-              </a>
-            </div>
-            <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>
-                {localize("Common.close", locale)}
-              </a>
-            </div>
+          <div className="col s2 offset-s9">
+            <a className={"waves-effect waves-light btn modal-close btn_modal " + disabledClass} onClick={this.handleApplyLicense}>
+              {localize("Common.apply", locale)}
+            </a>
           </div>
         </div>
       </div>
     );
+  }
+
+  paste = () => {
+    $("#license").focus();
+    document.execCommand("paste");
+    $("#license").trigger("autoresize");
   }
 
   handleLicenseChange = (ev: any) => {
@@ -133,7 +137,7 @@ class LicenseCSPSetup extends React.Component<ILicenseCSPSetupProps, ILicenseCSP
       name: "CryptoARM GOST",
     };
 
-    window.sudo.exec(cmnd, options, function(error: Error) {
+    window.sudo.exec(cmnd, options, function (error: Error) {
       if (error) {
         Materialize.toast(localize("License.lic_key_setup_fail", locale), 2000, "toast-lic_key_setup_fail");
       } else {

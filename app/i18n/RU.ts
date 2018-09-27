@@ -444,7 +444,7 @@ export default {
     Entered: "ВВЕСТИ",
     Сlose: "ЗАКРЫТЬ",
     enter_key: "Ввод лицензиии",
-    enter_key_csp: "Ввод лицензиии CSP",
+    enter_key_csp: "Ввод лицензиии КриптоПро CSP",
     get_overtimes_license: "Получение временной лицензиии",
     Enter_license: "УСТАНОВИТЬ ЛИЦЕНЗИЮ",
     license_request: "Запрос на выдачу временной лицензии",

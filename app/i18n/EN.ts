@@ -444,7 +444,7 @@ export default {
     Entered: "ENTER",
 	Сlose: "CLOSE",
     enter_key: "Enter the license",
-    enter_key_csp: "Enter the license CSP",
+    enter_key_csp: "Enter the license CryptoPro CSP",
     get_overtimes_license: "Obtaining a temporary license",
     Enter_license: "УСТАНОВИТЬ ЛИЦЕНЗИЮ",
     license_request: "Request for a temporary license",
