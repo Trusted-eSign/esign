@@ -237,7 +237,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
               </div>
             </div>
             <div className="license-btn">
-              <a className={"waves-effect waves-light btn " + disable} onClick={this.setupLicense.bind(this)}>{localize("License.Entered", locale)}</a>
+              <a className={"waves-effect waves-light btn " + disable} onClick={this.setupLicense.bind(this)}>{localize("Common.apply", locale)}</a>
             </div>
           </div>
         </div>
