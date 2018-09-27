@@ -72,10 +72,11 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
   let indexFile: number = 1;
   let newOutUri: string = outURI;
-  while (fileExists(newOutUri)) {
-    const parsed = path.parse(outURI);
+  const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
 
-    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
+  while (fileExists(newOutUri)) {
+    const parsed = path.parse(fileUri);
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
     indexFile++;
   }
 
