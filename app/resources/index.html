@@ -90,6 +90,7 @@
     window.USER_NAME = os.userInfo().username;
     window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CertStore');
     window.DEFAULT_DOCUMENTS_PATH = path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'Documents');
+    window.DEFAULT_CSR_PATH = path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CSR');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
     window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/CryptoARM GOST/license.lic");
@@ -104,8 +105,13 @@
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST'), { mode: 0o700 });
     }
+
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'Documents'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'Documents'), { mode: 0o700 });
+    }
+
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CSR'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CSR'), { mode: 0o700 });
     }
 
     document.ondragover = function (evt) {

@@ -1,10 +1,11 @@
 import noUiSlider from "nouislider";
+import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA,
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, DEFAULT_CSR_PATH,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_ADDITIONAL,
   REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
@@ -55,7 +56,6 @@ interface ICertificateRequestState {
   ogrnip?: string;
   organization: string;
   organizationUnitName?: string;
-  outputDirectory: string;
   province: string;
   selfSigned: boolean;
   snils?: string;
@@ -117,7 +117,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       ogrnip: template.ogrnip,
       organization: template.O,
       organizationUnitName: template.OU,
-      outputDirectory: window.HOME_DIR,
       province: template.stateOrProvinceName,
       selfSigned: false,
       snils: template.snils,
@@ -329,7 +328,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   handelReady = () => {
     const { localize, locale } = this.context;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, selfSigned, snils, title } = this.state;
+      keyUsage, locality, ogrnip, organization, organizationUnitName, province, selfSigned, snils, title } = this.state;
     const { licenseStatus, lic_error } = this.props;
 
     const key = new trusted.pki.Key();
@@ -492,10 +491,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
-    certReq.save(outputDirectory + "/generated.req", trusted.DataFormat.PEM);
+    certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.req`), trusted.DataFormat.PEM);
 
     if (!selfSigned && algorithm === ALG_RSA) {
-      keyPair.writePrivateKey(outputDirectory + "/generated.key", trusted.DataFormat.PEM, "");
+      keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.key`), trusted.DataFormat.PEM, "");
     }
 
     if (algorithm !== ALG_RSA) {
