@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { verifySignature } from "../../AC/documentsActions";
+import { verifySignature } from "../../AC";
 import { mapToArr } from "../../utils";
 
 interface IFileRedux {
