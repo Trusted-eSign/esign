@@ -196,7 +196,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   return outURI;
 }
 
-export function unSign(uri: string, folderOut: string): any {
+export function unSign(uri: string, folderOut: string, logOperation = true): any {
   let outURI: string;
   let content: trusted.cms.ISignedDataContent;
 
@@ -226,28 +226,32 @@ export function unSign(uri: string, folderOut: string): any {
       try {
         fs.writeFileSync(outURI, content.data);
 
-        logger.log({
-          level: "info",
-          message: "",
-          operation: "Снятие подписи",
-          operationObject: {
-            in: path.basename(uri),
-            out: path.basename(outURI),
-          },
-          userName: USER_NAME,
-        });
+        if (logOperation) {
+          logger.log({
+            level: "info",
+            message: "",
+            operation: "Снятие подписи",
+            operationObject: {
+              in: path.basename(uri),
+              out: path.basename(outURI),
+            },
+            userName: USER_NAME,
+          });
+        }
       } catch (err) {
-        logger.log({
-          certificate: "",
-          level: "error",
-          message: err.message ? err.message : err,
-          operation: "Снятие подписи",
-          operationObject: {
-            in: path.basename(uri),
-            out: "Null",
-          },
-          userName: USER_NAME,
-        });
+        if (logOperation) {
+          logger.log({
+            certificate: "",
+            level: "error",
+            message: err.message ? err.message : err,
+            operation: "Снятие подписи",
+            operationObject: {
+              in: path.basename(uri),
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+        }
 
         return "";
       }
@@ -257,17 +261,19 @@ export function unSign(uri: string, folderOut: string): any {
       return "";
     }
   } catch (err) {
-    logger.log({
-      certificate: "",
-      level: "error",
-      message: err.message ? err.message : err,
-      operation: "Снятие подписи",
-      operationObject: {
-        in: path.basename(uri),
-        out: "Null",
-      },
-      userName: USER_NAME,
-    });
+    if (logOperation) {
+      logger.log({
+        certificate: "",
+        level: "error",
+        message: err.message ? err.message : err,
+        operation: "Снятие подписи",
+        operationObject: {
+          in: path.basename(uri),
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    }
 
     return "";
   }
@@ -467,7 +473,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
 
       curRes.status_verify = certificatesSignStatus && signerStatus,
 
-      result.push(curRes);
+        result.push(curRes);
     }
 
     return result;

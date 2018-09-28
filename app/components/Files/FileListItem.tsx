@@ -105,7 +105,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
       if (cms.isDetached()) {
         this.openDetachedContent(file);
       } else {
-        const newPath = signs.unSign(file, TMP_DIR);
+        const newPath = signs.unSign(file, TMP_DIR, false);
 
         if (newPath) {
           if (shell.openItem(newPath)) {
