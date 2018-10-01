@@ -161,6 +161,7 @@ export default {
     create_request: "Создать запрос",
     create_request_created: "Запрос на сертификат успешно создан",
     create_selfSigned: "Создать самоподписанный сертификат",
+    go_to_csr_folder: "Перейти в каталог",
     template_label: "Шаблон сертификата",
     template_default: "Шаблон по умолчанию",
     template_additional_fields: "Шаблон с расширенным списком полей",

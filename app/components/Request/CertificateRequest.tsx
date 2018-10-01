@@ -1,3 +1,4 @@
+import fs from "fs";
 import noUiSlider from "nouislider";
 import * as path from "path";
 import PropTypes from "prop-types";
@@ -5,7 +6,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, DEFAULT_CSR_PATH,
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, DEFAULT_CSR_PATH, HOME_DIR,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_ADDITIONAL,
   REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
@@ -491,7 +492,16 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
-    certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.req`), trusted.DataFormat.PEM);
+
+    if (!fs.existsSync(path.join(HOME_DIR, ".Trusted", "CryptoARM GOST", "CSR"))) {
+      fs.mkdirSync(path.join(HOME_DIR, ".Trusted", "CryptoARM GOST", "CSR"), { mode: 0o700 });
+    }
+
+    try {
+      certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.req`), trusted.DataFormat.PEM);
+    } catch (e) {
+      //
+    }
 
     if (!selfSigned && algorithm === ALG_RSA) {
       keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.key`), trusted.DataFormat.PEM, "");

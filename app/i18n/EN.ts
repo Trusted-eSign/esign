@@ -161,6 +161,7 @@ export default {
     create_request: "Create request",
     create_request_created: "Certificate request was successfully created",
     create_selfSigned: "Create self-signed certificate",
+    go_to_csr_folder: "Go to folder",
     template_label: "Certificate template",
     template_default: "Default template",
     template_additional_fields: "Template with additional fields",
