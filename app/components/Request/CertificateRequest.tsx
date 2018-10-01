@@ -12,7 +12,7 @@ import {
   REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
 import * as jwt from "../../trusted/jwt";
-import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
+import { formatDate, randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import logger from "../../winstonLogger";
 import HeaderTabs from "./HeaderTabs";
 import KeyParameters from "./KeyParameters";
@@ -498,13 +498,13 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     }
 
     try {
-      certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.req`), trusted.DataFormat.PEM);
+      certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${algorithm}_${formatDate(new Date())}.req`), trusted.DataFormat.PEM);
     } catch (e) {
       //
     }
 
     if (!selfSigned && algorithm === ALG_RSA) {
-      keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${Date.now()}.key`), trusted.DataFormat.PEM, "");
+      keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${algorithm}_${formatDate(new Date())}.key`), trusted.DataFormat.PEM, "");
     }
 
     if (algorithm !== ALG_RSA) {
