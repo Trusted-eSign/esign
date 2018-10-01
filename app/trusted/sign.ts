@@ -72,10 +72,11 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
 
   let indexFile: number = 1;
   let newOutUri: string = outURI;
-  while (fileExists(newOutUri)) {
-    const parsed = path.parse(outURI);
+  const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
 
-    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
+  while (fileExists(newOutUri)) {
+    const parsed = path.parse(fileUri);
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
     indexFile++;
   }
 
@@ -98,7 +99,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
       certificate: cert.subjectName,
       level: "error",
       message: err.message ? err.message : err,
-      operation: localize("Events.sign", window.locale), 
+      operation: localize("Events.sign", window.locale),
       operationObject: {
         in: path.basename(uri),
         out: "Null",
@@ -113,7 +114,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     certificate: cert.subjectName,
     level: "info",
     message: "",
-    operation: localize("Events.sign", window.locale), 
+    operation: localize("Events.sign", window.locale),
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
@@ -169,7 +170,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
       certificate: cert.subjectName,
       level: "error",
       message: err.message ? err.message : err,
-      operation: localize("Events.sign", window.locale), 
+      operation: localize("Events.sign", window.locale),
       operationObject: {
         in: path.basename(uri),
         out: "Null",
@@ -183,8 +184,8 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   logger.log({
     certificate: cert.subjectName,
     level: "info",
-    message: localize("Events.add_sign", window.locale), 
-    operation: localize("Events.sign", window.locale), 
+    message: localize("Events.add_sign", window.locale),
+    operation: localize("Events.sign", window.locale),
     operationObject: {
       in: path.basename(uri),
       out: path.basename(outURI),
@@ -195,7 +196,7 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   return outURI;
 }
 
-export function unSign(uri: string, folderOut: string): any {
+export function unSign(uri: string, folderOut: string, logOperation = true): any {
   let outURI: string;
   let content: trusted.cms.ISignedDataContent;
 
@@ -228,7 +229,7 @@ export function unSign(uri: string, folderOut: string): any {
         logger.log({
           level: "info",
           message: "",
-          operation: localize("Events.remove_sign", window.locale), 
+          operation: localize("Events.remove_sign", window.locale),
           operationObject: {
             in: path.basename(uri),
             out: path.basename(outURI),
@@ -466,7 +467,7 @@ export function getSignPropertys(cms: trusted.cms.SignedData) {
 
       curRes.status_verify = certificatesSignStatus && signerStatus,
 
-      result.push(curRes);
+        result.push(curRes);
     }
 
     return result;

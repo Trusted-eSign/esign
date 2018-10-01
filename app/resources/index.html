@@ -90,6 +90,7 @@
     window.USER_NAME = os.userInfo().username;
     window.DEFAULT_CERTSTORE_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CertStore');
     window.DEFAULT_DOCUMENTS_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents');
+    window.DEFAULT_CSR_PATH = path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CSR');
     window.PLATFORM = process.platform;
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
     // window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
@@ -107,6 +108,10 @@
     }
     if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents'))) {
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'Documents'), { mode: 0o700 });
+    }
+
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CSR'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'Trusted eSign', 'CSR'), { mode: 0o700 });
     }
 
     document.ondragover = function (evt) {

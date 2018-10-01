@@ -21,10 +21,12 @@ export function encryptFile(uri: string, certs: trusted.pkistore.PkiItem[], poli
 
   indexFile = 1;
   newOutUri = outURI;
-  while (fileExists(newOutUri)) {
-    const parsed = path.parse(outURI);
+  const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
 
-    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
+  while (fileExists(newOutUri)) {
+    const parsed = path.parse(fileUri);
+
+    newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".enc");
     indexFile++;
   }
 

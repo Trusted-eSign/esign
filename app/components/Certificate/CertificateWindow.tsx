@@ -4,7 +4,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAllContainers } from "../../AC";
 import { resetCloudCSP } from "../../AC/cloudCspActions";
-import { ADDRESS_BOOK, CA, PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, ROOT, USER_NAME } from "../../constants";
+import {
+  ADDRESS_BOOK, CA, DEFAULT_CSR_PATH, PROVIDER_CRYPTOPRO,
+  PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, ROOT, USER_NAME,
+} from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
 import { fileCoding } from "../../utils";
 import logger from "../../winstonLogger";
@@ -637,6 +640,16 @@ class CertWindow extends React.Component<any, any> {
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
                         <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
                         <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
+                        {
+                          certificate && certificate.category === REQUEST ?
+                            <li>
+                              <a onClick={this.handleOpenCSRFolder}>
+                                {localize("CSR.go_to_csr_folder", locale)}
+                              </a>
+                            </li>
+                            :
+                            null
+                        }
                       </ul>
                     </li>
                   </ul>
@@ -660,6 +673,10 @@ class CertWindow extends React.Component<any, any> {
         <PasswordDialog value={this.state.password} onChange={this.handlePasswordChange} />
       </div>
     );
+  }
+
+  handleOpenCSRFolder = () => {
+    window.electron.shell.openItem(DEFAULT_CSR_PATH);
   }
 }
 

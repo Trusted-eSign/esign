@@ -496,11 +496,15 @@ export function deleteFile(fileId: number) {
 export function verifySignature(fileId: string) {
   return (dispatch, getState) => {
     const state = getState();
-    const { connections, files } = state;
-    const file = files.getIn(["entities", fileId]);
+    const { connections, documents, files } = state;
     let signaruteStatus = false;
     let signatureInfo;
     let cms: trusted.cms.SignedData;
+    let file = files.getIn(["entities", fileId]);
+
+    if (!file) {
+      file = documents.getIn(["entities", fileId]);
+    }
 
     try {
       cms = signs.loadSign(file.fullpath);

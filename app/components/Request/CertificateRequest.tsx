@@ -1,15 +1,17 @@
+import fs from "fs";
 import noUiSlider from "nouislider";
+import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
   ALG_RSA,
-  KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
+  DEFAULT_CSR_PATH, HOME_DIR, KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_ADDITIONAL,
   REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
 } from "../../constants";
-import { randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
+import { formatDate, randomSerial, uuid, validateInn, validateOgrnip, validateSnils } from "../../utils";
 import logger from "../../winstonLogger";
 import HeaderTabs from "./HeaderTabs";
 import KeyParameters from "./KeyParameters";
@@ -54,7 +56,6 @@ interface ICertificateRequestState {
   ogrnip?: string;
   organization: string;
   organizationUnitName?: string;
-  outputDirectory: string;
   province: string;
   selfSigned: boolean;
   snils?: string;
@@ -114,7 +115,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       ogrnip: template.ogrnip,
       organization: template.O,
       organizationUnitName: template.OU,
-      outputDirectory: window.HOME_DIR,
       province: template.stateOrProvinceName,
       selfSigned: false,
       snils: template.snils,
@@ -464,10 +464,19 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
-    certReq.save(outputDirectory + "/generated.req", trusted.DataFormat.PEM);
+
+    if (!fs.existsSync(path.join(HOME_DIR, ".Trusted", "Trusted eSign", "CSR"))) {
+      fs.mkdirSync(path.join(HOME_DIR, ".Trusted", "Trusted eSign", "CSR"), { mode: 0o700 });
+    }
+
+    try {
+      certReq.save(path.join(DEFAULT_CSR_PATH, `${cn}_${algorithm}_${formatDate(new Date())}.req`), trusted.DataFormat.PEM);
+    } catch (e) {
+      //
+    }
 
     if (!selfSigned && algorithm === ALG_RSA) {
-      keyPair.writePrivateKey(outputDirectory + "/generated.key", trusted.DataFormat.PEM, "");
+      keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${algorithm}_${formatDate(new Date())}.key`), trusted.DataFormat.PEM, "");
     }
 
     if (algorithm !== ALG_RSA) {
@@ -586,6 +595,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
           Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
         }
       }, REQUEST, containerName);
+
+      this.handleReloadCertificates();
 
       Materialize.toast(localize("CSR.create_request_created", locale), 2000, "toast-csr_created");
     }

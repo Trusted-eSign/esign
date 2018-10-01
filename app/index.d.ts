@@ -14,6 +14,7 @@ interface Window {
     TMP_DIR: string;
     DEFAULT_CERTSTORE_PATH: string;
     DEFAULT_DOCUMENTS_PATH: string;
+    DEFAULT_CSR_PATH: string;
     LICENSE_PATH: string;
     PLATFORM: string;
     SETTINGS_JSON: string;

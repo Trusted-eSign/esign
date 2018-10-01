@@ -1,6 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { TMP_DIR } from "../../constants";
+import * as signs from "../../trusted/sign";
+import { fileExists } from "../../utils";
 import FileIcon from "./FileIcon";
+
+const shell = window.electron.shell;
+const dialog = window.electron.remote.dialog;
 
 interface IFileRedux {
   active: boolean;
@@ -42,20 +48,6 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
     return nextProps.file.active !== this.props.file.active || nextProps.file.id !== this.props.file.id;
   }
 
-  stopEvent(event: any) {
-    event.stopPropagation();
-  }
-
-  openFile(event: any, file: string) {
-    event.stopPropagation();
-    window.electron.shell.openItem(file);
-  }
-
-  openFileFolder(event: any, path: string) {
-    event.stopPropagation();
-    window.electron.shell.showItemInFolder(path);
-  }
-
   render() {
     const { localize, locale } = this.context;
     const { file, style } = this.props;
@@ -85,7 +77,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
           <i className="file-setting-item waves-effect material-icons secondary-content"
             data-activates={"dropdown-btn-set-file-" + this.props.index} onClick={self.stopEvent}>more_vert</i>
           <ul id={"dropdown-btn-set-file-" + this.props.index} className="dropdown-content">
-            <li><a onClick={function(event: any) { self.openFile(event, file.fullpath); }}>{localize("Settings.open_file", locale)}</a></li>
+            <li><a onClick={function (event: any) { self.openFile(event, file.fullpath); }}>{localize("Settings.open_file", locale)}</a></li>
             {
               file.socket ? null
                 :
@@ -98,6 +90,65 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
         </div>
       </div>
     );
+  }
+
+  stopEvent(event: any) {
+    event.stopPropagation();
+  }
+
+  openFile(event: any, file: string) {
+    event.stopPropagation();
+
+    if (file.split(".").pop() === "sig") {
+      const cms: trusted.cms.SignedData | undefined = signs.loadSign(file);
+
+      if (cms.isDetached()) {
+        this.openDetachedContent(file);
+      } else {
+        const newPath = signs.unSign(file, TMP_DIR, false);
+
+        if (newPath) {
+          if (shell.openItem(newPath)) {
+            // shell.moveItemToTrash(newPath);
+          }
+        }
+      }
+    } else {
+      shell.openItem(file);
+    }
+  }
+
+  openDetachedContent = (file: string) => {
+    const { localize, locale } = this.context;
+
+    let tempURI: string;
+    tempURI = file.substring(0, file.lastIndexOf("."));
+    if (!fileExists(tempURI)) {
+      tempURI = dialog.showOpenDialog(null, {
+        properties: ["openFile"],
+        title: localize("Sign.sign_content_file", locale) + path.basename(file),
+      });
+
+      if (tempURI) {
+        tempURI = tempURI[0];
+      }
+
+      if (!tempURI || !fileExists(tempURI)) {
+        $(".toast-verify_get_content_failed").remove();
+        Materialize.toast(localize("Sign.verify_get_content_failed", locale), 2000, "toast-verify_get_content_failed");
+
+        return;
+      } else {
+        shell.openItem(tempURI);
+      }
+    } else {
+      shell.openItem(tempURI);
+    }
+  }
+
+  openFileFolder(event: any, path: string) {
+    event.stopPropagation();
+    shell.showItemInFolder(path);
   }
 }
 
