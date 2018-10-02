@@ -23,6 +23,7 @@ interface IFilelistItemProps {
   operation: string;
   onClickBtn: (event: any) => void;
   removeFiles: (event: any) => void;
+  selectTempContentOfSignedFiles: (filePath: string) => void;
   index: string;
 }
 
@@ -109,7 +110,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
 
         if (newPath) {
           if (shell.openItem(newPath)) {
-            // shell.moveItemToTrash(newPath);
+            this.props.selectTempContentOfSignedFiles(newPath);
           }
         }
       }

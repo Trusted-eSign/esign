@@ -13,7 +13,8 @@ import {
   LOAD_LICENSE, PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
-  SELECT_SIGNER_CERTIFICATE, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
+  SELECT_SIGNER_CERTIFICATE, SELECT_TEMP_CONTENT_OF_SIGNED_FILES, START,
+   SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
@@ -431,6 +432,13 @@ export function removeAllFiles() {
 export function removeAllRemoteFiles() {
   return {
     type: REMOVE_ALL_REMOTE_FILES,
+  };
+}
+
+export function selectTempContentOfSignedFiles(tempContentOfSignedFiles: string) {
+  return {
+    payload: { tempContentOfSignedFiles },
+    type: SELECT_TEMP_CONTENT_OF_SIGNED_FILES,
   };
 }
 

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { List } from "react-virtualized";
-import { activeFile, deleteFile } from "../../AC";
+import { activeFile, deleteFile, selectTempContentOfSignedFiles } from "../../AC";
 import { ENCRYPT, SIGN } from "../../constants";
 import { loadingRemoteFilesSelector } from "../../selectors";
 import { mapToArr } from "../../utils";
@@ -110,7 +110,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
   }
 
   rowRenderer = ({ index, key, style }) => {
-    const { files, operation, loadingFiles } = this.props;
+    const { files, operation, loadingFiles, selectTempContentOfSignedFiles } = this.props;
 
     if (!files.length && !loadingFiles.length) {
       return null;
@@ -139,6 +139,7 @@ class FileList extends React.Component<IFilelistProps, {}> {
           operation={operation}
           key={key}
           index={index}
+          selectTempContentOfSignedFiles={selectTempContentOfSignedFiles}
           style={style}
         />
       );
@@ -194,4 +195,4 @@ export default connect((state) => {
     selectedFilesPackage: state.files.selectedFilesPackage,
     selectingFilesPackage: state.files.selectingFilesPackage,
   };
-}, { activeFile, deleteFile })(FileList);
+}, { activeFile, deleteFile, selectTempContentOfSignedFiles })(FileList);
