@@ -115,7 +115,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
       style = { color: "green" };
       styleRow = { border: "2px solid green", padding: "5px" };
       return (
-        <div>
+        <React.Fragment>
           <div className="row">
             <div className="col s6">
               <div style={styleRow}>
@@ -132,13 +132,13 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
               <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       );
     } else {
       style = { color: "red" };
       styleRow = { border: "2px solid red", padding: "5px" };
       return (
-        <div>
+        <React.Fragment>
           <div className="row">
             <div className="col s6">
               <div style={styleRow}>
@@ -155,7 +155,7 @@ class LicenseStatus extends React.Component<ILicenseStatusProps, {}> {
               <ButtonWithExternalLink externalLink={localize("License.link_buy_license", locale)} externalName={localize("License.Buy_license", locale)} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       );
     }
   }

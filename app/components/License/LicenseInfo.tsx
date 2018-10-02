@@ -68,7 +68,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
       productName = "-";
       productIssue = "-";
       return (
-        <div>
+        <React.Fragment>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
           <div className="row leftshifter">
             <div className="col s6">
@@ -94,7 +94,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
               <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       );
     }
 
@@ -104,7 +104,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
       notBefore = this.getLocaleDate(license.iat * 1000);
       productName = localize("About.product_name", locale);
       return (
-        <div>
+        <React.Fragment>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
           <div className="row leftshifter">
             <div className="col s6">
@@ -124,7 +124,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
           </div>
           <div className="row leftshifter">
           </div>
-        </div>
+        </React.Fragment>
       );
     } else if (lic_format === "MTX") {
       if (lic_status === 0) {
@@ -138,7 +138,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
         productName = localize("About.product_name", locale);
       }
       return (
-        <div>
+        <React.Fragment>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
           <div className="row leftshifter">
             <div className="col s6">
@@ -158,7 +158,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
           </div>
           <div className="row leftshifter">
           </div>
-        </div>
+        </React.Fragment>
       );
     } else if (lic_format === "JWT") {
       if (lic_status === 0) {
@@ -177,7 +177,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
         productName = localize("About.product_name", locale);
       }
       return (
-        <div>
+        <React.Fragment>
           <div className="bmark_desktoplic">{localize("License.About_License", locale)}</div>
           <div className="row leftshifter">
             <div className="col s6">
@@ -203,7 +203,7 @@ class LicenseInfo extends React.Component<ILicenseInfoProps, {}> {
               <LicenseInfoFiled title={localize("License.lic_notafter", locale)} info={notAfter} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       );
     }
   }

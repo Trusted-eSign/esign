@@ -32,7 +32,7 @@ class LicenseInfoCSP extends React.Component<{}, ILicenseInfoCSPState> {
     const license = this.getLicense();
 
     return (
-      <div>
+      <React.Fragment>
         <div className="bmark_desktoplic">
           {localize("License.About_License_CSP", locale)}
         </div>
@@ -59,7 +59,7 @@ class LicenseInfoCSP extends React.Component<{}, ILicenseInfoCSPState> {
           </div>
         </div>
         {this.getModalLicenseCSPSetup()}
-      </div>
+      </React.Fragment>
     );
   }
 

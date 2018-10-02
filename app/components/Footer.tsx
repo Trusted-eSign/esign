@@ -15,7 +15,7 @@ class Footer extends React.Component<{}, {}> {
     const { localize, locale } = this.context;
 
     return (
-      <div>
+      <React.Fragment>
         <div className="page-footer mainfooter">
           <div className="footer-copyright">
             <div className="row">
@@ -32,7 +32,7 @@ class Footer extends React.Component<{}, {}> {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

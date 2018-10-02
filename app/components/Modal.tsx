@@ -62,9 +62,9 @@ class Modal extends React.Component<IModalProps, {}> {
             this.handleCloseModal();
           }}
         />
-        <div>
+        <React.Fragment>
           {this.props.children}
-        </div>
+        </React.Fragment>
       </div>
     );
   }

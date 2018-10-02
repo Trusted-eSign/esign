@@ -13,7 +13,7 @@ class MainWindowOperation extends React.Component<IMainWindowOperationsProps, {}
     const { info, title_pre, title_post, operation } = this.props;
 
     return (
-      <div>
+      <React.Fragment>
         <Link to={"/" + operation} className="r-iconbox-link iconpos_left">
           <div className="r-iconbox-link">
             <div className="r-iconbox-icon">
@@ -25,7 +25,7 @@ class MainWindowOperation extends React.Component<IMainWindowOperationsProps, {}
             <p>{info}</p>
           </div>
         </Link>
-      </div>
+      </React.Fragment>
     );
   }
 }

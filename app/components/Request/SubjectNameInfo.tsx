@@ -158,7 +158,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
 
     if (template === REQUEST_TEMPLATE_KEP_FIZ || template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL) {
       return (
-        <div>
+        <React.Fragment>
           {
             template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL ?
               (
@@ -211,7 +211,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
           </div>
           {
             template === REQUEST_TEMPLATE_ADDITIONAL ?
-              <div>
+              <React.Fragment>
                 <div className="row">
                   <div className="input-field input-field-csr col s6">
                     <input
@@ -236,10 +236,10 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                     <label htmlFor="title">{localize("CSR.title", locale)}</label>
                   </div>
                 </div>
-              </div> :
+              </React.Fragment> :
               null
           }
-        </div>
+        </React.Fragment>
       );
     }
   }

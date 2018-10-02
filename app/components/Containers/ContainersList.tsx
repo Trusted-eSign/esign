@@ -75,11 +75,11 @@ class ContainersList extends React.Component<any, any> {
     );
 
     return (
-      <div>
+      <React.Fragment>
         <ul className="collapsible" data-collapsible="accordion">
           {elements}
         </ul>
-      </div>
+      </React.Fragment>
     );
   }
 }

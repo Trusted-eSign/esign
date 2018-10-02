@@ -31,7 +31,7 @@ class ProductInformation extends React.Component<{}, {}> {
     const { localize, locale } = this.context;
 
     return (
-      <div>
+      <React.Fragment>
         <div className="infoapp">
           <div className="card-content white-text">
             <div className="row">
@@ -71,7 +71,7 @@ class ProductInformation extends React.Component<{}, {}> {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

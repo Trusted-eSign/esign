@@ -66,7 +66,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
         </div>
       );
     } else {
-      return (<div></div>);
+      return (null);
     }
   }
 

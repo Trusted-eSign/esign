@@ -431,12 +431,12 @@ class CertWindow extends React.Component<any, any> {
       cert = <CertificateInfo certificate={certificate} />;
     } else if (certificate) {
       cert = (
-        <div>
+        <React.Fragment>
           <a className="collection-info chain-info-blue">{localize("Certificate.cert_chain_status", locale)}</a>
           <div className="collection-info chain-status">{certificate.status ? localize("Certificate.cert_chain_status_true", locale) : localize("Certificate.cert_chain_status_false", locale)}</div>
           <a className="collection-info cert-info-blue">{localize("Certificate.cert_chain_info", locale)}</a>
           <CertificateChainInfo certificate={certificate} key={"chain_" + certificate.id} style="" onClick={() => { return; }} />
-        </div>
+        </React.Fragment>
       );
     }
 

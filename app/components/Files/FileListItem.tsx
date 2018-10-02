@@ -82,10 +82,10 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
             {
               file.socket ? null
                 :
-                <div>
+                <React.Fragment>
                   <li><a onClick={function (event: any) { self.openFileFolder(event, file.fullpath); }}>{localize("Settings.go_to_file", locale)}</a></li>
                   <li><a onClick={this.props.removeFiles}>{localize("Settings.delete_file", locale)}</a></li>
-                </div>
+                </React.Fragment>
             }
           </ul>
         </div>

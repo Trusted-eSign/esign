@@ -23,7 +23,7 @@ class DeleteDocuments extends React.Component<IDeleteDocumentsProps, {}> {
     const { localize, locale } = this.context;
 
     return (
-      <div>
+      <React.Fragment>
         <div className="row">
           <div className="col s12">
             <span className="card-infos sub">
@@ -41,7 +41,7 @@ class DeleteDocuments extends React.Component<IDeleteDocumentsProps, {}> {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 

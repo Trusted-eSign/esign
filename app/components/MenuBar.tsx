@@ -143,7 +143,7 @@ class MenuBar extends React.Component<any, {}> {
     const classDisabled = disabledNavigate ? "disabled" : "";
 
     return (
-      <div>
+      <React.Fragment>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
@@ -178,7 +178,7 @@ class MenuBar extends React.Component<any, {}> {
         </nav>
         {this.props.children}
         <Diagnostic />
-      </div>
+      </React.Fragment>
     );
   }
 
