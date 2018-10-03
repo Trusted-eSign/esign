@@ -121,7 +121,7 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
     }
 
     return (
-      <div>
+      <React.Fragment>
         <div className="infoapp">
           <div className="card-content gray-text">
             <span className="card-title">{localize("About.FeedBack", locale)}</span>
@@ -163,7 +163,7 @@ class FeedbackForm extends React.Component<{}, IFeedbackFormState> {
             <a onClick={this.validDatas}>{localize("About.send", locale)}</a>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

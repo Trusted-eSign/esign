@@ -50,7 +50,7 @@ class App extends React.Component<IAppProps, {}> {
   render() {
     return (
       <Router history={history}>
-        <div>
+        <React.Fragment>
           <Route path="/" component={MenuBar} />
           <Route exact path="/" component={MainWindow} />
           <Route path={LOCATION_SIGN} component={SignatureWindow} />
@@ -61,7 +61,7 @@ class App extends React.Component<IAppProps, {}> {
           <Route path={LOCATION_HELP} component={HelpWindow} />
           <Route path={LOCATION_DOCUMENTS} component={DocumentsWindow} />
           <Route path={LOCATION_EVENTS} component={EventsWindow} />
-        </div>
+        </React.Fragment>
       </Router>
     );
   }

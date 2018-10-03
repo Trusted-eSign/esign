@@ -239,9 +239,9 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.showModalWithError()}
-      </div>
+      </React.Fragment>
     );
   }
 }

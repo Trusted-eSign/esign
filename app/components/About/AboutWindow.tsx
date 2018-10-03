@@ -6,7 +6,7 @@ class AboutWindow extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <div className="main">
           <div className="about">
             <div className="row card">
@@ -19,7 +19,7 @@ class AboutWindow extends React.PureComponent {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

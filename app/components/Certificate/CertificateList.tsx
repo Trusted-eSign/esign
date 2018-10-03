@@ -144,7 +144,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
     });
 
     return (
-      <div>
+      <React.Fragment>
         <ul className="collapsible" data-collapsible="accordion">
           {this.getCollapsibleElement(localize("Certificate.certs_my", locale), "my", my, true)}
           {this.getCollapsibleElement(localize("Certificate.certs_other", locale), "other", other)}
@@ -153,7 +153,7 @@ class CertificateList extends React.Component<ICertificateListProps, ICertificat
           {this.getCollapsibleElement(localize("Certificate.certs_token", locale), "token", token)}
           {this.getCollapsibleElement(localize("Certificate.certs_request", locale), "request", request)}
         </ul>
-      </div>
+      </React.Fragment>
     );
   }
 }

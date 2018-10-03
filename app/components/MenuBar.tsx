@@ -10,7 +10,7 @@ import {
 } from "../constants";
 import { connectedSelector, loadingRemoteFilesSelector } from "../selectors";
 import { CANCELLED } from "../server/constants";
-import { mapToArr } from "../utils";
+import { fileExists, mapToArr } from "../utils";
 import Diagnostic from "./Diagnostic/Diagnostic";
 import LocaleSelect from "./LocaleSelect";
 import SideMenu from "./SideMenu";
@@ -35,7 +35,8 @@ class MenuBar extends React.Component<any, {}> {
 
   closeWindow() {
     const { localize, locale } = this.context;
-    const { cloudCSPSettings, encSettings, recipients, saveToDocuments, signSettings, signer } = this.props;
+    const { cloudCSPSettings, encSettings, recipients,
+       saveToDocuments, signSettings, signer, tempContentOfSignedFiles } = this.props;
 
     if (this.isFilesFromSocket()) {
       this.removeAllFiles();
@@ -54,6 +55,12 @@ class MenuBar extends React.Component<any, {}> {
         signer,
       },
     });
+
+    for (const filePath of tempContentOfSignedFiles ) {
+      if (fileExists(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
 
     const sstate = JSON.stringify(state, null, 4);
     fs.writeFile(SETTINGS_JSON, sstate, (err: any) => {
@@ -136,7 +143,7 @@ class MenuBar extends React.Component<any, {}> {
     const classDisabled = disabledNavigate ? "disabled" : "";
 
     return (
-      <div>
+      <React.Fragment>
         <nav className="app-bar">
           <div className="col s6 m6 l6 app-bar-wrapper">
             <ul className="app-bar-items">
@@ -171,7 +178,7 @@ class MenuBar extends React.Component<any, {}> {
         </nav>
         {this.props.children}
         <Diagnostic />
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -236,5 +243,6 @@ export default connect((state, ownProps) => {
     saveToDocuments: state.settings.saveToDocuments,
     signSettings: state.settings.sign,
     signer: state.signers.signer,
+    tempContentOfSignedFiles: state.files.tempContentOfSignedFiles,
   };
 }, { filePackageDelete })(MenuBar);

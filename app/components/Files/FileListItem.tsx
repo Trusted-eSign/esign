@@ -23,6 +23,7 @@ interface IFilelistItemProps {
   operation: string;
   onClickBtn: (event: any) => void;
   removeFiles: (event: any) => void;
+  selectTempContentOfSignedFiles: (filePath: string) => void;
   index: string;
 }
 
@@ -81,10 +82,10 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
             {
               file.socket ? null
                 :
-                <div>
+                <React.Fragment>
                   <li><a onClick={function (event: any) { self.openFileFolder(event, file.fullpath); }}>{localize("Settings.go_to_file", locale)}</a></li>
                   <li><a onClick={this.props.removeFiles}>{localize("Settings.delete_file", locale)}</a></li>
-                </div>
+                </React.Fragment>
             }
           </ul>
         </div>
@@ -109,7 +110,7 @@ class FileListItem extends React.Component<IFilelistItemProps, {}> {
 
         if (newPath) {
           if (shell.openItem(newPath)) {
-            // shell.moveItemToTrash(newPath);
+            this.props.selectTempContentOfSignedFiles(newPath);
           }
         }
       }

@@ -180,13 +180,13 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       );
     } else {
       body = (
-        <div>
+        <React.Fragment>
           <div className="row">
             <div className="col s6 card-infos sub">
               <EncodingTypeSelector EncodingValue={encodingType} handleChange={(encoding: string) => this.handleEncodingChange(encoding)} />
             </div>
           </div>
-        </div>
+        </React.Fragment>
       );
     }
 

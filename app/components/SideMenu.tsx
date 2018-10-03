@@ -23,7 +23,7 @@ class SideMenu extends React.Component<{}, {}> {
     const { localize, locale } = this.context;
 
     return (
-      <div>
+      <React.Fragment>
         <nav className="menu-logo">
           <div className="center">
             <Link to="/" className="menuheaderlink" href="/">
@@ -86,7 +86,7 @@ class SideMenu extends React.Component<{}, {}> {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

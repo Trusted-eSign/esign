@@ -2,7 +2,8 @@ import * as fs from "fs";
 import { OrderedMap, Record } from "immutable";
 import {
   ACTIVE_FILE, DELETE_FILE, DOCUMENTS_REVIEWED, PACKAGE_DELETE_FILE,
-  PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, SELECT_FILE, START, SUCCESS,
+  PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, SELECT_FILE,
+  SELECT_TEMP_CONTENT_OF_SIGNED_FILES, START, SUCCESS,
 } from "../constants";
 import { arrayToMap, fileExists } from "../utils";
 
@@ -23,6 +24,7 @@ const DefaultReducerState = Record({
   entities: OrderedMap({}),
   selectedFilesPackage: false,
   selectingFilesPackage: false,
+  tempContentOfSignedFiles: [],
 });
 
 export default (files = new DefaultReducerState(), action) => {
@@ -84,6 +86,9 @@ export default (files = new DefaultReducerState(), action) => {
 
     case DOCUMENTS_REVIEWED:
       return files.set("documentsReviewed", payload.reviewed);
+
+    case SELECT_TEMP_CONTENT_OF_SIGNED_FILES:
+      return files.set("tempContentOfSignedFiles", [...files.get("tempContentOfSignedFiles"), payload.tempContentOfSignedFiles]);
   }
 
   return files;

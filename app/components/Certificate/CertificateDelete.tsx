@@ -70,7 +70,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
       );
 
     return (
-      <div>
+      <React.Fragment>
         <div className="row">
           {body}
         </div>
@@ -86,7 +86,7 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 

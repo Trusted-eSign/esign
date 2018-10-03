@@ -86,13 +86,13 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
     if (operation === "certificate" && cert.key.length === 0 && cert.provider === "SYSTEM") {
       certKeyMenu = (
-        <div>
+        <React.Fragment>
           <i className="cert-setting-item waves-effect material-icons secondary-content"
             data-activates={"cert-key-set-file"} onClick={this.stopEvent}>more_vert</i>
           <ul id={"cert-key-set-file"} className="dropdown-content">
             <li><a onClick={this.addCertKey}>{localize("Certificate.import_key", locale)}</a></li>
           </ul>
-        </div>
+        </React.Fragment>
       );
     } else {
       certKeyMenu = null;

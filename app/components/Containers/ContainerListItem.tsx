@@ -26,7 +26,7 @@ class ContainerListItem extends React.Component<any, any> {
     }
 
     return (
-      <div>
+      <React.Fragment>
         <div className="row certificate-list-item" onClick={this.handleClick}>
           <div className={"collection-item avatar certs-collection " + active}>
             <div className="col s1 key_container">
@@ -38,7 +38,7 @@ class ContainerListItem extends React.Component<any, any> {
             </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }

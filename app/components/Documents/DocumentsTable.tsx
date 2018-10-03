@@ -110,7 +110,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
     const rowGetter = ({ index }: { index: number }) => this.getDatum(this.state.sortedList, index);
 
     return (
-      <div>
+      <React.Fragment>
         <Table
           ref="Table"
           disableHeader={disableHeader}
@@ -194,7 +194,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
             <i className={"small material-icons cryptoarm-blue waves-effect " + classDisabledNavigation} onClick={this.handleScrollToLastOfFoud}>last_page</i>
           </div> :
           null}
-      </div>
+      </React.Fragment>
     );
   }
 
@@ -325,10 +325,10 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
 
   headerRenderer = ({ dataKey, label, sortBy, sortDirection }: { dataKey?: string, label?: string, sortBy?: string, sortDirection?: TSortDirection }) => {
     return (
-      <div>
+      <React.Fragment>
         {label}
         {sortBy === dataKey && <SortIndicator sortDirection={sortDirection} />}
-      </div>
+      </React.Fragment>
     );
   }
 

@@ -190,7 +190,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       keyUsage, keyUsageGroup, locality, ogrnip, organization, organizationUnitName, province, selfSigned, snils, template, title } = this.state;
 
     return (
-      <div>
+      <React.Fragment>
         <div className="modal-body">
           <div className="row nobottom">
             <div className="col s12">
@@ -278,7 +278,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
             </div>
           </div>
         </div>
-      </div >
+      </React.Fragment>
     );
   }
 
