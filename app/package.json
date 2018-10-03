@@ -13,7 +13,7 @@
     "request": "2.73.0",
     "reselect": "^3.0.1",
     "socket.io": "^2.0.4",
-    "sudo-prompt": "7.0.0",
+    "sudo-prompt": "^8.2.3",
     "winston": "^3.0.0"
   }
 }
