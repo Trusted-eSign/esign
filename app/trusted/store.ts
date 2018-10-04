@@ -242,11 +242,11 @@ export class Store {
       cert = p12.certificate(pass);
       key = p12.key(pass);
     } catch (e) {
-      return undefined;
+      return false;
     }
 
     if (!cert || !key) {
-      return undefined;
+      return false;
     }
 
     this.importCertificate(cert);
@@ -267,7 +267,7 @@ export class Store {
     return true;
   }
 
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string, contName?: string) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
@@ -341,7 +341,7 @@ export class Store {
       return;
     }
 
-    RV.downloadCRL(DIST_POINTS, PATH_OUT, function (err: any, res: any) {
+    RV.downloadCRL(DIST_POINTS, PATH_OUT, function(err: any, res: any) {
       if (err) {
         done(err);
       } else {
@@ -370,7 +370,7 @@ export class Store {
     let uri: string;
     let newItem: any;
 
-    uri = this._store.addCrl(provider.handle, category, crl, flag);
+    uri = this._store.addCrl(provider.handle, category, crl);
 
     newItem = provider.objectToPkiItem(uri);
     items = this._store.cash.export();

@@ -378,7 +378,9 @@ class CertWindow extends React.Component<any, any> {
     $("#get-password").openModal({
       complete() {
         try {
-          trusted.utils.Csp.importPkcs12(p12, self.state.password);
+          if (p12) {
+            trusted.utils.Csp.importPkcs12(p12, self.state.password);
+          }
 
           self.handlePasswordChange("");
 

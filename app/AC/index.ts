@@ -14,7 +14,7 @@ import {
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, SELECT_TEMP_CONTENT_OF_SIGNED_FILES, START,
-   SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
+  SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
@@ -24,13 +24,13 @@ import { Store } from "../trusted/store";
 import { extFile, fileExists, toBase64 } from "../utils";
 
 export function changeLocation(location: string) {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch(push(location));
   };
 }
 
 export function loadLicense() {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({ type: LOAD_LICENSE + START });
 
     setTimeout(() => {
@@ -40,17 +40,17 @@ export function loadLicense() {
       let buffer;
       let lic;
       let lic_format = "NONE"; // Type license: MTX - old license, JWT - license of jwt roken, TRIAL - триальная лицензия, NONE - license epsent
-      let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
+      let lic_error = 911; // CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
       // Шаблон информации о лицензии для заполнения
       lic = {
         aud: "-",
-        sub: "CryptoARM GOST",
         core: 65535,
-        iss: 'ООО "Цифровые технологии"',
+        desc: "CryptoARM GOST",
         exp: 0,
         iat: 0,
+        iss: 'ООО "Цифровые технологии"',
         jti: "",
-        desc: "CryptoARM GOST",
+        sub: "CryptoARM GOST",
       };
       if (fs.existsSync(LICENSE_PATH)) {
         data = fs.readFileSync(LICENSE_PATH, "utf8");
@@ -61,35 +61,36 @@ export function loadLicense() {
         if (result != null) {
           lic_format = "MTX";
           const expirationTime = trusted.utils.Jwt.getExpirationTime(data);
-          if (expirationTime == 0) { // лицензия корректна
+          if (expirationTime === 0) { // лицензия корректна
             lic.exp = expirationTime;
             lic.iat = 0;
             licenseStatus = 1;
             const loaded = true;
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
+            lic_error = 900; // CTLICENSE_R_NO_ERROR
             dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
           } else if (expirationTime > 900 && expirationTime <= 912) { // Возвратился код ошибки
             lic.exp = expirationTime;
             lic.iat = 0;
             licenseStatus = 0;
             lic_error = expirationTime;
-            let verified = true;
+            const verified = true;
             dispatch({ payload: { data, lic_format, licenseStatus, lic_error, verified }, type: LOAD_LICENSE + FAIL });
           } else {
             lic.exp = expirationTime;
             lic.iat = 0;
             licenseStatus = 1;
             const loaded = true;
-            lic_error = 900;//CTLICENSE_R_NO_ERROR
+            lic_error = 900; // CTLICENSE_R_NO_ERROR
             dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
           }
         } else {
-          let result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
+          const result = data.match(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=\s\n\t]+$/);
           if (result != null) {
             lic_format = "JWT";
             const check = trusted.utils.Jwt.checkLicense(data);
-            if (check == 0) licenseStatus = 1;
-            else {
+            if (check === 0) {
+              licenseStatus = 1;
+            } else {
               lic_error = check;
               licenseStatus = 0;
             }
@@ -103,61 +104,64 @@ export function loadLicense() {
                   lic = parsedLicense;
                 }
                 const loaded = true;
-                if (check == 0) lic_error = 900;//CTLICENSE_R_NO_ERROR
+                if (check === 0) {
+                  lic_error = 900; // CTLICENSE_R_NO_ERROR
+                }
+
                 dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
               } catch (e) {
                 lic_format = "NONE"; // Лицензия отсутствует
                 licenseStatus = 0; // Статуст лицензии: 0 - не действует
                 data = "";
-                let loaded = false;
-                let verified = true;
+                const loaded = false;
+                const verified = true;
                 dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
               }
             }
           } else {
             // Проверка на наличие и истечение временной лицензии
-            let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+            const status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
             if (status_trial === 1) {
               lic_format = "TRIAL"; // Работает триальная лицензия
-              let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
+              const expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
               lic.exp = expirationTimeTrial;
               lic.iat = expirationTimeTrial - 14 * 86400;
               data = "";
-              let loaded = true;
+              const loaded = true;
               licenseStatus = 1; // Статуст лицензии: 1 - действует
-              lic_error = 900;//CTLICENSE_R_NO_ERROR
+              lic_error = 900; // CTLICENSE_R_NO_ERROR
               dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
             } else {
               lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
               licenseStatus = 0; // Статуст лицензии: 0 - не действует
               data = "";
-              let loaded = false;
-              let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
-              let verified = true;
+              const loaded = false;
+              const lic_error = 911; // CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
+              const verified = true;
               dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
             }
           }
         }
       } else {
         // // Проверка на наличие и истечение временной лицензии
-        let status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
+        const status_trial = trusted.utils.Jwt.checkTrialLicense(); // 1-лицензия действует, 0 - нет
         if (status_trial === 1) {
           lic_format = "TRIAL"; // Работает триальная лицензия
-          let expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
+          const expirationTimeTrial = trusted.utils.Jwt.getTrialExpirationTime();
           lic.exp = expirationTimeTrial;
           lic.iat = expirationTimeTrial - 14 * 86400;
           data = "";
-          let loaded = true;
+          const loaded = true;
           licenseStatus = 1; // Статуст лицензии: 1 - действует
-          lic_error = 900;//CTLICENSE_R_NO_ERROR
+          lic_error = 900; // CTLICENSE_R_NO_ERROR
           dispatch({ payload: { data, lic, lic_format, loaded, licenseStatus, lic_error }, type: LOAD_LICENSE + SUCCESS });
         } else {
           lic_format = "NONE"; // Лицензия отсутствует, т.к. триальная истекла
           licenseStatus = 0; // Статуст лицензии: 0 - не действует
           data = "";
-          let loaded = false;
-          let verified = true;
-          let lic_error = 911; //CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
+          const loaded = false;
+          const verified = true;
+          const lic_error = 911; // CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE
           dispatch({ payload: { data, lic_format, licenseStatus, lic_error, loaded, verified }, type: LOAD_LICENSE + FAIL });
         }
       }
@@ -170,7 +174,7 @@ interface IFile {
   filename: string;
   lastModifiedDate: Date;
   fullpath: string;
-  extension: string;
+  extension: string | undefined;
   active: boolean;
   extra: any;
   remoteId?: string;
@@ -203,7 +207,7 @@ export function packageSign(
   format: trusted.DataFormat,
   folderOut: string,
 ) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     dispatch({
       type: PACKAGE_SIGN + START,
     });
@@ -243,6 +247,7 @@ export function packageSign(
               let cms = signs.loadSign(newPath);
 
               if (cms.isDetached()) {
+                // tslint:disable-next-line:no-conditional-assignment
                 if (!(cms = signs.setDetachedContent(cms, newPath))) {
                   throw new Error(("err"));
                 }
@@ -252,18 +257,19 @@ export function packageSign(
 
               const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
 
-              signatureInfo.forEach((info) => {
+              signatureInfo.forEach((info: any) => {
                 const subjectCert = info.certs[info.certs.length - 1];
 
                 normalyzeSignatureInfo.push({
-                  subjectFriendlyName: info.subject,
-                  issuerFriendlyName: subjectCert.issuerFriendlyName,
-                  notBefore: new Date(subjectCert.notBefore).getTime(),
-                  notAfter: new Date(subjectCert.notAfter).getTime(),
                   digestAlgorithm: subjectCert.signatureDigestAlgorithm,
-                  signingTime: info.signingTime ? new Date(info.signingTime).getTime() : undefined,
-                  subjectName: subjectCert.subjectName,
+                  issuerFriendlyName: subjectCert.issuerFriendlyName,
                   issuerName: subjectCert.issuerName,
+                  notAfter: new Date(subjectCert.notAfter).getTime(),
+                  notBefore: new Date(subjectCert.notBefore).getTime(),
+                  signingTime: info.signingTime ? new Date(info.signingTime).getTime() : undefined,
+                  subjectFriendlyName: info.subject,
+                  subjectName: subjectCert.subjectName,
+
                 });
               });
 
@@ -275,7 +281,7 @@ export function packageSign(
                   signers: JSON.stringify(normalyzeSignatureInfo),
                 },
                 url: remoteFiles.uploader,
-              }, (err) => {
+              }, (err: Error) => {
                 if (err) {
                   if (connection && connection.connected && connection.socket) {
                     connection.socket.emit(ERROR, { id: file.remoteId, error: err });
@@ -322,7 +328,7 @@ export function packageSign(
 }
 
 export function filePackageSelect(files: IFilePath[]) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: PACKAGE_SELECT_FILE + START,
     });
@@ -386,7 +392,7 @@ export function selectTempContentOfSignedFiles(tempContentOfSignedFiles: string)
 }
 
 export function loadAllCertificates() {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: LOAD_ALL_CERTIFICATES + START,
     });
@@ -432,8 +438,8 @@ export function removeAllCertificates() {
   };
 }
 
-export function verifyCertificate(certificateId) {
-  return (dispatch, getState) => {
+export function verifyCertificate(certificateId: string) {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     const { certificates } = getState();
 
     const certItem = certificates.getIn(["entities", certificateId]);
@@ -459,7 +465,7 @@ export function verifyCertificate(certificateId) {
   };
 }
 
-export function selectSignerCertificate(selected) {
+export function selectSignerCertificate(selected: string) {
   return {
     payload: { selected },
     type: SELECT_SIGNER_CERTIFICATE,
@@ -467,13 +473,13 @@ export function selectSignerCertificate(selected) {
 }
 
 export function loadAllContainers() {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: LOAD_ALL_CONTAINERS + START,
     });
 
     setTimeout(() => {
-      let enumedContainers;
+      let enumedContainers: any[] = [];
 
       try {
         enumedContainers = trusted.utils.Csp.enumContainers(75);
@@ -509,7 +515,7 @@ export function removeAllContainers() {
 }
 
 export function getCertificateFromContainer(container: number) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     dispatch({
       payload: { container },
       type: GET_CERTIFICATE_FROM_CONTAINER + START,
@@ -566,9 +572,9 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
     extension,
     filename: name ? name : path.basename(fullpath),
     fullpath,
-    lastModifiedDate: lastModifiedDate ? lastModifiedDate : stat.birthtime,
+    lastModifiedDate: lastModifiedDate ? lastModifiedDate : (stat ? stat.birthtime : undefined),
     remoteId,
-    size: size ? size : stat.size,
+    size: size ? size : (stat ? stat.size : undefined),
     socket,
   };
 
@@ -594,7 +600,7 @@ export function deleteFile(fileId: number) {
 }
 
 export function verifySignature(fileId: string) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     const state = getState();
     const { connections, documents, files } = state;
     let signaruteStatus = false;
@@ -610,6 +616,7 @@ export function verifySignature(fileId: string) {
       cms = signs.loadSign(file.fullpath);
 
       if (cms.isDetached()) {
+        // tslint:disable-next-line:no-conditional-assignment
         if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
           throw new Error(("err"));
         }
@@ -632,7 +639,7 @@ export function verifySignature(fileId: string) {
         }
       }
 
-      signatureInfo = signatureInfo.map((info) => {
+      signatureInfo = signatureInfo.map((info: any) => {
         return {
           fileId,
           ...info,
@@ -657,7 +664,7 @@ export function verifySignature(fileId: string) {
   };
 }
 
-export function changeSignatureEncoding(encoding) {
+export function changeSignatureEncoding(encoding: string) {
   return {
     payload: { encoding },
     type: CHANGE_SIGNATURE_ENCODING,
