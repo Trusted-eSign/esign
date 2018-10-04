@@ -34,7 +34,7 @@ class FileIcon extends React.Component<IFileIconProps, {}> {
       }
 
       this.timerHandle = null;
-    }, 3000);
+    }, 2000);
   }
 
   componentWillUnmount() {
