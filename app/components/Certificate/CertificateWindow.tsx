@@ -260,6 +260,19 @@ class CertWindow extends React.Component<any, any> {
 
       window.PKISTORE.importCertificate(importingCertificate, PROVIDER_MICROSOFT, (err: Error) => {
         if (err) {
+
+          logger.log({
+            certificate: importingCertificate.subjectName,
+            level: "error",
+            message: err.message ? err.message : "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + importingCertificate.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
           Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
         } else {
           removeAllCertificates();
@@ -267,6 +280,18 @@ class CertWindow extends React.Component<any, any> {
           if (!isLoading) {
             loadAllCertificates();
           }
+
+          logger.log({
+            certificate: importingCertificate.subjectName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + importingCertificate.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
 
           Materialize.toast(localize("Certificate.cert_trusted_import_ok", locale), 2000, "toast-cert_trusted_import_ok");
         }
@@ -289,8 +314,21 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function (error: Error) {
-        if (error) {
+      window.sudo.exec(cmd, options, function (err: Error) {
+        if (err) {
+
+          logger.log({
+            certificate: importingCertificate.subjectName,
+            level: "error",
+            message: err.message ? err.message : "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + importingCertificate.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
           Materialize.toast(localize("Certificate.cert_trusted_import_failed", locale), 2000, "toast-cert_trusted_import_failed");
         } else {
           removeAllCertificates();
@@ -298,6 +336,18 @@ class CertWindow extends React.Component<any, any> {
           if (!isLoading) {
             loadAllCertificates();
           }
+
+          logger.log({
+            certificate: importingCertificate.subjectName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + importingCertificate.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
 
           Materialize.toast(localize("Certificate.cert_trusted_import_ok", locale), 2000, "toast-cert_trusted_import_ok");
         }
