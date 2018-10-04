@@ -180,7 +180,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
     const { localize, locale } = this.context;
     const { activeError, criticalError } = this.state;
 
-    if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE) {
+    if (!criticalError && activeError === NO_CORRECT_CRYPTOARM_LICENSE || activeError === NO_CRYPTOARM_LICENSE || activeError === ERROR_CHECK_CSP_LICENSE) {
       return (
         <Link to={"/license"} onClick={() => $("#modal-window-diagnostic").closeModal()}>
           <a className="waves-effect waves-light btn modal-close">{localize("Common.goOver", locale)}</a>

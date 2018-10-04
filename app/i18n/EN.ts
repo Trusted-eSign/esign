@@ -566,7 +566,7 @@ export default {
     problem_2: "There is no license for crypto provider CryptoPro CSP",
     resolve_2_1: "The system does not have the correct license for CryptoPro CSP, which is necessary for full-function operation of the application.",
     resolve_2_2: "To solve this problem, you can purchase a license for the product in the online store, accessible by reference ",
-    resolve_2_3: "Next, you will need to install the license according to the steps described in the product documentation that is available by reference ",
+    resolve_2_3: "After purchasing a license, you can install it through the application interface",
     problem_3: "There is no license for CryptoARM GOST",
     resolve_3_1: "In the application there is no installed license for the software product Crypto ARM GOST.",
     resolve_3_2: "Without a license, operations related to access to the key medium will not be performed. For example, the operation of signing and decrypting files. This problem is not critical and the application is functional with limited functionality.",

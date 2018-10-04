@@ -66,11 +66,7 @@ class Resolve extends React.Component<IResolveProps, {}> {
               {localize("Problems.resolve_2_2", locale)}
               <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/")}> cryptoarm.ru</a>
             </p>
-            <p className="help_paragraf">{localize("Problems.resolve_2_3", locale)}
-              <a className="hlink" onClick={(event) => this.gotoLink("https://cryptoarm.ru/upload/docs/userguide-cryptoarm-gost.pdf")}>
-                {localize("Help.link_user_guide_name", locale)}
-              </a>
-            </p>
+            <p className="help_paragraf">{localize("Problems.resolve_2_3", locale)} </p>
           </div>
         );
       case NO_GOST_2001:
