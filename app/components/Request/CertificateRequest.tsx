@@ -628,6 +628,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         }
       }, REQUEST, containerName);
 
+      logger.log({
+        certificate: certReq.subject,
+        level: "info",
+        message: "",
+        operation: "Генерация запроса на сертификат",
+        operationObject: {
+          in: "CN=" + cn,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
       this.handleReloadCertificates();
 
       Materialize.toast(localize("CSR.create_request_created", locale), 2000, "toast-csr_created");

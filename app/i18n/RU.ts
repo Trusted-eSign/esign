@@ -99,6 +99,7 @@ export default {
     all: "Все",
     certificate_generation: "Генерация сертификата",
     certificate_import: "Импорт сертификата",
+    csr_generation: "Генерация запроса на сертификат",
     date: "Дата",
     decrypt: "Расшифрование",
     delete_certificate: "Удаление сертификата",
