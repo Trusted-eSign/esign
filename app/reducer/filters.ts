@@ -1,5 +1,6 @@
 import {
-  APPLY_DOCUMENTS_FILTERS, APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_SEARCH_VALUE, DECRYPT,
+  APPLY_DOCUMENTS_FILTERS, APPLY_EVENTS_FILTERS, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CHANGE_SEARCH_VALUE,
+  CSR_GENERATION, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT, ENCRYPTED, EVENTS_CHANGE_FILTER_DATE_FROM,
   EVENTS_CHANGE_FILTER_DATE_TO, EVENTS_CHANGE_FILTER_IN_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_LEVEL,
   EVENTS_CHANGE_FILTER_OPERATION_TYPE, EVENTS_CHANGE_FILTER_OUT_OPERATION_OBJECT, EVENTS_CHANGE_FILTER_USER_NAME,
@@ -29,6 +30,7 @@ const defaultFilters = {
     operations: {
       CERTIFICATE_GENERATION: true,
       CERTIFICATE_IMPORT: true,
+      CSR_GENERATION: true,
       DECRYPT: true,
       DELETE_CERTIFICATE: true,
       DELETE_CONTAINER: true,
@@ -152,6 +154,7 @@ export default (filters = defaultFilters, action) => {
           operations: {
             CERTIFICATE_GENERATION: true,
             CERTIFICATE_IMPORT: true,
+            CSR_GENERATION: true,
             DECRYPT: true,
             DELETE_CERTIFICATE: true,
             DELETE_CONTAINER: true,
@@ -210,6 +213,7 @@ const checkDefaultEventsFilters = (filters: any) => {
     defaultFilters.events.operationObjectOut === filters.operationObjectOut &&
     defaultFilters.events.operations.CERTIFICATE_GENERATION === filters.operations.CERTIFICATE_GENERATION &&
     defaultFilters.events.operations.CERTIFICATE_IMPORT === filters.operations.CERTIFICATE_IMPORT &&
+    defaultFilters.events.operations.CSR_GENERATION === filters.operations.CSR_GENERATION &&
     defaultFilters.events.operations.DECRYPT === filters.operations.DECRYPT &&
     defaultFilters.events.operations.DELETE_CERTIFICATE === filters.operations.DELETE_CERTIFICATE &&
     defaultFilters.events.operations.DELETE_CONTAINER === filters.operations.DELETE_CONTAINER &&

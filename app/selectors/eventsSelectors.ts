@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import {
-  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT, DELETE_CERTIFICATE,
-  DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN, 
+  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CSR_GENERATION, DECRYPT, DELETE_CERTIFICATE,
+  DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN,
 } from "../constants";
 import  localize  from "../i18n/localize";
 
@@ -11,7 +11,7 @@ export const filtersGetter = (state) => state.filters;
 export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter, (events, filters) => {
   const { dateFrom, dateTo, level, operations, operationObjectIn, operationObjectOut, userName } = filters.events;
   return events.filter((event: any) => {
-    
+
     return event.userName.match(userName) &&
       event.operationObject.in.match(operationObjectIn) &&
       event.operationObject.out.match(operationObjectOut) &&
@@ -31,7 +31,7 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
         (
           !operations[SIGN] && !operations[UNSIGN] && !operations[ENCRYPT] &&
           !operations[DECRYPT] && !operations[DELETE_CERTIFICATE] && !operations[DELETE_CONTAINER] &&
-          !operations[CERTIFICATE_GENERATION] && !operations[CERTIFICATE_IMPORT] && !operations[PKCS12_IMPORT]
+          !operations[CERTIFICATE_GENERATION] && !operations[CSR_GENERATION] && !operations[CERTIFICATE_IMPORT] && !operations[PKCS12_IMPORT]
         )
       );
   });

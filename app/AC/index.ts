@@ -212,63 +212,6 @@ export function filePackageSelect(files: IFilePath[]) {
           socket,
         };
 
-        if (fileProps.filename.split(".").pop() === "sig") {
-          const state = getState();
-          const { connections } = state;
-          let signaruteStatus = false;
-          let signatureInfo;
-          let cms: trusted.cms.SignedData;
-
-          try {
-            cms = signs.loadSign(fileProps.fullpath);
-
-            if (cms.isDetached()) {
-              if (!(cms = signs.setDetachedContent(cms, fileProps.fullpath))) {
-                throw new Error(("err"));
-              }
-            }
-
-            signaruteStatus = signs.verifySign(cms);
-            signatureInfo = signs.getSignPropertys(cms);
-
-            if (fileProps.socket) {
-              const connectedList = connectedSelector(state, { connected: true });
-              const connection = connections.getIn(["entities", fileProps.socket]);
-
-              if (connection && connection.connected && connection.socket) {
-                connection.socket.emit(VERIFIED, signatureInfo);
-              } else if (connectedList.length) {
-                const connectedSocket = connectedList[0].socket;
-
-                connectedSocket.emit(VERIFIED, signatureInfo);
-                connectedSocket.broadcast.emit(VERIFIED, signatureInfo);
-              }
-            }
-
-            signatureInfo = signatureInfo.map((info) => {
-              return {
-                fileId: fileProps.id,
-                ...info,
-                id: Math.random(),
-              };
-            });
-
-          } catch (error) {
-            dispatch({
-              payload: { error, fileId: fileProps.id },
-              type: VERIFY_SIGNATURE + FAIL,
-            });
-          }
-
-          if (signatureInfo) {
-            dispatch({
-              generateId: true,
-              payload: { fileId: fileProps.id, signaruteStatus, signatureInfo },
-              type: VERIFY_SIGNATURE + SUCCESS,
-            });
-          }
-        }
-
         filePackage.push(fileProps);
       });
 

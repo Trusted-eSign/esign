@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import { applyEventsFilters, resetEventsFilters } from "../../AC/eventsFiltersActions";
 import {
-  ALL, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, DECRYPT,
+  ALL, CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CSR_GENERATION, DECRYPT,
   DELETE_CERTIFICATE, DELETE_CONTAINER, ENCRYPT,
   PKCS12_IMPORT, SIGN, UNSIGN,
 } from "../../constants";
@@ -32,6 +32,7 @@ interface IEventsFilters {
   operations: {
     CERTIFICATE_GENERATION: boolean;
     CERTIFICATE_IMPORT: boolean;
+    CSR_GENERATION: boolean;
     DECRYPT: boolean;
     DELETE_CERTIFICATE: boolean;
     DELETE_CONTAINER: boolean;
@@ -53,6 +54,7 @@ const initialState = {
   operations: {
     CERTIFICATE_GENERATION: true,
     CERTIFICATE_IMPORT: true,
+    CSR_GENERATION: true,
     DECRYPT: true,
     DELETE_CERTIFICATE: true,
     DELETE_CONTAINER: true,
@@ -296,6 +298,19 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
                         </div>
                         <div className="input-checkbox">
                           <input
+                            name={CSR_GENERATION}
+                            type="checkbox"
+                            id={CSR_GENERATION}
+                            className="filled-in"
+                            checked={operations.CSR_GENERATION}
+                            onChange={this.handleOperationTypesChange}
+                          />
+                          <label htmlFor={CSR_GENERATION} className="truncate">
+                            {localize("EventsFilters.csr_generation", locale)}
+                          </label>
+                        </div>
+                        <div className="input-checkbox">
+                          <input
                             name={CERTIFICATE_IMPORT}
                             type="checkbox"
                             id={CERTIFICATE_IMPORT}
@@ -379,6 +394,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
 
     return operations.CERTIFICATE_GENERATION &&
       operations.CERTIFICATE_IMPORT &&
+      operations.CSR_GENERATION &&
       operations.DECRYPT &&
       operations.DELETE_CERTIFICATE &&
       operations.DELETE_CONTAINER &&
@@ -431,6 +447,7 @@ class FilterEvents extends React.Component<IFilterEventsProps, IEventsFilters> {
       operations: {
         CERTIFICATE_GENERATION: value,
         CERTIFICATE_IMPORT: value,
+        CSR_GENERATION: value,
         DECRYPT: value,
         DELETE_CERTIFICATE: value,
         DELETE_CONTAINER: value,
