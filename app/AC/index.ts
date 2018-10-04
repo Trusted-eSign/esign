@@ -398,15 +398,28 @@ export function loadAllCertificates() {
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
       window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
-        if (!item.id) {
-          item.id = item.provider + "_" + item.category + "_" + item.hash;
+      const crls = [];
+      const certs = [];
+
+      for (const item of certificateStore.items) {
+        if (item.type === "CERTIFICATE") {
+          if (!item.id) {
+            item.id = item.provider + "_" + item.category + "_" + item.hash;
+          }
+
+          certs.push(item);
+        } else if (item.type === "CRL") {
+          if (!item.id) {
+            item.id = item.provider + "_" + item.category + "_" + item.hash;
+          }
+
+          crls.push(item);
         }
-        return item.type === "CERTIFICATE";
-      });
+      }
 
       dispatch({
         certs,
+        crls,
         type: LOAD_ALL_CERTIFICATES + SUCCESS,
       });
     }, 0);

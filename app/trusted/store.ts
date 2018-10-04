@@ -30,7 +30,7 @@ export class Store {
 
     this._items = this._items.concat(this._store.find({
       provider: ["CRYPTOPRO", "MICROSOFT"],
-      type: ["CERTIFICATE"],
+      type: ["CERTIFICATE", "CRL"],
     }));
   }
 
