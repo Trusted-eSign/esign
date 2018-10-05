@@ -427,46 +427,6 @@ class CertWindow extends React.Component<any, any> {
     });
   }
 
-  importCertKey = (event: any) => {
-    if (isEncryptedKey(event[0].path)) {
-      $("#get-password").openModal({
-        complete() {
-          this.importCertKeyHelper(event[0].path, this.state.password);
-        },
-        dismissible: false,
-      });
-    } else {
-      this.importCertKeyHelper(event[0].path, "");
-    }
-  }
-
-  importCertKeyHelper(path: string, pass: string) {
-    $("#cert-key-import").val("");
-
-    const { certificates } = this.props;
-    const { localize, locale } = this.context;
-
-    const KEY_PATH = path;
-    const CERTIFICATES = certificates;
-    const RES = window.PKISTORE.importKey(KEY_PATH, pass);
-    let key = 0;
-
-    if (RES) {
-      for (let i: number = 0; i < CERTIFICATES.length; i++) {
-        if (CERTIFICATES[i].active) {
-          CERTIFICATES[i].privateKey = true;
-          key = i;
-        }
-      }
-
-      $(".toast-key_import_ok").remove();
-      Materialize.toast(localize("Certificate.key_import_ok", locale), 2000, "toast-key_import_ok");
-    } else {
-      $(".toast-key_import_failed").remove();
-      Materialize.toast(localize("Certificate.key_import_failed", locale), 2000, "toast-key_import_failed");
-    }
-  }
-
   getCertificateInfoBody() {
     const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
@@ -664,11 +624,6 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
-                      <input type="file" className="input-file" id="cert-key-import" onChange={
-                        (event: any) => {
-                          this.importCertKey(event.target.files);
-                        }
-                      } />
                       <CertificateList activeCert={this.handleActiveCert} operation="certificate" />
                     </div>
                     <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
