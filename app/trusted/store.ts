@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
@@ -6,34 +5,21 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
   REQUEST, ROOT,
 } from "../constants";
-import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
-import localize from "../i18n/localize";
-import { fileCoding } from "../utils";
+import { DEFAULT_CERTSTORE_PATH, TMP_DIR, USER_NAME } from "../constants";
 import logger from "../winstonLogger";
 
 const OS_TYPE = os.type();
 
 export class Store {
+  // tslint:disable:variable-name
   _items: any[];
-  _providerSystem: trusted.pkistore.Provider_System;
-  _providerCryptopro: trusted.pkistore.ProviderCryptopro;
-  _providerMicrosoft: trusted.pkistore.ProviderMicrosoft;
+  _providerSystem: trusted.pkistore.Provider_System | undefined;
+  _providerCryptopro: trusted.pkistore.ProviderCryptopro | undefined;
+  _providerMicrosoft: trusted.pkistore.ProviderMicrosoft | undefined;
   _store: trusted.pkistore.PkiStore;
-  _rv: trusted.pki.Revocation;
-  _certs: trusted.pki.CertificateCollection;
+  _rv: trusted.pki.Revocation | undefined;
 
   constructor() {
-    this.init();
-
-    this._items = this._store.cash.export();
-
-    this._items = this._items.concat(this._store.find({
-      provider: ["CRYPTOPRO", "MICROSOFT"],
-      type: ["CERTIFICATE", "CRL"],
-    }));
-  }
-
-  init() {
     this._store = new trusted.pkistore.PkiStore(DEFAULT_CERTSTORE_PATH + "/cash.json");
 
     if (OS_TYPE === "Windows_NT") {
@@ -44,9 +30,17 @@ export class Store {
         this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
         this._store.addProvider(this._providerCryptopro.handle);
       } catch (e) {
+        // tslint:disable-next-line:no-console
         console.log(`Error init CryptoPro \n ${e}`);
       }
     }
+
+    this._items = this._store.cash.export();
+
+    this._items = this._items.concat(this._store.find({
+      provider: ["CRYPTOPRO", "MICROSOFT"],
+      type: ["CERTIFICATE", "CRL"],
+    }));
   }
 
   get items(): trusted.pkistore.PkiItem[] {
@@ -97,7 +91,7 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
         done(err);
       } else {
@@ -270,7 +264,9 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       if (objectWithKey.provider === "MICROSOFT") {
         try {
-          keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
+          if (this._providerMicrosoft) {
+            keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
+          }
         } catch (err) {
           // const JWT_RES: number = jwt.checkLicense();
           // if (JWT_RES) {
@@ -289,7 +285,9 @@ export class Store {
     } else {
       if (objectWithKey.provider === "CRYPTOPRO") {
         try {
-          keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
+          if (this._providerCryptopro) {
+            keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
+          }
         } catch (err) {
           // const JWT_RES: number = jwt.checkLicense();
           // if (JWT_RES) {
