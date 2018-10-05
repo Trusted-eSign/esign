@@ -571,11 +571,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         if (algorithm !== ALG_RSA) {
           trusted.utils.Csp.installCertificateToContainer(cert, containerName, 75);
           trusted.utils.Csp.installCertificateFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-          // window.PKISTORE.importCertificate(cert, providerType, (err: Error) => {
-          //   if (err) {
-          //     Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-          //   }
-          // }, MY, containerName);
         } else {
           window.PKISTORE.importCertificate(cert, PROVIDER_SYSTEM, (err: Error) => {
             if (err) {
@@ -653,7 +648,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     const { algorithm } = this.state;
     const OS_TYPE = os.type();
 
-    let providerType: string = PROVIDER_SYSTEM;
+    let providerType: string;
 
     if (algorithm !== ALG_RSA) {
       if (OS_TYPE === "Windows_NT") {

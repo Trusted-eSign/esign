@@ -6,7 +6,7 @@ import { loadAllCertificates, loadAllContainers, removeAllCertificates, removeAl
 import { resetCloudCSP } from "../../AC/cloudCspActions";
 import {
   ADDRESS_BOOK, CA, DEFAULT_CSR_PATH, PROVIDER_CRYPTOPRO,
-  PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, ROOT, USER_NAME,
+  PROVIDER_MICROSOFT, REQUEST, ROOT, USER_NAME,
 } from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
 import { fileCoding } from "../../utils";
@@ -152,7 +152,7 @@ class CertWindow extends React.Component<any, any> {
     let container = "";
 
     let certificate: trusted.pki.Certificate;
-    let providerType: string = PROVIDER_SYSTEM;
+    let providerType: string;
 
     try {
       certificate = trusted.pki.Certificate.load(path, format);

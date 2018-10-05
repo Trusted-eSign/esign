@@ -402,7 +402,6 @@ export function loadAllCertificates() {
 
       window.PKISTORE = certificateStore;
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
-      window.PKIITEMS = certificateStore.items;
 
       const crls = [];
       const certs = [];

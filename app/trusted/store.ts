@@ -26,7 +26,6 @@ export class Store {
     this.init();
 
     this._items = this._store.cash.export();
-    this._rv = new trusted.pki.Revocation();
 
     this._items = this._items.concat(this._store.find({
       provider: ["CRYPTOPRO", "MICROSOFT"],
@@ -391,6 +390,10 @@ export class Store {
    * Search crl for certificate in local store
    */
   getCrlLocal(cert: any): any {
+    if (!this._rv) {
+      this._rv = new trusted.pki.Revocation();
+    }
+
     return this._rv.getCrlLocal(cert, this._store);
   }
 
