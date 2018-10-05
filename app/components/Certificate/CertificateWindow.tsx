@@ -490,7 +490,7 @@ class CertWindow extends React.Component<any, any> {
   }
 
   getTitle() {
-    const { certificate } = this.state;
+    const { certificate, crl } = this.state;
     const { localize, locale } = this.context;
 
     let title: any = null;
@@ -500,6 +500,11 @@ class CertWindow extends React.Component<any, any> {
         <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
         <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
       </div>;
+    } else if (crl) {
+      title = (
+        <div className="cert-title-main">
+          <div className="collection-title cert-title">{crl.issuerFriendlyName}</div>
+        </div>);
     } else {
       title = <span>{localize("Certificate.cert_info", locale)}</span>;
     }
