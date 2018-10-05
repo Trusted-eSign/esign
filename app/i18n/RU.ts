@@ -63,6 +63,10 @@ export default {
     id_tc26_signwithdigest_gost3410_12_256: "ГОСТ Р 34.11-2012/34.10-2012 256 бит",
     id_tc26_signwithdigest_gost3410_12_512: "ГОСТ Р 34.11-2012/34.10-2012 512 бит",
   },
+  CRL: {
+    lastUpdate: "Действителен с",
+    nextUpdate: "Следующее обновление",
+  },
   CSR: {
     algorithm: "Алгоритм",
     common_name: "Идентификатор CN",

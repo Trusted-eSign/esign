@@ -45,7 +45,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className="collection-info cert-info-blue">
-            {localize("Certificate.cert_valid", locale)}
+            {localize("CRL.lastUpdate", locale)}
           </div>
           <div className="collection-title ">{(new Date(crl.lastUpdate)).toLocaleDateString(locale, {
             day: "numeric",
@@ -57,7 +57,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className="collection-info cert-info-blue">
-            {localize("Certificate.cert_valid", locale)}
+            {localize("CRL.nextUpdate", locale)}
           </div>
           <div className="collection-title ">{(new Date(crl.nextUpdate)).toLocaleDateString(locale, {
             day: "numeric",

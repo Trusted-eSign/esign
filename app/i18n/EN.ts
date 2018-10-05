@@ -63,6 +63,10 @@ export default {
     id_tc26_signwithdigest_gost3410_12_256: "GOST R 34.11-2012/34.10-2012 256 bit",
     id_tc26_signwithdigest_gost3410_12_512: "GOST R 34.11-2012/34.10-2012 512 bit",
   },
+  CRL: {
+    lastUpdate: "Last update",
+    nextUpdate: "Next update",
+  },
   CSR: {
     algorithm: "Algorithm",
     common_name: "CN",
