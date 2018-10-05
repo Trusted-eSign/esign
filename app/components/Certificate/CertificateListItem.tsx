@@ -102,7 +102,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       <div className="row certificate-list-item" id={cert.id}>
         <div className={"collection-item avatar certs-collection " + active}
           onClick={this.handleClick}>
-          <div className={"rectangle"} style={rectangleStyle}></div>
+          <div className="rectangle" style={rectangleStyle}></div>
           <div className="col s11">
             <div className="collection-title ">{cert.subjectFriendlyName}</div>
             <div className="collection-info cert-info ">{cert.issuerFriendlyName}</div>

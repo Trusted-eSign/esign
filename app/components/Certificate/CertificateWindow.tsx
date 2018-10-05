@@ -9,10 +9,13 @@ import {
   PROVIDER_MICROSOFT, REQUEST, ROOT, USER_NAME,
 } from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
+import { filteredCrlsSelector } from "../../selectors/crlsSelectors";
 import { fileCoding } from "../../utils";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
 import CloudCSP from "../CloudCSP/CloudCSP";
+import CRLInfo from "../CRL/CRLInfo";
+import CRLList from "../CRL/CRLList";
 import Dialog from "../Dialog";
 import Modal from "../Modal";
 import PasswordDialog from "../PasswordDialog";
@@ -41,6 +44,7 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      crl: null,
       importingCertificate: null,
       importingCertificatePath: null,
       password: "",
@@ -107,7 +111,11 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleActiveCert = (certificate: any) => {
-    this.setState({ certificate });
+    this.setState({ certificate, crl: null });
+  }
+
+  handleActiveCRL = (crl: any) => {
+    this.setState({ certificate: null, crl });
   }
 
   handleReloadCertificates = () => {
@@ -427,15 +435,22 @@ class CertWindow extends React.Component<any, any> {
     });
   }
 
+  getCertificateOrCRLInfo() {
+    const { certificate, crl } = this.state;
+    const { localize, locale } = this.context;
+
+    if (certificate) {
+      return this.getCertificateInfoBody();
+    } else if (crl) {
+      return this.getCRLInfoBody();
+    } else {
+      return <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />;
+    }
+  }
+
   getCertificateInfoBody() {
     const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
-
-    if (!certificate) {
-      return (
-        <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />
-      );
-    }
 
     let cert: any = null;
 
@@ -457,6 +472,18 @@ class CertWindow extends React.Component<any, any> {
         <CertificateInfoTabs activeCertInfoTab={this.handleChangeActiveTab} />
         <div className="add-certs-item">
           {cert}
+        </div>
+      </div>
+    );
+  }
+
+  getCRLInfoBody() {
+    const { crl } = this.state;
+
+    return (
+      <div className="add-certs">
+        <div className="add-certs-item">
+          <CRLInfo crl={crl} />
         </div>
       </div>
     );
@@ -573,7 +600,7 @@ class CertWindow extends React.Component<any, any> {
   render() {
     // tslint:disable-next-line:no-shadowed-variable
     const { resetCloudCSP } = this.props;
-    const { certificates, cloudCSPState, isLoading, isLoadingFromDSS } = this.props;
+    const { certificates, cloudCSPState, crls, isLoading, isLoadingFromDSS } = this.props;
     const { certificate } = this.state;
     const { localize, locale } = this.context;
 
@@ -602,8 +629,8 @@ class CertWindow extends React.Component<any, any> {
     }
 
     const ACTIVE_CERTIFICATE_REQUEST = certificate && certificate.category === REQUEST ? "active" : "not-active";
-    const NAME = certificates.length < 1 ? "active" : "not-active";
-    const VIEW = certificates.length < 1 ? "not-active" : "";
+    const NAME = certificates.length < 1 && crls.length < 1 ? "active" : "not-active";
+    const VIEW = certificates.length < 1 && crls.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";
 
     return (
@@ -625,6 +652,7 @@ class CertWindow extends React.Component<any, any> {
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
                       <CertificateList activeCert={this.handleActiveCert} operation="certificate" />
+                      <CRLList activeCert={this.handleActiveCRL} />
                     </div>
                     <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                   </div>
@@ -661,7 +689,7 @@ class CertWindow extends React.Component<any, any> {
                     </li>
                   </ul>
                 </nav>
-                {this.getCertificateInfoBody()}
+                {this.getCertificateOrCRLInfo()}
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
                 {this.showModalCertificateRequest()}
@@ -692,6 +720,7 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
     cloudCSPState: state.cloudCSP,
     containersLoading: state.containers.loading,
+    crls: filteredCrlsSelector(state),
     isLoading: state.certificates.loading,
     isLoadingFromDSS: state.cloudCSP.loading,
   };
