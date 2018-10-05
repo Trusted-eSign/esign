@@ -114,6 +114,10 @@
       fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CSR'), { mode: 0o700 });
     }
 
+    if (!fs.existsSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CertStore'))) {
+      fs.mkdirSync(path.join(HOME_DIR, '.Trusted', 'CryptoARM GOST', 'CertStore'), { mode: 0o700 });
+    }
+
     document.ondragover = function (evt) {
       evt.preventDefault();
     };
