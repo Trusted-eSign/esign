@@ -44,7 +44,7 @@ class CRLListItem extends React.Component<ICertificateListItemProps, {}> {
     let active = "";
     let rectangleStyle;
 
-    const status = true;
+    const status = this.checkCRL(crl);
 
     if (status) {
       rectangleStyle = rectangleValidStyle;
@@ -67,6 +67,19 @@ class CRLListItem extends React.Component<ICertificateListItemProps, {}> {
         </div>
       </div>
     );
+  }
+
+  checkCRL = (crl: any) => {
+    const currentDate = new Date();
+
+    if (((new Date(crl.nextUpdate)).getTime() >= currentDate.getTime()) &&
+      ((new Date(crl.lastUpdate)).getTime() <= currentDate.getTime())) {
+      return true;
+    } else {
+      //
+    }
+
+    return false;
   }
 }
 
