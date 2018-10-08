@@ -19,7 +19,7 @@ interface ICertificateListProps {
 let scrollTimer: NodeJS.Timer | null;
 let lastScrollFireTime = 0;
 
-class CertificateList extends React.Component<ICertificateListProps, ICertificateListProps> {
+class CertificateList extends React.Component<ICertificateListProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,

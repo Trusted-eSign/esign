@@ -322,7 +322,7 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function (err: Error) {
+      window.sudo.exec(cmd, options, function(err: Error) {
         if (err) {
 
           logger.log({

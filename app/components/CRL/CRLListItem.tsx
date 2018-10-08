@@ -28,10 +28,6 @@ class CRLListItem extends React.Component<ICertificateListItemProps, {}> {
     return nextProps.isOpen !== this.props.isOpen;
   }
 
-  componentDidMount() {
-    $(".cert-setting-item").dropdown();
-  }
-
   handleClick = () => {
     const { chooseCert, toggleOpen } = this.props;
 
