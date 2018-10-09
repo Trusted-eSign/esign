@@ -29,7 +29,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, {}>
 
   timerHandle: NodeJS.Timer | null;
 
-  shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
+  shouldComponentUpdate(nextProps: ICertificateListItemProps) {
     return nextProps.isOpen !== this.props.isOpen ||
       nextProps.cert.verified !== this.props.cert.verified;
   }

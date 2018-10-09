@@ -1,9 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { AutoSizer, List } from "react-virtualized";
+import { List } from "react-virtualized";
 import { loadAllCertificates, verifyCertificate } from "../../AC";
-import { ENCRYPT, SIGN } from "../../constants";
 import accordion from "../../decorators/accordion";
 import { filteredCertificatesSelector } from "../../selectors";
 import ProgressBars from "../ProgressBars";
