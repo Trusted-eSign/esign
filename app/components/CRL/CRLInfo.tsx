@@ -39,7 +39,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("Certificate.issuer_name", locale)}
           </div>
-          <div className="collection-title ">
+          <div className="collection-title selectable-text">
             {crl.issuerFriendlyName}
           </div>
         </div>
@@ -47,7 +47,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("CRL.lastUpdate", locale)}
           </div>
-          <div className="collection-title ">{(new Date(crl.lastUpdate)).toLocaleDateString(locale, {
+          <div className="collection-title selectable-text">{(new Date(crl.lastUpdate)).toLocaleDateString(locale, {
             day: "numeric",
             hour: "numeric",
             minute: "numeric",
@@ -59,7 +59,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("CRL.nextUpdate", locale)}
           </div>
-          <div className="collection-title ">{(new Date(crl.nextUpdate)).toLocaleDateString(locale, {
+          <div className="collection-title selectable-text">{(new Date(crl.nextUpdate)).toLocaleDateString(locale, {
             day: "numeric",
             hour: "numeric",
             minute: "numeric",
@@ -71,7 +71,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("Sign.alg", locale)}
           </div>
-          <div className={"collection-title "}>
+          <div className={"collection-title selectable-text"}>
             {localizeAlgorithm(crl.signatureAlgorithm, locale)}
           </div>
         </div>
@@ -79,7 +79,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("Certificate.signature_digest_algorithm", locale)}
           </div>
-          <div className="collection-title ">
+          <div className="collection-title selectable-text">
             {localizeAlgorithm(crl.signatureDigestAlgorithm, locale)}
           </div>
         </div>
@@ -87,7 +87,7 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
           <div className="collection-info cert-info-blue">
             {localize("Certificate.thumbprint", locale)}
           </div>
-          <div className="collection-title ">
+          <div className="collection-title selectable-text">
             {crl.hash}
           </div>
         </div>

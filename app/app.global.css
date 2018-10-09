@@ -1594,6 +1594,11 @@ form.col.s12 {
   float: left;
 }
 
+.selectable-text {
+  -webkit-user-select: text;
+  cursor: text;
+}
+
 h6.contact-text {
   -webkit-user-select: text;
   font-size: 1.0rem;
