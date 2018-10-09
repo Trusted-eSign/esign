@@ -31,7 +31,7 @@ interface IDocumentsWindowProps {
   selectAllDocuments: () => void;
   selectDocument: (uid: number) => void;
   removeDocuments: (documents: any) => void;
-  arhiveDocuments: (documents: any, arhive_name: string) => void;
+  arhiveDocuments: (documents: any, arhiveName: string) => void;
 }
 
 interface IDocumentsWindowState {
@@ -65,7 +65,7 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
       outDuration: 225,
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
       $(".tooltipped").tooltip();
     });
   }
@@ -352,17 +352,17 @@ class DocumentsWindow extends React.Component<IDocumentsWindowProps, IDocumentsW
 
   handleArhiveDocuments = () => {
     const { localize, locale } = this.context;
-    const { documents, filePackageSelect, removeAllFiles, removeAllRemoteFiles } = this.props;
-    let arhive_name: string = "";
-    // var first_filename = documents[0].filename;
-    // var f_name = first_filename.substr(0, first_filename.lastIndexOf('.'));
-    // arhive_name = f_name + ".zip";
-    let date = new Date();
-    var dateNow = ('0' + date.getDate()).slice(-2) + '.' + ('0' + (date.getMonth() + 1)).slice(-2) + '.' + date.getFullYear() + '_' + ('0' + date.getHours()).slice(-2) + '.' + ('0' + date.getMinutes()).slice(-2) + '.' + ('0' + date.getSeconds()).slice(-2);
-    arhive_name = "arhive_" + dateNow + ".zip";
-    arhiveDocuments(documents, arhive_name);
+    const { documents } = this.props;
+    let arhiveName: string = "";
+
+    const date = new Date();
+    // tslint:disable-next-line:quotemark
+    // tslint:disable-next-line:max-line-length
+    const dateNow = ("0" + date.getDate()).slice(-2) + "." + ("0" + (date.getMonth() + 1)).slice(-2) + "." + date.getFullYear() + "_" + ("0" + date.getHours()).slice(-2) + "." + ("0" + date.getMinutes()).slice(-2) + "." + ("0" + date.getSeconds()).slice(-2);
+    arhiveName = "arhive_" + dateNow + ".zip";
+    arhiveDocuments(documents, arhiveName);
     this.handleReloadDocuments();
-    let message = localize("Documents.documents_arhive", locale) + arhive_name;
+    const message = localize("Documents.documents_arhive", locale) + arhiveName;
     Materialize.toast(message, 2000, "toast-arhive_documents");
   }
 

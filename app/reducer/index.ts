@@ -4,6 +4,7 @@ import certificates from "./certificates";
 import cloudCSP from "./cloudCSP";
 import connections from "./connections";
 import containers from "./containers";
+import crls from "./crls";
 import documents from "./documents";
 import events from "./events";
 import files from "./files";
@@ -20,6 +21,7 @@ export default combineReducers({
   cloudCSP,
   connections,
   containers,
+  crls,
   documents,
   events,
   files,

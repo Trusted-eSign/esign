@@ -9,10 +9,13 @@ import {
   PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, ROOT, USER_NAME,
 } from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
-import { fileCoding } from "../../utils";
+import { filteredCrlsSelector } from "../../selectors/crlsSelectors";
+import { fileCoding, isEncryptedKey } from "../../utils";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
 import CloudCSP from "../CloudCSP/CloudCSP";
+import CRLInfo from "../CRL/CRLInfo";
+import CRLList from "../CRL/CRLList";
 import Dialog from "../Dialog";
 import Modal from "../Modal";
 import PasswordDialog from "../PasswordDialog";
@@ -41,6 +44,7 @@ class CertWindow extends React.Component<any, any> {
     this.state = ({
       activeCertInfoTab: true,
       certificate: null,
+      crl: null,
       importingCertificate: null,
       importingCertificatePath: null,
       password: "",
@@ -107,7 +111,11 @@ class CertWindow extends React.Component<any, any> {
   }
 
   handleActiveCert = (certificate: any) => {
-    this.setState({ certificate });
+    this.setState({ certificate, crl: null });
+  }
+
+  handleActiveCRL = (crl: any) => {
+    this.setState({ certificate: null, crl });
   }
 
   handleReloadCertificates = () => {
@@ -188,7 +196,7 @@ class CertWindow extends React.Component<any, any> {
           certificate: certificate.subjectName,
           level: "info",
           message: "",
-          operation: localize("Events.cert_import", locale), 
+          operation: localize("Events.cert_import", locale),
           operationObject: {
             in: "CN=" + certificate.subjectFriendlyName,
             out: "Null",
@@ -202,7 +210,7 @@ class CertWindow extends React.Component<any, any> {
           certificate: certificate.subjectName,
           level: "error",
           message: err.message ? err.message : err,
-          operation: localize("Events.cert_import", locale), 
+          operation: localize("Events.cert_import", locale),
           operationObject: {
             in: "CN=" + certificate.subjectFriendlyName,
             out: "Null",
@@ -225,7 +233,7 @@ class CertWindow extends React.Component<any, any> {
         certificate: certificate.subjectName,
         level: "info",
         message: "",
-        operation: localize("Events.cert_import", locale), 
+        operation: localize("Events.cert_import", locale),
         operationObject: {
           in: "CN=" + certificate.subjectFriendlyName,
           out: "Null",
@@ -314,7 +322,7 @@ class CertWindow extends React.Component<any, any> {
         name: "Trusted eSign",
       };
 
-      window.sudo.exec(cmd, options, function (err: Error) {
+      window.sudo.exec(cmd, options, function(err: Error) {
         if (err) {
 
           logger.log({
@@ -378,7 +386,9 @@ class CertWindow extends React.Component<any, any> {
     $("#get-password").openModal({
       complete() {
         try {
-          trusted.utils.Csp.importPkcs12(p12, self.state.password);
+          if (p12) {
+            trusted.utils.Csp.importPkcs12(p12, self.state.password);
+          }
 
           self.handlePasswordChange("");
 
@@ -395,7 +405,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "info",
             message: "",
-            operation: localize("Events.PKCS12_import", locale), 
+            operation: localize("Events.PKCS12_import", locale),
             operationObject: {
               in: path.basename(P12_PATH),
               out: "Null",
@@ -412,7 +422,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: "",
             level: "error",
             message: err.message ? err.message : err,
-            operation: localize("Events.PKCS12_import", locale), 
+            operation: localize("Events.PKCS12_import", locale),
             operationObject: {
               in: path.basename(P12_PATH),
               out: "Null",
@@ -465,15 +475,22 @@ class CertWindow extends React.Component<any, any> {
     }
   }
 
+  getCertificateOrCRLInfo() {
+    const { certificate, crl } = this.state;
+    const { localize, locale } = this.context;
+
+    if (certificate) {
+      return this.getCertificateInfoBody();
+    } else if (crl) {
+      return this.getCRLInfoBody();
+    } else {
+      return <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />;
+    }
+  }
+
   getCertificateInfoBody() {
     const { activeCertInfoTab, certificate } = this.state;
     const { localize, locale } = this.context;
-
-    if (!certificate) {
-      return (
-        <BlockNotElements name={"active"} title={localize("Certificate.cert_not_select", locale)} />
-      );
-    }
 
     let cert: any = null;
 
@@ -500,8 +517,20 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
+  getCRLInfoBody() {
+    const { crl } = this.state;
+
+    return (
+      <div className="add-certs">
+        <div className="add-certs-item">
+          <CRLInfo crl={crl} />
+        </div>
+      </div>
+    );
+  }
+
   getTitle() {
-    const { certificate } = this.state;
+    const { certificate, crl } = this.state;
     const { localize, locale } = this.context;
 
     let title: any = null;
@@ -511,6 +540,11 @@ class CertWindow extends React.Component<any, any> {
         <div className="collection-title cert-title">{certificate.subjectFriendlyName}</div>
         <div className="collection-info cert-info cert-title">{certificate.issuerFriendlyName}</div>
       </div>;
+    } else if (crl) {
+      title = (
+        <div className="cert-title-main">
+          <div className="collection-title cert-title">{crl.issuerFriendlyName}</div>
+        </div>);
     } else {
       title = <span>{localize("Certificate.cert_info", locale)}</span>;
     }
@@ -611,7 +645,7 @@ class CertWindow extends React.Component<any, any> {
   render() {
     // tslint:disable-next-line:no-shadowed-variable
     const { resetCloudCSP } = this.props;
-    const { certificates, cloudCSPState, isLoading, isLoadingFromDSS } = this.props;
+    const { certificates, cloudCSPState, crls, isLoading, isLoadingFromDSS } = this.props;
     const { certificate } = this.state;
     const { localize, locale } = this.context;
 
@@ -640,8 +674,8 @@ class CertWindow extends React.Component<any, any> {
     }
 
     const ACTIVE_CERTIFICATE_REQUEST = certificate && certificate.category === REQUEST ? "active" : "not-active";
-    const NAME = certificates.length < 1 ? "active" : "not-active";
-    const VIEW = certificates.length < 1 ? "not-active" : "";
+    const NAME = certificates.length < 1 && crls.length < 1 ? "active" : "not-active";
+    const VIEW = certificates.length < 1 && crls.length < 1 ? "not-active" : "";
     const DISABLED = certificate ? "" : "disabled";
 
     return (
@@ -662,12 +696,8 @@ class CertWindow extends React.Component<any, any> {
                 <div className="add-certs">
                   <div className="add-certs-item">
                     <div className={"add-cert-collection collection " + VIEW}>
-                      <input type="file" className="input-file" id="cert-key-import" onChange={
-                        (event: any) => {
-                          this.importCertKey(event.target.files);
-                        }
-                      } />
                       <CertificateList activeCert={this.handleActiveCert} operation="certificate" />
+                      <CRLList activeCert={this.handleActiveCRL} />
                     </div>
                     <BlockNotElements name={NAME} title={localize("Certificate.cert_not_found", locale)} />
                   </div>
@@ -704,7 +734,7 @@ class CertWindow extends React.Component<any, any> {
                     </li>
                   </ul>
                 </nav>
-                {this.getCertificateInfoBody()}
+                {this.getCertificateOrCRLInfo()}
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
                 {this.showModalCertificateRequest()}
@@ -735,6 +765,7 @@ export default connect((state) => {
     certificates: filteredCertificatesSelector(state, { operation: "certificate" }),
     cloudCSPState: state.cloudCSP,
     containersLoading: state.containers.loading,
+    crls: filteredCrlsSelector(state),
     isLoading: state.certificates.loading,
     isLoadingFromDSS: state.cloudCSP.loading,
   };

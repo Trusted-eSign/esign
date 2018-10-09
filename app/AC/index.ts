@@ -14,7 +14,7 @@ import {
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, SELECT_TEMP_CONTENT_OF_SIGNED_FILES, START,
-   SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
+  SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
   VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
@@ -67,7 +67,7 @@ export function packageSign(
   format: trusted.DataFormat,
   folderOut: string,
 ) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     dispatch({
       type: PACKAGE_SIGN + START,
     });
@@ -107,6 +107,7 @@ export function packageSign(
               let cms = signs.loadSign(newPath);
 
               if (cms.isDetached()) {
+                // tslint:disable-next-line:no-conditional-assignment
                 if (!(cms = signs.setDetachedContent(cms, newPath))) {
                   throw new Error(("err"));
                 }
@@ -116,18 +117,19 @@ export function packageSign(
 
               const normalyzeSignatureInfo: INormalizedSignInfo[] = [];
 
-              signatureInfo.forEach((info) => {
+              signatureInfo.forEach((info: any) => {
                 const subjectCert = info.certs[info.certs.length - 1];
 
                 normalyzeSignatureInfo.push({
-                  subjectFriendlyName: info.subject,
-                  issuerFriendlyName: subjectCert.issuerFriendlyName,
-                  notBefore: new Date(subjectCert.notBefore).getTime(),
-                  notAfter: new Date(subjectCert.notAfter).getTime(),
                   digestAlgorithm: subjectCert.signatureDigestAlgorithm,
-                  signingTime: info.signingTime ? new Date(info.signingTime).getTime() : undefined,
-                  subjectName: subjectCert.subjectName,
+                  issuerFriendlyName: subjectCert.issuerFriendlyName,
                   issuerName: subjectCert.issuerName,
+                  notAfter: new Date(subjectCert.notAfter).getTime(),
+                  notBefore: new Date(subjectCert.notBefore).getTime(),
+                  signingTime: info.signingTime ? new Date(info.signingTime).getTime() : undefined,
+                  subjectFriendlyName: info.subject,
+                  subjectName: subjectCert.subjectName,
+
                 });
               });
 
@@ -139,7 +141,7 @@ export function packageSign(
                   signers: JSON.stringify(normalyzeSignatureInfo),
                 },
                 url: remoteFiles.uploader,
-              }, (err) => {
+              }, (err: Error) => {
                 if (err) {
                   if (connection && connection.connected && connection.socket) {
                     connection.socket.emit(ERROR, { id: file.remoteId, error: err });
@@ -186,7 +188,7 @@ export function packageSign(
 }
 
 export function filePackageSelect(files: IFilePath[]) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: PACKAGE_SELECT_FILE + START,
     });
@@ -250,7 +252,7 @@ export function selectTempContentOfSignedFiles(tempContentOfSignedFiles: string)
 }
 
 export function loadAllCertificates() {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: LOAD_ALL_CERTIFICATES + START,
     });
@@ -260,17 +262,29 @@ export function loadAllCertificates() {
 
       window.PKISTORE = certificateStore;
       window.TRUSTEDCERTIFICATECOLLECTION = certificateStore.trustedCerts;
-      window.PKIITEMS = certificateStore.items;
 
-      const certs = certificateStore.items.filter(function (item: trusted.pkistore.PkiItem) {
-        if (!item.id) {
-          item.id = item.provider + "_" + item.category + "_" + item.hash;
+      const crls = [];
+      const certs = [];
+
+      for (const item of certificateStore.items) {
+        if (item.type === "CERTIFICATE") {
+          if (!item.id) {
+            item.id = item.provider + "_" + item.category + "_" + item.hash;
+          }
+
+          certs.push(item);
+        } else if (item.type === "CRL") {
+          if (!item.id) {
+            item.id = item.provider + "_" + item.category + "_" + item.hash;
+          }
+
+          crls.push(item);
         }
-        return item.type === "CERTIFICATE";
-      });
+      }
 
       dispatch({
         certs,
+        crls,
         type: LOAD_ALL_CERTIFICATES + SUCCESS,
       });
     }, 0);
@@ -283,8 +297,8 @@ export function removeAllCertificates() {
   };
 }
 
-export function verifyCertificate(certificateId) {
-  return (dispatch, getState) => {
+export function verifyCertificate(certificateId: string) {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     const { certificates } = getState();
 
     const certItem = certificates.getIn(["entities", certificateId]);
@@ -310,7 +324,7 @@ export function verifyCertificate(certificateId) {
   };
 }
 
-export function selectSignerCertificate(selected) {
+export function selectSignerCertificate(selected: string) {
   return {
     payload: { selected },
     type: SELECT_SIGNER_CERTIFICATE,
@@ -318,13 +332,13 @@ export function selectSignerCertificate(selected) {
 }
 
 export function loadAllContainers() {
-  return (dispatch) => {
+  return (dispatch: (action: {}) => void) => {
     dispatch({
       type: LOAD_ALL_CONTAINERS + START,
     });
 
     setTimeout(() => {
-      let enumedContainers;
+      let enumedContainers: any[] = [];
 
       try {
         enumedContainers = trusted.utils.Csp.enumContainers(75);
@@ -360,7 +374,7 @@ export function removeAllContainers() {
 }
 
 export function getCertificateFromContainer(container: number) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     dispatch({
       payload: { container },
       type: GET_CERTIFICATE_FROM_CONTAINER + START,
@@ -417,9 +431,9 @@ export function selectFile(fullpath: string, name?: string, lastModifiedDate?: D
     extension,
     filename: name ? name : path.basename(fullpath),
     fullpath,
-    lastModifiedDate: lastModifiedDate ? lastModifiedDate : stat.birthtime,
+    lastModifiedDate: lastModifiedDate ? lastModifiedDate : (stat ? stat.birthtime : undefined),
     remoteId,
-    size: size ? size : stat.size,
+    size: size ? size : (stat ? stat.size : undefined),
     socket,
   };
 
@@ -445,7 +459,7 @@ export function deleteFile(fileId: number) {
 }
 
 export function verifySignature(fileId: string) {
-  return (dispatch, getState) => {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
     const state = getState();
     const { connections, documents, files } = state;
     let signaruteStatus = false;
@@ -461,6 +475,7 @@ export function verifySignature(fileId: string) {
       cms = signs.loadSign(file.fullpath);
 
       if (cms.isDetached()) {
+        // tslint:disable-next-line:no-conditional-assignment
         if (!(cms = signs.setDetachedContent(cms, file.fullpath))) {
           throw new Error(("err"));
         }
@@ -483,7 +498,7 @@ export function verifySignature(fileId: string) {
         }
       }
 
-      signatureInfo = signatureInfo.map((info) => {
+      signatureInfo = signatureInfo.map((info: any) => {
         return {
           fileId,
           ...info,
@@ -508,7 +523,7 @@ export function verifySignature(fileId: string) {
   };
 }
 
-export function changeSignatureEncoding(encoding) {
+export function changeSignatureEncoding(encoding: string) {
   return {
     payload: { encoding },
     type: CHANGE_SIGNATURE_ENCODING,

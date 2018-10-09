@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
@@ -6,20 +5,18 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
   REQUEST, ROOT,
 } from "../constants";
-import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
-import localize from "../i18n/localize";
-import { fileCoding } from "../utils";
+import { DEFAULT_CERTSTORE_PATH, TMP_DIR, USER_NAME } from "../constants";
 import logger from "../winstonLogger";
 
 const OS_TYPE = os.type();
 
 export class Store {
+  // tslint:disable:variable-name
   _items: any[];
   _providerSystem: trusted.pkistore.Provider_System;
   _providerMicrosoft: trusted.pkistore.ProviderMicrosoft;
   _store: trusted.pkistore.PkiStore;
-  _rv: trusted.pki.Revocation;
-  _certs: trusted.pki.CertificateCollection;
+  _rv: trusted.pki.Revocation | undefined;
 
   constructor() {
     this.init();
@@ -36,12 +33,18 @@ export class Store {
   init() {
     this._providerSystem = new trusted.pkistore.Provider_System(DEFAULT_CERTSTORE_PATH);
     this._store = new trusted.pkistore.PkiStore(DEFAULT_CERTSTORE_PATH + "/cash.json");
-    this._store.addProvider(this._providerSystem.handle);
 
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
       this._store.addProvider(this._providerMicrosoft.handle);
     }
+
+    this._items = this._store.cash.export();
+
+    this._items = this._items.concat(this._store.find({
+      provider: ["CRYPTOPRO", "MICROSOFT"],
+      type: ["CERTIFICATE", "CRL"],
+    }));
   }
 
   get items(): trusted.pkistore.PkiItem[] {
@@ -159,7 +162,7 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
         done(err);
       } else {
@@ -180,6 +183,11 @@ export class Store {
         break;
       default:
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    if (!provider) {
+      Materialize.toast(`Provider ${certificate.provider} not init`, 2000, "toast-not_init_provider");
+      return false;
     }
 
     const certX509 = this.getPkiObject(certificate);
@@ -217,43 +225,7 @@ export class Store {
     return true;
   }
 
-  importPkcs12(p12Path: string, pass: string): boolean {
-    let p12: trusted.pki.Pkcs12;
-    let cert: trusted.pki.Certificate;
-    let key: trusted.pki.Key;
-    let ca: trusted.pki.CertificateCollection;
-
-    try {
-      p12 = trusted.pki.Pkcs12.load(p12Path);
-      cert = p12.certificate(pass);
-      key = p12.key(pass);
-    } catch (e) {
-      return undefined;
-    }
-
-    if (!cert || !key) {
-      return undefined;
-    }
-
-    this.importCertificate(cert);
-    this.addKeyToStore(key, "");
-
-    try {
-      ca = p12.ca(pass);
-    } catch (e) {
-      ca = undefined;
-    }
-
-    if (ca) {
-      for (let i: number = 0; i < ca.length; i++) {
-        this.importCertificate(ca.items(i));
-      }
-    }
-
-    return true;
-  }
-
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string, contName?: string) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
@@ -316,47 +288,12 @@ export class Store {
     });*/
   }
 
-  downloadCRL(cert: any, done: (err: any, res?: any) => void): any {
-    const SELF = this;
-    const PATH_OUT: string = path.join(DEFAULT_PATH, "temp.crl");
-    const RV: any = new trusted.pki.Revocation();
-    const DIST_POINTS: string[] = RV.getCrlDistPoints(cert);
-    let crl: any;
-
-    if (DIST_POINTS.length === 0) {
-      return;
-    }
-
-    RV.downloadCRL(DIST_POINTS, PATH_OUT, function (err: any, res: any) {
-      if (err) {
-        done(err);
-      } else {
-        crl = res;
-
-        SELF.addCrlToStore(SELF._providerSystem, "CRL", crl, 0);
-
-        done(null, crl);
-      }
-    });
-  }
-
-  importCRL(crlPath: string): number {
-    const CRL: trusted.pki.Crl = trusted.pki.Crl.load(crlPath);
-
-    if (!CRL) {
-      return 0;
-    } else {
-      this.addCrlToStore(this._providerSystem, "CRL", CRL, 0);
-      return 1;
-    }
-  }
-
   addCrlToStore(provider: any, category: any, crl: any, flag: any): void {
     let items: any;
     let uri: string;
     let newItem: any;
 
-    uri = this._store.addCrl(provider.handle, category, crl, flag);
+    uri = this._store.addCrl(provider.handle, category, crl);
 
     newItem = provider.objectToPkiItem(uri);
     items = this._store.cash.export();
@@ -377,6 +314,10 @@ export class Store {
    * Search crl for certificate in local store
    */
   getCrlLocal(cert: any): any {
+    if (!this._rv) {
+      this._rv = new trusted.pki.Revocation();
+    }
+
     return this._rv.getCrlLocal(cert, this._store);
   }
 

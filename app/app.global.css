@@ -826,6 +826,10 @@ i.material-icons.choosefolder {
   line-height: 30px;
 }
 
+.collapsible {
+  margin: 0;
+}
+
 .collapsible-header.color{
     background-color: ghostwhite;
 }
