@@ -4,8 +4,8 @@ import {
   DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN,
 } from "../constants";
 
-export const eventsGetter = (state) => state.events.entities;
-export const filtersGetter = (state) => state.filters;
+export const eventsGetter = (state: any) => state.events.entities;
+export const filtersGetter = (state: any) => state.filters;
 
 export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter, (events, filters) => {
   const { dateFrom, dateTo, level, operations, operationObjectIn, operationObjectOut, userName } = filters.events;

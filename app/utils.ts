@@ -7,7 +7,7 @@ export function arrayToMap(arr, RecordModel) {
 }
 
 export function mapToArr(obj) {
-  return obj.valueSeq().toArray()
+  return obj.valueSeq().toArray();
 }
 
 export function extFile(filename: string) {

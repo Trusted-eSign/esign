@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import {
@@ -6,38 +5,22 @@ import {
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM,
   REQUEST, ROOT,
 } from "../constants";
-import { DEFAULT_CERTSTORE_PATH, DEFAULT_PATH, TMP_DIR, USER_NAME } from "../constants";
-import localize from "../i18n/localize";
-import { fileCoding } from "../utils";
+import { DEFAULT_CERTSTORE_PATH, TMP_DIR, USER_NAME } from "../constants";
 import logger from "../winstonLogger";
 
 const OS_TYPE = os.type();
 
 export class Store {
+  // tslint:disable:variable-name
   _items: any[];
-  _providerSystem: trusted.pkistore.Provider_System;
-  _providerCryptopro: trusted.pkistore.ProviderCryptopro;
-  _providerMicrosoft: trusted.pkistore.ProviderMicrosoft;
+  _providerSystem: trusted.pkistore.Provider_System | undefined;
+  _providerCryptopro: trusted.pkistore.ProviderCryptopro | undefined;
+  _providerMicrosoft: trusted.pkistore.ProviderMicrosoft | undefined;
   _store: trusted.pkistore.PkiStore;
-  _rv: trusted.pki.Revocation;
-  _certs: trusted.pki.CertificateCollection;
+  _rv: trusted.pki.Revocation | undefined;
 
   constructor() {
-    this.init();
-
-    this._items = this._store.cash.export();
-    this._rv = new trusted.pki.Revocation();
-
-    this._items = this._items.concat(this._store.find({
-      provider: ["CRYPTOPRO", "MICROSOFT"],
-      type: ["CERTIFICATE"],
-    }));
-  }
-
-  init() {
-    this._providerSystem = new trusted.pkistore.Provider_System(DEFAULT_CERTSTORE_PATH);
     this._store = new trusted.pkistore.PkiStore(DEFAULT_CERTSTORE_PATH + "/cash.json");
-    this._store.addProvider(this._providerSystem.handle);
 
     if (OS_TYPE === "Windows_NT") {
       this._providerMicrosoft = new trusted.pkistore.ProviderMicrosoft();
@@ -47,9 +30,17 @@ export class Store {
         this._providerCryptopro = new trusted.pkistore.ProviderCryptopro();
         this._store.addProvider(this._providerCryptopro.handle);
       } catch (e) {
+        // tslint:disable-next-line:no-console
         console.log(`Error init CryptoPro \n ${e}`);
       }
     }
+
+    this._items = this._store.cash.export();
+
+    this._items = this._items.concat(this._store.find({
+      provider: ["CRYPTOPRO", "MICROSOFT"],
+      type: ["CERTIFICATE", "CRL"],
+    }));
   }
 
   get items(): trusted.pkistore.PkiItem[] {
@@ -79,76 +70,6 @@ export class Store {
     return this._store.find(filter);
   }
 
-  importKey(keyPath: string, pass: string): boolean {
-    try {
-      const FORMAT: trusted.DataFormat = fileCoding(keyPath);
-      let key: trusted.pki.Key;
-
-      try {
-        key = trusted.pki.Key.readPrivateKey(keyPath, FORMAT, pass);
-      } catch (e) {
-        $(".toast-key_load_failed").remove();
-        Materialize.toast(localize("Key.key_load_failed", window.locale), 2000, "toast-key_load_failed");
-
-        return false;
-      }
-
-      return this.addKeyToStore(key, "");
-    } catch (e) {
-      return false;
-    }
-  }
-
-  addKeyToStore(key: trusted.pki.Key, password: string = "", provider?: any): boolean {
-    const ITEMS = this._store.cash.export();
-    let uri: string;
-    let newItem: any;
-    let res: boolean = false;
-
-    if (!provider) {
-      provider = this._providerSystem;
-    }
-
-    uri = this._store.addKey(provider.handle, key, password);
-    newItem = provider.objectToPkiItem(uri);
-
-    for (const item of ITEMS) {
-      if (item.hash === newItem.hash) {
-        return res;
-      }
-    }
-
-    const ARR = [newItem];
-    this._store.cash.import(ARR);
-
-    this._items = this._store.cash.export();
-
-    const TEMP_PKI_ITEMS = this._items.slice(0);
-
-    TEMP_PKI_ITEMS.forEach(function (item: any, i: number): void {
-      const TEMP_PATH: string = item.uri.substring(0, item.uri.lastIndexOf("."));
-      const PUB_KEY: any = TEMP_PATH.substr(-40);
-
-      if (newItem.hash === PUB_KEY && item.type === "CERTIFICATE") {
-        TEMP_PKI_ITEMS[i].key = newItem.hash;
-        res = true;
-      }
-    });
-
-    this._items = TEMP_PKI_ITEMS;
-
-    fs.writeFileSync(DEFAULT_CERTSTORE_PATH + "/cash.json", "{}", "utf8");
-
-    this._store.cash.import(TEMP_PKI_ITEMS);
-
-    this._items = this._items.concat(this._store.find({
-      provider: ["CRYPTOPRO", "MICROSOFT"],
-      type: ["CERTIFICATE"],
-    }));
-
-    return res;
-  }
-
   importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string,  contName?: string): void {
     let provider;
 
@@ -170,7 +91,7 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
       if (err) {
         done(err);
       } else {
@@ -194,6 +115,11 @@ export class Store {
         break;
       default:
         Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    if (!provider) {
+      Materialize.toast(`Provider ${certificate.provider} not init`, 2000, "toast-not_init_provider");
+      return false;
     }
 
     const certX509 = this.getPkiObject(certificate);
@@ -231,43 +157,7 @@ export class Store {
     return true;
   }
 
-  importPkcs12(p12Path: string, pass: string): boolean {
-    let p12: trusted.pki.Pkcs12;
-    let cert: trusted.pki.Certificate;
-    let key: trusted.pki.Key;
-    let ca: trusted.pki.CertificateCollection;
-
-    try {
-      p12 = trusted.pki.Pkcs12.load(p12Path);
-      cert = p12.certificate(pass);
-      key = p12.key(pass);
-    } catch (e) {
-      return undefined;
-    }
-
-    if (!cert || !key) {
-      return undefined;
-    }
-
-    this.importCertificate(cert);
-    this.addKeyToStore(key, "");
-
-    try {
-      ca = p12.ca(pass);
-    } catch (e) {
-      ca = undefined;
-    }
-
-    if (ca) {
-      for (let i: number = 0; i < ca.length; i++) {
-        this.importCertificate(ca.items(i));
-      }
-    }
-
-    return true;
-  }
-
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider, callback, category?: string, contName?: string) {
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
     const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
@@ -330,47 +220,12 @@ export class Store {
     });*/
   }
 
-  downloadCRL(cert: any, done: (err: any, res?: any) => void): any {
-    const SELF = this;
-    const PATH_OUT: string = path.join(DEFAULT_PATH, "temp.crl");
-    const RV: any = new trusted.pki.Revocation();
-    const DIST_POINTS: string[] = RV.getCrlDistPoints(cert);
-    let crl: any;
-
-    if (DIST_POINTS.length === 0) {
-      return;
-    }
-
-    RV.downloadCRL(DIST_POINTS, PATH_OUT, function (err: any, res: any) {
-      if (err) {
-        done(err);
-      } else {
-        crl = res;
-
-        SELF.addCrlToStore(SELF._providerSystem, "CRL", crl, 0);
-
-        done(null, crl);
-      }
-    });
-  }
-
-  importCRL(crlPath: string): number {
-    const CRL: trusted.pki.Crl = trusted.pki.Crl.load(crlPath);
-
-    if (!CRL) {
-      return 0;
-    } else {
-      this.addCrlToStore(this._providerSystem, "CRL", CRL, 0);
-      return 1;
-    }
-  }
-
   addCrlToStore(provider: any, category: any, crl: any, flag: any): void {
     let items: any;
     let uri: string;
     let newItem: any;
 
-    uri = this._store.addCrl(provider.handle, category, crl, flag);
+    uri = this._store.addCrl(provider.handle, category, crl);
 
     newItem = provider.objectToPkiItem(uri);
     items = this._store.cash.export();
@@ -391,6 +246,10 @@ export class Store {
    * Search crl for certificate in local store
    */
   getCrlLocal(cert: any): any {
+    if (!this._rv) {
+      this._rv = new trusted.pki.Revocation();
+    }
+
     return this._rv.getCrlLocal(cert, this._store);
   }
 
@@ -405,7 +264,9 @@ export class Store {
     if (OS_TYPE === "Windows_NT") {
       if (objectWithKey.provider === "MICROSOFT") {
         try {
-          keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
+          if (this._providerMicrosoft) {
+            keyItem = this._providerMicrosoft.getKey(this._store.getItem(objectWithKey));
+          }
         } catch (err) {
           // const JWT_RES: number = jwt.checkLicense();
           // if (JWT_RES) {
@@ -424,7 +285,9 @@ export class Store {
     } else {
       if (objectWithKey.provider === "CRYPTOPRO") {
         try {
-          keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
+          if (this._providerCryptopro) {
+            keyItem = this._providerCryptopro.getKey(this._store.getItem(objectWithKey));
+          }
         } catch (err) {
           // const JWT_RES: number = jwt.checkLicense();
           // if (JWT_RES) {

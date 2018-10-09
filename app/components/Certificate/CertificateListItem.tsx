@@ -31,21 +31,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       nextProps.cert.verified !== this.props.cert.verified;
   }
 
-  stopEvent = (event: any) => {
-    event.stopPropagation();
-  }
-
-  addCertKey = () => {
-    const CLICK_EVENT = document.createEvent("MouseEvents");
-
-    CLICK_EVENT.initEvent("click", true, true);
-    document.querySelector("#cert-key-import").dispatchEvent(CLICK_EVENT);
-  }
-
-  componentDidMount() {
-    $(".cert-setting-item").dropdown();
-  }
-
   handleClick = () => {
     const { chooseCert, toggleOpen } = this.props;
 
@@ -55,9 +40,7 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
 
   render() {
     const { cert, operation, isOpen } = this.props;
-    const { localize, locale } = this.context;
 
-    let certKeyMenu: any = null;
     let active = "";
     let curStatusStyle;
     let curKeyStyle;
@@ -84,25 +67,11 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
       active = "active";
     }
 
-    if (operation === "certificate" && cert.key.length === 0 && cert.provider === "SYSTEM") {
-      certKeyMenu = (
-        <React.Fragment>
-          <i className="cert-setting-item waves-effect material-icons secondary-content"
-            data-activates={"cert-key-set-file"} onClick={this.stopEvent}>more_vert</i>
-          <ul id={"cert-key-set-file"} className="dropdown-content">
-            <li><a onClick={this.addCertKey}>{localize("Certificate.import_key", locale)}</a></li>
-          </ul>
-        </React.Fragment>
-      );
-    } else {
-      certKeyMenu = null;
-    }
-
     return (
       <div className="row certificate-list-item" id={cert.id}>
         <div className={"collection-item avatar certs-collection " + active}
           onClick={this.handleClick}>
-          <div className={"rectangle"} style={rectangleStyle}></div>
+          <div className="rectangle" style={rectangleStyle}></div>
           <div className="col s11">
             <div className="collection-title ">{cert.subjectFriendlyName}</div>
             <div className="collection-info cert-info ">{cert.issuerFriendlyName}</div>
@@ -112,7 +81,6 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
             <div className={curStatusStyle}></div>
           </div>
         </div>
-        {certKeyMenu}
       </div>
     );
   }

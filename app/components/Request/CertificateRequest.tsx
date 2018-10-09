@@ -6,7 +6,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { loadAllCertificates, removeAllCertificates } from "../../AC";
 import {
-  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, ALG_RSA, DEFAULT_CSR_PATH, HOME_DIR,
+  ALG_GOST12_256, ALG_GOST12_512, ALG_GOST2001, DEFAULT_CSR_PATH, HOME_DIR,
   KEY_USAGE_ENCIPHERMENT, KEY_USAGE_SIGN, KEY_USAGE_SIGN_AND_ENCIPHERMENT, MY,
   PROVIDER_CRYPTOPRO, PROVIDER_MICROSOFT, PROVIDER_SYSTEM, REQUEST, REQUEST_TEMPLATE_ADDITIONAL,
   REQUEST_TEMPLATE_DEFAULT, REQUEST_TEMPLATE_KEP_FIZ, REQUEST_TEMPLATE_KEP_IP, ROOT, USER_NAME,
@@ -452,10 +452,6 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
     try {
       switch (algorithm) {
-        case ALG_RSA:
-          pkeyopt.push(`rsa_keygen_bits:${keyLength}`);
-          keyPair = key.generate(algorithm, pkeyopt);
-          break;
         case ALG_GOST2001:
         case ALG_GOST12_256:
         case ALG_GOST12_512:
@@ -503,16 +499,10 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       //
     }
 
-    if (!selfSigned && algorithm === ALG_RSA) {
-      keyPair.writePrivateKey(path.join(DEFAULT_CSR_PATH, `${cn}_${algorithm}_${formatDate(new Date())}.key`), trusted.DataFormat.PEM, "");
-    }
-
-    if (algorithm !== ALG_RSA) {
-      if (OS_TYPE === "Windows_NT") {
-        providerType = PROVIDER_MICROSOFT;
-      } else {
-        providerType = PROVIDER_CRYPTOPRO;
-      }
+    if (OS_TYPE === "Windows_NT") {
+      providerType = PROVIDER_MICROSOFT;
+    } else {
+      providerType = PROVIDER_CRYPTOPRO;
     }
 
     if (selfSigned) {
@@ -568,23 +558,8 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       }
 
       try {
-        if (algorithm !== ALG_RSA) {
-          trusted.utils.Csp.installCertificateToContainer(cert, containerName, 75);
-          trusted.utils.Csp.installCertificateFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
-          // window.PKISTORE.importCertificate(cert, providerType, (err: Error) => {
-          //   if (err) {
-          //     Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-          //   }
-          // }, MY, containerName);
-        } else {
-          window.PKISTORE.importCertificate(cert, PROVIDER_SYSTEM, (err: Error) => {
-            if (err) {
-              Materialize.toast(localize("Certificate.cert_import_failed", locale), 2000, "toast-cert_import_error");
-            }
-          }, MY);
-
-          window.PKISTORE.addKeyToStore(keyPair);
-        }
+        trusted.utils.Csp.installCertificateToContainer(cert, containerName, 75);
+        trusted.utils.Csp.installCertificateFromContainer(containerName, 75, "Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider");
 
         this.handleReloadCertificates();
 
@@ -650,17 +625,14 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
 
   handleImportCertificationRequest = (csr: trusted.pki.CertificationRequest, contName: string) => {
     const { localize, locale } = this.context;
-    const { algorithm } = this.state;
     const OS_TYPE = os.type();
 
-    let providerType: string = PROVIDER_SYSTEM;
+    let providerType: string;
 
-    if (algorithm !== ALG_RSA) {
-      if (OS_TYPE === "Windows_NT") {
-        providerType = PROVIDER_MICROSOFT;
-      } else {
-        providerType = PROVIDER_CRYPTOPRO;
-      }
+    if (OS_TYPE === "Windows_NT") {
+      providerType = PROVIDER_MICROSOFT;
+    } else {
+      providerType = PROVIDER_CRYPTOPRO;
     }
 
     window.PKISTORE.importCertificationRequest(csr, providerType, contName, (err: Error) => {
