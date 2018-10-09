@@ -9,6 +9,10 @@ import { filteredCertificatesSelector } from "../../selectors";
 import ProgressBars from "../ProgressBars";
 import CertificateListItem from "./CertificateListItem";
 
+const HEIGHT_MODAL = 356;
+const HEIGHT_FULL = 432;
+const ROW_HEIGHT = 45;
+
 interface ICertificateListProps {
   activeCert: (certificate: any) => void;
   certificates: any;
@@ -18,12 +22,6 @@ interface ICertificateListProps {
   loadAllCertificates: () => void;
   verifyCertificate: (id: number) => void;
 }
-
-// let scrollTimer: NodeJS.Timer | null;
-// let lastScrollFireTime = 0;
-
-const HEIGHT_MODAL = 356;
-const HEIGHT_FULL = 432;
 
 class CertificateList extends React.Component<ICertificateListProps, any> {
   static contextTypes = {
@@ -48,122 +46,10 @@ class CertificateList extends React.Component<ICertificateListProps, any> {
     }
 
     $(".collapsible").collapsible();
-
-    // const addCerts = $(".add-certs");
-
-    // if (addCerts.length) {
-    //   addCerts[0].addEventListener("scroll", this.fireOnScroll);
-    // }
-
-    // this.processScroll();
-  }
-
-  // fireOnScroll = () => {
-  //   const minScrollTime = 1000;
-  //   const now = new Date().getTime();
-  //   const self = this;
-
-  //   if (!scrollTimer) {
-  //     if (now - lastScrollFireTime > (3 * minScrollTime)) {
-  //       lastScrollFireTime = now;
-  //     }
-
-  //     scrollTimer = setTimeout(function() {
-  //       scrollTimer = null;
-  //       lastScrollFireTime = new Date().getTime();
-  //       self.processScroll();
-  //     }, minScrollTime);
-  //   }
-  // }
-
-  // processScroll = () => {
-  //   // tslint:disable-next-line:no-shadowed-variable
-  //   const { certificates, verifyCertificate } = this.props;
-
-  //   certificates.forEach((cert: any) => {
-  //     let visible = false;
-
-  //     if ($(`#${cert.id}:visible`).length > 0) {
-  //       visible = $(`#${cert.id}:visible`).visible();
-  //     }
-
-  //     if (visible) {
-  //       if (!cert.verified) {
-  //         verifyCertificate(cert.id);
-  //       }
-  //     }
-  //   });
-  // }
-
-  getCollapsibleElement(head: string, name: string, elements: object[], active: boolean = false) {
-    const { certificates, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened, isLoading } = this.props;
-
-    if (!elements || elements.length === 0) {
-      return null;
-    }
-
-    const activeSection = active ? "active" : "";
-
-    return (
-      <li>
-        <div className={`collapsible-header color ${activeSection}`} onClick={() => this.setState({activeSection: name})}>
-          <i className={`material-icons left ${name}`}>
-          </i>
-          {head}
-        </div>
-        <div className="collapsible-body">
-          <List
-            height={this.getListHeight(elements)}
-            overscanRowCount={1}
-            rowCount={elements.length}
-            rowHeight={45}
-            rowRenderer={({ index, key, style }) => {
-
-              if (!elements.length || this.state.activeSection !== name) {
-                return null;
-              }
-
-              const cert = elements[index];
-
-              return (
-                <ul
-                  key={key}
-                  style={style}
-                >
-                  <CertificateListItem
-                    key={cert.id}
-                    cert={cert}
-                    chooseCert={() => activeCert(cert)}
-                    operation={operation}
-                    selectedCert={() => selectedCert(cert)}
-                    isOpen={isItemOpened(cert.id.toString())}
-                    toggleOpen={toggleOpenItem(cert.id.toString())}
-                    style={style} />;
-                </ul>
-              );
-            }}
-            width={369}
-          />
-        </div>
-      </li>
-    );
-  }
-
-  getListHeight = () => {
-    const { operation } = this.props;
-
-    switch (operation) {
-      case "sign":
-      case "encrypt":
-        return HEIGHT_MODAL;
-
-      default:
-        return HEIGHT_FULL;
-    }
   }
 
   render() {
-    const { certificates, activeCert, selectedCert, operation, toggleOpenItem, isItemOpened, isLoading } = this.props;
+    const { certificates, isLoading } = this.props;
     const { localize, locale } = this.context;
 
     if (isLoading) {
@@ -177,18 +63,7 @@ class CertificateList extends React.Component<ICertificateListProps, any> {
     const token: object[] = [];
     const request: object[] = [];
 
-    certificates.forEach((cert) => {
-      // const element = (
-      //   <CertificateListItem
-      //     key={cert.id}
-      //     cert={cert}
-      //     chooseCert={() => activeCert(cert)}
-      //     operation={operation}
-      //     selectedCert={() => selectedCert(cert)}
-      //     isOpen={isItemOpened(cert.id.toString())}
-      //     toggleOpen={toggleOpenItem(cert.id.toString())} />
-      // );
-
+    certificates.forEach((cert: any) => {
       switch (cert.category) {
         case "MY":
           return my.push(cert);
@@ -217,6 +92,80 @@ class CertificateList extends React.Component<ICertificateListProps, any> {
         </ul>
       </React.Fragment>
     );
+  }
+
+  getCollapsibleElement = (head: string, name: string, elements: object[], active: boolean = false) => {
+    const { activeCert, selectedCert, operation, toggleOpenItem, isItemOpened } = this.props;
+
+    if (!elements || elements.length === 0) {
+      return null;
+    }
+
+    const activeSection = active ? "active" : "";
+
+    return (
+      <li>
+        <div className={`collapsible-header color ${activeSection}`} onClick={() => this.setState({ activeSection: name })}>
+          <i className={`material-icons left ${name}`}>
+          </i>
+          {head}
+        </div>
+        <div className="collapsible-body">
+          <List
+            height={this.getListHeight(elements.length)}
+            overscanRowCount={1}
+            rowCount={elements.length}
+            rowHeight={ROW_HEIGHT}
+            rowRenderer={({ index, key, style }) => {
+              if (!elements.length || this.state.activeSection !== name) {
+                return null;
+              }
+
+              const cert = elements[index];
+
+              return (
+                <ul
+                  key={key}
+                  style={style}
+                >
+                  <CertificateListItem
+                    key={cert.id}
+                    cert={cert}
+                    chooseCert={() => activeCert(cert)}
+                    operation={operation}
+                    selectedCert={() => selectedCert(cert)}
+                    isOpen={isItemOpened(cert.id.toString())}
+                    toggleOpen={toggleOpenItem(cert.id.toString())}
+                    style={style} />;
+                </ul>
+              );
+            }}
+            width={operation === "certificate" ? 377 : 318}
+          />
+        </div>
+      </li>
+    );
+  }
+
+  getListHeight = (countItems: number) => {
+    const { operation } = this.props;
+
+    switch (operation) {
+      case "sign":
+      case "encrypt":
+        if (countItems * ROW_HEIGHT < HEIGHT_MODAL) {
+          return countItems * ROW_HEIGHT;
+        } else {
+          return HEIGHT_MODAL;
+        }
+
+      default:
+        if (countItems * ROW_HEIGHT < HEIGHT_FULL) {
+          return countItems * ROW_HEIGHT;
+        } else {
+          return HEIGHT_FULL;
+        }
+    }
   }
 }
 

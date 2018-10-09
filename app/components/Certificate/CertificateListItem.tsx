@@ -18,24 +18,40 @@ interface ICertificateListItemProps {
   isOpen: boolean;
   toggleOpen: () => void;
   cert: any;
+  verifyCertificate: (id: any) => void;
 }
 
-class CertificateListItem extends React.Component<ICertificateListItemProps, ICertificateListItemProps> {
+class CertificateListItem extends React.Component<ICertificateListItemProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
+
+  timerHandle: NodeJS.Timer | null;
 
   shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
     return nextProps.isOpen !== this.props.isOpen ||
       nextProps.cert.verified !== this.props.cert.verified;
   }
 
-  handleClick = () => {
-    const { chooseCert, toggleOpen } = this.props;
+  componentDidMount() {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { cert, verifyCertificate } = this.props;
 
-    chooseCert();
-    toggleOpen();
+    this.timerHandle = setTimeout(() => {
+      if (!cert.verified) {
+        verifyCertificate(cert.id);
+      }
+
+      this.timerHandle = null;
+    }, 2000);
+  }
+
+  componentWillUnmount() {
+    if (this.timerHandle) {
+      clearTimeout(this.timerHandle);
+      this.timerHandle = null;
+    }
   }
 
   render() {
@@ -83,6 +99,13 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
         </div>
       </div>
     );
+  }
+
+  handleClick = () => {
+    const { chooseCert, toggleOpen } = this.props;
+
+    chooseCert();
+    toggleOpen();
   }
 }
 
