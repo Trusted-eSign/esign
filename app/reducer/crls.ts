@@ -5,7 +5,9 @@ import { arrayToMap } from "../utils";
 
 const CRLModel = Record({
   active: false,
+  authorityKeyid: null,
   category: null,
+  crlNumber: null,
   format: null,
   hash: null,
   id: null,

@@ -64,6 +64,8 @@ export default {
     id_tc26_signwithdigest_gost3410_12_512: "ГОСТ Р 34.11-2012/34.10-2012 512 бит",
   },
   CRL: {
+    authorityKeyid: "Идентификатор ключа",
+    crlNumber: "Номер CRL",
     lastUpdate: "Действителен с",
     nextUpdate: "Следующее обновление",
   },

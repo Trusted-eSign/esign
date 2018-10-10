@@ -4,7 +4,9 @@ import { localizeAlgorithm } from "../../i18n/localize";
 
 export interface ICRL {
   active: boolean;
+  authorityKeyid: string;
   category: string;
+  crlNumber: string;
   format: string;
   hash: string;
   id: string;
@@ -91,6 +93,30 @@ export default class CRLInfo extends React.Component<ICRLInfoProps, {}> {
             {crl.hash}
           </div>
         </div>
+        {
+          crl.authorityKeyid ?
+            <div className="collection-item certs-collection certificate-info">
+              <div className="collection-info cert-info-blue">
+                {localize("CRL.authorityKeyid", locale)}
+              </div>
+              <div className="collection-title selectable-text">
+                {crl.authorityKeyid}
+              </div>
+            </div>
+            : null
+        }
+        {
+          crl.crlNumber ?
+            <div className="collection-item certs-collection certificate-info">
+              <div className="collection-info cert-info-blue">
+                {localize("CRL.crlNumber", locale)}
+              </div>
+              <div className="collection-title selectable-text">
+                {crl.crlNumber}
+              </div>
+            </div>
+            : null
+        }
       </div>
     );
   }

@@ -64,6 +64,8 @@ export default {
     id_tc26_signwithdigest_gost3410_12_512: "GOST R 34.11-2012/34.10-2012 512 bit",
   },
   CRL: {
+    authorityKeyid: "Authority key id",
+    crlNumber: "CRL number",
     lastUpdate: "Last update",
     nextUpdate: "Next update",
   },
