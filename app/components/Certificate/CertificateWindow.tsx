@@ -313,7 +313,7 @@ class CertWindow extends React.Component<any, any> {
         certmgrPath = os.arch() === "ia32" ? "/opt/cprocsp/bin/ia32/certmgr" : "/opt/cprocsp/bin/amd64/certmgr";
       }
 
-      const storeName = isSelfSigned ? "uROOT" : "uCA";
+      const storeName = isSelfSigned ? "mROOT" : "mCA";
 
       // tslint:disable-next-line:quotemark
       const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store ' + "'" + storeName + "'" + ' -file ' + "'" + importingCertificatePath + "'" + "\"";
