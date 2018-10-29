@@ -315,7 +315,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   resign = (files: IFile[], cert: any, key: any) => {
     const { connections, connectedList, settings, uploader } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, verifySignature } = this.props;
+    const { deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
@@ -344,7 +344,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
 
         if (newPath) {
-          verifySignature(file.id);
+          deleteFile(file.id);
+          selectFile(newPath);
 
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
