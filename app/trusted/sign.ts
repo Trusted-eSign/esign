@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { USER_NAME } from "../constants";
+import { DEFAULT_DOCUMENTS_PATH, USER_NAME } from "../constants";
 import localize from "../i18n/localize";
 import { fileCoding, fileExists } from "../utils";
 import logger from "../winstonLogger";
@@ -81,6 +81,7 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
   }
 
   outURI = newOutUri;
+  const newFileUri = outURI.substring(0, outURI.lastIndexOf("."));
 
   try {
     const sd: trusted.cms.SignedData = new trusted.cms.SignedData();
@@ -121,6 +122,10 @@ export function signFile(uri: string, cert: trusted.pki.Certificate, key: truste
     },
     userName: USER_NAME,
   });
+
+  if (folderOut === DEFAULT_DOCUMENTS_PATH && policies.includes("detached") && !fileExists(newFileUri)) {
+    fs.writeFileSync(newFileUri, fs.readFileSync(uri));
+  }
 
   return outURI;
 }
