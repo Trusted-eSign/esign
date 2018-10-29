@@ -131,18 +131,19 @@ export function resignFile(uri: string, cert: trusted.pki.Certificate, key: trus
   if (folderOut.length > 0) {
     outURI = path.join(folderOut, path.basename(uri));
 
-    let indexFile: number = 1;
-    let newOutUri: string = outURI;
-    const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
+    if (path.dirname(uri) !== folderOut) {
+      let indexFile: number = 1;
+      let newOutUri: string = outURI;
+      const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
 
-    while (fileExists(newOutUri)) {
-      const parsed = path.parse(fileUri);
-      newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
-      indexFile++;
+      while (fileExists(newOutUri)) {
+        const parsed = path.parse(fileUri);
+        newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
+        indexFile++;
+      }
+
+      outURI = newOutUri;
     }
-
-    outURI = newOutUri;
-
   } else {
     outURI = uri;
   }
