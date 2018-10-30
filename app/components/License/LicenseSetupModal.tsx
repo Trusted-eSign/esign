@@ -1,14 +1,14 @@
+import * as crypto_module from "crypto";
 import * as fs from "fs";
 import * as npath from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { loadLicense } from "../../AC";
-import { LICENSE_PATH, PLATFORM } from "../../constants";
+import { DEFAULT_PATH, LICENSE_PATH, PLATFORM } from "../../constants";
 import * as jwt from "../../trusted/jwt";
 import { toBase64 } from "../../utils";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
-
 const dialog = window.electron.remote.dialog;
 
 interface ILicenseSetupModalProps {
@@ -160,6 +160,14 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
           if (!error) {
             trusted.common.OpenSSL.stop();
             trusted.common.OpenSSL.run();
+
+            if (process.platform === "win32") {
+              try {
+                crypto_module.loadConfig(npath.join(DEFAULT_PATH, "./config/openssl.cfg"));
+              } catch (e) {
+                // error
+              }
+            }
 
             loadLicense();
 
