@@ -66,6 +66,12 @@ export default {
   CRL: {
     authorityKeyid: "Идентификатор ключа",
     crlNumber: "Номер CRL",
+    crl_export: "Экспортировать",
+    crl_export_cancel: "Отмена экспорта СОС (CRL)",
+    crl_export_failed: "Не удалось экспортировать СОС (CRL)",
+    crl_export_ok: "СОС (CRL) успешно экспортирован",
+    crls: "Списки отзыва",
+    export_crl: "Экспорт CRL",
     lastUpdate: "Действителен с",
     nextUpdate: "Следующее обновление",
   },
@@ -336,6 +342,8 @@ export default {
   Export: {
     export: "Экспорт",
     export_certificate: "Экспорт сертификата",
+    export_crl_format_base64: "X509_CRL (.CRL) в кодировке BASE64",
+    export_crl_format_der: "X509_CRL (.CRL) в кодировке DER",
     export_format: "Формат экспортируемого файла",
     export_format_base64: "X509 (.CER) в кодировке BASE64",
     export_format_der: "X509 (.CER) в кодировке DER",

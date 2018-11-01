@@ -14,6 +14,7 @@ import { fileCoding } from "../../utils";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
 import CloudCSP from "../CloudCSP/CloudCSP";
+import CRLExport from "../CRL/CRLExport";
 import CRLInfo from "../CRL/CRLInfo";
 import CRLList from "../CRL/CRLList";
 import Dialog from "../Dialog";
@@ -52,6 +53,7 @@ class CertWindow extends React.Component<any, any> {
       showModalCertificateRequest: false,
       showModalCloudCSP: false,
       showModalDeleteCertifiacte: false,
+      showModalExportCRL: false,
       showModalExportCertifiacte: false,
     });
   }
@@ -82,6 +84,14 @@ class CertWindow extends React.Component<any, any> {
 
   handleShowModalExportCertifiacte = () => {
     this.setState({ showModalExportCertifiacte: true });
+  }
+
+  handleCloseModalExportCRL = () => {
+    this.setState({ showModalExportCRL: false });
+  }
+
+  handleShowModalExportCRL = () => {
+    this.setState({ showModalExportCRL: true });
   }
 
   handleCloseModalCertificateRequest = () => {
@@ -322,7 +332,7 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function(err: Error) {
+      window.sudo.exec(cmd, options, function (err: Error) {
         if (err) {
 
           logger.log({
@@ -558,6 +568,29 @@ class CertWindow extends React.Component<any, any> {
     );
   }
 
+  showModalExportCRL = () => {
+    const { localize, locale } = this.context;
+    const { crl, showModalExportCRL } = this.state;
+
+    if (!crl || !showModalExportCRL) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalExportCRL}
+        header={localize("CRL.export_crl", locale)}
+        onClose={this.handleCloseModalExportCRL}>
+
+        <CRLExport
+          crl={crl}
+          onSuccess={this.handleCloseModalExportCRL}
+          onCancel={this.handleCloseModalExportCRL}
+          onFail={this.handleCloseModalExportCRL} />
+      </Modal>
+    );
+  }
+
   showModalCertificateRequest = () => {
     const { localize, locale } = this.context;
     const { certificate, showModalCertificateRequest } = this.state;
@@ -606,7 +639,7 @@ class CertWindow extends React.Component<any, any> {
     // tslint:disable-next-line:no-shadowed-variable
     const { resetCloudCSP } = this.props;
     const { certificates, cloudCSPState, crls, isLoading, isLoadingFromDSS } = this.props;
-    const { certificate } = this.state;
+    const { certificate, crl } = this.state;
     const { localize, locale } = this.context;
 
     if (isLoading || isLoadingFromDSS) {
@@ -636,7 +669,7 @@ class CertWindow extends React.Component<any, any> {
     const ACTIVE_CERTIFICATE_REQUEST = certificate && certificate.category === REQUEST ? "active" : "not-active";
     const NAME = certificates.length < 1 && crls.length < 1 ? "active" : "not-active";
     const VIEW = certificates.length < 1 && crls.length < 1 ? "not-active" : "";
-    const DISABLED = certificate ? "" : "disabled";
+    const DISABLED = certificate || crl ? "" : "disabled";
 
     return (
       <div className="main">
@@ -678,14 +711,28 @@ class CertWindow extends React.Component<any, any> {
                         <i className="nav-small-icon material-icons cert-settings">more_vert</i>
                       </a>
                       <ul id="dropdown-btn-for-cert" className="dropdown-content">
-                        <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
-                        <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
+                        {
+                          certificate ?
+                            <React.Fragment>
+                              <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
+                              <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
+                            </React.Fragment>
+                            : null
+                        }
                         {
                           certificate && certificate.category === REQUEST ?
                             <li>
                               <a onClick={this.handleOpenCSRFolder}>
                                 {localize("CSR.go_to_csr_folder", locale)}
                               </a>
+                            </li>
+                            :
+                            null
+                        }
+                        {
+                          crl ?
+                            <li>
+                              <a onClick={this.handleShowModalExportCRL}>{localize("Certificate.cert_export", locale)}</a>
                             </li>
                             :
                             null
@@ -697,6 +744,7 @@ class CertWindow extends React.Component<any, any> {
                 {this.getCertificateOrCRLInfo()}
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
+                {this.showModalExportCRL()}
                 {this.showModalCertificateRequest()}
                 {this.showModalCloudCSP()}
               </div>

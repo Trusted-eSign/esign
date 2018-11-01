@@ -66,6 +66,12 @@ export default {
   CRL: {
     authorityKeyid: "Authority key id",
     crlNumber: "CRL number",
+    crl_export: "Export",
+    crl_export_cancel: "Cancel the CRL export",
+    crl_export_failed: "The CRL export failed",
+    crl_export_ok: "The CRL is successfully exported",
+    crls: "CRLs",
+    export_crl: "Export the CRL",
     lastUpdate: "Last update",
     nextUpdate: "Next update",
   },
@@ -336,6 +342,8 @@ export default {
   Export: {
     export: "Export",
     export_certificate: "Export certificate",
+    export_crl_format_base64: "Base-64 encoded X509_CRL (.CRL)",
+    export_crl_format_der: "DER encoded binary X509_CRL (.CRL)",
     export_format: "Export file format",
     export_format_base64: "Base-64 encoded X509 (.CER)",
     export_format_der: "DER encoded binary X509 (.CER)",
