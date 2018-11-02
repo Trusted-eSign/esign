@@ -72,6 +72,8 @@ export default {
     crl_export_cancel: "Отмена экспорта СОС (CRL)",
     crl_export_failed: "Не удалось экспортировать СОС (CRL)",
     crl_export_ok: "СОС (CRL) успешно экспортирован",
+    crl_import_failed: "Не удалось импортировать CRL",
+    crl_import_ok: "СОС (CRL) успешно импортирован",
     crls: "Списки отзыва",
     delete_crl: "Удаление CRL",
     export_crl: "Экспорт CRL",

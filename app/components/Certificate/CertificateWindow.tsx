@@ -200,11 +200,20 @@ class CertWindow extends React.Component<any, any> {
     let container = "";
 
     let certificate: trusted.pki.Certificate;
+    let crl: trusted.pki.Crl;
     let providerType: string;
 
     try {
       certificate = trusted.pki.Certificate.load(path, format);
     } catch (e) {
+      try {
+        crl = trusted.pki.Crl.load(path, format);
+        this.crlImport(crl, path);
+        return;
+      } catch (e) {
+        //
+      }
+
       this.p12Import(event);
 
       return;
@@ -398,6 +407,115 @@ class CertWindow extends React.Component<any, any> {
           });
 
           Materialize.toast(localize("Certificate.cert_trusted_import_ok", locale), 2000, "toast-cert_trusted_import_ok");
+        }
+      });
+    }
+  }
+
+  crlImport = (crl: trusted.pki.Crl, crlFilePath?: string) => {
+    const { localize, locale } = this.context;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { isLoading, loadAllCertificates, removeAllCertificates } = this.props;
+
+    if (!crl) {
+      $(".toast-cert_load_failed").remove();
+      Materialize.toast(localize("Certificate.cert_load_failed", locale), 2000, "toast-cert_load_failed");
+
+      return;
+    }
+
+    if (OS_TYPE === "Windows_NT") {
+      window.PKISTORE.importCrl(crl, PROVIDER_MICROSOFT, (err: Error) => {
+        if (err) {
+          logger.log({
+            certificate: crl.issuerFriendlyName,
+            level: "error",
+            message: err.message ? err.message : "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + crl.issuerFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
+          Materialize.toast(localize("CRL.crl_import_failed", locale), 2000, "toast-crl_import_failed");
+        } else {
+          removeAllCertificates();
+
+          if (!isLoading) {
+            loadAllCertificates();
+          }
+
+          logger.log({
+            certificate: crl.issuerFriendlyName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + crl.issuerFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
+          Materialize.toast(localize("CRL.crl_import_ok", locale), 2000, "toast-crl_import_ok");
+        }
+      }, CA);
+    } else if (crlFilePath) {
+      let certmgrPath = "";
+
+      if (OS_TYPE === "Darwin") {
+        certmgrPath = "/opt/cprocsp/bin/certmgr";
+      } else {
+        certmgrPath = os.arch() === "ia32" ? "/opt/cprocsp/bin/ia32/certmgr" : "/opt/cprocsp/bin/amd64/certmgr";
+      }
+
+      const storeName = "mCA";
+
+      // tslint:disable-next-line:quotemark
+      const cmd = "sh -c " + "\"" + certmgrPath + ' -install -store ' + "'" + storeName + "'" + ' -crl -file ' + "'" + crlFilePath + "'" + "\"";
+
+      const options = {
+        name: "CryptoARM GOST",
+      };
+
+      window.sudo.exec(cmd, options, function(err: Error) {
+        if (err) {
+
+          logger.log({
+            certificate: crl.issuerFriendlyName,
+            level: "error",
+            message: err.message ? err.message : "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + crl.issuerFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
+          Materialize.toast(localize("CRL.crl_import_failed", locale), 2000, "toast-crl_import_failed");
+        } else {
+          removeAllCertificates();
+
+          if (!isLoading) {
+            loadAllCertificates();
+          }
+
+          logger.log({
+            certificate: crl.issuerFriendlyName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + crl.issuerFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+
+          Materialize.toast(localize("CRL.crl_import_ok", locale), 2000, "toast-crl_import_ok");
         }
       });
     }

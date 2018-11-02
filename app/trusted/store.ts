@@ -70,7 +70,7 @@ export class Store {
     return this._store.find(filter);
   }
 
-  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string,  contName?: string): void {
+  importCertificate(certificate: trusted.pki.Certificate, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }, category?: string, contName?: string): void {
     let provider;
 
     switch (providerType) {
@@ -91,13 +91,97 @@ export class Store {
       Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
     }
 
-    this.handleImportCertificate(certificate, this._store, provider, function(err: Error) {
+    this.handleImportCertificate(certificate, this._store, provider, function (err: Error) {
       if (err) {
         done(err);
       } else {
         done();
       }
     }, category, contName);
+  }
+
+  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
+    const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
+
+    if (provider instanceof trusted.pkistore.Provider_System) {
+      const uri = store.addCert(provider.handle, MY, cert);
+      const newItem = provider.objectToPkiItem(uri);
+
+      const items = this._store.cash.export();
+      let isNewItem = true;
+
+      for (const item of items) {
+        if (item.hash === newItem.hash) {
+          isNewItem = false;
+          break;
+        }
+      }
+
+      if (isNewItem) {
+        const ARR: any[] = [newItem];
+        this._store.cash.import(ARR);
+
+        this._items.push(newItem);
+      }
+    } else {
+      const bCA = cert.isCA;
+      const selfSigned = cert.isSelfSigned;
+      const hasKey = provider.hasPrivateKey(cert);
+
+      if (category) {
+        store.addCert(provider.handle, category, cert, contName, 75);
+      } else {
+        if (hasKey) {
+          store.addCert(provider.handle, MY, cert, contName, 75);
+        } else if (!hasKey && !bCA) {
+          store.addCert(provider.handle, ADDRESS_BOOK, cert, contName, 75);
+        } else if (bCA) {
+          if (OS_TYPE === "Windows_NT") {
+            selfSigned ? store.addCert(provider.handle, ROOT, cert, contName, 75) : store.addCert(provider.handle, CA, cert, contName, 75);
+          }
+        }
+      }
+    }
+
+    return callback();
+  }
+
+  importCrl(crl: trusted.pki.Crl, providerType: string = PROVIDER_SYSTEM, done = (err?: Error) => { return; }): void {
+    let provider;
+
+    switch (providerType) {
+      case PROVIDER_SYSTEM:
+        provider = this._providerSystem;
+        break;
+      case PROVIDER_MICROSOFT:
+        provider = this._providerMicrosoft;
+        break;
+      case PROVIDER_CRYPTOPRO:
+        provider = this._providerCryptopro;
+        break;
+      default:
+        Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    if (!provider) {
+      Materialize.toast(`Provider ${providerType} not init`, 2000, "toast-not_init_provider");
+    }
+
+    this.handleImportCrl(crl, this._store, provider, function(err: Error) {
+      if (err) {
+        done(err);
+      } else {
+        done();
+      }
+    });
+  }
+
+  handleImportCrl(crl: trusted.pki.Crl, store: trusted.pkistore.PkiStore, provider: any, callback: any) {
+    if (OS_TYPE === "Windows_NT") {
+      store.addCrl(provider.handle, CA, crl);
+    }
+
+    return callback();
   }
 
   deleteCertificate(certificate: trusted.pkistore.PkiItem): boolean {
@@ -212,69 +296,6 @@ export class Store {
     }
 
     return true;
-  }
-
-  handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
-    const self = this;
-    const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);
-    const pathForSave = path.join(TMP_DIR, `certificate_${Date.now()}.cer`);
-
-    if (provider instanceof trusted.pkistore.Provider_System) {
-      const uri = store.addCert(provider.handle, MY, cert);
-      const newItem = provider.objectToPkiItem(uri);
-
-      const items = this._store.cash.export();
-      let isNewItem = true;
-
-      for (const item of items) {
-        if (item.hash === newItem.hash) {
-          isNewItem = false;
-          break;
-        }
-      }
-
-      if (isNewItem) {
-        const ARR: any[] = [newItem];
-        this._store.cash.import(ARR);
-
-        this._items.push(newItem);
-      }
-    } else {
-      const bCA = cert.isCA;
-      const selfSigned = cert.isSelfSigned;
-      const hasKey = provider.hasPrivateKey(cert);
-
-      if (category) {
-        store.addCert(provider.handle, category, cert, contName, 75);
-      } else {
-        if (hasKey) {
-          store.addCert(provider.handle, MY, cert, contName, 75);
-        } else if (!hasKey && !bCA) {
-          store.addCert(provider.handle, ADDRESS_BOOK, cert, contName, 75);
-        } else if (bCA) {
-          if (OS_TYPE === "Windows_NT") {
-            selfSigned ? store.addCert(provider.handle, ROOT, cert, contName, 75) : store.addCert(provider.handle, CA, cert, contName, 75);
-          }
-        }
-      }
-    }
-
-    return callback();
-
-    /*if (!urls.length) {
-      return callback();
-    }
-
-    trusted.pki.Certificate.download(urls, pathForSave, function (err, res) {
-      if (err) {
-        return callback(err);
-      } else {
-        tempCert = res;
-        urls = tempCert.CAIssuersUrls;
-
-        self.handleImportCertificate(tempCert, store, provider, callback);
-      }
-    });*/
   }
 
   addCrlToStore(provider: any, category: any, crl: any, flag: any): void {

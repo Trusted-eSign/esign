@@ -72,6 +72,8 @@ export default {
     crl_export_cancel: "Cancel the CRL export",
     crl_export_failed: "The CRL export failed",
     crl_export_ok: "The CRL is successfully exported",
+    crl_import_failed: "The CRL import failed",
+    crl_import_ok: "The CRL successfully imported",
     crls: "CRLs",
     delete_crl: "Delete CRL",
     export_crl: "Export the CRL",
