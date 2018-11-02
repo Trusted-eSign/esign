@@ -371,7 +371,7 @@ class CertWindow extends React.Component<any, any> {
         name: "CryptoARM GOST",
       };
 
-      window.sudo.exec(cmd, options, function (err: Error) {
+      window.sudo.exec(cmd, options, function(err: Error) {
         if (err) {
 
           logger.log({
@@ -431,7 +431,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: crl.issuerFriendlyName,
             level: "error",
             message: err.message ? err.message : "",
-            operation: "Импорт сертификата",
+            operation: "Импорт CRL",
             operationObject: {
               in: "CN=" + crl.issuerFriendlyName,
               out: "Null",
@@ -451,7 +451,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: crl.issuerFriendlyName,
             level: "info",
             message: "",
-            operation: "Импорт сертификата",
+            operation: "Импорт CRL",
             operationObject: {
               in: "CN=" + crl.issuerFriendlyName,
               out: "Null",
@@ -487,7 +487,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: crl.issuerFriendlyName,
             level: "error",
             message: err.message ? err.message : "",
-            operation: "Импорт сертификата",
+            operation: "Импорт CRL",
             operationObject: {
               in: "CN=" + crl.issuerFriendlyName,
               out: "Null",
@@ -507,7 +507,7 @@ class CertWindow extends React.Component<any, any> {
             certificate: crl.issuerFriendlyName,
             level: "info",
             message: "",
-            operation: "Импорт сертификата",
+            operation: "Импорт CRL",
             operationObject: {
               in: "CN=" + crl.issuerFriendlyName,
               out: "Null",

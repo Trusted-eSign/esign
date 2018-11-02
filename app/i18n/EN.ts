@@ -316,6 +316,7 @@ export default {
     all: "All",
     certificate_generation: "Certificate generation",
     certificate_import: "Certificate import",
+    crl_import: "CRL import",
     csr_generation: "CSR generation",
     date: "Date",
     decrypt: "Decrypt",
