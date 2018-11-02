@@ -66,14 +66,18 @@ export default {
   CRL: {
     authorityKeyid: "Идентификатор ключа",
     crlNumber: "Номер CRL",
+    crl_delete_failed: "Не удалось удалить CRL",
+    crl_delete_ok: "CRL успешно удалён",
     crl_export: "Экспортировать",
     crl_export_cancel: "Отмена экспорта СОС (CRL)",
     crl_export_failed: "Не удалось экспортировать СОС (CRL)",
     crl_export_ok: "СОС (CRL) успешно экспортирован",
     crls: "Списки отзыва",
+    delete_crl: "Удаление CRL",
     export_crl: "Экспорт CRL",
     lastUpdate: "Действителен с",
     nextUpdate: "Следующее обновление",
+    realy_delete_crl: "Вы действительно хотите удалить CRL?",
   },
   CSR: {
     algorithm: "Алгоритм",

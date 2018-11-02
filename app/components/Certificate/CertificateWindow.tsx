@@ -14,6 +14,7 @@ import { fileCoding } from "../../utils";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
 import CloudCSP from "../CloudCSP/CloudCSP";
+import CRLDelete from "../CRL/CRLDelete";
 import CRLExport from "../CRL/CRLExport";
 import CRLInfo from "../CRL/CRLInfo";
 import CRLList from "../CRL/CRLList";
@@ -32,6 +33,13 @@ import CertificateInfoTabs from "./CertificateInfoTabs";
 import CertificateList from "./CertificateList";
 
 const OS_TYPE = os.type();
+
+const MODAL_DELETE_CERTIFICATE = "MODAL_DELETE_CERTIFICATE";
+const MODAL_EXPORT_CERTIFICATE = "MODAL_EXPORT_CERTIFICATE";
+const MODAL_EXPORT_CRL = "MODAL_EXPORT_CRL";
+const MODAL_DELETE_CRL = "MODAL_DELETE_CRL";
+const MODAL_CERTIFICATE_REQUEST = "MODAL_CERTIFICATE_REQUEST";
+const MODAL_CLOUD_CSP = "MODAL_CLOUD_CSP";
 
 class CertWindow extends React.Component<any, any> {
   static contextTypes = {
@@ -52,6 +60,68 @@ class CertWindow extends React.Component<any, any> {
       showDialogInstallRootCertificate: false,
       showModalCertificateRequest: false,
       showModalCloudCSP: false,
+      showModalDeleteCRL: false,
+      showModalDeleteCertifiacte: false,
+      showModalExportCRL: false,
+      showModalExportCertifiacte: false,
+    });
+  }
+
+  handleShowModalByType = (typeOfModal: string) => {
+    switch (typeOfModal) {
+      case MODAL_DELETE_CERTIFICATE:
+        this.setState({ showModalDeleteCertifiacte: true });
+        break;
+      case MODAL_EXPORT_CERTIFICATE:
+        this.setState({ showModalExportCertifiacte: true });
+        break;
+      case MODAL_EXPORT_CRL:
+        this.setState({ showModalExportCRL: true });
+        break;
+      case MODAL_DELETE_CRL:
+        this.setState({ showModalDeleteCRL: true });
+        break;
+      case MODAL_CERTIFICATE_REQUEST:
+        this.setState({ showModalCertificateRequest: true });
+        break;
+      case MODAL_CLOUD_CSP:
+        this.setState({ showModalCloudCSP: true });
+        break;
+      default:
+        return;
+    }
+  }
+
+  handleCloseModalByType = (typeOfModal: string): void => {
+    switch (typeOfModal) {
+      case MODAL_DELETE_CERTIFICATE:
+        this.setState({ showModalDeleteCertifiacte: false });
+        break;
+      case MODAL_EXPORT_CERTIFICATE:
+        this.setState({ showModalExportCertifiacte: false });
+        break;
+      case MODAL_EXPORT_CRL:
+        this.setState({ showModalExportCRL: false });
+        break;
+      case MODAL_DELETE_CRL:
+        this.setState({ showModalDeleteCRL: false });
+        break;
+      case MODAL_CERTIFICATE_REQUEST:
+        this.setState({ showModalCertificateRequest: false });
+        break;
+      case MODAL_CLOUD_CSP:
+        this.setState({ showModalCloudCSP: false });
+        break;
+      default:
+        return;
+    }
+  }
+
+  handleCloseModals = () => {
+    this.setState({
+      showModalCertificateRequest: false,
+      showModalCloudCSP: false,
+      showModalDeleteCRL: false,
       showModalDeleteCertifiacte: false,
       showModalExportCRL: false,
       showModalExportCertifiacte: false,
@@ -68,46 +138,6 @@ class CertWindow extends React.Component<any, any> {
       importingCertificatePath: path,
       showDialogInstallRootCertificate: true,
     });
-  }
-
-  handleCloseModalDeleteCertificate = () => {
-    this.setState({ showModalDeleteCertifiacte: false });
-  }
-
-  handleShowModalDeleteCertifiacte = () => {
-    this.setState({ showModalDeleteCertifiacte: true });
-  }
-
-  handleCloseModalExportCertificate = () => {
-    this.setState({ showModalExportCertifiacte: false });
-  }
-
-  handleShowModalExportCertifiacte = () => {
-    this.setState({ showModalExportCertifiacte: true });
-  }
-
-  handleCloseModalExportCRL = () => {
-    this.setState({ showModalExportCRL: false });
-  }
-
-  handleShowModalExportCRL = () => {
-    this.setState({ showModalExportCRL: true });
-  }
-
-  handleCloseModalCertificateRequest = () => {
-    this.setState({ showModalCertificateRequest: false });
-  }
-
-  handleShowModalCertificateRequest = () => {
-    this.setState({ showModalCertificateRequest: true });
-  }
-
-  handleCloseModalCloudCSP = () => {
-    this.setState({ showModalCloudCSP: false });
-  }
-
-  handleShowModalCloudCSP = () => {
-    this.setState({ showModalCloudCSP: true });
   }
 
   handlePasswordChange = (password: string) => {
@@ -140,7 +170,7 @@ class CertWindow extends React.Component<any, any> {
       loadAllCertificates();
     }
 
-    this.handleCloseModalDeleteCertificate();
+    this.handleCloseModals();
   }
 
   handleReloadContainers = () => {
@@ -158,7 +188,7 @@ class CertWindow extends React.Component<any, any> {
       loadAllContainers();
     }
 
-    this.handleCloseModalDeleteCertificate();
+    this.handleCloseModals();
   }
 
   handleCertificateImport = (event: any) => {
@@ -534,11 +564,11 @@ class CertWindow extends React.Component<any, any> {
       <Modal
         isOpen={showModalDeleteCertifiacte}
         header={localize("Certificate.delete_certificate", locale)}
-        onClose={this.handleCloseModalDeleteCertificate}>
+        onClose={() => this.handleCloseModalByType(MODAL_DELETE_CERTIFICATE)}>
 
         <CertificateDelete
           certificate={certificate}
-          onCancel={this.handleCloseModalDeleteCertificate}
+          onCancel={() => this.handleCloseModalByType(MODAL_DELETE_CERTIFICATE)}
           reloadCertificates={this.handleReloadCertificates}
           reloadContainers={this.handleReloadContainers} />
       </Modal>
@@ -557,13 +587,13 @@ class CertWindow extends React.Component<any, any> {
       <Modal
         isOpen={showModalExportCertifiacte}
         header={localize("Export.export_certificate", locale)}
-        onClose={this.handleCloseModalExportCertificate}>
+        onClose={() => this.handleCloseModalByType(MODAL_EXPORT_CERTIFICATE)}>
 
         <CertificateExport
           certificate={certificate}
-          onSuccess={this.handleCloseModalExportCertificate}
-          onCancel={this.handleCloseModalExportCertificate}
-          onFail={this.handleCloseModalExportCertificate} />
+          onSuccess={() => this.handleCloseModalByType(MODAL_EXPORT_CERTIFICATE)}
+          onCancel={() => this.handleCloseModalByType(MODAL_EXPORT_CERTIFICATE)}
+          onFail={() => this.handleCloseModalByType(MODAL_EXPORT_CERTIFICATE)} />
       </Modal>
     );
   }
@@ -580,13 +610,35 @@ class CertWindow extends React.Component<any, any> {
       <Modal
         isOpen={showModalExportCRL}
         header={localize("CRL.export_crl", locale)}
-        onClose={this.handleCloseModalExportCRL}>
+        onClose={() => this.handleCloseModalByType(MODAL_EXPORT_CRL)}>
 
         <CRLExport
           crl={crl}
-          onSuccess={this.handleCloseModalExportCRL}
-          onCancel={this.handleCloseModalExportCRL}
-          onFail={this.handleCloseModalExportCRL} />
+          onSuccess={() => this.handleCloseModalByType(MODAL_EXPORT_CRL)}
+          onCancel={() => this.handleCloseModalByType(MODAL_EXPORT_CRL)}
+          onFail={() => this.handleCloseModalByType(MODAL_EXPORT_CRL)} />
+      </Modal>
+    );
+  }
+
+  showModalDeleteCrl = () => {
+    const { localize, locale } = this.context;
+    const { crl, showModalDeleteCRL } = this.state;
+
+    if (!crl || !showModalDeleteCRL) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalDeleteCRL}
+        header={localize("CRL.delete_crl", locale)}
+        onClose={() => this.handleCloseModalByType(MODAL_DELETE_CRL)}>
+
+        <CRLDelete
+          crl={crl}
+          onCancel={() => this.handleCloseModalByType(MODAL_DELETE_CRL)}
+          reloadCertificates={this.handleReloadCertificates} />
       </Modal>
     );
   }
@@ -605,11 +657,11 @@ class CertWindow extends React.Component<any, any> {
       <Modal
         isOpen={showModalCertificateRequest}
         header={localize("CSR.create_request", locale)}
-        onClose={this.handleCloseModalCertificateRequest}>
+        onClose={() => this.handleCloseModalByType(MODAL_CERTIFICATE_REQUEST)}>
 
         <CertificateRequest
           certificateTemplate={certificateTemplate}
-          onCancel={this.handleCloseModalCertificateRequest}
+          onCancel={() => this.handleCloseModalByType(MODAL_CERTIFICATE_REQUEST)}
           selfSigned={false}
         />
       </Modal>
@@ -628,9 +680,9 @@ class CertWindow extends React.Component<any, any> {
       <Modal
         isOpen={showModalCloudCSP}
         header={localize("CloudCSP.cloudCSP", locale)}
-        onClose={this.handleCloseModalCloudCSP}>
+        onClose={() => this.handleCloseModalByType(MODAL_CLOUD_CSP)}>
 
-        <CloudCSP onCancel={this.handleCloseModalCloudCSP} />
+        <CloudCSP onCancel={() => this.handleCloseModalByType(MODAL_CLOUD_CSP)} />
       </Modal>
     );
   }
@@ -679,8 +731,8 @@ class CertWindow extends React.Component<any, any> {
               <div className="content-wrapper z-depth-1">
                 <ToolBarWithSearch operation="certificate" disable=""
                   reloadCertificates={this.handleReloadCertificates}
-                  handleShowModalCertificateRequest={this.handleShowModalCertificateRequest}
-                  handleShowModalCloudCSP={this.handleShowModalCloudCSP}
+                  handleShowModalCertificateRequest={() => this.handleShowModalByType(MODAL_CERTIFICATE_REQUEST)}
+                  handleShowModalCloudCSP={() => this.handleShowModalByType(MODAL_CLOUD_CSP)}
                   rightBtnAction={
                     (event: any) => {
                       this.handleCertificateImport(event.target.files);
@@ -714,8 +766,8 @@ class CertWindow extends React.Component<any, any> {
                         {
                           certificate ?
                             <React.Fragment>
-                              <li><a onClick={this.handleShowModalExportCertifiacte}>{localize("Certificate.cert_export", locale)}</a></li>
-                              <li><a onClick={this.handleShowModalDeleteCertifiacte}>{localize("Common.delete", locale)}</a></li>
+                              <li><a onClick={() => this.handleShowModalByType(MODAL_EXPORT_CERTIFICATE)}>{localize("Certificate.cert_export", locale)}</a></li>
+                              <li><a onClick={() => this.handleShowModalByType(MODAL_DELETE_CERTIFICATE)}>{localize("Common.delete", locale)}</a></li>
                             </React.Fragment>
                             : null
                         }
@@ -732,7 +784,8 @@ class CertWindow extends React.Component<any, any> {
                         {
                           crl ?
                             <li>
-                              <a onClick={this.handleShowModalExportCRL}>{localize("Certificate.cert_export", locale)}</a>
+                              <a onClick={() => this.handleShowModalByType(MODAL_EXPORT_CRL)}>{localize("Certificate.cert_export", locale)}</a>
+                              <li><a onClick={() => this.handleShowModalByType(MODAL_DELETE_CRL)}>{localize("Common.delete", locale)}</a></li>
                             </li>
                             :
                             null
@@ -745,12 +798,13 @@ class CertWindow extends React.Component<any, any> {
                 {this.showModalDeleteCertificate()}
                 {this.showModalExportCertificate()}
                 {this.showModalExportCRL()}
+                {this.showModalDeleteCrl()}
                 {this.showModalCertificateRequest()}
                 {this.showModalCloudCSP()}
               </div>
               {
                 certificate && certificate.category === REQUEST ?
-                  <RequestButtons onCopy={() => this.handleShowModalCertificateRequest()} /> : null
+                  <RequestButtons onCopy={() => this.handleShowModalByType(MODAL_CERTIFICATE_REQUEST)} /> : null
               }
             </div>
           </div>

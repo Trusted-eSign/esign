@@ -157,6 +157,63 @@ export class Store {
     return true;
   }
 
+  deleteCrl(crl: trusted.pkistore.PkiItem): boolean {
+    let provider;
+
+    switch (crl.provider) {
+      case "SYSTEM":
+        provider = this._providerSystem;
+        break;
+      case "MICROSOFT":
+        provider = this._providerMicrosoft;
+        break;
+      case "CRYPTOPRO":
+        provider = this._providerCryptopro;
+        break;
+      default:
+        Materialize.toast("Unsupported provider name", 2000, "toast-unsupported_provider_name");
+    }
+
+    if (!provider) {
+      Materialize.toast(`Provider ${crl.provider} not init`, 2000, "toast-not_init_provider");
+      return false;
+    }
+
+    const crlX509 = this.getPkiObject(crl);
+
+    try {
+      this._store.deleteCrl(provider.handle, crl.category, crlX509);
+
+      logger.log({
+        certificate: crl.subjectName,
+        level: "info",
+        message: "",
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + crl.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+    } catch (err) {
+      logger.log({
+        certificate: crl.subjectName,
+        level: "error",
+        message: err.message ? err.message : err,
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + crl.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
+
+      return false;
+    }
+
+    return true;
+  }
+
   handleImportCertificate(certificate: trusted.pki.Certificate | Buffer, store: trusted.pkistore.PkiStore, provider: any, callback: any, category?: string, contName?: string) {
     const self = this;
     const cert = certificate instanceof trusted.pki.Certificate ? certificate : trusted.pki.Certificate.import(certificate);

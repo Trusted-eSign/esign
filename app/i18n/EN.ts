@@ -66,14 +66,18 @@ export default {
   CRL: {
     authorityKeyid: "Authority key id",
     crlNumber: "CRL number",
+    crl_delete_failed: "The CRL delete failed",
+    crl_delete_ok: "The CRL is successfully deleted",
     crl_export: "Export",
     crl_export_cancel: "Cancel the CRL export",
     crl_export_failed: "The CRL export failed",
     crl_export_ok: "The CRL is successfully exported",
     crls: "CRLs",
+    delete_crl: "Delete CRL",
     export_crl: "Export the CRL",
     lastUpdate: "Last update",
     nextUpdate: "Next update",
+    realy_delete_crl: "You really want delete CRL?",
   },
   CSR: {
     algorithm: "Algorithm",
