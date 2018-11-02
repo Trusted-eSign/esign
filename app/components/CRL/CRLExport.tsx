@@ -102,7 +102,6 @@ class CRLExport extends React.Component<ICRLExportProps, ICRLExportState> {
     if (outFilePAth && X509_CRL) {
       try {
         const encoding = encodingType === BASE64 ? trusted.DataFormat.PEM : trusted.DataFormat.DER;
-        console.log("eeee", encoding);
         X509_CRL.save(outFilePAth, encoding);
       } catch (e) {
         $(".toast-crl_export_failed").remove();
