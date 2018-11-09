@@ -344,9 +344,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
 
         if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath);
-
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
 
@@ -420,6 +417,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
               },
               );
             }
+          } else {
+            deleteFile(file.id);
+            selectFile(newPath);
           }
         } else {
           res = false;
