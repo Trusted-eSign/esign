@@ -241,7 +241,11 @@ export function packageSign(
               connectedSocket.broadcast.emit(SIGNED, { id: file.remoteId });
             }
 
-            fs.unlinkSync(file.fullpath);
+            try {
+              fs.unlinkSync(file.fullpath);
+            } catch (e) {
+              //
+            }
 
             if (remoteFiles.uploader) {
               let cms = signs.loadSign(newPath);

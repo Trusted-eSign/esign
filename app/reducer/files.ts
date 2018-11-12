@@ -62,7 +62,11 @@ export default (files = new DefaultReducerState(), action) => {
       const file = files.getIn(["entities", payload.fileId]);
 
       if (file && file.socket && fileExists(file.fullpath)) {
-        fs.unlinkSync(file.fullpath);
+        try {
+          fs.unlinkSync(file.fullpath);
+        } catch (e) {
+          //
+        }
       }
 
       return files.deleteIn(["entities", payload.fileId]);
@@ -73,7 +77,11 @@ export default (files = new DefaultReducerState(), action) => {
         const tfile = files.getIn(["entities", id]);
 
         if (tfile && tfile.socket && fileExists(tfile.fullpath)) {
-          fs.unlinkSync(tfile.fullpath);
+          try {
+            fs.unlinkSync(tfile.fullpath);
+          } catch (e) {
+            //
+          }
         }
 
         newFiles = newFiles.deleteIn(["entities", id]);
