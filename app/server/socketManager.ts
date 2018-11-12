@@ -13,6 +13,7 @@ import {
 import store from "../store/index";
 import * as signs from "../trusted/sign";
 import { extFile } from "../utils";
+import { fileExists } from "../utils";
 import { CONNECTION, DECRYPT, DISCONNECT, ENCRYPT, SIGN, UNAVAILABLE, VERIFIED, VERIFY } from "./constants";
 import io from "./socketIO";
 
@@ -210,6 +211,17 @@ function download(file: IFileProperty, pathname: string, done: (err: Error, url?
       case 200:
         const totalSize = parseInt(response.headers["content-length"], 10);
         store.dispatch({ type: DOWNLOAD_REMOTE_FILE + START, payload: { id: file.id, totalSize } });
+
+        let indexFile: number = 1;
+        let newOutUri: string = pathname;
+        while (fileExists(newOutUri)) {
+          const parsed = path.parse(pathname);
+
+          newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext);
+          indexFile++;
+        }
+
+        pathname = newOutUri;
 
         const stream = fs.createWriteStream(pathname);
 
