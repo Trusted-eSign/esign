@@ -35,7 +35,7 @@ export class Store {
       }
     }
 
-    this._items = this._store.cash.export();
+    this._items = [];
 
     this._items = this._items.concat(this._store.find({
       provider: ["CRYPTOPRO", "MICROSOFT"],
@@ -107,7 +107,7 @@ export class Store {
       const uri = store.addCert(provider.handle, MY, cert);
       const newItem = provider.objectToPkiItem(uri);
 
-      const items = this._store.cash.export();
+      const items: native.PKISTORE.IPkiItem[] = [];
       let isNewItem = true;
 
       for (const item of items) {
@@ -118,9 +118,6 @@ export class Store {
       }
 
       if (isNewItem) {
-        const ARR: any[] = [newItem];
-        this._store.cash.import(ARR);
-
         this._items.push(newItem);
       }
     } else {
@@ -299,23 +296,12 @@ export class Store {
   }
 
   addCrlToStore(provider: any, category: any, crl: any, flag: any): void {
-    let items: any;
     let uri: string;
     let newItem: any;
 
     uri = this._store.addCrl(provider.handle, category, crl);
 
     newItem = provider.objectToPkiItem(uri);
-    items = this._store.cash.export();
-
-    for (const item of items) {
-      if (item.hash === newItem.hash) {
-        return;
-      }
-    }
-
-    const ARR = [newItem];
-    this._store.cash.import(ARR);
 
     this._items.push(newItem);
   }
