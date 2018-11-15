@@ -70,7 +70,7 @@ io.on(CONNECTION, (socket) => {
     store.dispatch({ type: TOGGLE_SAVE_TO_DOCUMENTS, payload: { saveToDocuments: false } });
 
     if (data && data.params && data.params.license) {
-      addLicenseToStore(data.params.license);
+      addLicenseToStore(socket.id, data.params.license);
     }
   });
 
@@ -97,31 +97,21 @@ io.on(CONNECTION, (socket) => {
     downloadFiles(data, socket);
 
     if (data && data.params && data.params.license) {
-      addLicenseToStore(data.params.license);
+      addLicenseToStore(socket.id, data.params.license);
     }
   });
 
   socket.on(DISCONNECT, () => {
-    const connection = store.getState().connections.getIn(["entities", socket.id]);
-
-    if (connection && connection.license) {
-      try {
-        trusted.utils.Jwt.deleteLicense(connection.license);
-      } catch (e) {
-        console.log("error", e);
-      }
-    }
-
     store.dispatch({ type: REMOVE_CONNECTION, payload: { id: socket.id, socket } });
   });
 });
 
-const addLicenseToStore = (license: string) => {
+const addLicenseToStore = (id: string, license: string) => {
   if (license) {
     if (checkLicense(license)) {
       try {
         if (trusted.utils.Jwt.addLicense(license)) {
-          store.dispatch({ type: ADD_LICENSE, payload: { license } });
+          store.dispatch({ type: ADD_LICENSE, payload: { id, license } });
         }
       } catch (e) {
         console.log("error", e);
