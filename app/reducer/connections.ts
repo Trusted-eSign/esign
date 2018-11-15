@@ -4,12 +4,17 @@ import { ADD_CONNECTION, ADD_LICENSE, REMOVE_CONNECTION, SET_CONNECTED, SET_DISC
 const ConnectionModel = Record({
   connected: false,
   id: null,
-  license: null,
   socket: null,
+});
+
+const LicenseModel = Record({
+  id: null,
+  license: null,
 });
 
 const DefaultReducerState = Record({
   entities: OrderedMap({}),
+  licenses: OrderedMap({}),
 });
 
 export default (connections = new DefaultReducerState(), action) => {
@@ -23,7 +28,10 @@ export default (connections = new DefaultReducerState(), action) => {
       }));
 
     case ADD_LICENSE:
-      return connections.setIn(["entities", payload.id, "license"], payload.license);
+      return connections.setIn(["licenses", payload.id], new LicenseModel({
+        id: payload.id,
+        license: payload.license,
+      }));
 
     case REMOVE_CONNECTION:
       return connections.deleteIn(["entities", payload.id]);
