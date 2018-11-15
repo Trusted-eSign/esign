@@ -4,16 +4,13 @@ import * as npath from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { loadLicense } from "../../AC";
+import { loadLicense } from "../../AC/licenseActions";
 import { DEFAULT_PATH, LICENSE_PATH, PLATFORM } from "../../constants";
 import * as jwt from "../../trusted/jwt";
-import { toBase64 } from "../../utils";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 const dialog = window.electron.remote.dialog;
 
 interface ILicenseSetupModalProps {
-  status: number;
-  loading: boolean;
   closeWindow: () => void;
   loadLicense: () => void;
 }
@@ -60,7 +57,6 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
     };
 
     let command = "";
-    let status: any;
 
     if (PLATFORM !== "win32") {
       command = "sh -c " + "\"";
@@ -71,9 +67,7 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       }
     }
 
-    let data = null;
     let key;
-    let lic_format;
 
     if (license_key) {
       key = license_key;
@@ -95,68 +89,15 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
       $(".toast-lic_key_uncorrect").remove();
       Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
     } else {
-      let parsedLicense;
-      let buffer;
-      const result = key.match(/[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}-[A-Za-z0-9]{5}/ig);
-
-      if (result != null) {
-        lic_format = "MTX";
-        let productMarker = key.match(/^CAG/ig);
-        if (productMarker == null) {
-          status = 907;
-          data = "-";
-        } else {
-          let expirationTime = trusted.utils.Jwt.getExpirationTime(key);
-          let dateExp = new Date(expirationTime * 1000).getTime();
-          let dateNow = new Date().getTime();
-          let dateDif = dateExp - dateNow;
-          if ((dateDif < 0) && (dateExp != 0)) { status = 908 } else status = 1;
-          //validate
-          data = {
-            aud: "-",
-            sub: "CryptoARM GOST",
-            core: 65535,
-            iss: 'ООО "Цифровые технологии"',
-            exp: expirationTime,
-            iat: "",
-            jti: "",
-            desc: "CryptoARM GOST",
-          };
-        }
-      } else {
-        const splitLicense = key.split(".");
-        if (splitLicense[1]) {
-          try {
-            buffer = new Buffer(toBase64(splitLicense[1]), "base64").toString("utf8");
-            parsedLicense = JSON.parse(buffer);
-
-            if (parsedLicense.exp && parsedLicense.aud && parsedLicense.iat && parsedLicense.iss
-              && parsedLicense.jti && parsedLicense.sub) {
-              data = parsedLicense;
-              lic_format = "JWT";
-              if (data.sub !== "CryptoARM GOST") {
-                status = 907;
-                data = data.sub = "-";
-              }
-            }
-          } catch (e) {
-            data = null;
-            lic_format = "NONE";
-          }
-        }
-      }
-    }
-
-    if (data && data.sub !== "-") {
-      if (status != 908) status = jwt.checkLicense(key);
-      if (status === 0) {
+      if (jwt.checkLicense(key)) {
         if (PLATFORM === "win32") {
           command = command + "echo " + key.trim() + " > " + '"' + LICENSE_PATH + '"';
         } else {
           command = command + " printf " + key.trim() + " > " + "'" + LICENSE_PATH + "'" + " && ";
           command = command + " chmod 777 " + "'" + LICENSE_PATH + "'" + "\"";
         }
-        window.sudo.exec(command, options, function (error: any) {
+
+        window.sudo.exec(command, options, function(error: any) {
           if (!error) {
             trusted.common.OpenSSL.stop();
             trusted.common.OpenSSL.run();
@@ -179,12 +120,9 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
           }
         });
       } else {
-        $(".toast-status.message").remove();
-        Materialize.toast(localize(jwt.getErrorMessage(status), locale), 2000, "toast-status.message");
+        $(".toast-lic_key_uncorrect").remove();
+        Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
       }
-    } else {
-      $(".toast-lic_key_uncorrect").remove();
-      Materialize.toast(localize("License.lic_key_uncorrect", locale), 2000, "toast-lic_key_uncorrect");
     }
 
     this.props.closeWindow();
@@ -257,6 +195,5 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
 export default connect((state) => {
   return {
     loading: state.license.loading,
-    status: state.license.status,
   };
 }, { loadLicense })(LicenseSetupModal);
