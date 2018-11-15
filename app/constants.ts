@@ -144,6 +144,7 @@ export const ALG_GOST12_256 = "gost2012-256";
 export const ALG_GOST12_512 = "gost2012-512";
 
 export const ADD_CONNECTION = "ADD_CONNECTION";
+export const ADD_LICENSE = "ADD_LICENSE";
 export const REMOVE_CONNECTION = "REMOVE_CONNECTION";
 export const SET_CONNECTED = "SET_CONNECTED";
 export const SET_DISCONNECTED = "SET_DISCONNECTED";

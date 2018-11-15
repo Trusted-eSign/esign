@@ -1,9 +1,10 @@
 import { OrderedMap, Record } from "immutable";
-import { ADD_CONNECTION, REMOVE_CONNECTION, SET_CONNECTED, SET_DISCONNECTED } from "../constants";
+import { ADD_CONNECTION, ADD_LICENSE, REMOVE_CONNECTION, SET_CONNECTED, SET_DISCONNECTED } from "../constants";
 
 const ConnectionModel = Record({
   connected: false,
   id: null,
+  license: null,
   socket: null,
 });
 
@@ -12,7 +13,7 @@ const DefaultReducerState = Record({
 });
 
 export default (connections = new DefaultReducerState(), action) => {
-  const { type, payload, randomId } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case ADD_CONNECTION:
@@ -20,6 +21,9 @@ export default (connections = new DefaultReducerState(), action) => {
         id: payload.id,
         socket: payload.socket,
       }));
+
+    case ADD_LICENSE:
+      return connections.setIn(["entities", payload.id, "license"], payload.license);
 
     case REMOVE_CONNECTION:
       return connections.deleteIn(["entities", payload.id]);

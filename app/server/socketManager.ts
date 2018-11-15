@@ -4,13 +4,14 @@ import * as os from "os";
 import * as path from "path";
 import { push } from "react-router-redux";
 import {
-  ADD_CONNECTION, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
+  ADD_CONNECTION, ADD_LICENSE, ADD_REMOTE_FILE, CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_OUTFOLDER,
   CHANGE_SIGNATURE_TIMESTAMP, DOWNLOAD_REMOTE_FILE, FAIL, LOCATION_ENCRYPT,
   LOCATION_SIGN, PACKAGE_SELECT_FILE, REMOVE_ALL_FILES, REMOVE_ALL_REMOTE_FILES, REMOVE_CONNECTION,
   SET_CONNECTED, SET_REMOTE_FILES_PARAMS, START, SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
   VERIFY_SIGNATURE,
 } from "../constants";
 import store from "../store/index";
+import { checkLicense } from "../trusted/jwt";
 import * as signs from "../trusted/sign";
 import { extFile } from "../utils";
 import { fileExists } from "../utils";
@@ -36,6 +37,7 @@ interface ISignRequest {
     files: IFileProperty[];
     uploader: string;
     extra: any;
+    license?: string;
   };
   controller: string;
 }
@@ -48,6 +50,7 @@ interface IEncryptRequest {
     files: IFileProperty[];
     uploader: string;
     extra: any;
+    license?: string;
   };
   controller: string;
 }
@@ -65,6 +68,10 @@ io.on(CONNECTION, (socket) => {
     store.dispatch({ type: CHANGE_SIGNATURE_TIMESTAMP, payload: { timestamp: true } });
     store.dispatch({ type: CHANGE_SIGNATURE_OUTFOLDER, payload: { outfolder: "" } });
     store.dispatch({ type: TOGGLE_SAVE_TO_DOCUMENTS, payload: { saveToDocuments: false } });
+
+    if (data && data.params && data.params.license) {
+      addLicenseToStore(data.params.license);
+    }
   });
 
   socket.on(VERIFY, (data: ISignRequest) => {
@@ -88,12 +95,40 @@ io.on(CONNECTION, (socket) => {
     cleanFileLists();
     openWindow(DECRYPT);
     downloadFiles(data, socket);
+
+    if (data && data.params && data.params.license) {
+      addLicenseToStore(data.params.license);
+    }
   });
 
   socket.on(DISCONNECT, () => {
+    const connection = store.getState().connections.getIn(["entities", socket.id]);
+
+    if (connection && connection.license) {
+      try {
+        trusted.utils.Jwt.deleteLicense(connection.license);
+      } catch (e) {
+        console.log("error", e);
+      }
+    }
+
     store.dispatch({ type: REMOVE_CONNECTION, payload: { id: socket.id, socket } });
   });
 });
+
+const addLicenseToStore = (license: string) => {
+  if (license) {
+    if (checkLicense(license)) {
+      try {
+        if (trusted.utils.Jwt.addLicense(license)) {
+          store.dispatch({ type: ADD_LICENSE, payload: { license } });
+        }
+      } catch (e) {
+        console.log("error", e);
+      }
+    }
+  }
+};
 
 const downloadFiles = (data: ISignRequest | IEncryptRequest, socket: SocketIO.Socket) => {
   const { params } = data;
