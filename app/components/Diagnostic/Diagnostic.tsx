@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { loadAllCertificates, loadLicense } from "../../AC";
+import { loadAllCertificates } from "../../AC";
+import { loadLicense } from "../../AC/licenseActions";
 import {
   BUG, ERROR_CHECK_CSP_LICENSE, ERROR_CHECK_CSP_PARAMS,
   ERROR_LOAD_TRUSTED_CRYPTO,  NO_CORRECT_CRYPTOARM_LICENSE, NO_CRYPTOARM_LICENSE,
@@ -125,7 +126,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
   componentWillReceiveProps(nextProps: any) {
     const { certificatesLoaded, loadingLicense } = this.props;
 
-    if (nextProps.statusLicense == 0 && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.statusLicense === false && nextProps.lic_format === "NONE" && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -133,7 +134,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
     }
-    if (nextProps.lic_format === "MTX" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.lic_format === "MTX" && nextProps.statusLicense === false && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,
@@ -141,7 +142,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
     }
-    if (nextProps.lic_format === "JWT" && nextProps.statusLicense == 0 && nextProps.verifiedLicense == true && loadingLicense === false) {
+    if (nextProps.lic_format === "JWT" && nextProps.statusLicense === false && nextProps.verifiedLicense == true && loadingLicense === false) {
       this.setState({
         errors: [...this.state.errors, {
           important: WARNING,

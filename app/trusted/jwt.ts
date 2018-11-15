@@ -12,13 +12,13 @@ const CTLICENSE_R_ERROR_OPERATION_BLOCK: number = 910;
 const CTLICENSE_R_ERROR_NO_LICENSE_IN_STORE: number = 911;
 const CTLICENSE_R_ERROR_STORE_IS_LOCKED: number = 912;
 
-export function checkLicense(key?: string): number {
+export function checkLicense(key?: string): boolean {
   try {
     const res = key ? trusted.utils.Jwt.checkLicense(key) : trusted.utils.Jwt.checkLicense();
 
-    return res;
+    return res === 0;
   } catch (err) {
-    return -1;
+    return false;
   }
 }
 

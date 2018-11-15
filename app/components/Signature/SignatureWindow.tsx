@@ -2,7 +2,7 @@ import * as fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
+import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature } from "../../AC";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
@@ -45,7 +45,7 @@ interface ISignatureWindowProps {
   deleteFile: (file: string) => void;
   selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
   licenseLoaded: boolean;
-  licenseStatus: number;
+  licenseStatus: boolean;
   licenseToken: string;
   lic_error: number;
   loadAllCertificates: () => void;
@@ -68,6 +68,7 @@ interface ISignatureWindowProps {
   settings: any;
   signedPackage: boolean;
   signingPackage: boolean;
+  verifyLicense: (license?: string) => void;
   verifyingPackage: boolean;
   packageSignResult: boolean;
   packageSign: (files: IFile[], cert: trusted.pki.Certificate, key: trusted.pki.Key, policies: string[], format: trusted.DataFormat, folderOut: string) => void;
@@ -93,7 +94,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   componentDidMount() {
     const { certificatesLoaded, certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { loadAllCertificates } = this.props;
+    const { loadAllCertificates, verifyLicense } = this.props;
+
+    verifyLicense();
 
     if (!certificatesLoading && !certificatesLoaded) {
       loadAllCertificates();
@@ -185,7 +188,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     const { files, signer, licenseStatus, lic_error } = this.props;
     const { localize, locale } = this.context;
 
-    if (licenseStatus !== 1) {
+    if (licenseStatus !== true) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
 
@@ -554,4 +557,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature })(SignatureWindow);
+}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { loadLicense } from "../../AC";
+import { loadLicense } from "../../AC/licenseActions";
 import LicenseInfoFiled from "./LicenseInfoField";
 
 interface ILicenseModel {

@@ -20,7 +20,7 @@ const DefaultReducerState = Record({
   lic_format: null,
   loaded: false,
   loading: false,
-  status: null,
+  status: false,
   verified: false,
 });
 
@@ -39,7 +39,7 @@ export default (license = new DefaultReducerState(), action) => {
         .set("data", payload.data)
         .set("loading", false)
         .set("loaded", true)
-        .set("verified", payload.verified)
+        .set("verified", true)
         .set("lic_format", payload.lic_format)
         .set("lic_error", payload.lic_error)
         .set("status", payload.licenseStatus);
@@ -48,8 +48,8 @@ export default (license = new DefaultReducerState(), action) => {
       return license
         .set("loading", false)
         .set("loaded", false)
-        .set("status", 0)
-        .set("verified", payload.verified)
+        .set("status", false)
+        .set("verified", true)
         .set("lic_error", payload.lic_error)
         .set("lic_format", payload.lic_format);
 

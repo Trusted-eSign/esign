@@ -159,7 +159,7 @@ class EncryptWindow extends React.Component<any, any> {
     const { connectedList, connections, files, settings, deleteFile, selectFile, licenseStatus, lic_error } = this.props;
     const { localize, locale } = this.context;
 
-    if (licenseStatus !== 1) {
+    if (licenseStatus !== true) {
       $(".toast-jwtErrorLicense").remove();
       Materialize.toast(localize(jwt.getErrorMessage(lic_error), locale), 5000, "toast-jwtErrorLicense");
 
