@@ -170,6 +170,12 @@ export function packageSign(
                     type: DELETE_FILE,
                   });
                 }
+
+                try {
+                  fs.unlinkSync(newPath);
+                } catch (e) {
+                  //
+                }
               },
               );
             }
