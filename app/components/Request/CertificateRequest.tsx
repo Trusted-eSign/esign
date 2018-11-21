@@ -484,7 +484,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
     ];
 
     certReq.subject = atrs;
-    certReq.version = 2;
+    certReq.version = 0;
     certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
