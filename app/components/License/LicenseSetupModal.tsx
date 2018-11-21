@@ -97,6 +97,12 @@ class LicenseSetupModal extends React.Component<ILicenseSetupModalProps, ILicens
           command = command + " chmod 777 " + "'" + LICENSE_PATH + "'" + "\"";
         }
 
+        try {
+          trusted.utils.Jwt.addLicense(key);
+        } catch (e) {
+          console.log("error", e);
+        }
+
         window.sudo.exec(command, options, function(error: any) {
           if (!error) {
             trusted.common.OpenSSL.stop();
