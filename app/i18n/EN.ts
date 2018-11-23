@@ -245,6 +245,7 @@ export default {
     containersNotFound: "Containers not found",
     delete_container: "delete container by certificate (not recomended)",
     installCertificate: "Install certificate",
+    invalid_character: "Invalid character",
   },
   Csp: {
     cpcspPKZIVersion: "CryptoPro CSP product version",

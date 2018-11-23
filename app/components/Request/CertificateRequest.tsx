@@ -678,10 +678,25 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 
   handleInputChange = (ev: any) => {
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z-.\\\s]+$/i;
+
     const target = ev.target;
     const name = target.name;
+    const value = ev.target.value;
 
-    this.setState({ [name]: ev.target.value });
+    if (name === "containerName") {
+      if (pattern.test(value || !value)) {
+        this.setState({[name]: value});
+      } else {
+        $(".toast-invalid_character").remove();
+        Materialize.toast(localize("Containers.invalid_character", locale), 2000, "toast-invalid_character");
+      }
+
+      return;
+    }
+
+    this.setState({[name]: value});
   }
 
   handleCountryChange = (ev: any) => {
