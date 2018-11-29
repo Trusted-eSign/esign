@@ -99,7 +99,7 @@ export default {
     email_address: "Email адрес",
     exportable_key: "Пометить ключи как экспортируемые",
     extKeyUsage: "Назначение сертификата (EKU)",
-    fill_required_fields: "Заполните обязательные поля",
+    fill_required_fields: "Проверьте правильность заполнения полей",
     generate_new_key: "Создать новый ключевой набор",
     go_to_csr_folder: "Перейти в каталог",
     inn: "ИНН",
