@@ -8,6 +8,7 @@ import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
 import * as jwt from "../../trusted/jwt";
+import { checkLicense } from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
@@ -186,8 +187,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   handleSign = () => {
-    const { files, signer, licenseStatus, lic_error } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { files, signer, lic_error, verifyLicense } = this.props;
     const { localize, locale } = this.context;
+
+    const licenseStatus = checkLicense();
 
     if (licenseStatus !== true) {
       $(".toast-jwtErrorLicense").remove();
