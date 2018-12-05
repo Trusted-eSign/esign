@@ -1,5 +1,5 @@
 import { OrderedMap, Record } from "immutable";
-import { ADD_CONNECTION, ADD_LICENSE, REMOVE_CONNECTION, SET_CONNECTED, SET_DISCONNECTED } from "../constants";
+import { ADD_CONNECTION, ADD_LICENSE, DELETE_ALL_TEMPORY_LICENSES, REMOVE_CONNECTION, SET_CONNECTED, SET_DISCONNECTED } from "../constants";
 
 const ConnectionModel = Record({
   connected: false,
@@ -32,6 +32,9 @@ export default (connections = new DefaultReducerState(), action) => {
         id: payload.id,
         license: payload.license,
       }));
+
+    case DELETE_ALL_TEMPORY_LICENSES:
+      return connections.setIn(["licenses"], OrderedMap({}));
 
     case REMOVE_CONNECTION:
       return connections.deleteIn(["entities", payload.id]);

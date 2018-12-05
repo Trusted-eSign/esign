@@ -1,10 +1,32 @@
 import * as fs from "fs";
 import {
-  FAIL, LICENSE_PATH,
+  DELETE_ALL_TEMPORY_LICENSES, FAIL, LICENSE_PATH,
   LOAD_LICENSE, START, SUCCESS, VERIFY_LICENSE,
 } from "../constants";
 import { checkLicense } from "../trusted/jwt";
 import { toBase64 } from "../utils";
+
+export function deleteAllTemporyLicenses() {
+  return (dispatch: (action: {}) => void, getState: () => any) => {
+    const state = getState();
+    const { connections } = state;
+    const licenses = connections.get("licenses");
+
+    licenses.forEach((license) => {
+      if (license && license.license) {
+        try {
+          trusted.utils.Jwt.deleteLicense(license.license);
+        } catch (e) {
+          console.log("error", e);
+        }
+      }
+    });
+
+    dispatch({
+      type: DELETE_ALL_TEMPORY_LICENSES,
+    });
+  };
+}
 
 export function verifyLicense(license?: string) {
   const licenseStatus = checkLicense(license);

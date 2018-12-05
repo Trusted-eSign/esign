@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
-import { verifyLicense } from "../../AC/licenseActions";
+import { deleteAllTemporyLicenses, verifyLicense } from "../../AC/licenseActions";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
@@ -44,6 +44,7 @@ interface ISignatureWindowProps {
   certificatesLoading: boolean;
   connections: any;
   connectedList: IConnection[];
+  deleteAllTemporyLicenses: () => void;
   deleteFile: (file: string) => void;
   selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
   licenseLoaded: boolean;
@@ -109,6 +110,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     if (this.props.method === SIGN && prevProps.files && prevProps.files.length && (!this.props.files || !this.props.files.length)) {
       this.props.removeAllRemoteFiles();
       remote.getCurrentWindow().close();
+
+      this.props.deleteAllTemporyLicenses();
     }
   }
 
@@ -562,4 +565,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);
+}, { deleteAllTemporyLicenses, deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);
