@@ -22,6 +22,8 @@ export default merge.smart(baseConfig, {
     publicPath: '../dist/'
   },
 
+  mode: 'production',
+
   module: {
     rules: [
       // Extract all .global.css to style.css as is

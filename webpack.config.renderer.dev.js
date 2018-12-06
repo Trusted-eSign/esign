@@ -47,6 +47,8 @@ export default merge.smart(baseConfig, {
     publicPath: `http://localhost:${port}/dist/`
   },
 
+  mode: 'development',
+
   module: {
     rules: [
       {
@@ -246,7 +248,7 @@ export default merge.smart(baseConfig, {
       verbose: true,
       disableDotRule: false,
     },
-    setup() {
+    before() {
       if (process.env.START_HOT) {
         spawn(
           'npm',
