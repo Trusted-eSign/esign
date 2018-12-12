@@ -14,7 +14,7 @@ const builder = new xml2js.Builder();
 const partnerId = "digt";
 const signType = "Detached";
 
-const signDocument = {
+const objSignDocument = {
   "soapenv:Envelope": {
     "$": {
       "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
@@ -48,9 +48,9 @@ const signDocument = {
   },
 };
 
-const signDocumentMap = Map(fromJS(signDocument));
+const mapSignDocument = Map(fromJS(objSignDocument));
 
-const signText = {
+const objSignText = {
   "soapenv:Envelope": {
     "$": {
       "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
@@ -78,19 +78,19 @@ const signText = {
   },
 };
 
-const signTextMap = Map(fromJS(signText));
+const mapSignText = Map(fromJS(objSignText));
 
 export const buildXML = (template: string, inputParams: ISignDocument) => {
   switch (template) {
     case SIGN_DOCUMENT:
-      const sdocumentBody = createSignDocumentBody(signDocumentMap.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"]), inputParams);
-      const sdocumentMap = signDocumentMap.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"], sdocumentBody);
+      const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"]), inputParams);
+      const sdocumentMap = mapSignDocument.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"], sdocumentBody);
 
       return builder.buildObject(sdocumentMap.toJS());
 
     case SIGN_TEXT:
-      const stextBody = createSignTextBody(signTextMap.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"]), inputParams);
-      const stextMap = signTextMap.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"], stextBody);
+      const stextBody = createSignTextBody(mapSignText.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"]), inputParams);
+      const stextMap = mapSignText.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"], stextBody);
 
       return builder.buildObject(stextMap.toJS());
 
