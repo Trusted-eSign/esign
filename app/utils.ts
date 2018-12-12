@@ -249,3 +249,24 @@ export function formatDate(date: Date) {
 
   return [year, month, day].join("-");
 }
+
+export function md5(data: string): string {
+  return crypto.createHash("md5").update(data).digest("hex").toUpperCase();
+}
+
+export function xorConvolutionMD5(hash: string): string {
+  let res = "";
+
+  if (hash && hash.length && hash.length === 32) {
+    for (let i = 0; i < 8; i++) {
+      // tslint:disable-next-line:no-bitwise
+      res += (charToHex(hash.charAt(i)) ^ charToHex(hash.charAt(i + 8))  ^ charToHex(hash.charAt(i + 16))  ^ charToHex(hash.charAt(i + 24)) ).toString(16);
+    }
+  }
+
+  return res.toUpperCase();
+}
+
+function charToHex(char: string): number {
+  return parseInt(char, 16);
+}
