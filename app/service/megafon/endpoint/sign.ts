@@ -6,6 +6,7 @@
 */
 
 import { fromJS, Map } from "immutable";
+import request from "request";
 import xml2js from "xml2js";
 import { SIGN_DOCUMENT, SIGN_TEXT } from "../constants";
 import { ISignDocument, ISignText } from "../types";
@@ -23,25 +24,23 @@ const objSignDocument = {
     "soapenv:Header": {},
     "soapenv:Body": {
       "ws:signDocumentRequest": {
-        "soapenv:Body": {
-          "ws:partner_id": {
-            _: partnerId,
-          },
-          "ws:msisdn": {
-            _: "?",
-          },
-          "ws:text": {
-            _: "?",
-          },
-          "ws:document": {
-            _: "?",
-          },
-          "ws:signType": {
-            _: signType,
-          },
-          "ws:digest": {
-            _: "?",
-          },
+        "ws:partner_id": {
+          _: partnerId,
+        },
+        "ws:msisdn": {
+          _: "?",
+        },
+        "ws:text": {
+          _: "?",
+        },
+        "ws:document": {
+          _: "?",
+        },
+        "ws:signType": {
+          _: signType,
+        },
+        "ws:digest": {
+          _: "?",
         },
       },
     },
@@ -59,19 +58,17 @@ const objSignText = {
     "soapenv:Header": {},
     "soapenv:Body": {
       "ws:signTextRequest": {
-        "soapenv:Body": {
-          "ws:partner_id": {
-            _: partnerId,
-          },
-          "ws:msisdn": {
-            _: "?",
-          },
-          "ws:text": {
-            _: "?",
-          },
-          "ws:signType": {
-            _: signType,
-          },
+        "ws:partner_id": {
+          _: partnerId,
+        },
+        "ws:msisdn": {
+          _: "?",
+        },
+        "ws:text": {
+          _: "?",
+        },
+        "ws:signType": {
+          _: signType,
         },
       },
     },
@@ -83,14 +80,14 @@ const mapSignText = Map(fromJS(objSignText));
 export const buildXML = (template: string, inputParams: ISignDocument) => {
   switch (template) {
     case SIGN_DOCUMENT:
-      const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"]), inputParams);
-      const sdocumentMap = mapSignDocument.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest", "soapenv:Body"], sdocumentBody);
+      const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"]), inputParams);
+      const sdocumentMap = mapSignDocument.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"], sdocumentBody);
 
       return builder.buildObject(sdocumentMap.toJS());
 
     case SIGN_TEXT:
-      const stextBody = createSignTextBody(mapSignText.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"]), inputParams);
-      const stextMap = mapSignText.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest", "soapenv:Body"], stextBody);
+      const stextBody = createSignTextBody(mapSignText.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"]), inputParams);
+      const stextMap = mapSignText.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"], stextBody);
 
       return builder.buildObject(stextMap.toJS());
 

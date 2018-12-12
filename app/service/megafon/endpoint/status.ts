@@ -22,13 +22,11 @@ const objGetSignStatus = {
     "soapenv:Header": {},
     "soapenv:Body": {
       "ws:getSignStatusRequest": {
-        "soapenv:Body": {
-          "ws:partner_id": {
-            _: partnerId,
-          },
-          "ws:transaction_id": {
-            _: "?",
-          },
+        "ws:partner_id": {
+          _: partnerId,
+        },
+        "ws:transaction_id": {
+          _: "?",
         },
       },
     },
@@ -40,8 +38,8 @@ const mapGetSignStatus = Map(fromJS(objGetSignStatus));
 export const buildXML = (template: string, inputParams: IGetSignStatus) => {
   switch (template) {
     case GET_SIGN_STATUS:
-      const sstatusBody = createGetSignStatusBody(mapGetSignStatus.getIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest", "soapenv:Body"]), inputParams);
-      const sstatusMap = mapGetSignStatus.setIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest", "soapenv:Body"], sstatusBody);
+      const sstatusBody = createGetSignStatusBody(mapGetSignStatus.getIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"]), inputParams);
+      const sstatusMap = mapGetSignStatus.setIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"], sstatusBody);
 
       return builder.buildObject(sstatusMap.toJS());
 
