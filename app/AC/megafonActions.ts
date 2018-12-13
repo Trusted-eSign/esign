@@ -36,8 +36,6 @@ export function signDocument(msisdn: string, text: string, document: string, sig
 
     const xml = buildXML(SIGN_DOCUMENT, params);
 
-    console.log("xml", xml);
-
     if (!xml) {
       dispatch({
         type: SIGN_DOCUMENT + FAIL,
