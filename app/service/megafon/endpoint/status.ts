@@ -35,7 +35,7 @@ const objGetSignStatus = {
 
 const mapGetSignStatus = Map(fromJS(objGetSignStatus));
 
-export const buildXML = (template: string, inputParams: IGetSignStatus) => {
+export const buildXML = (template: "GET_SIGN_STATUS", inputParams: IGetSignStatus) => {
   switch (template) {
     case GET_SIGN_STATUS:
       const sstatusBody = createGetSignStatusBody(mapGetSignStatus.getIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"]), inputParams);

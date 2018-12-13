@@ -2,9 +2,10 @@ import { fromJS, Map } from "immutable";
 import request from "request";
 import xml2js from "xml2js";
 import { FAIL, START, SUCCESS } from "../constants";
-import { GET_SIGN_STATUS, SIGN_DOCUMENT, SIGN_TEXT, SIGN_URI } from "../service/megafon/constants";
+import { GET_SIGN_STATUS, SIGN_DOCUMENT, SIGN_TEXT, SIGN_URI, STATUS_URI } from "../service/megafon/constants";
 import { buildXML } from "../service/megafon/endpoint/sign";
-import { ISignDocument, ISignText } from "../service/megafon/types";
+import { buildXML as buildXMLStatus } from "../service/megafon/endpoint/status";
+import { IGetSignStatus, ISignDocument, ISignText } from "../service/megafon/types";
 import { md5, xorConvolutionMD5 } from "../utils";
 
 const HEADERS = { "content-type": "text/xml" };
@@ -175,6 +176,87 @@ export function signText(msisdn: string, text: string, signType?: "Attached" | "
       } else {
         dispatch({
           type: SIGN_TEXT + FAIL,
+        });
+      }
+    });
+  };
+}
+
+/**
+ * Метод предназначен для получения статуса подписания
+ *
+ * @export
+ * @param {string} transaction_id Уникальный идентификатор транзакции
+ */
+// tslint:disable-next-line:variable-name
+export function getSignStatus(transaction_id: string) {
+  return (dispatch: (action: {}) => void) => {
+    dispatch({
+      type: GET_SIGN_STATUS + START,
+    });
+
+    const params: IGetSignStatus = {
+      transaction_id,
+    };
+
+    const xml = buildXMLStatus(GET_SIGN_STATUS, params);
+
+    if (!xml) {
+      dispatch({
+        type: GET_SIGN_STATUS + FAIL,
+      });
+    }
+
+    request({
+      body: xml,
+      headers: HEADERS,
+      method: METHOD,
+      uri: STATUS_URI,
+    }, (error, response, body) => {
+      if (error) {
+        dispatch({
+          payload: {
+            error,
+            status: error && error.code ? error.code : "",
+          },
+          type: GET_SIGN_STATUS + FAIL,
+        });
+        return;
+      }
+
+      if (!error && response.statusCode === 200) {
+        const mapGetSignResponse = objToMap(strXmlToObject(body));
+
+        if (mapGetSignResponse && Map.isMap(mapGetSignResponse) && !mapGetSignResponse.isEmpty()) {
+          const status = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:status"]);
+
+          if (status === "100") {
+            const cms = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:cms"]);
+
+            if (cms) {
+              dispatch({
+                payload: {
+                  cms,
+                },
+                type: GET_SIGN_STATUS + SUCCESS,
+              });
+            }
+          } else {
+            dispatch({
+              payload: {
+                status,
+              },
+              type: GET_SIGN_STATUS + FAIL,
+            });
+          }
+        } else {
+          dispatch({
+            type: GET_SIGN_STATUS + FAIL,
+          });
+        }
+      } else {
+        dispatch({
+          type: GET_SIGN_STATUS + FAIL,
         });
       }
     });
