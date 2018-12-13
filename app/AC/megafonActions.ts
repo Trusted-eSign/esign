@@ -240,6 +240,17 @@ export function getSignStatus(transaction_id: string) {
                 },
                 type: GET_SIGN_STATUS + SUCCESS,
               });
+            } else {
+              const signStatusList = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:signStatusList"]);
+
+              if (signStatusList) {
+                dispatch({
+                  payload: {
+                    signStatusList,
+                  },
+                  type: GET_SIGN_STATUS + SUCCESS,
+                });
+              }
             }
           } else {
             dispatch({
