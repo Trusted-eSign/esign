@@ -89,3 +89,28 @@ export interface IGetSignStatus {
    */
   transaction_id: string;
 }
+
+/**
+ * Метод осуществляет проверку подлинности подписанного документа
+ *
+ * @export
+ * @interface IVerify
+ */
+export interface IVerify {
+  /**
+   * Документ для проверки.
+   * Передается в виде Base64
+   *
+   * @type {string}
+   * @memberof IVerify
+   */
+  document: string;
+  /**
+   * Подпись документа. Данный параметр необязательный, в случае attached подписи и обязательный, в случае detached подписи.
+   * Передается в виде Base64
+   *
+   * @type {string}
+   * @memberof IVerify
+   */
+  signature?: string;
+}

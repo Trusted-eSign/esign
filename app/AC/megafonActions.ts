@@ -2,10 +2,10 @@ import { fromJS, Map } from "immutable";
 import request from "request";
 import xml2js from "xml2js";
 import { FAIL, START, SUCCESS } from "../constants";
-import { GET_SIGN_STATUS, SIGN_DOCUMENT, SIGN_TEXT, SIGN_URI, STATUS_URI } from "../service/megafon/constants";
+import { GET_SIGN_STATUS, SIGN_DOCUMENT, SIGN_TEXT, SIGN_URI, STATUS_URI, VERIFY } from "../service/megafon/constants";
 import { buildXML } from "../service/megafon/endpoint/sign";
 import { buildXML as buildXMLStatus } from "../service/megafon/endpoint/status";
-import { IGetSignStatus, ISignDocument, ISignText } from "../service/megafon/types";
+import { IGetSignStatus, ISignDocument, ISignText, IVerify } from "../service/megafon/types";
 import { md5, xorConvolutionMD5 } from "../utils";
 
 const HEADERS = { "content-type": "text/xml" };
@@ -35,6 +35,8 @@ export function signDocument(msisdn: string, text: string, document: string, sig
     };
 
     const xml = buildXML(SIGN_DOCUMENT, params);
+
+    console.log("xml", xml);
 
     if (!xml) {
       dispatch({
@@ -268,6 +270,81 @@ export function getSignStatus(transaction_id: string) {
       } else {
         dispatch({
           type: GET_SIGN_STATUS + FAIL,
+        });
+      }
+    });
+  };
+}
+
+/**
+ * Метод осуществляет проверку подлинности подписанного документа
+ *
+ * @export
+ * @param {string} document Документ для проверки. Передается в виде Base64
+ * @param {string} [signature] Подпись документа. Данный параметр необязательный, в случае attached подписи и обязательный, в случае detached подписи.Передается в виде Base64.
+ */
+export function verify(document: string, signature?: string) {
+  return (dispatch: (action: {}) => void) => {
+    dispatch({
+      type: VERIFY + START,
+    });
+
+    const params: IVerify = {
+      document,
+      signature,
+    };
+
+    const xml = buildXML(VERIFY, params);
+
+    if (!xml) {
+      dispatch({
+        type: VERIFY + FAIL,
+      });
+    }
+
+    request({
+      body: xml,
+      headers: HEADERS,
+      method: METHOD,
+      uri: SIGN_URI,
+    }, (error, response, body) => {
+      if (error) {
+        dispatch({
+          payload: {
+            error,
+            status: error && error.code ? error.code : "",
+          },
+          type: VERIFY + FAIL,
+        });
+        return;
+      }
+
+      if (!error && response.statusCode === 200) {
+        const mapVerifyResponse = objToMap(strXmlToObject(body));
+
+        if (mapVerifyResponse && Map.isMap(mapVerifyResponse) && !mapVerifyResponse.isEmpty()) {
+          const status = mapVerifyResponse.getIn(["S:Envelope", "S:Body", "ns2:verifyResponse", "ns2:status"]);
+
+          if (status === "100") {
+            dispatch({
+              type: VERIFY + SUCCESS,
+            });
+          } else {
+            dispatch({
+              payload: {
+                status,
+              },
+              type: VERIFY + FAIL,
+            });
+          }
+        } else {
+          dispatch({
+            type: VERIFY + FAIL,
+          });
+        }
+      } else {
+        dispatch({
+          type: VERIFY + FAIL,
         });
       }
     });

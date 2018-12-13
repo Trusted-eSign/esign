@@ -7,8 +7,8 @@
 
 import { fromJS, Map } from "immutable";
 import xml2js from "xml2js";
-import { SIGN_DOCUMENT, SIGN_TEXT } from "../constants";
-import { ISignDocument, ISignText } from "../types";
+import { SIGN_DOCUMENT, SIGN_TEXT, VERIFY } from "../constants";
+import { ISignDocument, ISignText, IVerify } from "../types";
 
 const builder = new xml2js.Builder();
 const partnerId = "digt";
@@ -76,7 +76,32 @@ const objSignText = {
 
 const mapSignText = Map(fromJS(objSignText));
 
-export const buildXML = (template: "SIGN_DOCUMENT" | "SIGN_TEXT", inputParams: ISignDocument | ISignText) => {
+const objVerify = {
+  "soapenv:Envelope": {
+    "$": {
+      "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:ws": "http://megalabs.ru/mes/ws-api",
+    },
+    "soapenv:Header": {},
+    "soapenv:Body": {
+      "ws:verifyRequest": {
+        "ws:partner_id": {
+          _: partnerId,
+        },
+        "ws:document": {
+          _: "?",
+        },
+        "ws:signaure": {
+          _: "?",
+        },
+      },
+    },
+  },
+};
+
+const mapVerify = Map(fromJS(objVerify));
+
+export const buildXML = (template: "SIGN_DOCUMENT" | "SIGN_TEXT" | "VERIFY", inputParams: ISignDocument | ISignText | IVerify) => {
   switch (template) {
     case SIGN_DOCUMENT:
       const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"]), inputParams);
@@ -89,6 +114,12 @@ export const buildXML = (template: "SIGN_DOCUMENT" | "SIGN_TEXT", inputParams: I
       const stextMap = mapSignText.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"], stextBody);
 
       return builder.buildObject(stextMap.toJS());
+
+    case VERIFY:
+      const verifyBody = createVerifyBody(mapVerify.getIn(["soapenv:Envelope", "soapenv:Body", "ws:verifyRequest"]), inputParams);
+      const verifyMap = mapVerify.setIn(["soapenv:Envelope", "soapenv:Body", "ws:verifyRequest"], verifyBody);
+
+      return builder.buildObject(verifyMap.toJS());
 
     default:
       return "";
@@ -116,6 +147,17 @@ const createSignTextBody = (body: Map<any, any>, inputParams: ISignText) => {
 
   if (inputParams.signType) {
     res = res.setIn(["ws:signType", "_"], inputParams.signType);
+  }
+
+  return res;
+};
+
+const createVerifyBody = (body: Map<any, any>, inputParams: IVerify) => {
+  let res = body
+    .setIn(["ws:document", "_"], inputParams.document);
+
+  if (inputParams.signature) {
+    res = res.setIn(["ws:signaure", "_"], inputParams.signature);
   }
 
   return res;
