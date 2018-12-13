@@ -65,7 +65,7 @@ export function signDocument(msisdn: string, text: string, document: string, sig
         if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
           const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
 
-          if (status === 100) {
+          if (status === "100") {
             const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
 
             if (transactionId) {
@@ -149,7 +149,7 @@ export function signText(msisdn: string, text: string, signType?: "Attached" | "
         if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
           const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
 
-          if (status === 100) {
+          if (status === "100") {
             const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
 
             if (transactionId) {
