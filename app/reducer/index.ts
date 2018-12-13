@@ -10,6 +10,7 @@ import events from "./events";
 import files from "./files";
 import filters from "./filters";
 import license from "./license";
+import megafon from "./megafon";
 import recipients from "./recipients";
 import remoteFiles from "./remoteFiles";
 import settings from "./settings";
@@ -28,6 +29,7 @@ export default combineReducers({
   files,
   filters,
   license,
+  megafon,
   recipients,
   remoteFiles,
   settings,
