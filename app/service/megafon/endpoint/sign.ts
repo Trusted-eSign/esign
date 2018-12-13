@@ -6,7 +6,6 @@
 */
 
 import { fromJS, Map } from "immutable";
-import request from "request";
 import xml2js from "xml2js";
 import { SIGN_DOCUMENT, SIGN_TEXT } from "../constants";
 import { ISignDocument, ISignText } from "../types";
@@ -77,7 +76,7 @@ const objSignText = {
 
 const mapSignText = Map(fromJS(objSignText));
 
-export const buildXML = (template: string, inputParams: ISignDocument) => {
+export const buildXML = (template: "SIGN_DOCUMENT" | "SIGN_TEXT", inputParams: ISignDocument | ISignText) => {
   switch (template) {
     case SIGN_DOCUMENT:
       const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"]), inputParams);
