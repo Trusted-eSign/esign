@@ -5,11 +5,14 @@ import { FAIL, START, SUCCESS } from "../constants";
 import { GET_SIGN_STATUS, MULTIPLY_SIGN, SIGN_DOCUMENT, SIGN_TEXT, SIGN_URI, STATUS_URI, VERIFY } from "../service/megafon/constants";
 import { buildXML } from "../service/megafon/endpoint/sign";
 import { buildXML as buildXMLStatus } from "../service/megafon/endpoint/status";
-import { IDocumentData, IGetSignStatus, ISignDocument, ISignText, IVerify, IMultiplysign } from "../service/megafon/types";
+import { IDocumentData, IGetSignStatus, IMultiplysign, ISignDocument, ISignText, IVerify } from "../service/megafon/types";
 import { md5, xorConvolutionMD5 } from "../utils";
 
 const HEADERS = { "content-type": "text/xml" };
 const METHOD = "POST";
+const REQUEST_INTERVAL = 10000;
+
+let timer: NodeJS.Timer | null = null;
 
 /**
  * Подпись документа в МЭП Мегафон
@@ -25,6 +28,11 @@ export function signDocument(msisdn: string, text: string, document: string, sig
     dispatch({
       type: SIGN_DOCUMENT + START,
     });
+
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
 
     const params: ISignDocument = {
       digest: xorConvolutionMD5(md5(document)),
@@ -75,6 +83,8 @@ export function signDocument(msisdn: string, text: string, document: string, sig
                 },
                 type: SIGN_DOCUMENT + SUCCESS,
               });
+
+              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
             }
           } else {
             dispatch({
@@ -115,6 +125,11 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
     });
 
     const documentList: IDocumentData[] = [];
+
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
 
     for (const doc of documents) {
       documentList.push({
@@ -171,6 +186,8 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
                 },
                 type: MULTIPLY_SIGN + SUCCESS,
               });
+
+              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
             }
           } else {
             dispatch({
@@ -207,6 +224,11 @@ export function signText(msisdn: string, text: string, signType?: "Attached" | "
     dispatch({
       type: SIGN_TEXT + START,
     });
+
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
 
     const params: ISignText = {
       msisdn,
@@ -255,6 +277,8 @@ export function signText(msisdn: string, text: string, signType?: "Attached" | "
                 },
                 type: SIGN_TEXT + SUCCESS,
               });
+
+              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
             }
           } else {
             dispatch({
@@ -303,6 +327,8 @@ export function getSignStatus(transaction_id: string) {
       });
     }
 
+    let status;
+
     request({
       body: xml,
       headers: HEADERS,
@@ -317,6 +343,12 @@ export function getSignStatus(transaction_id: string) {
           },
           type: GET_SIGN_STATUS + FAIL,
         });
+
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+
         return;
       }
 
@@ -324,7 +356,7 @@ export function getSignStatus(transaction_id: string) {
         const mapGetSignResponse = objToMap(strXmlToObject(body));
 
         if (mapGetSignResponse && Map.isMap(mapGetSignResponse) && !mapGetSignResponse.isEmpty()) {
-          const status = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:status"]);
+          status = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:status"]);
 
           if (status === "100") {
             const cms = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:cms"]);
@@ -348,7 +380,7 @@ export function getSignStatus(transaction_id: string) {
                 });
               }
             }
-          } else {
+          } else if (status !== "101") {
             dispatch({
               payload: {
                 status,
@@ -367,6 +399,14 @@ export function getSignStatus(transaction_id: string) {
         });
       }
     });
+
+    // Операция подписи завершилась
+    if (status !== "101") {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
   };
 }
 
