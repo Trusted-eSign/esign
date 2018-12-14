@@ -114,3 +114,63 @@ export interface IVerify {
    */
   signature?: string;
 }
+
+/**
+ * Тип данных DocumentData
+ *
+ * @export
+ * @interface IDocumentData
+ */
+export interface IDocumentData {
+  /**
+   * Подписываемый документ (накладная, договор, скан и т.п.), передается в виде Base64
+   *
+   * @type {string}
+   * @memberof IDocumentData
+   */
+  document: string;
+  /**
+   * Специфицируемая «свертка» от документа (8 шестнадцатеричных символов)
+   *
+   * @type {string}
+   * @memberof IDocumentData
+   */
+  digest: string;
+}
+
+/**
+ * Метод multiplysign осуществляет подписание одного или нескольких документов
+ *
+ * @export
+ * @interface IMultiplysign
+ */
+export interface IMultiplysign {
+  /**
+   * Мобильный номер SIM карты клиента с ЭП (обязательно для указания, если не указана transacrionId, совместно не используются)
+   *
+   * @type {string}
+   * @memberof ISignDocument
+   */
+  msisdn: string;
+  /**
+   * Текст, который будет отображен на Мобильном Устройстве Абонента при подписании документа
+   *
+   * @type {string}
+   * @memberof ISignDocument
+   */
+  text: string;
+  /**
+   * Список документов, содержащий объекты типа DocumentData
+   *
+   * @type {IDocumentData[]}
+   * @memberof IMultiplysign
+   */
+  documentList: IDocumentData[];
+  /**
+   * Тип подписи. Возможные значения:  • Attached – прикрепленная подпись  • Detached – открепленная подпись
+   *
+   * @type {string}
+   * @memberof ISignDocument
+   */
+  signType?: string;
+}

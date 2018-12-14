@@ -1,6 +1,6 @@
 import { Map } from "immutable";
 import { FAIL, START, SUCCESS } from "../constants";
-import { GET_SIGN_STATUS, SIGN_DOCUMENT, SIGN_TEXT, VERIFY } from "../service/megafon/constants";
+import { GET_SIGN_STATUS, MULTIPLY_SIGN, SIGN_DOCUMENT, SIGN_TEXT, VERIFY } from "../service/megafon/constants";
 
 const DefaultReducerState = Map({
   cms: null,
@@ -17,6 +17,7 @@ export default (megafonState = DefaultReducerState, action) => {
 
   switch (type) {
     case GET_SIGN_STATUS + START:
+    case MULTIPLY_SIGN + START:
     case SIGN_TEXT + START:
     case SIGN_DOCUMENT + START:
     case VERIFY + START:
@@ -26,6 +27,7 @@ export default (megafonState = DefaultReducerState, action) => {
 
     case SIGN_TEXT + SUCCESS:
     case SIGN_DOCUMENT + SUCCESS:
+    case MULTIPLY_SIGN + SUCCESS:
       return megafonState
         .set("isStarted", false)
         .set("isDone", true)
@@ -40,6 +42,7 @@ export default (megafonState = DefaultReducerState, action) => {
 
     case SIGN_DOCUMENT + FAIL:
     case SIGN_TEXT + FAIL:
+    case MULTIPLY_SIGN + FAIL:
     case GET_SIGN_STATUS + FAIL:
     case VERIFY + FAIL:
       return megafonState
