@@ -14,112 +14,78 @@ const builder = new xml2js.Builder();
 const partnerId = "digt";
 const signType = "Detached";
 
-const objSignDocument = {
+const mapTemplateRequest = Map(fromJS({
   "soapenv:Envelope": {
     "$": {
       "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
       "xmlns:ws": "http://megalabs.ru/mes/ws-api",
     },
     "soapenv:Header": {},
-    "soapenv:Body": {
-      "ws:signDocumentRequest": {
-        "ws:partner_id": {
-          _: partnerId,
-        },
-        "ws:msisdn": {
-          _: "?",
-        },
-        "ws:text": {
-          _: "?",
-        },
-        "ws:document": {
-          _: "?",
-        },
-        "ws:signType": {
-          _: signType,
-        },
-        "ws:digest": {
-          _: "?",
-        },
-      },
-    },
+    "soapenv:Body": {},
   },
-};
+}));
 
-const mapSignDocument = Map(fromJS(objSignDocument));
-
-const objSignText = {
-  "soapenv:Envelope": {
-    "$": {
-      "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:ws": "http://megalabs.ru/mes/ws-api",
-    },
-    "soapenv:Header": {},
-    "soapenv:Body": {
-      "ws:signTextRequest": {
-        "ws:partner_id": {
-          _: partnerId,
-        },
-        "ws:msisdn": {
-          _: "?",
-        },
-        "ws:text": {
-          _: "?",
-        },
-        "ws:signType": {
-          _: signType,
-        },
-      },
-    },
+const mapSignDocumentRequest = Map(fromJS({
+  "ws:partner_id": {
+    _: partnerId,
   },
-};
-
-const mapSignText = Map(fromJS(objSignText));
-
-const objVerify = {
-  "soapenv:Envelope": {
-    "$": {
-      "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:ws": "http://megalabs.ru/mes/ws-api",
-    },
-    "soapenv:Header": {},
-    "soapenv:Body": {
-      "ws:verifyRequest": {
-        "ws:partner_id": {
-          _: partnerId,
-        },
-        "ws:document": {
-          _: "?",
-        },
-        "ws:signaure": {
-          _: "?",
-        },
-      },
-    },
+  "ws:msisdn": {
+    _: "?",
   },
-};
+  "ws:text": {
+    _: "?",
+  },
+  "ws:document": {
+    _: "?",
+  },
+  "ws:signType": {
+    _: signType,
+  },
+  "ws:digest": {
+    _: "?",
+  },
+}));
 
-const mapVerify = Map(fromJS(objVerify));
+const mapSignTextRequest = Map(fromJS({
+  "ws:partner_id": {
+    _: partnerId,
+  },
+  "ws:msisdn": {
+    _: "?",
+  },
+  "ws:text": {
+    _: "?",
+  },
+  "ws:signType": {
+    _: signType,
+  },
+}));
+
+const mapVerifyRequest = Map(fromJS({
+  "ws:partner_id": {
+    _: partnerId,
+  },
+  "ws:document": {
+    _: "?",
+  },
+  "ws:signaure": {
+    _: "?",
+  },
+}));
 
 export const buildXML = (template: "SIGN_DOCUMENT" | "SIGN_TEXT" | "VERIFY", inputParams: ISignDocument | ISignText | IVerify) => {
   switch (template) {
     case SIGN_DOCUMENT:
-      const sdocumentBody = createSignDocumentBody(mapSignDocument.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"]), inputParams);
-      const sdocumentMap = mapSignDocument.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"], sdocumentBody);
-
-      return builder.buildObject(sdocumentMap.toJS());
+      const sdocumentBody = createSignDocumentBody(mapSignDocumentRequest, inputParams);
+      return builder.buildObject(mapTemplateRequest.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signDocumentRequest"], sdocumentBody).toJS());
 
     case SIGN_TEXT:
-      const stextBody = createSignTextBody(mapSignText.getIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"]), inputParams);
-      const stextMap = mapSignText.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"], stextBody);
-
-      return builder.buildObject(stextMap.toJS());
+      const stextBody = createSignTextBody(mapSignTextRequest, inputParams);
+      return builder.buildObject(mapTemplateRequest.setIn(["soapenv:Envelope", "soapenv:Body", "ws:signTextRequest"], stextBody).toJS());
 
     case VERIFY:
-      const verifyBody = createVerifyBody(mapVerify.getIn(["soapenv:Envelope", "soapenv:Body", "ws:verifyRequest"]), inputParams);
-      const verifyMap = mapVerify.setIn(["soapenv:Envelope", "soapenv:Body", "ws:verifyRequest"], verifyBody);
-
-      return builder.buildObject(verifyMap.toJS());
+      const verifyBody = createVerifyBody(mapVerifyRequest, inputParams);
+      return builder.buildObject(mapTemplateRequest.setIn(["soapenv:Envelope", "soapenv:Body", "ws:verifyRequest"], verifyBody).toJS());
 
     default:
       return "";

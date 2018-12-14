@@ -13,35 +13,31 @@ import { IGetSignStatus } from "../types";
 const builder = new xml2js.Builder();
 const partnerId = "digt";
 
-const objGetSignStatus = {
+const mapTemplateRequest = Map(fromJS({
   "soapenv:Envelope": {
     "$": {
       "xmlns:soapenv": "http://schemas.xmlsoap.org/soap/envelope/",
       "xmlns:ws": "http://megalabs.ru/mes/ws-api",
     },
     "soapenv:Header": {},
-    "soapenv:Body": {
-      "ws:getSignStatusRequest": {
-        "ws:partner_id": {
-          _: partnerId,
-        },
-        "ws:transaction_id": {
-          _: "?",
-        },
-      },
-    },
+    "soapenv:Body": {},
   },
-};
+}));
 
-const mapGetSignStatus = Map(fromJS(objGetSignStatus));
+const mapGetSignStatusRequest = Map(fromJS({
+  "ws:partner_id": {
+    _: partnerId,
+  },
+  "ws:transaction_id": {
+    _: "?",
+  },
+}));
 
 export const buildXML = (template: "GET_SIGN_STATUS", inputParams: IGetSignStatus) => {
   switch (template) {
     case GET_SIGN_STATUS:
-      const sstatusBody = createGetSignStatusBody(mapGetSignStatus.getIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"]), inputParams);
-      const sstatusMap = mapGetSignStatus.setIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"], sstatusBody);
-
-      return builder.buildObject(sstatusMap.toJS());
+      const sstatusBody = createGetSignStatusBody(mapGetSignStatusRequest, inputParams);
+      return builder.buildObject(mapTemplateRequest.setIn(["soapenv:Envelope", "soapenv:Body", "ws:getSignStatusRequest"], sstatusBody).toJS());
 
     default:
       return "";
