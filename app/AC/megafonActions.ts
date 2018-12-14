@@ -169,7 +169,7 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
                 payload: {
                   transactionId,
                 },
-                type: SIGN_DOCUMENT + SUCCESS,
+                type: MULTIPLY_SIGN + SUCCESS,
               });
             }
           } else {
@@ -177,17 +177,17 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
               payload: {
                 status,
               },
-              type: SIGN_DOCUMENT + FAIL,
+              type: MULTIPLY_SIGN + FAIL,
             });
           }
         } else {
           dispatch({
-            type: SIGN_DOCUMENT + FAIL,
+            type: MULTIPLY_SIGN + FAIL,
           });
         }
       } else {
         dispatch({
-          type: SIGN_DOCUMENT + FAIL,
+          type: MULTIPLY_SIGN + FAIL,
         });
       }
     });
