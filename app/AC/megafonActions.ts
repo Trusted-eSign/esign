@@ -132,8 +132,6 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
 
     const xml = buildXML(MULTIPLY_SIGN, params);
 
-    console.log("xml", xml);
-
     if (!xml) {
       dispatch({
         type: MULTIPLY_SIGN + FAIL,
