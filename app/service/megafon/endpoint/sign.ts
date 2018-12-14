@@ -157,18 +157,16 @@ const createMultiplySignBody = (body: Map<any, any>, inputParams: IMultiplysign)
   let documentList = List();
 
   for (const document of inputParams.documentList) {
-    const documentData = Map(fromJS({
-      "ws:documentData": {
-        "ws:document": document.document,
-        "ws:digest": document.digest,
-      },
-    }));
+    const documentData = Map({
+      "ws:document": document.document,
+      "ws:digest": document.digest,
+    });
 
     documentList = documentList.push(documentData);
   }
 
   if (documentList && !documentList.isEmpty()) {
-    res = res.setIn(["ws:documentList"], documentList);
+    res = res.setIn(["ws:documentList", "ws:documentData"], documentList);
   }
 
   if (inputParams.signType) {
