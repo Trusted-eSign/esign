@@ -159,6 +159,7 @@ export const LOCATION_ABOUT = "/about";
 export const LOCATION_LICENSE = "/license";
 export const LOCATION_HELP = "/help";
 export const LOCATION_EVENTS = "/events";
+export const LOCATION_SERVICES = "/services";
 
 export const KEY_USAGE_SIGN = "sign";
 export const KEY_USAGE_ENCIPHERMENT  = "encipherment";
