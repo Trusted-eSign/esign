@@ -2,15 +2,22 @@ import React from "react";
 import ServicesListItem from "./ServicesListItem";
 
 interface IService {
+  id: string;
   type: "MEGAFON";
   name: string;
 }
 
-interface IServicesList {
+interface IServicesListProps {
+  activeService?: IService;
+  onListItemClick: (service: IService) => (service: IService) => void;
   services: IService[];
 }
 
-class ServicesList extends React.PureComponent<IServicesList, {}> {
+class ServicesList extends React.PureComponent<IServicesListProps, {}> {
+  constructor(props: IServicesListProps) {
+    super(props);
+  }
+
   render() {
     const { services } = this.props;
 
@@ -27,10 +34,19 @@ class ServicesList extends React.PureComponent<IServicesList, {}> {
 
   getBody = (services: IService[]) => {
     const body = services.map((service) => {
-      return <ServicesListItem service={service}/>;
+      return <ServicesListItem
+        key={service.id}
+        active={this.isItemOpened(service.id)}
+        onClick={this.props.onListItemClick(service)}
+        service={service}
+      />;
     });
 
     return body;
+  }
+
+  isItemOpened = (id: string) => {
+    return this.props.activeService ? this.props.activeService.id === id : false;
   }
 }
 

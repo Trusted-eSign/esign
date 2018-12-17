@@ -8,7 +8,14 @@ import ServiceCertificates from "./ServiceCertificates";
 import ServiceSettings from "./ServiceSettings";
 import ServicesList from "./ServicesList";
 
+interface IService {
+  id: string;
+  type: "MEGAFON";
+  name: string;
+}
+
 interface IServicesWindowState {
+  activeService: IService | undefined;
   showModalAddService: boolean;
 }
 
@@ -22,6 +29,7 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
     super(props);
 
     this.state = {
+      activeService: undefined,
       showModalAddService: false,
     };
   }
@@ -36,7 +44,11 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
             <div style={{ height: "90%" }} >
               <div className="content-wrapper z-depth-1">
                 <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
-                <ServicesList services={[{type: MEGAFON, name: "МЭП Мегафон"}]}/>
+                <ServicesList
+                  activeService={this.state.activeService}
+                  onListItemClick={this.toggleActiveService}
+                  services={[{ id: "1", type: MEGAFON, name: "МЭП Мегафон" }]}
+                />
               </div>
 
               <div className={"btns-for-operation active"}>
@@ -70,6 +82,20 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
         </div>
       </div>
     );
+  }
+
+  toggleActiveService = (service: IService) => (ev: any) => {
+    const { activeService } = this.state;
+
+    if (ev && ev.preventDefault) {
+      ev.preventDefault();
+    }
+
+    if (service) {
+      this.setState({
+        activeService: activeService && activeService.id && activeService.id === service.id ? undefined : service,
+      });
+    }
   }
 
   showModalAddService = () => {

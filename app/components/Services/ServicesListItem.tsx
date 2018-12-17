@@ -2,21 +2,26 @@ import React from "react";
 import ServiceIcon from "./ServiceIcon";
 
 interface IService {
+  id: string;
   type: "MEGAFON";
   name: string;
 }
 
 interface IServicesListItemProps {
+  active: boolean;
+  onClick: (service: IService) => void;
   service: IService;
 }
 
 class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
   render() {
-    const { service } = this.props;
+    const { active, service } = this.props;
+
+    const activeType = active ? "active" : "";
 
     return (
-      <div className="row">
-        <div className="collection-item avatar certs-collection">
+      <div className="row" onClick={() => this.props.onClick(service)}>
+        <div className={"collection-item avatar certs-collection " + activeType} >
           <div className="col s2">
             <ServiceIcon type={service.type} />
           </div>
