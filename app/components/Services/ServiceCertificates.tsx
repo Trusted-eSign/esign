@@ -14,6 +14,11 @@ class ServiceCertificates extends React.PureComponent<{}, {}> {
     return (
       <div className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Services.service_certificates", locale)} />
+        <div className={"cert-contents"}>
+          <a className="waves-effect waves-light btn-large add-cert-btn" onClick={() => console.log("Получить сертификаты")}>
+            {localize("Services.get_sertificates", locale)}
+          </a>
+        </div>
       </div>
     );
   }

@@ -14,3 +14,5 @@ export const GET_DECRYPT_STATUS = "GET_DECRYPT_STATUS";
 
 export const SIGN_URI = "https://msign.megafon.ru/mes-ws/sign";
 export const STATUS_URI = "https://msign.megafon.ru/mes-ws/status";
+
+export const MEGAFON = "MEGAFON";

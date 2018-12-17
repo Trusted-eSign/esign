@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { MEGAFON } from "../../service/megafon/constants";
+import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import Modal from "../Modal";
 import AddService from "./AddService";
 import ServiceCertificates from "./ServiceCertificates";
@@ -31,8 +33,12 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
       <div className="main">
         <div className="content">
           <div className="content-item-height">
-            <div style={{height: "90%"}} >
-              <ServicesList />
+            <div style={{ height: "90%" }} >
+              <div className="content-wrapper z-depth-1">
+                <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
+                <ServicesList services={[{type: MEGAFON, name: "МЭП Мегафон"}]}/>
+              </div>
+
               <div className={"btns-for-operation active"}>
                 <a className="waves-effect waves-light btn-large operation-btn active" onClick={this.handleShowModalAddService}>
                   {localize("Services.add", locale)}

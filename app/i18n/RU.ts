@@ -519,6 +519,7 @@ export default {
     Services: "Сервисы подписи",
     add: "Добавить",
     add_new_service: "Добавление нового сервиса подписи",
+    get_sertificates: "Получить сертификаты",
     service_certificates: "Сертификаты",
     service_settings: "Настройки",
     services_list: "Список сервисов подписи",

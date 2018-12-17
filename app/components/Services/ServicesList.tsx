@@ -1,21 +1,36 @@
-import PropTypes from "prop-types";
 import React from "react";
-import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import ServicesListItem from "./ServicesListItem";
 
-class ServicesList extends React.PureComponent<{}, {}> {
-  static contextTypes = {
-    locale: PropTypes.string,
-    localize: PropTypes.func,
-  };
+interface IService {
+  type: "MEGAFON";
+  name: string;
+}
 
+interface IServicesList {
+  services: IService[];
+}
+
+class ServicesList extends React.PureComponent<IServicesList, {}> {
   render() {
-    const { localize, locale } = this.context;
+    const { services } = this.props;
+
+    if (!services || !services.length) {
+      return null;
+    }
 
     return (
-      <div className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
+      <div className="collection">
+        {this.getBody(services)}
       </div>
     );
+  }
+
+  getBody = (services: IService[]) => {
+    const body = services.map((service) => {
+      return <ServicesListItem service={service}/>;
+    });
+
+    return body;
   }
 }
 

@@ -516,6 +516,7 @@ export default {
     Services: "Signature services",
     add: "Add",
     add_new_service: "Add new signature service",
+    get_sertificates: "Get certificates",
     service_certificates: "Certificates",
     service_settings: "Настройки",
     services_list: "List of signature services",

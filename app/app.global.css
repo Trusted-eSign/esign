@@ -1737,6 +1737,10 @@ h6.contact-title {
   background: url(./resources/image/files/file_file.png) no-repeat;
 }
 
+.type_icon.MEGAFON{
+  background: url(./resources/image/services/megafon.png) no-repeat;
+}
+
 #file-avatar {
   height: 40px;
   width: 32px;
