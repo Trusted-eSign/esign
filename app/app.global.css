@@ -3543,6 +3543,11 @@ svg:hover {
     height: 410px;
 }
 
+
+.add_new_service_modal {
+  height: 300px;
+}
+
 .modal_license_csp{
   height: 150px;
 }

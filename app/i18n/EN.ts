@@ -514,6 +514,11 @@ export default {
   Services: {
     SERVICES: "SIGNATURE SERVICES",
     Services: "Signature services",
+    add: "Add",
+    add_new_service: "Add new signature service",
+    service_certificates: "Certificates",
+    service_settings: "Настройки",
+    services_list: "List of signature services",
   },
   Settings: {
     BASE: "BASE-64",

@@ -517,6 +517,11 @@ export default {
   Services: {
     SERVICES: "СЕРВИСЫ ПОДПИСИ",
     Services: "Сервисы подписи",
+    add: "Добавить",
+    add_new_service: "Добавление нового сервиса подписи",
+    service_certificates: "Сертификаты",
+    service_settings: "Настройки",
+    services_list: "Список сервисов подписи",
   },
   Settings: {
     BASE: "BASE-64",
