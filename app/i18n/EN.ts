@@ -517,9 +517,11 @@ export default {
     add: "Add",
     add_new_service: "Add new signature service",
     get_sertificates: "Get certificates",
+    mobile_number: "Mobile number (Megafon)",
     service_certificates: "Certificates",
-    service_settings: "Настройки",
+    service_settings: "Settings",
     services_list: "List of signature services",
+    write_mobile_number: "Write mobile number, format +7XXXXXXXXXX",
   },
   Settings: {
     BASE: "BASE-64",

@@ -520,9 +520,11 @@ export default {
     add: "Добавить",
     add_new_service: "Добавление нового сервиса подписи",
     get_sertificates: "Получить сертификаты",
+    mobile_number: "Номер телефона (МЭП Мегафон)",
     service_certificates: "Сертификаты",
     service_settings: "Настройки",
     services_list: "Список сервисов подписи",
+    write_mobile_number: "Введите номер телефона, в формате +7XXXXXXXXXX",
   },
   Settings: {
     BASE: "BASE-64",

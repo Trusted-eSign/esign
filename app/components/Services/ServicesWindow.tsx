@@ -62,7 +62,7 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceSettings />
+              <ServiceSettings service={this.state.activeService}/>
             </div>
             <div style={{
               height: "50%",
