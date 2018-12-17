@@ -1,11 +1,6 @@
 import React from "react";
 import ServicesListItem from "./ServicesListItem";
-
-interface IService {
-  id: string;
-  type: "MEGAFON";
-  name: string;
-}
+import { IService } from "./types";
 
 interface IServicesListProps {
   activeService?: IService;

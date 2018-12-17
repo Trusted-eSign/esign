@@ -1,11 +1,6 @@
 import React from "react";
 import ServiceIcon from "./ServiceIcon";
-
-interface IService {
-  id: string;
-  type: "MEGAFON";
-  name: string;
-}
+import { IService } from "./types";
 
 interface IServicesListItemProps {
   active: boolean;

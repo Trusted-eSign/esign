@@ -7,12 +7,7 @@ import AddService from "./AddService";
 import ServiceCertificates from "./ServiceCertificates";
 import ServiceSettings from "./ServiceSettings";
 import ServicesList from "./ServicesList";
-
-interface IService {
-  id: string;
-  type: "MEGAFON";
-  name: string;
-}
+import { IService } from "./types";
 
 interface IServicesWindowState {
   activeService: IService | undefined;
