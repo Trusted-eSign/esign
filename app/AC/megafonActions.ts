@@ -25,85 +25,99 @@ let timer: NodeJS.Timer | null = null;
  */
 export function signDocument(msisdn: string, text: string, document: string, signType?: "Attached" | "Detached") {
   return (dispatch: (action: {}) => void) => {
-    dispatch({
-      type: SIGN_DOCUMENT + START,
-    });
-
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-
-    const params: ISignDocument = {
-      digest: xorConvolutionMD5(md5(document)),
-      document,
-      msisdn,
-      signType,
-      text: text + "/n" + xorConvolutionMD5(md5(text)),
-    };
-
-    const xml = buildXML(SIGN_DOCUMENT, params);
-
-    if (!xml) {
+    return new Promise((resolve, reject) => {
       dispatch({
-        type: SIGN_DOCUMENT + FAIL,
+        type: SIGN_DOCUMENT + START,
       });
-    }
 
-    request({
-      body: xml,
-      headers: HEADERS,
-      method: METHOD,
-      uri: SIGN_URI,
-    }, (error, response, body) => {
-      if (error) {
-        dispatch({
-          payload: {
-            error,
-            status: error && error.code ? error.code : "",
-          },
-          type: SIGN_DOCUMENT + FAIL,
-        });
-        return;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
       }
 
-      if (!error && response.statusCode === 200) {
-        const mapSignResponse = objToMap(strXmlToObject(body));
+      const params: ISignDocument = {
+        digest: xorConvolutionMD5(md5(document)),
+        document,
+        msisdn,
+        signType,
+        text: text + "/n" + xorConvolutionMD5(md5(text)),
+      };
 
-        if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
-          const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+      const xml = buildXML(SIGN_DOCUMENT, params);
 
-          if (status === "100") {
-            const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+      if (!xml) {
+        dispatch({
+          type: SIGN_DOCUMENT + FAIL,
+        });
 
-            if (transactionId) {
+        reject();
+      }
+
+      request({
+        body: xml,
+        headers: HEADERS,
+        method: METHOD,
+        uri: SIGN_URI,
+      }, (error, response, body) => {
+        if (error) {
+          dispatch({
+            payload: {
+              error,
+              status: error && error.code ? error.code : "",
+            },
+            type: SIGN_DOCUMENT + FAIL,
+          });
+
+          reject(error && error.code ? error.code : "");
+          return;
+        }
+
+        if (!error && response.statusCode === 200) {
+          const mapSignResponse = objToMap(strXmlToObject(body));
+
+          if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
+            const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+
+            if (status === "100") {
+              const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+
+              if (transactionId) {
+                dispatch({
+                  payload: {
+                    transactionId,
+                  },
+                  type: SIGN_DOCUMENT + SUCCESS,
+                });
+
+                timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+
+                resolve();
+              }
+            } else {
               dispatch({
                 payload: {
-                  transactionId,
+                  status,
                 },
-                type: SIGN_DOCUMENT + SUCCESS,
+                type: SIGN_DOCUMENT + FAIL,
               });
 
-              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+              reject(status);
             }
           } else {
             dispatch({
-              payload: {
-                status,
-              },
               type: SIGN_DOCUMENT + FAIL,
             });
+
+            reject();
           }
         } else {
           dispatch({
             type: SIGN_DOCUMENT + FAIL,
           });
+
+          reject();
         }
-      } else {
-        dispatch({
-          type: SIGN_DOCUMENT + FAIL,
-        });
-      }
+      });
     });
   };
 }
@@ -120,93 +134,107 @@ export function signDocument(msisdn: string, text: string, document: string, sig
  */
 export function multiplySign(msisdn: string, text: string, documents: string[], signType?: "Attached" | "Detached") {
   return (dispatch: (action: {}) => void) => {
-    dispatch({
-      type: MULTIPLY_SIGN + START,
-    });
-
-    const documentList: IDocumentData[] = [];
-
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-
-    for (const doc of documents) {
-      documentList.push({
-        digest: xorConvolutionMD5(md5(doc)),
-        document: doc,
-      });
-    }
-
-    const params: IMultiplysign = {
-      documentList,
-      msisdn,
-      signType,
-      text: text + "/n" + xorConvolutionMD5(md5(text)),
-    };
-
-    const xml = buildXML(MULTIPLY_SIGN, params);
-
-    if (!xml) {
+    return new Promise((resolve, reject) => {
       dispatch({
-        type: MULTIPLY_SIGN + FAIL,
+        type: MULTIPLY_SIGN + START,
       });
-    }
 
-    request({
-      body: xml,
-      headers: HEADERS,
-      method: METHOD,
-      uri: SIGN_URI,
-    }, (error, response, body) => {
-      if (error) {
-        dispatch({
-          payload: {
-            error,
-            status: error && error.code ? error.code : "",
-          },
-          type: MULTIPLY_SIGN + FAIL,
-        });
-        return;
+      const documentList: IDocumentData[] = [];
+
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
       }
 
-      if (!error && response.statusCode === 200) {
-        const mapSignResponse = objToMap(strXmlToObject(body));
+      for (const doc of documents) {
+        documentList.push({
+          digest: xorConvolutionMD5(md5(doc)),
+          document: doc,
+        });
+      }
 
-        if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
-          const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+      const params: IMultiplysign = {
+        documentList,
+        msisdn,
+        signType,
+        text: text + "/n" + xorConvolutionMD5(md5(text)),
+      };
 
-          if (status === "100") {
-            const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+      const xml = buildXML(MULTIPLY_SIGN, params);
 
-            if (transactionId) {
+      if (!xml) {
+        dispatch({
+          type: MULTIPLY_SIGN + FAIL,
+        });
+
+        reject();
+      }
+
+      request({
+        body: xml,
+        headers: HEADERS,
+        method: METHOD,
+        uri: SIGN_URI,
+      }, (error, response, body) => {
+        if (error) {
+          dispatch({
+            payload: {
+              error,
+              status: error && error.code ? error.code : "",
+            },
+            type: MULTIPLY_SIGN + FAIL,
+          });
+
+          reject(error && error.code ? error.code : "");
+          return;
+        }
+
+        if (!error && response.statusCode === 200) {
+          const mapSignResponse = objToMap(strXmlToObject(body));
+
+          if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
+            const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+
+            if (status === "100") {
+              const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+
+              if (transactionId) {
+                dispatch({
+                  payload: {
+                    transactionId,
+                  },
+                  type: MULTIPLY_SIGN + SUCCESS,
+                });
+
+                timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+
+                resolve();
+              }
+            } else {
               dispatch({
                 payload: {
-                  transactionId,
+                  status,
                 },
-                type: MULTIPLY_SIGN + SUCCESS,
+                type: MULTIPLY_SIGN + FAIL,
               });
 
-              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+              reject(status);
             }
           } else {
             dispatch({
-              payload: {
-                status,
-              },
               type: MULTIPLY_SIGN + FAIL,
             });
+
+            reject();
           }
         } else {
           dispatch({
             type: MULTIPLY_SIGN + FAIL,
           });
+
+          reject(response && response.statusCode ? response.statusCode : "");
         }
-      } else {
-        dispatch({
-          type: MULTIPLY_SIGN + FAIL,
-        });
-      }
+      });
     });
   };
 }
@@ -221,83 +249,96 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
  */
 export function signText(msisdn: string, text: string, signType?: "Attached" | "Detached") {
   return (dispatch: (action: {}) => void) => {
-    dispatch({
-      type: SIGN_TEXT + START,
-    });
-
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-
-    const params: ISignText = {
-      msisdn,
-      signType,
-      text: text + "/n" + xorConvolutionMD5(md5(text)),
-    };
-
-    const xml = buildXML(SIGN_TEXT, params);
-
-    if (!xml) {
+    return new Promise((resolve, reject) => {
       dispatch({
-        type: SIGN_TEXT + FAIL,
+        type: SIGN_TEXT + START,
       });
-    }
 
-    request({
-      body: xml,
-      headers: HEADERS,
-      method: METHOD,
-      uri: SIGN_URI,
-    }, (error, response, body) => {
-      if (error) {
-        dispatch({
-          payload: {
-            error,
-            status: error && error.code ? error.code : "",
-          },
-          type: SIGN_TEXT + FAIL,
-        });
-        return;
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
       }
 
-      if (!error && response.statusCode === 200) {
-        const mapSignResponse = objToMap(strXmlToObject(body));
+      const params: ISignText = {
+        msisdn,
+        signType,
+        text: text + "/n" + xorConvolutionMD5(md5(text)),
+      };
 
-        if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
-          const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+      const xml = buildXML(SIGN_TEXT, params);
 
-          if (status === "100") {
-            const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+      if (!xml) {
+        dispatch({
+          type: SIGN_TEXT + FAIL,
+        });
 
-            if (transactionId) {
+        reject();
+      }
+
+      request({
+        body: xml,
+        headers: HEADERS,
+        method: METHOD,
+        uri: SIGN_URI,
+      }, (error, response, body) => {
+        if (error) {
+          dispatch({
+            payload: {
+              error,
+              status: error && error.code ? error.code : "",
+            },
+            type: SIGN_TEXT + FAIL,
+          });
+
+          reject(error && error.code ? error.code : "");
+        }
+
+        if (!error && response.statusCode === 200) {
+          const mapSignResponse = objToMap(strXmlToObject(body));
+
+          if (mapSignResponse && Map.isMap(mapSignResponse) && !mapSignResponse.isEmpty()) {
+            const status = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:status"]);
+
+            if (status === "100") {
+              const transactionId = mapSignResponse.getIn(["S:Envelope", "S:Body", "ns2:signResponse", "ns2:transaction_id"]);
+
+              if (transactionId) {
+                dispatch({
+                  payload: {
+                    transactionId,
+                  },
+                  type: SIGN_TEXT + SUCCESS,
+                });
+
+                timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+
+                resolve();
+              }
+            } else {
               dispatch({
                 payload: {
-                  transactionId,
+                  status,
                 },
-                type: SIGN_TEXT + SUCCESS,
+                type: SIGN_TEXT + FAIL,
               });
 
-              timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
+              reject(status);
             }
           } else {
             dispatch({
-              payload: {
-                status,
-              },
               type: SIGN_TEXT + FAIL,
             });
+
+            reject();
           }
         } else {
           dispatch({
             type: SIGN_TEXT + FAIL,
           });
+
+          reject();
         }
-      } else {
-        dispatch({
-          type: SIGN_TEXT + FAIL,
-        });
-      }
+      });
     });
   };
 }
