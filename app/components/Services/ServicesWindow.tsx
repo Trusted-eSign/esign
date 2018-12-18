@@ -49,11 +49,13 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                 <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
                 {services && services.length ?
                   (
-                    <ServicesList
-                      activeService={activeService}
-                      onListItemClick={this.toggleActiveService}
-                      services={services}
-                    />
+                    <div className="add">
+                      <ServicesList
+                        activeService={activeService}
+                        onListItemClick={this.toggleActiveService}
+                        services={services}
+                      />
+                    </div>
                   ) :
                   (
                     <BlockNotElements name="active" title={localize("Services.empty_services_list", locale)} />
@@ -84,7 +86,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceCertificates service={activeService}/>
+              <ServiceCertificates service={activeService} />
             </div>
           </div>
           {this.showModalAddService()}
