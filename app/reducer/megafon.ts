@@ -23,7 +23,11 @@ export default (megafonState = DefaultReducerState, action) => {
     case VERIFY + START:
       return megafonState
         .set("isDone", false)
-        .set("isStarted", true);
+        .set("isStarted", true)
+        .set("error", null)
+        .set("status", null)
+        .set("transactionId", null)
+        .set("cms", null);
 
     case SIGN_TEXT + SUCCESS:
     case SIGN_DOCUMENT + SUCCESS:
