@@ -9,7 +9,6 @@ const ServiceModel = Record({
 });
 
 const SettingsModel = Record({
-  id: null,
   mobileNumber: null,
 });
 
@@ -29,7 +28,7 @@ export default (services = new DefaultReducerState(), action) => {
         .deleteIn(["entities", payload.id]);
 
     case CHANGE_SERVICE_SETTINGS:
-      return services.setIn(["entities", "settings", payload.id], new SettingsModel(payload.settings));
+      return services.setIn(["entities", payload.id, "settings"], new SettingsModel(payload.settings));
   }
 
   return services;

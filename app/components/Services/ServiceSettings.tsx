@@ -35,7 +35,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, {}> {
     if (service) {
       switch (service.type) {
         case MEGAFON:
-          return <MegafonSettings />;
+          return <MegafonSettings service={service}/>;
 
         default:
           return null;

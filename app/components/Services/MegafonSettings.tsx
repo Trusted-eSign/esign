@@ -1,26 +1,21 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import { changeServiceSettings } from "../../AC/servicesActions";
 import { IService } from "./types";
 
-interface IMegafonSettingsState {
-  mobileNumber: string;
+interface IMegafonSettingsProps {
+  changeServiceSettings: (id: string, settings: {
+    mobileNumber: string;
+  }) => void;
+  service: IService;
 }
 
-const initialState = {
-  mobileNumber: "+7",
-};
-
-class MegafonSettings extends React.PureComponent<{}, IMegafonSettingsState> {
+class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
-
-  constructor(props: {}) {
-    super(props);
-
-    this.state = { ...initialState };
-  }
 
   componentDidMount() {
     Materialize.updateTextFields();
@@ -32,11 +27,14 @@ class MegafonSettings extends React.PureComponent<{}, IMegafonSettingsState> {
 
   render() {
     const { localize, locale } = this.context;
-    const { mobileNumber } = this.state;
+    const { service } = this.props;
+    const {settings} = service;
+
+    const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "7";
 
     return (
       <div className="row">
-      <div className="row" />
+        <div className="row" />
         <div className="input-field input-field-csr col s12">
           <input
             id="mobileNumber"
@@ -56,8 +54,10 @@ class MegafonSettings extends React.PureComponent<{}, IMegafonSettingsState> {
   }
 
   handleMobileNumberChange = (ev: any) => {
-    this.setState({ mobileNumber: ev.target.value });
+    // tslint:disable-next-line:no-shadowed-variable
+    const { changeServiceSettings, service } = this.props;
+    changeServiceSettings(service.id, { mobileNumber: ev.target.value });
   }
 }
 
-export default MegafonSettings;
+export default connect(() => ({}), { changeServiceSettings })(MegafonSettings);

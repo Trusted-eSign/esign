@@ -24,3 +24,13 @@ export function deleteService(id: string) {
     type: DELETE_SERVICE,
   };
 }
+
+export function changeServiceSettings(id: string, settings: any) {
+  return {
+    payload: {
+      id,
+      settings,
+    },
+    type: CHANGE_SERVICE_SETTINGS,
+  };
+}
