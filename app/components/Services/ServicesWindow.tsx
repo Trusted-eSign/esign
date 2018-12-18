@@ -38,6 +38,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
   render() {
     const { localize, locale } = this.context;
     const { services } = this.props;
+    const { activeService } = this.state;
 
     return (
       <div className="main">
@@ -49,13 +50,13 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                 {services && services.length ?
                   (
                     <ServicesList
-                      activeService={this.state.activeService}
+                      activeService={activeService}
                       onListItemClick={this.toggleActiveService}
                       services={services}
                     />
                   ) :
                   (
-                    <BlockNotElements name="active" title={localize("Services.empty_services_list", locale)}/>
+                    <BlockNotElements name="active" title={localize("Services.empty_services_list", locale)} />
                   )}
               </div>
 
@@ -75,7 +76,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceSettings service={this.state.activeService} />
+              <ServiceSettings service={activeService} />
             </div>
             <div style={{
               height: "50%",
@@ -83,7 +84,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceCertificates />
+              <ServiceCertificates service={activeService}/>
             </div>
           </div>
           {this.showModalAddService()}
