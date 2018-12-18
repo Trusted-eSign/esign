@@ -368,7 +368,7 @@ export function getSignStatus(transaction_id: string) {
       });
     }
 
-    let status;
+    let status: string;
 
     request({
       body: xml,
@@ -439,15 +439,15 @@ export function getSignStatus(transaction_id: string) {
           type: GET_SIGN_STATUS + FAIL,
         });
       }
-    });
 
-    // Операция подписи завершилась
-    if (status !== "101") {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
+      // Операция подписи завершилась
+      if (status !== "101") {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
       }
-    }
+    });
   };
 }
 
