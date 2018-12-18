@@ -1,11 +1,24 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { MEGAFON } from "../../service/megafon/constants";
+
+const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
+
+interface IAddServiceState {
+  serviceName: string;
+  serviceType: string;
+}
+
+const initialState = {
+  serviceName: "",
+  serviceType: MEGAFON,
+};
 
 interface IAddService {
   onCancel?: () => void;
 }
 
-class AddService extends React.Component<IAddService, {}> {
+class AddService extends React.Component<IAddService, IAddServiceState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -13,6 +26,16 @@ class AddService extends React.Component<IAddService, {}> {
 
   constructor(props: IAddService) {
     super(props);
+
+    this.state = { ...initialState };
+  }
+
+  componentDidMount() {
+    Materialize.updateTextFields();
+  }
+
+  componentDidUpdate() {
+    Materialize.updateTextFields();
   }
 
   componentWillUnmount() {
@@ -21,6 +44,7 @@ class AddService extends React.Component<IAddService, {}> {
 
   render() {
     const { localize, locale } = this.context;
+    const { serviceName } = this.state;
 
     return (
       <div className="add_new_service_modal">
@@ -31,7 +55,45 @@ class AddService extends React.Component<IAddService, {}> {
               height: "250px",
               overflow: "auto",
             }}>
+              <div className="row">
+                <div className="col s12">
+                  <form action="#">
+                    <p>
+                      <input name="serviceType" type="radio"
+                        checked={true}
+                        id={MEGAFON}
+                        onClick={() => this.handleChangeServiceType(MEGAFON)}
+                      />
+                      <label htmlFor={MEGAFON} >
+                        {localize("Services.megafon", locale)}
+                      </label>
+                    </p>
+                    <p>
+                      <input name="serviceType" type="radio" id={CRYPTOPRO_DSS} disabled={true}
+                        onClick={() => this.handleChangeServiceType(CRYPTOPRO_DSS)} />
+                      <label htmlFor={CRYPTOPRO_DSS}>
+                        {localize("Services.cryptopro_dss", locale)}
+                      </label>
+                    </p>
+                  </form>
+                </div>
+              </div>
+              <div className="input-field input-field-csr col s12">
+                <input
+                  id="serviceName"
+                  type="text"
+                  className={"validate"}
+                  name="serviceName"
+                  value={serviceName}
+                  placeholder={localize("Services.write_service_name", locale)}
+                  onChange={this.handleServiceNameChange}
+                />
+                <label htmlFor="serviceName">
+                  {localize("Services.name", locale)}
+                </label>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -52,6 +114,14 @@ class AddService extends React.Component<IAddService, {}> {
         </div>
       </div>
     );
+  }
+
+  handleServiceNameChange = (ev: any) => {
+    this.setState({ serviceName: ev.target.value });
+  }
+
+  handleChangeServiceType = (type: string) => {
+    this.setState({ serviceType: type });
   }
 
   handleAdd = () => {
