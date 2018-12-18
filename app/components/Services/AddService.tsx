@@ -60,6 +60,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
             }}>
               <div className="row">
                 <div className="col s12">
+                  <p className="label-csr">
+                    {localize("Services.service_type", locale)}
+                  </p>
                   <form action="#">
                     <p>
                       <input name="serviceType" type="radio"
@@ -130,7 +133,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   handleAdd = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { addService } = this.props;
-    const {serviceName, serviceType} = this.state;
+    const { serviceName, serviceType } = this.state;
 
     addService(serviceName, serviceType);
 
