@@ -86,7 +86,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceCertificates service={activeService} />
+              <ServiceCertificates serviceId={activeService ? activeService.id : undefined} />
             </div>
           </div>
           {this.showModalAddService()}
