@@ -1,14 +1,15 @@
+import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { changeServiceSettings } from "../../AC/servicesActions";
-import { IService } from "./types";
 
 interface IMegafonSettingsProps {
   changeServiceSettings: (id: string, settings: {
     mobileNumber: string;
   }) => void;
-  service: IService;
+  serviceId: string;
+  services: Map<any, any>;
 }
 
 class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
@@ -27,10 +28,10 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { service } = this.props;
-    const {settings} = service;
+    const { serviceId, services } = this.props;
+    const {settings} = services.getIn(["entities", serviceId]);
 
-    const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "7";
+    const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "+7";
 
     return (
       <div className="row">
@@ -55,9 +56,11 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
 
   handleMobileNumberChange = (ev: any) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { changeServiceSettings, service } = this.props;
-    changeServiceSettings(service.id, { mobileNumber: ev.target.value });
+    const { changeServiceSettings, serviceId } = this.props;
+    changeServiceSettings(serviceId, { mobileNumber: ev.target.value });
   }
 }
 
-export default connect(() => ({}), { changeServiceSettings })(MegafonSettings);
+export default connect((state) => ({
+  services: state.services,
+}), { changeServiceSettings })(MegafonSettings);

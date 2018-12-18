@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
-import { MEGAFON } from "../../service/megafon/constants";
 import { mapToArr } from "../../utils";
+import BlockNotElements from "../BlockNotElements";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import Modal from "../Modal";
 import AddService from "./AddService";
@@ -46,11 +46,17 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
             <div style={{ height: "90%" }} >
               <div className="content-wrapper z-depth-1">
                 <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
-                <ServicesList
-                  activeService={this.state.activeService}
-                  onListItemClick={this.toggleActiveService}
-                  services={services}
-                />
+                {services && services.length ?
+                  (
+                    <ServicesList
+                      activeService={this.state.activeService}
+                      onListItemClick={this.toggleActiveService}
+                      services={services}
+                    />
+                  ) :
+                  (
+                    <BlockNotElements name="active" title={localize("Services.empty_services_list", locale)}/>
+                  )}
               </div>
 
               <div className={"btns-for-operation active"}>

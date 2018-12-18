@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { MEGAFON } from "../../service/megafon/constants";
+import BlockNotElements from "../BlockNotElements";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import MegafonSettings from "./MegafonSettings";
 import { IService } from "./types";
@@ -32,16 +33,18 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, {}> {
   }
 
   getBody = (service: IService | undefined) => {
+    const { localize, locale } = this.context;
+
     if (service) {
       switch (service.type) {
         case MEGAFON:
-          return <MegafonSettings service={service}/>;
+          return <MegafonSettings serviceId={service.id}/>;
 
         default:
           return null;
       }
     } else {
-      return null;
+      return <BlockNotElements name="active" title={localize("Services.service_not_selected", locale)}/>;
     }
   }
 }
