@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import { addService } from "../../AC/servicesActions";
 import { MEGAFON } from "../../service/megafon/constants";
 
 const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
@@ -14,17 +16,18 @@ const initialState = {
   serviceType: MEGAFON,
 };
 
-interface IAddService {
+interface IAddServiceProps {
+  addService: (name: string, type: string) => void;
   onCancel?: () => void;
 }
 
-class AddService extends React.Component<IAddService, IAddServiceState> {
+class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  constructor(props: IAddService) {
+  constructor(props: IAddServiceProps) {
     super(props);
 
     this.state = { ...initialState };
@@ -125,6 +128,12 @@ class AddService extends React.Component<IAddService, IAddServiceState> {
   }
 
   handleAdd = () => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { addService } = this.props;
+    const {serviceName, serviceType} = this.state;
+
+    addService(serviceName, serviceType);
+
     this.handelCancel();
   }
 
@@ -141,4 +150,4 @@ class AddService extends React.Component<IAddService, IAddServiceState> {
   }
 }
 
-export default AddService;
+export default connect(() => ({}), { addService })(AddService);

@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
 import { MEGAFON } from "../../service/megafon/constants";
+import { mapToArr } from "../../utils";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
 import Modal from "../Modal";
 import AddService from "./AddService";
@@ -9,12 +11,16 @@ import ServiceSettings from "./ServiceSettings";
 import ServicesList from "./ServicesList";
 import { IService } from "./types";
 
+interface IServicesWindowProps {
+  services: IService[];
+}
+
 interface IServicesWindowState {
   activeService: IService | undefined;
   showModalAddService: boolean;
 }
 
-class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
+class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServicesWindowState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -31,6 +37,7 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
 
   render() {
     const { localize, locale } = this.context;
+    const { services } = this.props;
 
     return (
       <div className="main">
@@ -42,7 +49,7 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
                 <ServicesList
                   activeService={this.state.activeService}
                   onListItemClick={this.toggleActiveService}
-                  services={[{ id: "1", type: MEGAFON, name: "МЭП Мегафон" }]}
+                  services={services}
                 />
               </div>
 
@@ -62,7 +69,7 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceSettings service={this.state.activeService}/>
+              <ServiceSettings service={this.state.activeService} />
             </div>
             <div style={{
               height: "50%",
@@ -123,4 +130,6 @@ class ServicesWindow extends React.PureComponent<{}, IServicesWindowState> {
   }
 }
 
-export default ServicesWindow;
+export default connect((state) => ({
+  services: mapToArr(state.services.entities),
+}))(ServicesWindow);

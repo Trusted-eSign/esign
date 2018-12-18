@@ -21,10 +21,8 @@ class ServicesList extends React.PureComponent<IServicesListProps, {}> {
     }
 
     return (
-      <div className="add">
-        <div className="collection">
-          {this.getBody(services)}
-        </div>
+      <div className="collection">
+        {this.getBody(services)}
       </div>
     );
   }

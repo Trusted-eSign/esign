@@ -15,13 +15,13 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
     const activeType = active ? "active" : "";
 
     return (
-      <div className="row" onClick={() => this.props.onClick(service)}>
+      <div className="row nobottom" onClick={() => this.props.onClick(service)}>
         <div className={"collection-item avatar certs-collection " + activeType} >
           <div className="col s2">
             <ServiceIcon type={service.type} />
           </div>
           <div className="col s10">
-            <div className="collection-title">{service.name}</div>
+            <div className="collection-title">{service.type}</div>
             <div className="collection-info">{service.name}</div>
           </div>
         </div>
