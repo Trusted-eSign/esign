@@ -34,8 +34,11 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
     // Typical usage (don't forget to compare props):
     if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
       this.props.megafon.cms !== prevProps.megafon.cms) {
-      console.log("cms", this.props.megafon.cms);
-      Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
+
+        const certificate = this.getCertificateFromSign(this.props.megafon.cms);
+        console.log("certificate", certificate);
+
+        Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
     }
   }
 
@@ -70,6 +73,50 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
           );
       }
     }
+  }
+
+  /**
+   * Return fist signer certificate
+   *
+   * @memberof ServiceCertificates
+   */
+  getCertificateFromSign = (cmsStr: string) => {
+    if (!cmsStr || !cmsStr.length) {
+      return undefined;
+    }
+
+    try {
+      const cms: trusted.cms.SignedData = new trusted.cms.SignedData();
+      cms.import(Buffer.from("-----BEGIN CMS-----" + "\n" + cmsStr + "\n" + "-----END CMS-----"), trusted.DataFormat.PEM);
+
+      const signers = cms.signers();
+      const certificates = cms.certificates();
+
+      let signer: trusted.cms.Signer;
+      let signerId: trusted.cms.SignerId;
+
+      for (let i = 0; i < signers.length; i++) {
+        signer = signers.items(i);
+        signerId = signer.signerId;
+
+        for (let j = 0; j < certificates.length; j++) {
+          const tmpCert: trusted.pki.Certificate = certificates.items(j);
+          if ((tmpCert.issuerName === signerId.issuerName) && (tmpCert.serialNumber === signerId.serialNumber)) {
+            signer.certificate = tmpCert;
+            break;
+          }
+        }
+
+        if (signer.certificate) {
+          return signer.certificate;
+        }
+      }
+
+    } catch (e) {
+      //
+    }
+
+    return undefined;
   }
 }
 
