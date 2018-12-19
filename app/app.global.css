@@ -2161,7 +2161,7 @@ a.cert-back-btn.waves-effect.waves-light {
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.2);
-    position: absolute;
+    position: relative;
     z-index: 1000;
 }
 .preloader-text {
