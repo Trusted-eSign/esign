@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
+import { addServiceCertificate } from "../../AC/servicesActions";
 import { MEGAFON } from "../../service/megafon/constants";
 import { SIGN_TEXT } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
@@ -18,6 +19,7 @@ interface IMegafonState {
 }
 
 interface IServiceCertificatesProps {
+  addServiceCertificate: (certificate: trusted.pki.Certificate, serviceType: "MEGAFON", serviceID: string) => void;
   megafon: IMegafonState;
   service: IService | undefined;
   serviceId: string;
@@ -36,7 +38,10 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
       this.props.megafon.cms !== prevProps.megafon.cms) {
 
         const certificate = this.getCertificateFromSign(this.props.megafon.cms);
-        console.log("certificate", certificate);
+
+        if (certificate) {
+          this.props.addServiceCertificate(certificate, MEGAFON, "1");
+        }
 
         Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
     }
