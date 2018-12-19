@@ -3,10 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
 import { addServiceCertificate } from "../../AC/servicesActions";
-import { MEGAFON } from "../../service/megafon/constants";
 import { SIGN_TEXT } from "../../service/megafon/constants";
+import { MEGAFON } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
+import { mapToArr } from "../../utils";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import ProgressBars from "../ProgressBars";
 import { IService } from "./types";
 
 interface IMegafonState {
@@ -20,6 +22,8 @@ interface IMegafonState {
 
 interface IServiceCertificatesProps {
   addServiceCertificate: (certificate: trusted.pki.Certificate, serviceType: "MEGAFON", serviceID: string) => void;
+  certificates: object[];
+  isStarted: boolean;
   megafon: IMegafonState;
   service: IService | undefined;
   serviceId: string;
@@ -37,32 +41,79 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
     if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
       this.props.megafon.cms !== prevProps.megafon.cms) {
 
-        const certificate = this.getCertificateFromSign(this.props.megafon.cms);
+      const certificate = this.getCertificateFromSign(this.props.megafon.cms);
 
-        if (certificate) {
-          this.props.addServiceCertificate(certificate, MEGAFON, "1");
-        }
+      if (certificate) {
+        this.props.addServiceCertificate(certificate, MEGAFON, "1");
+      }
 
-        Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
+      Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
     }
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { service } = this.props;
-
-    const disabled = service ? "" : "disabled";
 
     return (
       <div className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Services.service_certificates", locale)} />
+        {this.getBody()}
+      </div>
+    );
+  }
+
+  getBody = () => {
+    const { localize, locale } = this.context;
+    const { certificates, isStarted, service } = this.props;
+
+    if (isStarted) {
+      return <ProgressBars />;
+    }
+
+    const disabled = service ? "" : "disabled";
+
+    if (certificates && certificates.length) {
+      return (
+        <div className={"add-cert-collection collection "}>
+          {certificates.map((certificate) => {
+            let curStatusStyle;
+            let curKeyStyle;
+            let rectangleStyle;
+            if (certificate.status) {
+              curStatusStyle = "cert_status_ok long";
+              rectangleStyle = { background: "#4caf50" };
+            } else {
+              curStatusStyle = "cert_status_error long";
+              rectangleStyle = { background: "#bf3817" };
+            }
+
+            if (certificate.key.length > 0) {
+              curKeyStyle = "key long";
+            } else {
+              curKeyStyle = "";
+            }
+
+            return <div className="collection-item avatar certs-collection" key={certificate.id}>
+              <div className="r-iconbox-link">
+                <div className={"rectangle"} style={rectangleStyle}></div>
+                <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
+                <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
+                  <div className="key long"></div>
+                  <div className={curStatusStyle}></div>
+                </div>
+              </div>
+            </div>;
+          })}
+        </div>);
+    } else {
+      return (
         <div className={"cert-contents"}>
           <a className={"waves-effect waves-light btn-large add-cert-btn " + disabled} onClick={this.handleGetCertificates}>
             {localize("Services.get_sertificates", locale)}
           </a>
         </div>
-      </div>
-    );
+      );
+    }
   }
 
   handleGetCertificates = () => {
@@ -130,6 +181,8 @@ interface IOwnProps {
 }
 
 export default connect((state, ownProps: IOwnProps) => ({
+  certificates: mapToArr(state.certificates.entities.filter((certificate) => certificate.serviceId === ownProps.serviceId)),
+  isStarted: state.megafon.isStarted,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
-}), { signText })(ServiceCertificates);
+}), { addServiceCertificate, signText })(ServiceCertificates);

@@ -41,7 +41,7 @@ export function addServiceCertificate(certificate: trusted.pki.Certificate, serv
     category: "MY",
     format: "PEM",
     hash: certificate.thumbprint,
-    id: service + "_" + certificate.thumbprint,
+    id: service + "_" + serviceId + "_" + certificate.thumbprint,
     issuerFriendlyName: certificate.issuerFriendlyName,
     issuerName: certificate.issuerName,
     key: "1",
