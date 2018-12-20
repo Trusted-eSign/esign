@@ -14,6 +14,7 @@ import ServicesList from "./ServicesList";
 import { IService } from "./types";
 
 interface IServicesWindowProps {
+  certificates: any[];
   services: IService[];
 }
 
@@ -28,7 +29,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
     localize: PropTypes.func,
   };
 
-  constructor(props: {}) {
+  constructor(props: IServicesWindowProps) {
     super(props);
 
     this.state = {
@@ -39,6 +40,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
 
   componentWillUnmount() {
     const state = {
+      certificates: this.props.certificates,
       services: this.props.services,
     };
 
@@ -159,6 +161,6 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
 }
 
 export default connect((state) => ({
+  certificates: mapToArr(state.certificates.entities.filter((certificate) => certificate.service && certificate.serviceId)),
   services: mapToArr(state.services.entities),
-  servicesMap: state.services,
 }))(ServicesWindow);

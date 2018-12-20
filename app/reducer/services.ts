@@ -1,18 +1,18 @@
 import { OrderedMap, Record } from "immutable";
 import { ADD_SERVICE, CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
 
-const ServiceModel = Record({
+export const ServiceModel = Record({
   id: null,
   name: null,
   settings: OrderedMap({}),
   type: null,
 });
 
-const SettingsModel = Record({
+export const SettingsModel = Record({
   mobileNumber: null,
 });
 
-const DefaultReducerState = Record({
+export const DefaultReducerState = Record({
   entities: OrderedMap({}),
 });
 

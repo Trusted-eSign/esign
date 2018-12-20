@@ -5,7 +5,7 @@ import {
 } from "../constants";
 import { arrayToMap } from "../utils";
 
-const CertificateModel = Record({
+export const CertificateModel = Record({
   active: false,
   category: null,
   format: null,
@@ -33,7 +33,7 @@ const CertificateModel = Record({
   version: null,
 });
 
-const DefaultReducerState = Record({
+export const DefaultReducerState = Record({
   entities: OrderedMap({}),
   loaded: false,
   loading: false,

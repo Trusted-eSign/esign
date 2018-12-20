@@ -1,16 +1,10 @@
 import * as fs from "fs";
-import { Map, OrderedMap, Record } from "immutable";
-import * as path from "path";
+import { OrderedMap, Record } from "immutable";
 import { SERVICES_JSON, SETTINGS_JSON } from "../constants";
-import { arrayToMap, fileExists, mapToArr } from "../utils";
-
-const RecipientModel = Record({
-  certId: null,
-});
-
-const DefaultRecipientsState = Record({
-  entities: OrderedMap({}),
-});
+import { CertificateModel, DefaultReducerState as DefaultCertificatesReducerState } from "../reducer/certificates";
+import { DefaultReducerState as DefaultRecipientsReducerState, RecipientModel } from "../reducer/recipients";
+import { DefaultReducerState as DefaultServicesReducerState, ServiceModel, SettingsModel } from "../reducer/services";
+import { fileExists } from "../utils";
 
 let odata = {};
 
@@ -19,7 +13,7 @@ if (fileExists(SETTINGS_JSON)) {
 
   if (data) {
     try {
-      let recipientsMap = new DefaultRecipientsState();
+      let recipientsMap = new DefaultRecipientsReducerState();
 
       odata = JSON.parse(data);
 
@@ -43,39 +37,35 @@ if (fileExists(SETTINGS_JSON)) {
   }
 }
 
-const ServiceModel = Record({
-  id: null,
-  name: null,
-  settings: OrderedMap({}),
-  type: null,
-});
-
-const SettingsModel = Record({
-  mobileNumber: null,
-});
-
-const DefaultServicesState = Record({
-  entities: OrderedMap({}),
-});
-
 if (fileExists(SERVICES_JSON)) {
   const services = fs.readFileSync(SERVICES_JSON, "utf8");
 
   if (services) {
     try {
-      let servicesMap = new DefaultServicesState();
+      let servicesMap = new DefaultServicesReducerState();
+      let certificatesMap = new DefaultCertificatesReducerState();
 
       const data = JSON.parse(services);
 
       for (const service of data.services) {
-        let mservice = new ServiceModel({...service});
-        mservice = mservice.setIn(["settings"], new SettingsModel({mobileNumber: service.settings.mobileNumber}));
+        let mservice = new ServiceModel({ ...service });
+        mservice = mservice.setIn(["settings"], new SettingsModel({ mobileNumber: service.settings.mobileNumber }));
         servicesMap = servicesMap.setIn(["entities", service.id], mservice);
       }
 
       odata.services = servicesMap;
+
+      if (data.certificates) {
+        for (const certificate of data.certificates) {
+          certificatesMap = certificatesMap.setIn(["entities", certificate.id], new CertificateModel({ ...certificate }));
+        }
+
+        odata.certificates = certificatesMap;
+      }
+
     } catch (e) {
       odata.services = {};
+      odata.certificates = {};
     }
   }
 }
