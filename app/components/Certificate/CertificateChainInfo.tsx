@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { MEGAFON } from "../../service/megafon/constants";
 
 class CertificateChainInfo extends React.Component<any, any> {
   static contextTypes = {
@@ -94,7 +95,8 @@ class CertificateChainInfo extends React.Component<any, any> {
         }
 
         if (j === 0) {
-          curKeyStyle = certificate.key.length > 0 ? "key" : "";
+          curKeyStyle = certificate.key.length > 0 ? "key " : "";
+          curKeyStyle += certificate.service === MEGAFON ? "megafonkey" : "localkey";
         }
 
         const active = this.isItemOpened(element.thumbprint) ? "active" : "";

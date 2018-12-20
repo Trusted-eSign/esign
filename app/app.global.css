@@ -2492,8 +2492,15 @@ a.cert-back-btn.waves-effect.waves-light {
     left: 50px;
 }
 
+.localkey {
+  background: url(./resources/image/key.svg);
+}
+
+.megafonkey {
+  background: url(./resources/image/services/megafon.png);
+}
+
 .key {
-    background: url(./resources/image/key.svg);
     background-size: 100%;
     height: 16px;
     width: 16px;
@@ -2504,7 +2511,7 @@ a.cert-back-btn.waves-effect.waves-light {
     left: -2px;
 }
 
-.key.short {
+.short {
     margin-left: 288px;
 }
 

@@ -101,9 +101,13 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
             }
 
             if (certificate.key.length > 0) {
-              curKeyStyle = "key long";
+              curKeyStyle = "key long ";
             } else {
               curKeyStyle = "";
+            }
+
+            if (curKeyStyle) {
+              curKeyStyle += certificate.service === MEGAFON ? "megafonkey" : "localkey";
             }
 
             return <div className="collection-item avatar certs-collection" key={certificate.id}>
@@ -111,7 +115,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
                 <div className={"rectangle"} style={rectangleStyle}></div>
                 <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
                 <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
-                  <div className="key long"></div>
+                  <div className={curKeyStyle}></div>
                   <div className={curStatusStyle}></div>
                 </div>
               </div>

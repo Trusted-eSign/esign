@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { MEGAFON } from "../service/megafon/constants";
 
 const rectangleValidStyle = {
   background: "#4caf50",
@@ -55,7 +56,8 @@ class RecipientsList extends React.Component<any, any> {
             }
 
             if (element.key.length > 0) {
-              (dialogType === "modal") ? curKeyStyle = "key short" : curKeyStyle = "key long";
+              (dialogType === "modal") ? curKeyStyle = "key short " : curKeyStyle = "key long ";
+              curKeyStyle += element.service === MEGAFON ? "megafonkey" : "localkey";
             } else {
               curKeyStyle = "";
             }
