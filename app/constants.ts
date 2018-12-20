@@ -121,6 +121,7 @@ export const PLATFORM: string = window.PLATFORM;
 export const TMP_DIR: string = window.TMP_DIR;
 export const LICENSE_PATH = window.LICENSE_PATH;
 export const SETTINGS_JSON = window.SETTINGS_JSON;
+export const SERVICES_JSON = window.SERVICES_JSON;
 export const TRUSTED_CRYPTO_LOG = window.TRUSTED_CRYPTO_LOG;
 export const APP_LOG_FILE = window.APP_LOG_FILE;
 export const APP_ERRORS_LOG_FILE = window.APP_ERRORS_LOG_FILE;

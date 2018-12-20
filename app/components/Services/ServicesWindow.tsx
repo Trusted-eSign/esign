@@ -1,6 +1,8 @@
+import fs from "fs";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { SERVICES_JSON } from "../../constants";
 import { mapToArr } from "../../utils";
 import BlockNotElements from "../BlockNotElements";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
@@ -33,6 +35,23 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
       activeService: undefined,
       showModalAddService: false,
     };
+  }
+
+  componentWillUnmount() {
+    const state = {
+      services: this.props.services,
+    };
+
+    const sstate = JSON.stringify(state, null, 4);
+
+    fs.writeFile(SERVICES_JSON, sstate, (err: any) => {
+      if (err) {
+        // tslint:disable-next-line:no-console
+        console.log("-------");
+      }
+      // tslint:disable-next-line:no-console
+      console.log("++++++");
+    });
   }
 
   render() {
@@ -141,4 +160,5 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
 
 export default connect((state) => ({
   services: mapToArr(state.services.entities),
+  servicesMap: state.services,
 }))(ServicesWindow);

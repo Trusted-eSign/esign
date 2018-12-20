@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { Map, OrderedMap, Record } from "immutable";
 import * as path from "path";
-import { SETTINGS_JSON } from "../constants";
+import { SERVICES_JSON, SETTINGS_JSON } from "../constants";
 import { arrayToMap, fileExists, mapToArr } from "../utils";
 
 const RecipientModel = Record({
@@ -39,6 +39,43 @@ if (fileExists(SETTINGS_JSON)) {
       }
     } catch (e) {
       odata = {};
+    }
+  }
+}
+
+const ServiceModel = Record({
+  id: null,
+  name: null,
+  settings: OrderedMap({}),
+  type: null,
+});
+
+const SettingsModel = Record({
+  mobileNumber: null,
+});
+
+const DefaultServicesState = Record({
+  entities: OrderedMap({}),
+});
+
+if (fileExists(SERVICES_JSON)) {
+  const services = fs.readFileSync(SERVICES_JSON, "utf8");
+
+  if (services) {
+    try {
+      let servicesMap = new DefaultServicesState();
+
+      const data = JSON.parse(services);
+
+      for (const service of data.services) {
+        let mservice = new ServiceModel({...service});
+        mservice = mservice.setIn(["settings"], new SettingsModel({mobileNumber: service.settings.mobileNumber}));
+        servicesMap = servicesMap.setIn(["entities", service.id], mservice);
+      }
+
+      odata.services = servicesMap;
+    } catch (e) {
+      odata.services = {};
     }
   }
 }
