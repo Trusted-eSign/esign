@@ -1,25 +1,39 @@
 import * as fs from "fs";
+import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
 import { deleteAllTemporyLicenses, verifyLicense } from "../../AC/licenseActions";
+import { multiplySign } from "../../AC/megafonActions";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
-import * as jwt from "../../trusted/jwt";
+import { MEGAFON, MULTIPLY_SIGN } from "../../service/megafon/constants";
+import { statusCodes } from "../../service/megafon/statusCodes";
 import { checkLicense } from "../../trusted/jwt";
+import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
 import { dirExists, mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import FileSelector from "../Files/FileSelector";
 import ProgressBars from "../ProgressBars";
+import { IService } from "../Services/types";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 
 const remote = window.electron.remote;
+
+interface IMegafonState {
+  cms: string;
+  error: string;
+  isDone: boolean;
+  isStarted: boolean;
+  status: string;
+  transactionId: string;
+}
 
 interface IFile {
   id: string;
@@ -52,7 +66,9 @@ interface ISignatureWindowProps {
   licenseToken: string;
   lic_error: number;
   loadAllCertificates: () => void;
+  megafon: IMegafonState;
   method: string;
+  multiplySign: (msisdn: string, text: string, documents: string[], signType?: "Attached" | "Detached" | undefined) => any;
   files: Array<{
     id: string,
     filename: string,
@@ -66,6 +82,7 @@ interface ISignatureWindowProps {
   }>;
   verifySignature: (file: string) => void;
   removeAllRemoteFiles: () => void;
+  services: Map<any, any>;
   signatures: any;
   signer: any;
   settings: any;
@@ -215,46 +232,51 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
 
     if (files.length > 0) {
-      const key = window.PKISTORE.findKey(signer);
+      if (signer.service) {
+        this.signInService(files);
+      } else {
+        const key = window.PKISTORE.findKey(signer);
 
-      if (!key) {
-        $(".toast-key_not_found").remove();
-        Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
+        if (!key) {
+          $(".toast-key_not_found").remove();
+          Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
 
-        logger.log({
-          level: "error",
-          message: "Key not found",
-          operation: "Подпись",
-          operationObject: {
-            in: "Key",
-            out: "Null",
-          },
-          userName: USER_NAME,
-        });
+          logger.log({
+            level: "error",
+            message: "Key not found",
+            operation: "Подпись",
+            operationObject: {
+              in: "Key",
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
 
-        return;
-      }
+          return;
+        }
 
-      const cert = window.PKISTORE.getPkiObject(signer);
+        const cert = window.PKISTORE.getPkiObject(signer);
 
-      const filesForSign = [];
-      const filesForResign = [];
+        const filesForSign = [];
+        const filesForResign = [];
 
-      for (const file of files) {
-        if (file.fullpath.split(".").pop() === "sig") {
-          filesForResign.push(file);
-        } else {
-          filesForSign.push(file);
+        for (const file of files) {
+          if (file.fullpath.split(".").pop() === "sig") {
+            filesForResign.push(file);
+          } else {
+            filesForSign.push(file);
+          }
+        }
+
+        if (filesForSign && filesForSign.length) {
+          this.sign(filesForSign, cert, key);
+        }
+
+        if (filesForResign && filesForResign.length) {
+          this.resign(filesForResign, cert, key);
         }
       }
 
-      if (filesForSign && filesForSign.length) {
-        this.sign(filesForSign, cert, key);
-      }
-
-      if (filesForResign && filesForResign.length) {
-        this.resign(filesForResign, cert, key);
-      }
     }
   }
 
@@ -285,6 +307,29 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
 
     filePackageDelete(filePackage);
+  }
+
+  signInService = (files: IFile[]) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { multiplySign, services, settings, signer } = this.props;
+
+    const signType = settings.detached ? "Detached" : "Attached";
+    const service = services.getIn(["entities", signer.serviceId]);
+
+    if (files.length > 0 && service && service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
+      const documents: string[] = [];
+
+      for (const file of files) {
+        const document = fs.readFileSync(file.fullpath, "base64");
+        documents.push(document);
+      }
+
+      multiplySign(service.settings.mobileNumber, Buffer.from("Sign in CryptoARM GOST", "utf8").toString("base64"), documents, signType)
+        .then(
+          (response) => console.log(`Fulfilled: ${response}`),
+          (error) => Materialize.toast(statusCodes[MULTIPLY_SIGN][error], 2000, "toast-mep_status"),
+        );
+    }
   }
 
   sign = (files: IFile[], cert: any, key: any) => {
@@ -551,12 +596,13 @@ export default connect((state) => {
     connectedList: connectedSelector(state, { connected: true }),
     connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
+    lic_error: state.license.lic_error,
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,
-    lic_error: state.license.lic_error,
     licenseToken: state.license.data,
     method: state.remoteFiles.method,
     packageSignResult: state.signatures.packageSignResult,
+    services: state.services,
     settings: state.settings.sign,
     signatures,
     signedPackage: state.signatures.signedPackage,
@@ -565,4 +611,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteAllTemporyLicenses, deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);
+}, { deleteAllTemporyLicenses, deleteFile, multiplySign, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);
