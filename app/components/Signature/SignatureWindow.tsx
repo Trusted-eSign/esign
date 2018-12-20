@@ -9,7 +9,7 @@ import { multiplySign } from "../../AC/megafonActions";
 import { USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
-import { MEGAFON, MULTIPLY_SIGN } from "../../service/megafon/constants";
+import { MEGAFON, SIGN_DOCUMENT } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { checkLicense } from "../../trusted/jwt";
 import * as jwt from "../../trusted/jwt";
@@ -327,7 +327,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       multiplySign(service.settings.mobileNumber, Buffer.from("Sign in CryptoARM GOST", "utf8").toString("base64"), documents, signType)
         .then(
           (response) => console.log(`Fulfilled: ${response}`),
-          (error) => Materialize.toast(statusCodes[MULTIPLY_SIGN][error], 2000, "toast-mep_status"),
+          (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
         );
     }
   }
