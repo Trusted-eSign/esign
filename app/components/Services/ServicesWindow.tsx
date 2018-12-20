@@ -49,7 +49,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                 <HeaderWorkspaceBlock text={localize("Services.services_list", locale)} />
                 {services && services.length ?
                   (
-                    <div className="add">
+                    <div className="add" style={{ overflow: "auto" }}>
                       <ServicesList
                         activeService={activeService}
                         onListItemClick={this.toggleActiveService}
