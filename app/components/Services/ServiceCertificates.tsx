@@ -44,7 +44,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
       const certificate = this.getCertificateFromSign(this.props.megafon.cms);
 
       if (certificate) {
-        this.props.addServiceCertificate(certificate, MEGAFON, "1");
+        this.props.addServiceCertificate(certificate, MEGAFON, this.props.serviceId);
       }
 
       Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
