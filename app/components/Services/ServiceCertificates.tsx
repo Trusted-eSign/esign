@@ -49,6 +49,17 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
       Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
     }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.status !== prevProps.megafon.status) {
+        const status = this.props.megafon.status;
+        if (status && status !== "100") {
+          const toast = statusCodes[SIGN_TEXT][status] ? statusCodes[SIGN_TEXT][status] :  `Ошибка МЭП ${status}`;
+
+          $(".toast-mep_status").remove();
+          Materialize.toast(toast, 2000, "toast-mep_status");
+        }
+    }
   }
 
   render() {
@@ -64,9 +75,11 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
   getBody = () => {
     const { localize, locale } = this.context;
-    const { certificates, isStarted, service } = this.props;
+    const { certificates, megafon, service } = this.props;
 
-    if (isStarted) {
+    console.log("isStarted", megafon.isStarted);
+
+    if (megafon.isStarted) {
       return <ProgressBars />;
     }
 
@@ -125,7 +138,10 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
         signText(service.settings.mobileNumber, Buffer.from("TEST: CryptoARM GOST", "utf8").toString("base64"), "Attached")
           .then(
             (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
-            (error) => Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status"),
+            (error) => {
+              $(".toast-mep_status").remove();
+              Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
+            },
           );
       }
     }
@@ -182,7 +198,6 @@ interface IOwnProps {
 
 export default connect((state, ownProps: IOwnProps) => ({
   certificates: mapToArr(state.certificates.entities.filter((certificate) => certificate.serviceId === ownProps.serviceId)),
-  isStarted: state.megafon.isStarted,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
 }), { addServiceCertificate, signText })(ServiceCertificates);
