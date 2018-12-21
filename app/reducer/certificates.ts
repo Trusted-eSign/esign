@@ -1,7 +1,7 @@
 import { OrderedMap, Record } from "immutable";
 import {
-  ADD_SERVICE_CERTIFICATE, LOAD_ALL_CERTIFICATES, REMOVE_ALL_CERTIFICATES,
-  START, SUCCESS, VERIFY_CERTIFICATE,
+  ADD_SERVICE_CERTIFICATE, DELETE_SERVICE, LOAD_ALL_CERTIFICATES,
+  REMOVE_ALL_CERTIFICATES, START, SUCCESS, VERIFY_CERTIFICATE,
 } from "../constants";
 import { arrayToMap } from "../utils";
 
@@ -63,6 +63,12 @@ export default (certificates = new DefaultReducerState(), action) => {
     case ADD_SERVICE_CERTIFICATE:
       return certificates
         .setIn(["entities", payload.certificate.id], new CertificateModel(payload.certificate));
+
+    case DELETE_SERVICE:
+      const certificatesFromService = certificates.get("entities").filter((certificate: any) => certificate.serviceId === payload.id);
+      certificatesFromService.forEach((certificate: any) => certificates = certificates.deleteIn(["entities", certificate.id]));
+
+      return certificates;
   }
 
   return certificates;
