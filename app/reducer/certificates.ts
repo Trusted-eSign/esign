@@ -31,6 +31,7 @@ export const CertificateModel = Record({
   uri: null,
   verified: false,
   version: null,
+  x509: null,
 });
 
 export const DefaultReducerState = Record({

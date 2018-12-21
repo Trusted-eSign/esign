@@ -60,6 +60,7 @@ export function addServiceCertificate(certificate: trusted.pki.Certificate, serv
     subjectName: certificate.subjectName,
     verified: true,
     version: certificate.version,
+    x509: certificate.export(trusted.DataFormat.PEM).toString(),
   };
 
   return {

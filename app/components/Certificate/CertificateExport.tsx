@@ -264,7 +264,18 @@ class CertificateExport extends React.Component<ICertificateExportProps, ICertif
       title: localize("Certificate.export_cert", locale),
     });
 
-    const x509 = window.PKISTORE.getPkiObject(certificate);
+    let tcert: trusted.pki.Certificate | undefined;
+
+    if (certificate.x509 && certificate.service) {
+      try {
+        tcert = new trusted.pki.Certificate();
+        tcert.import(Buffer.from(certificate.x509), trusted.DataFormat.PEM);
+      } catch (e) {
+        //
+      }
+    }
+
+    const x509 = certificate.x509 ? tcert : window.PKISTORE.getPkiObject(certificate);
 
     if (outFilePAth && x509) {
       try {
