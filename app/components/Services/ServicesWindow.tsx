@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
@@ -15,6 +16,7 @@ import { IService } from "./types";
 
 interface IServicesWindowProps {
   certificates: any[];
+  mapServices: Map<any, any>;
   services: IService[];
 }
 
@@ -99,7 +101,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceSettings service={activeService} />
+              <ServiceSettings service={activeService ? this.props.mapServices.getIn(["entities", activeService.id]) : undefined} />
             </div>
             <div style={{
               height: "50%",
@@ -162,5 +164,6 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
 
 export default connect((state) => ({
   certificates: mapToArr(state.certificates.entities.filter((certificate) => certificate.service && certificate.serviceId)),
+  mapServices: state.services,
   services: mapToArr(state.services.entities),
 }))(ServicesWindow);
