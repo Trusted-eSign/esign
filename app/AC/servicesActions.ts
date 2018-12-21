@@ -1,4 +1,5 @@
-import { ADD_SERVICE, ADD_SERVICE_CERTIFICATE, CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
+import { ADD_SERVICE, ADD_SERVICE_CERTIFICATE, CHANGE_SERVICE_NAME,
+  CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
 import { uuid } from "../utils";
 
 export function addService(name: string, type: string) {
@@ -32,6 +33,16 @@ export function changeServiceSettings(id: string, settings: any) {
       settings,
     },
     type: CHANGE_SERVICE_SETTINGS,
+  };
+}
+
+export function changeServiceName(id: string, name: string) {
+  return {
+    payload: {
+      id,
+      name,
+    },
+    type: CHANGE_SERVICE_NAME,
   };
 }
 

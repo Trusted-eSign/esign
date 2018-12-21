@@ -1,5 +1,5 @@
 import { OrderedMap, Record } from "immutable";
-import { ADD_SERVICE, CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
+import { ADD_SERVICE, CHANGE_SERVICE_NAME, CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
 
 export const ServiceModel = Record({
   id: null,
@@ -29,6 +29,9 @@ export default (services = new DefaultReducerState(), action) => {
 
     case CHANGE_SERVICE_SETTINGS:
       return services.setIn(["entities", payload.id, "settings"], new SettingsModel(payload.settings));
+
+    case CHANGE_SERVICE_NAME:
+      return services.setIn(["entities", payload.id, "name"], payload.name);
   }
 
   return services;
