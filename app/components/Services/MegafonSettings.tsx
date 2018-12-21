@@ -31,6 +31,11 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
   render() {
     const { localize, locale } = this.context;
     const { service } = this.props;
+
+    if (!service) {
+      return null;
+    }
+
     const { settings } = service;
 
     const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "+7";

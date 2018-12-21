@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { connect } from "react-redux";
+import { deleteService } from "../../AC/servicesActions";
 
 interface IDeleteServiceProps {
+  deleteService: (id: string) => void;
   service: any;
   onCancel?: () => void;
 }
@@ -57,12 +60,15 @@ class DeleteService extends React.Component<IDeleteServiceProps, {}> {
   }
 
   handleDeleteService = () => {
-    const { service } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { deleteService, service } = this.props;
     const { localize, locale } = this.context;
 
     if (!service) {
       return;
     }
+
+    deleteService(service.id);
 
     $(".toast-service_delete_ok").remove();
     Materialize.toast(localize("Services.service_delete_ok", locale), 2000, "toast-service_delete_ok");
@@ -71,4 +77,4 @@ class DeleteService extends React.Component<IDeleteServiceProps, {}> {
   }
 }
 
-export default DeleteService;
+export default connect(() => ({}), { deleteService })(DeleteService);
