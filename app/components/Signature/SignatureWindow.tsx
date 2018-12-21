@@ -153,6 +153,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         this.saveSignedFile(cms);
       }
     }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.status !== prevProps.megafon.status) {
+        const status = this.props.megafon.status;
+        if (status && status !== "100") {
+          const toast = statusCodes[SIGN_DOCUMENT][status] ? statusCodes[SIGN_DOCUMENT][status] :  `Ошибка МЭП ${status}`;
+
+          $(".toast-mep_status").remove();
+          Materialize.toast(toast, 2000, "toast-mep_status");
+        }
+    }
   }
 
   componentWillReceiveProps(nextProps: ISignatureWindowProps) {
