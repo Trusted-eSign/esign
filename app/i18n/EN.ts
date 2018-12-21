@@ -520,6 +520,7 @@ export default {
     displayed_text: "Displayed text",
     empty_services_list: "List of services is empty",
     get_sertificates: "Get certificates",
+    invalid_character: "Invalid character",
     megafon: "Megafon",
     mobile_number: "Mobile number (Megafon)",
     name: "Name",

@@ -523,6 +523,7 @@ export default {
     displayed_text: "Отображаемый текст",
     empty_services_list: "Список сервисов пуст",
     get_sertificates: "Получить сертификаты",
+    invalid_character: "Недопустимый символ",
     megafon: "Мегафон",
     mobile_number: "Номер телефона (МЭП Мегафон)",
     name: "Наименование",

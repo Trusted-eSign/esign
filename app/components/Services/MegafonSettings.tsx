@@ -57,7 +57,17 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
   handleMobileNumberChange = (ev: any) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { changeServiceSettings, serviceId } = this.props;
-    changeServiceSettings(serviceId, { mobileNumber: ev.target.value });
+    const { localize, locale } = this.context;
+
+    const value = ev.target.value;
+    const pattern = /^(\+7)(\d){0,10}$/g;
+
+    if (pattern.test(value)) {
+      changeServiceSettings(serviceId, { mobileNumber: value });
+    } else {
+      $(".toast-invalid_character").remove();
+      Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
+    }
   }
 }
 

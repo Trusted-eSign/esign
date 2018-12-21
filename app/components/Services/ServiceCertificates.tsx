@@ -52,13 +52,13 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
     if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
       this.props.megafon.status !== prevProps.megafon.status) {
-        const status = this.props.megafon.status;
-        if (status && status !== "100") {
-          const toast = statusCodes[SIGN_TEXT][status] ? statusCodes[SIGN_TEXT][status] :  `Ошибка МЭП ${status}`;
+      const status = this.props.megafon.status;
+      if (status && status !== "100") {
+        const toast = statusCodes[SIGN_TEXT][status] ? statusCodes[SIGN_TEXT][status] : `Ошибка МЭП ${status}`;
 
-          $(".toast-mep_status").remove();
-          Materialize.toast(toast, 2000, "toast-mep_status");
-        }
+        $(".toast-mep_status").remove();
+        Materialize.toast(toast, 2000, "toast-mep_status");
+      }
     }
   }
 
@@ -134,17 +134,23 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
   handleGetCertificates = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { service, signText } = this.props;
+    const { localize, locale } = this.context;
 
     if (service && service.type) {
-      if (service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
-        signText(service.settings.mobileNumber, Buffer.from("TEST: CryptoARM GOST", "utf8").toString("base64"), "Attached")
-          .then(
-            (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
-            (error) => {
-              $(".toast-mep_status").remove();
-              Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
-            },
-          );
+      if (service.type === MEGAFON) {
+        if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length === 12) {
+          signText(service.settings.mobileNumber, Buffer.from("TEST: CryptoARM GOST", "utf8").toString("base64"), "Attached")
+            .then(
+              (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
+              (error) => {
+                $(".toast-mep_status").remove();
+                Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
+              },
+            );
+        } else {
+          $(".toast-write_mobile_number").remove();
+          Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+        }
       }
     }
   }
