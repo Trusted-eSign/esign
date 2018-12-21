@@ -89,6 +89,10 @@ export function signDocument(msisdn: string, text: string, document: string, sig
                   type: SIGN_DOCUMENT + SUCCESS,
                 });
 
+                dispatch({
+                  type: GET_SIGN_STATUS + START,
+                });
+
                 timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
 
                 resolve();
@@ -206,6 +210,10 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
                   type: MULTIPLY_SIGN + SUCCESS,
                 });
 
+                dispatch({
+                  type: GET_SIGN_STATUS + START,
+                });
+
                 timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
 
                 resolve();
@@ -308,6 +316,10 @@ export function signText(msisdn: string, text: string, signType?: "Attached" | "
                     transactionId,
                   },
                   type: SIGN_TEXT + SUCCESS,
+                });
+
+                dispatch({
+                  type: GET_SIGN_STATUS + START,
                 });
 
                 timer = setInterval(() => dispatch(getSignStatus(transactionId)), REQUEST_INTERVAL);
