@@ -182,10 +182,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { certificatesLoading, signingPackage, verifyingPackage } = this.props;
+    const { certificatesLoading, megafon, signingPackage, verifyingPackage } = this.props;
 
-    if (certificatesLoading || signingPackage || verifyingPackage) {
+    if (certificatesLoading || signingPackage || verifyingPackage || megafon.isStarted) {
       return <ProgressBars />;
     }
 
@@ -338,7 +337,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
       multiplySign(service.settings.mobileNumber, Buffer.from("Sign in CryptoARM GOST", "utf8").toString("base64"), documents, signType)
         .then(
-          (response) => console.log(`Fulfilled: ${response}`),
           (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
         );
     }
@@ -566,7 +564,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   saveSignedFile = (cms: string) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { selectFile } = this.props;
+    const { filePackageDelete, selectFile } = this.props;
+    const { files } = this.props;
 
     if (!cms) {
       return;
@@ -580,6 +579,16 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       tcms.save(outPath, trusted.DataFormat.PEM);
 
       selectFile(outPath);
+
+      if (files) {
+        const signedFileIdPackage: number[] = [];
+
+        files.forEach((file) => {
+          signedFileIdPackage.push(file.id);
+        });
+
+        filePackageDelete(signedFileIdPackage);
+      }
     } catch (e) {
       //
     }
