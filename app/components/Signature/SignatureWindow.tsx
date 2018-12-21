@@ -564,7 +564,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
   saveSignedFile = (cms: string) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, selectFile } = this.props;
+    const { filePackageDelete, selectFile, settings } = this.props;
     const { files } = this.props;
 
     if (!cms) {
@@ -575,7 +575,15 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       const tcms: trusted.cms.SignedData = new trusted.cms.SignedData();
       tcms.import(Buffer.from("-----BEGIN CMS-----" + "\n" + cms + "\n" + "-----END CMS-----"), trusted.DataFormat.PEM);
 
-      const outPath = path.join(DEFAULT_DOCUMENTS_PATH, uuid() + ".sig");
+      let dirName = settings.outfolder;
+
+      if (dirName.length > 0) {
+        if (!dirExists(dirName)) {
+          dirName = DEFAULT_DOCUMENTS_PATH;
+        }
+      }
+
+      const outPath = path.join(dirName, uuid() + ".sig");
       tcms.save(outPath, trusted.DataFormat.PEM);
 
       selectFile(outPath);
