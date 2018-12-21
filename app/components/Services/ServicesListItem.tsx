@@ -1,4 +1,5 @@
 import React from "react";
+import { MEGAFON } from "../../service/megafon/constants";
 import ServiceIcon from "./ServiceIcon";
 import { IService } from "./types";
 
@@ -21,12 +22,32 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
             <ServiceIcon type={service.type} />
           </div>
           <div className="col s10">
-            <div className="collection-title">{service.type}</div>
-            <div className="collection-info">{service.name}</div>
+            <div className="collection-title">{this.getTitle(service)}</div>
+            <div className="collection-info">{this.getInfo(service)}</div>
           </div>
         </div>
       </div>
     );
+  }
+
+  getTitle = (service: IService) => {
+    switch (service.type) {
+      case MEGAFON:
+        return service.name ? service.name : "МЭП Мегафон";
+
+      default:
+        return service.type;
+    }
+  }
+
+  getInfo = (service: IService) => {
+    switch (service.type) {
+      case MEGAFON:
+        return service.settings ? service.settings.mobileNumber : "";
+
+      default:
+        return service.type;
+    }
   }
 }
 
