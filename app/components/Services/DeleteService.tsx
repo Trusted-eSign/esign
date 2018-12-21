@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-interface IServiceDeleteProps {
+interface IDeleteServiceProps {
   service: any;
   onCancel?: () => void;
 }
 
-class ServiceDelete extends React.Component<IServiceDeleteProps, {}> {
+class DeleteService extends React.Component<IDeleteServiceProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -71,4 +71,4 @@ class ServiceDelete extends React.Component<IServiceDeleteProps, {}> {
   }
 }
 
-export default ServiceDelete;
+export default DeleteService;

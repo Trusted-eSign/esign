@@ -3,8 +3,8 @@ import React from "react";
 import { MEGAFON } from "../../service/megafon/constants";
 import BlockNotElements from "../BlockNotElements";
 import Modal from "../Modal";
+import DeleteService from "./DeleteService";
 import MegafonSettings from "./MegafonSettings";
-import ServiceDelete from "./ServiceDelete";
 import { IService } from "./types";
 
 interface IServiceSettingsProps {
@@ -101,7 +101,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
         header={localize("Services.delete_service", locale)}
         onClose={this.handleCloseModalDeleteService}>
 
-        <ServiceDelete
+        <DeleteService
           service={service}
           onCancel={this.handleCloseModalDeleteService} />
       </Modal>
