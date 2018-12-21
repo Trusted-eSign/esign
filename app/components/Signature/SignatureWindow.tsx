@@ -1,12 +1,13 @@
 import * as fs from "fs";
 import { Map } from "immutable";
+import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
 import { deleteAllTemporyLicenses, verifyLicense } from "../../AC/licenseActions";
 import { multiplySign } from "../../AC/megafonActions";
-import { USER_NAME } from "../../constants";
+import { DEFAULT_DOCUMENTS_PATH, USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
 import { MEGAFON, SIGN_DOCUMENT } from "../../service/megafon/constants";
@@ -14,7 +15,7 @@ import { statusCodes } from "../../service/megafon/statusCodes";
 import { checkLicense } from "../../trusted/jwt";
 import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
-import { dirExists, mapToArr } from "../../utils";
+import { dirExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import FileSelector from "../Files/FileSelector";
@@ -129,6 +130,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
       remote.getCurrentWindow().close();
 
       this.props.deleteAllTemporyLicenses();
+    }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.cms !== prevProps.megafon.cms &&
+      this.props.megafon.status === "100") {
+
+      const cms = this.props.megafon.cms;
+
+      if (cms) {
+        this.saveSignedFile(cms);
+      }
     }
   }
 
@@ -552,6 +564,27 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
   }
 
+  saveSignedFile = (cms: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { selectFile } = this.props;
+
+    if (!cms) {
+      return;
+    }
+
+    try {
+      const tcms: trusted.cms.SignedData = new trusted.cms.SignedData();
+      tcms.import(Buffer.from("-----BEGIN CMS-----" + "\n" + cms + "\n" + "-----END CMS-----"), trusted.DataFormat.PEM);
+
+      const outPath = path.join(DEFAULT_DOCUMENTS_PATH, uuid() + ".sig");
+      tcms.save(outPath, trusted.DataFormat.PEM);
+
+      selectFile(outPath);
+    } catch (e) {
+      //
+    }
+  }
+
   getSignatureInfo() {
     const { fileSignatures, filename, showSignatureInfo, signerCertificate } = this.state;
 
@@ -600,6 +633,7 @@ export default connect((state) => {
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,
     licenseToken: state.license.data,
+    megafon: state.megafon.toJS(),
     method: state.remoteFiles.method,
     packageSignResult: state.signatures.packageSignResult,
     services: state.services,

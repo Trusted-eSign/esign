@@ -77,8 +77,6 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
     const { localize, locale } = this.context;
     const { certificates, megafon, service } = this.props;
 
-    console.log("isStarted", megafon.isStarted);
-
     if (megafon.isStarted) {
       return <ProgressBars />;
     }
