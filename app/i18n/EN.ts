@@ -517,6 +517,7 @@ export default {
     add: "Add",
     add_new_service: "Add new signature service",
     cryptopro_dss: "CryptoPro DSS",
+    displayed_text: "Displayed text",
     empty_services_list: "List of services is empty",
     get_sertificates: "Get certificates",
     megafon: "Megafon",
@@ -527,8 +528,10 @@ export default {
     service_settings: "Settings",
     service_type: "Type of service",
     services_list: "List of signature services",
+    text: "Text",
     write_mobile_number: "Write mobile number, format +7XXXXXXXXXX",
     write_service_name: "Write service name",
+    write_text: "Write text for show on mobile phone",
   },
   Settings: {
     BASE: "BASE-64",

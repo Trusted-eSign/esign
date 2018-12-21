@@ -520,6 +520,7 @@ export default {
     add: "Добавить",
     add_new_service: "Добавление нового сервиса подписи",
     cryptopro_dss: "КриптоПро DSS",
+    displayed_text: "Отображаемый текст",
     empty_services_list: "Список сервисов пуст",
     get_sertificates: "Получить сертификаты",
     megafon: "Мегафон",
@@ -530,8 +531,10 @@ export default {
     service_settings: "Настройки",
     service_type: "Тип сервиса подписи",
     services_list: "Список сервисов подписи",
+    text: "Текст",
     write_mobile_number: "Введите номер телефона, в формате +7XXXXXXXXXX",
     write_service_name: "Введите имя сервиса",
+    write_text: "Введите текст, который будет отображен на Мобильном Устройстве Абонента",
   },
   Settings: {
     BASE: "BASE-64",

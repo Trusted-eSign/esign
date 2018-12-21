@@ -19,7 +19,9 @@ import { dirExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import FileSelector from "../Files/FileSelector";
+import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
+import TextForShowOnMobilePhone from "../Services/TextForShowOnMobilephone";
 import { IService } from "../Services/types";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
@@ -96,7 +98,15 @@ interface ISignatureWindowProps {
   uploader: string;
 }
 
-class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
+interface ISignatureWindowState {
+  fileSignatures: any;
+  filename: any;
+  showModalTextForShowOnMobilePhone: boolean;
+  showSignatureInfo: boolean;
+  signerCertificate: any;
+}
+
+class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureWindowState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -107,6 +117,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     this.state = ({
       fileSignatures: null,
       filename: null,
+      showModalTextForShowOnMobilePhone: false,
       showSignatureInfo: false,
       signerCertificate: null,
     });
@@ -200,6 +211,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
               onUnsign={this.unSign}
               onCancelSign={this.onCancelSign} />
           </div>
+          {this.showModalTextForShowOnMobilePhone()}
         </div>
       </div>
     );
@@ -244,7 +256,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
 
     if (files.length > 0) {
       if (signer.service) {
-        this.signInService(files);
+        this.handleShowModalTextForShowOnMobilePhone();
       } else {
         const key = window.PKISTORE.findKey(signer);
 
@@ -320,9 +332,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     filePackageDelete(filePackage);
   }
 
-  signInService = (files: IFile[]) => {
+  signInService = (text: string) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { multiplySign, services, settings, signer } = this.props;
+    const { multiplySign, files, services, settings, signer } = this.props;
 
     const signType = settings.detached ? "Detached" : "Attached";
     const service = services.getIn(["entities", signer.serviceId]);
@@ -335,7 +347,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         documents.push(document);
       }
 
-      multiplySign(service.settings.mobileNumber, Buffer.from("Sign in CryptoARM GOST", "utf8").toString("base64"), documents, signType)
+      multiplySign(service.settings.mobileNumber, text, documents, signType)
         .then(
           (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
         );
@@ -600,6 +612,35 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     } catch (e) {
       //
     }
+  }
+
+  showModalTextForShowOnMobilePhone = () => {
+    const { localize, locale } = this.context;
+    const { showModalTextForShowOnMobilePhone } = this.state;
+
+    if (!showModalTextForShowOnMobilePhone) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalTextForShowOnMobilePhone}
+        header={localize("Services.displayed_text", locale)}
+        onClose={this.handleCloseModalTextForShowOnMobilePhone} style={{
+          width: "70%",
+        }}>
+
+        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} />
+      </Modal>
+    );
+  }
+
+  handleShowModalTextForShowOnMobilePhone = () => {
+    this.setState({ showModalTextForShowOnMobilePhone: true });
+  }
+
+  handleCloseModalTextForShowOnMobilePhone = () => {
+    this.setState({ showModalTextForShowOnMobilePhone: false });
   }
 
   getSignatureInfo() {
