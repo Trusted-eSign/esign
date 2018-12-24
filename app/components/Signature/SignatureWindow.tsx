@@ -155,14 +155,34 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     }
 
     if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
-      this.props.megafon.status !== prevProps.megafon.status) {
-        const status = this.props.megafon.status;
-        if (status && status !== "100") {
-          const toast = statusCodes[SIGN_DOCUMENT][status] ? statusCodes[SIGN_DOCUMENT][status] :  `Ошибка МЭП ${status}`;
+      this.props.megafon.signStatusList &&
+      this.props.megafon.signStatusList["ns2:signStatus"] &&
+      this.props.megafon.status === "100") {
 
-          $(".toast-mep_status").remove();
-          Materialize.toast(toast, 2000, "toast-mep_status");
+      const signStatusList = this.props.megafon.signStatusList;
+
+      if (signStatusList) {
+        const signStatus = signStatusList["ns2:signStatus"];
+
+        for (const status of signStatus) {
+          const cms = status["ns2:cms"];
+
+          if (cms) {
+            this.saveSignedFile(cms);
+          }
         }
+      }
+    }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.status !== prevProps.megafon.status) {
+      const status = this.props.megafon.status;
+      if (status && status !== "100") {
+        const toast = statusCodes[SIGN_DOCUMENT][status] ? statusCodes[SIGN_DOCUMENT][status] : `Ошибка МЭП ${status}`;
+
+        $(".toast-mep_status").remove();
+        Materialize.toast(toast, 2000, "toast-mep_status");
+      }
     }
   }
 
@@ -345,7 +365,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
   signInService = (text: string) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { multiplySign, files, services, settings, signer } = this.props;
+    const { multiplySign, filePackageDelete, files, services, settings, signer } = this.props;
 
     const signType = settings.detached ? "Detached" : "Attached";
     const service = services.getIn(["entities", signer.serviceId]);
@@ -360,6 +380,21 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
       multiplySign(service.settings.mobileNumber, text, documents, signType)
         .then(
+          (result) => {
+            Materialize.toast("Запрос на подпись успешно отправлен", 2000, "toast-mep_sign_true");
+
+            if (files) {
+              const signedFileIdPackage: number[] = [];
+
+              files.forEach((file) => {
+                signedFileIdPackage.push(file.id);
+              });
+
+              filePackageDelete(signedFileIdPackage);
+            }
+
+            return;
+          },
           (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
         );
     }
@@ -604,22 +639,14 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         if (!dirExists(dirName)) {
           dirName = DEFAULT_DOCUMENTS_PATH;
         }
+      } else {
+        dirName = DEFAULT_DOCUMENTS_PATH;
       }
 
       const outPath = path.join(dirName, uuid() + ".sig");
       tcms.save(outPath, trusted.DataFormat.PEM);
 
       selectFile(outPath);
-
-      if (files) {
-        const signedFileIdPackage: number[] = [];
-
-        files.forEach((file) => {
-          signedFileIdPackage.push(file.id);
-        });
-
-        filePackageDelete(signedFileIdPackage);
-      }
     } catch (e) {
       //
     }
