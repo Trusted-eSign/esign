@@ -1,10 +1,10 @@
-interface IMegafonSettings {
+export interface IMegafonSettings {
   mobileNumber: string;
 }
 
 export interface IService {
   id: string;
   type: "MEGAFON";
-  settings?: IMegafonSettings;
+  settings: IMegafonSettings;
   name: string;
 }

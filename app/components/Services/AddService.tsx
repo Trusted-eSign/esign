@@ -3,21 +3,26 @@ import React from "react";
 import { connect } from "react-redux";
 import { addService } from "../../AC/servicesActions";
 import { MEGAFON } from "../../service/megafon/constants";
+import { IMegafonSettings } from "./types";
 
 const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
 
 interface IAddServiceState {
   serviceName: string;
   serviceType: string;
+  serviceSettings: IMegafonSettings;
 }
 
 const initialState = {
-  serviceName: "",
+  serviceName: "МЭП Мегафон",
+  serviceSettings: {
+    mobileNumber: "+7",
+  },
   serviceType: MEGAFON,
 };
 
 interface IAddServiceProps {
-  addService: (name: string, type: string) => void;
+  addService: (name: string, type: string, settings: IMegafonSettings) => void;
   onCancel?: () => void;
 }
 
@@ -47,7 +52,8 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
   render() {
     const { localize, locale } = this.context;
-    const { serviceName } = this.state;
+    const { serviceName, serviceSettings } = this.state;
+    const { mobileNumber } = serviceSettings;
 
     return (
       <div className="add_new_service_modal">
@@ -55,7 +61,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
           <div className="col s12">
             <div className="content-wrapper tbody border_group" style={{
               boxshadow: "0 0 0 1px rgb(227, 227, 228)",
-              height: "250px",
+              height: "300px",
               overflow: "auto",
             }}>
               <div className="row">
@@ -84,19 +90,37 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                   </form>
                 </div>
               </div>
-              <div className="input-field input-field-csr col s12">
-                <input
-                  id="serviceName"
-                  type="text"
-                  className={"validate"}
-                  name="serviceName"
-                  value={serviceName}
-                  placeholder={localize("Services.write_service_name", locale)}
-                  onChange={this.handleServiceNameChange}
-                />
-                <label htmlFor="serviceName">
-                  {localize("Services.name", locale)}
-                </label>
+              <div className="row">
+                <div className="input-field input-field-csr col s12">
+                  <input
+                    id="serviceName"
+                    type="text"
+                    className={"validate"}
+                    name="serviceName"
+                    value={serviceName}
+                    placeholder={localize("Services.write_service_name", locale)}
+                    onChange={this.handleServiceNameChange}
+                  />
+                  <label htmlFor="serviceName">
+                    {localize("Services.name", locale)}
+                  </label>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-field input-field-csr col s12">
+                  <input
+                    id="mobileNumber"
+                    type="text"
+                    className={"validate"}
+                    name="mobileNumber"
+                    value={mobileNumber}
+                    placeholder={localize("Services.write_mobile_number", locale)}
+                    onChange={this.handleMobileNumberChange}
+                  />
+                  <label htmlFor="mobileNumber">
+                    {localize("Services.mobile_number", locale)}
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -106,20 +130,31 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
         <div className="row halfbottom" />
 
         <div className="row">
-          <div className="col s3">
-            <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleReset}>{localize("Common.reset", locale)}</a>
-          </div>
-          <div className="col s6 offset-s3">
-            <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleAdd}>{localize("Common.apply", locale)}</a>
+          <div className="col s6 offset-s5">
+            <div className="col s7">
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleAdd}>{localize("Services.connect", locale)}</a>
             </div>
-            <div className="col s6">
+            <div className="col s5">
               <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
             </div>
           </div>
         </div>
       </div>
     );
+  }
+
+  handleMobileNumberChange = (ev: any) => {
+    const { localize, locale } = this.context;
+
+    const value = ev.target.value;
+    const pattern = /^(\+7)(\d){0,10}$/g;
+
+    if (pattern.test(value)) {
+      this.setState({ serviceSettings: { mobileNumber: value } });
+    } else {
+      $(".toast-invalid_character").remove();
+      Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
+    }
   }
 
   handleServiceNameChange = (ev: any) => {
@@ -133,9 +168,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   handleAdd = () => {
     // tslint:disable-next-line:no-shadowed-variable
     const { addService } = this.props;
-    const { serviceName, serviceType } = this.state;
+    const { serviceName, serviceSettings, serviceType } = this.state;
 
-    addService(serviceName, serviceType);
+    addService(serviceName, serviceType, serviceSettings);
 
     this.handelCancel();
   }
@@ -146,10 +181,6 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     if (onCancel) {
       onCancel();
     }
-  }
-
-  handleReset = () => {
-    this.handelCancel();
   }
 }
 

@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { MEGAFON } from "../../service/megafon/constants";
 import BlockNotElements from "../BlockNotElements";
 import Modal from "../Modal";
 import DeleteService from "./DeleteService";
-import MegafonSettings from "./MegafonSettings";
+import ModifyService from "./ModifyService";
+import ServiceInfo from "./ServiceInfo";
 import { IService } from "./types";
 
 interface IServiceSettingsProps {
@@ -12,6 +12,7 @@ interface IServiceSettingsProps {
 }
 
 interface IServiceSettingsState {
+  showModalChangeService: boolean;
   showModalDeleteService: boolean;
 }
 
@@ -25,6 +26,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
     super(props);
 
     this.state = ({
+      showModalChangeService: false,
       showModalDeleteService: false,
     });
   }
@@ -51,7 +53,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
           <ul className="app-bar-items">
             <li className="app-bar-item">
               <span>
-                {localize("Services.service_settings", locale)}
+                {localize("Services.info", locale)}
               </span>
             </li>
             <li className="right">
@@ -59,6 +61,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
                 <i className="nav-small-icon material-icons cert-settings">more_vert</i>
               </a>
               <ul id="dropdown-btn-for-service" className="dropdown-content">
+                <li><a onClick={() => this.handleShowModalChangeService()}>{localize("Services.change", locale)}</a></li>
                 <li><a onClick={() => this.handleShowModalDeleteService()}>{localize("Services.delete", locale)}</a></li>
               </ul>
             </li>
@@ -66,6 +69,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
         </nav>
         {this.getBody(service)}
         {this.showModalDeleteService()}
+        {this.showModalChangeService()}
       </div>
     );
   }
@@ -74,13 +78,7 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
     const { localize, locale } = this.context;
 
     if (service) {
-      switch (service.type) {
-        case MEGAFON:
-          return <MegafonSettings serviceId={service.id} />;
-
-        default:
-          return null;
-      }
+      return <ServiceInfo service={service} />;
     } else {
       return <BlockNotElements name="active" title={localize("Services.service_not_selected", locale)} />;
     }
@@ -106,6 +104,39 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
           onCancel={this.handleCloseModalDeleteService} />
       </Modal>
     );
+  }
+
+  showModalChangeService = () => {
+    const { localize, locale } = this.context;
+    const { showModalChangeService } = this.state;
+    const { service } = this.props;
+
+    if (!service || !showModalChangeService) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalChangeService}
+        header={localize("Services.service_settings", locale)}
+        onClose={this.handleCloseModalChangeService}
+        style={{
+          width: "70%",
+        }}>
+
+        <ModifyService
+          service={service}
+          onCancel={this.handleCloseModalChangeService} />
+      </Modal>
+    );
+  }
+
+  handleShowModalChangeService = () => {
+    this.setState({ showModalChangeService: true });
+  }
+
+  handleCloseModalChangeService = () => {
+    this.setState({ showModalChangeService: false });
   }
 
   handleShowModalDeleteService = () => {

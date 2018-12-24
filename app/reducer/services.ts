@@ -21,7 +21,11 @@ export default (services = new DefaultReducerState(), action) => {
 
   switch (type) {
     case ADD_SERVICE:
-      return services.setIn(["entities", payload.service.id], new ServiceModel(payload.service));
+      services = services.setIn(["entities", payload.service.id], new ServiceModel(payload.service));
+      if (payload.settings) {
+        services = services.setIn(["entities", payload.service.id, "settings"], new SettingsModel(payload.settings));
+      }
+      return services;
 
     case DELETE_SERVICE:
       return services

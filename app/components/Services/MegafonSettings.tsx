@@ -52,11 +52,11 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
               className={"validate"}
               name="name"
               value={name}
-              placeholder={localize("Services.write_service_name", locale)}
+              placeholder={localize("Services.write_service_description", locale)}
               onChange={this.handleNameChange}
             />
             <label htmlFor="name">
-              {localize("Services.name", locale)}
+              {localize("Services.description", locale)}
             </label>
           </div>
         </div>
