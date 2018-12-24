@@ -5,13 +5,10 @@ interface ITextForShowOnMobilePhoneState {
   text: string;
 }
 
-const initialState = {
-  text: "",
-};
-
 interface ITextForShowOnMobilePhoneProps {
   done: (text: string) => void;
   onCancel?: () => void;
+  text?: string;
 }
 
 class TextForShowOnMobilePhone extends React.Component<ITextForShowOnMobilePhoneProps, ITextForShowOnMobilePhoneState> {
@@ -23,7 +20,7 @@ class TextForShowOnMobilePhone extends React.Component<ITextForShowOnMobilePhone
   constructor(props: ITextForShowOnMobilePhoneProps) {
     super(props);
 
-    this.state = { ...initialState };
+    this.state = { text: props.text ? props.text : "" };
   }
 
   componentDidMount() {

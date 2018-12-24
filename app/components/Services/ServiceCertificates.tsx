@@ -139,7 +139,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
     if (service && service.type) {
       if (service.type === MEGAFON) {
         if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length === 12) {
-          signText(service.settings.mobileNumber, Buffer.from("TEST: CryptoARM GOST", "utf8").toString("base64"), "Attached")
+          signText(service.settings.mobileNumber, Buffer.from("Подключение сервиса в КриптоАРМ ГОСТ", "utf8").toString("base64"), "Attached")
             .then(
               (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
               (error) => {

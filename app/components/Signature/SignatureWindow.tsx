@@ -655,9 +655,20 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
   showModalTextForShowOnMobilePhone = () => {
     const { localize, locale } = this.context;
     const { showModalTextForShowOnMobilePhone } = this.state;
+    const { files } = this.props;
 
     if (!showModalTextForShowOnMobilePhone) {
       return;
+    }
+
+    let text = "";
+
+    if (files && files.length) {
+      text = files.length > 1 ? "Подтвердите подпись файлов: " : "Подтвердите подпись файла: ";
+
+      for (const file of files) {
+        text += file.filename + ", ";
+      }
     }
 
     return (
@@ -668,7 +679,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
           width: "70%",
         }}>
 
-        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} />
+        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} text={text}/>
       </Modal>
     );
   }
