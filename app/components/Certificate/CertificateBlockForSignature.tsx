@@ -25,7 +25,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
   }
 
   activeCert = (cert: any) => {
-    this.setState({selectedSigner: cert});
+    this.setState({ selectedSigner: cert });
   }
 
   handleChooseSigner = () => {
@@ -39,6 +39,11 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     const { signer, verifyCertificate } = this.props;
 
     let curStatusStyle;
+    let curKeyStyle = signer.key.length > 0 ? "key " : "";
+
+    if (curKeyStyle) {
+      curKeyStyle += signer.service === "MEGAFON" ? "megafonkey" : "localkey";
+    }
 
     if (signer && !signer.verified) {
       verifyCertificate(signer.id);
@@ -60,6 +65,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
               </div>
               <div className="col s1">
                 <div className={curStatusStyle} />
+                <div className={curKeyStyle} style={{ "margin-top": "10px" }} />
               </div>
             </div>
           </div>
@@ -139,19 +145,20 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     return (
       <div id="cert-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Certificate.certificate", locale)} icon={icon} onСlickBtn={() => {
-          this.setState({modalCertList: true});
+          this.setState({ modalCertList: true });
           $("#add-cert").openModal();
         }} />
         <div className={"cert-contents " + NOT_ACTIVE_SIGNER}>
           <a className="waves-effect waves-light btn-large add-cert-btn" {...SETTINGS} onClick={() => {
-            this.setState({modalCertList: true});
-            $("#add-cert").openModal(); }
-            }>{localize("Certificate.Select_Cert_Sign", locale)}</a>
+            this.setState({ modalCertList: true });
+            $("#add-cert").openModal();
+          }
+          }>{localize("Certificate.Select_Cert_Sign", locale)}</a>
         </div>
         {this.getCertificateInfo()}
         <div id="add-cert" className="modal cert-window">
           <div className="add-cert-content">
-            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={function() {
+            <HeaderWorkspaceBlock text={localize("Certificate.certs", locale)} new_class="modal-bar" icon="close" onСlickBtn={function () {
               $("#add-cert").closeModal();
             }} />
             <div className="cert-window-content">
@@ -192,9 +199,9 @@ class CertificateBlockForSignature extends React.Component<any, any> {
 
 export default connect((state) => {
   return {
-    certificates: filteredCertificatesSelector(state, {operation: "sign"}),
+    certificates: filteredCertificatesSelector(state, { operation: "sign" }),
     isLoaded: state.certificates.loaded,
     isLoading: state.certificates.loading,
     signer: state.certificates.getIn(["entities", state.signers.signer]),
   };
-}, { selectSignerCertificate, verifyCertificate }, null, {pure: false})(CertificateBlockForSignature);
+}, { selectSignerCertificate, verifyCertificate }, null, { pure: false })(CertificateBlockForSignature);
