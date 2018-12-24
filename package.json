@@ -91,9 +91,11 @@
     "@types/react-virtualized": "^9.18.5",
     "@types/redux": "^3.6.0",
     "@types/redux-logger": "^3.0.0",
+    "@types/request": "^2.48.1",
     "@types/socket.io": "^1.4.36",
     "@types/systeminformation": "^3.23.0",
     "@types/webpack-env": "^1.13.0",
+    "@types/xml2js": "^0.4.3",
     "babel-loader": "^7.1.5",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dev-expression": "^0.2.1",
@@ -138,8 +140,6 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "@types/request": "^2.48.1",
-    "@types/xml2js": "^0.4.3",
     "babelify": "^7.3.0",
     "browserify": "^16.2.3",
     "electron-debug": "^1.1.0",
