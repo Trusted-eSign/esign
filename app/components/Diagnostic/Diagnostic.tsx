@@ -52,11 +52,11 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
 
         this.setState({
           errors: [...this.state.errors, {
-            important: BUG,
+            important: WARNING,
             type: NO_GOST_2001,
           }],
         });
-        this.setState({ criticalError: true });
+        this.setState({ criticalError: false });
         return false;
       }
 

@@ -1,16 +1,16 @@
 import { OrderedMap, Record } from "immutable";
 import { ADD_RECIPIENT_CERTIFICATE, DELETE_RECIPIENT_CERTIFICATE, REMOVE_ALL_CERTIFICATES } from "../constants";
 
-const RecipientModel = Record({
+export const RecipientModel = Record({
   certId: null,
 });
 
-const DefaultReducerState = Record({
+export const DefaultReducerState = Record({
   entities: OrderedMap({}),
 });
 
 export default (recipients = new DefaultReducerState(), action) => {
-  const { type, payload, randomId } = action;
+  const { type, payload } = action;
 
   switch (type) {
     case ADD_RECIPIENT_CERTIFICATE:

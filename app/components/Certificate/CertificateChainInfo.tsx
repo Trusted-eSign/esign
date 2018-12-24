@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { MEGAFON } from "../../service/megafon/constants";
 
 class CertificateChainInfo extends React.Component<any, any> {
   static contextTypes = {
@@ -94,7 +95,8 @@ class CertificateChainInfo extends React.Component<any, any> {
         }
 
         if (j === 0) {
-          curKeyStyle = certificate.key.length > 0 ? "key" : "";
+          curKeyStyle = certificate.key.length > 0 ? "key " : "";
+          curKeyStyle += certificate.service === MEGAFON ? "megafonkey" : "localkey";
         }
 
         const active = this.isItemOpened(element.thumbprint) ? "active" : "";
@@ -125,7 +127,18 @@ class CertificateChainInfo extends React.Component<any, any> {
   }
 
   buildChain = (certItem: any) => {
-    const certificate = certItem.object ? certItem.object : window.PKISTORE.getPkiObject(certItem);
+    let tcert: trusted.pki.Certificate | undefined;
+
+    if (certItem.x509 && certItem.service) {
+      try {
+        tcert = new trusted.pki.Certificate();
+        tcert.import(Buffer.from(certItem.x509), trusted.DataFormat.PEM);
+      } catch (e) {
+        //
+      }
+    }
+
+    const certificate = certItem.object ? certItem.object : certItem.x509 ? tcert : window.PKISTORE.getPkiObject(certItem);
 
     try {
       if (certItem.provider && certItem.provider === "SYSTEM") {

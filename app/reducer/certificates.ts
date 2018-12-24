@@ -1,9 +1,11 @@
 import { OrderedMap, Record } from "immutable";
-import { LOAD_ALL_CERTIFICATES, REMOVE_ALL_CERTIFICATES,
-  START, SUCCESS, VERIFY_CERTIFICATE } from "../constants";
+import {
+  ADD_SERVICE_CERTIFICATE, DELETE_SERVICE, LOAD_ALL_CERTIFICATES,
+  REMOVE_ALL_CERTIFICATES, START, SUCCESS, VERIFY_CERTIFICATE,
+} from "../constants";
 import { arrayToMap } from "../utils";
 
-const CertificateModel = Record({
+export const CertificateModel = Record({
   active: false,
   category: null,
   format: null,
@@ -18,6 +20,8 @@ const CertificateModel = Record({
   provider: null,
   publicKeyAlgorithm: null,
   serial: null,
+  service: null,
+  serviceId: null,
   signatureAlgorithm: null,
   signatureDigestAlgorithm: null,
   status: false,
@@ -27,9 +31,10 @@ const CertificateModel = Record({
   uri: null,
   verified: false,
   version: null,
+  x509: null,
 });
 
-const DefaultReducerState = Record({
+export const DefaultReducerState = Record({
   entities: OrderedMap({}),
   loaded: false,
   loading: false,
@@ -54,6 +59,16 @@ export default (certificates = new DefaultReducerState(), action) => {
 
     case REMOVE_ALL_CERTIFICATES:
       return certificates = new DefaultReducerState();
+
+    case ADD_SERVICE_CERTIFICATE:
+      return certificates
+        .setIn(["entities", payload.certificate.id], new CertificateModel(payload.certificate));
+
+    case DELETE_SERVICE:
+      const certificatesFromService = certificates.get("entities").filter((certificate: any) => certificate.serviceId === payload.id);
+      certificatesFromService.forEach((certificate: any) => certificates = certificates.deleteIn(["entities", certificate.id]));
+
+      return certificates;
   }
 
   return certificates;

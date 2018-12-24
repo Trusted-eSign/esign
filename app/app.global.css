@@ -1737,6 +1737,10 @@ h6.contact-title {
   background: url(./resources/image/files/file_file.png) no-repeat;
 }
 
+.type_icon.MEGAFON{
+  background: url(./resources/image/services/megafon.png) no-repeat;
+}
+
 #file-avatar {
   height: 40px;
   width: 32px;
@@ -2157,7 +2161,7 @@ a.cert-back-btn.waves-effect.waves-light {
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.2);
-    position: absolute;
+    position: relative;
     z-index: 1000;
 }
 .preloader-text {
@@ -2488,8 +2492,15 @@ a.cert-back-btn.waves-effect.waves-light {
     left: 50px;
 }
 
+.localkey {
+  background: url(./resources/image/key.svg);
+}
+
+.megafonkey {
+  background: url(./resources/image/services/megafon.png);
+}
+
 .key {
-    background: url(./resources/image/key.svg);
     background-size: 100%;
     height: 16px;
     width: 16px;
@@ -2500,7 +2511,7 @@ a.cert-back-btn.waves-effect.waves-light {
     left: -2px;
 }
 
-.key.short {
+.short {
     margin-left: 288px;
 }
 
@@ -3541,6 +3552,11 @@ svg:hover {
 
 .filter_setting_modal{
     height: 410px;
+}
+
+
+.add_new_service_modal {
+  height: 300px;
 }
 
 .modal_license_csp{
