@@ -101,7 +101,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
               paddingBottom: "0.75rem",
               position: "relative",
             }}>
-              <ServiceSettings service={activeService ? this.props.mapServices.getIn(["entities", activeService.id]) : undefined} />
+              <ServiceSettings service={activeService ? this.props.mapServices.getIn(["entities", activeService.id]).toJS() : undefined} />
             </div>
             <div style={{
               height: "50%",

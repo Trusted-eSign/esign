@@ -1,17 +1,11 @@
-import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
-import { connect } from "react-redux";
-import { changeServiceName, changeServiceSettings } from "../../AC/servicesActions";
 import { IService } from "./types";
 
 interface IMegafonSettingsProps {
-  changeServiceName: (id: string, name: string) => void;
-  changeServiceSettings: (id: string, settings: {
-    mobileNumber: string;
-  }) => void;
+  nameChange: (ev: any) => void;
+  mobileNumberChange: (ev: any) => void;
   service: IService;
-  serviceId: string;
 }
 
 class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
@@ -30,7 +24,7 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
 
   render() {
     const { localize, locale } = this.context;
-    const { service } = this.props;
+    const { mobileNumberChange, nameChange, service } = this.props;
 
     if (!service) {
       return null;
@@ -53,7 +47,7 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
               name="name"
               value={name}
               placeholder={localize("Services.write_service_description", locale)}
-              onChange={this.handleNameChange}
+              onChange={nameChange}
             />
             <label htmlFor="name">
               {localize("Services.description", locale)}
@@ -69,7 +63,7 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
               name="mobileNumber"
               value={mobileNumber}
               placeholder={localize("Services.write_mobile_number", locale)}
-              onChange={this.handleMobileNumberChange}
+              onChange={mobileNumberChange}
             />
             <label htmlFor="mobileNumber">
               {localize("Services.mobile_number", locale)}
@@ -79,35 +73,6 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
       </div>
     );
   }
-
-  handleNameChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeServiceName, serviceId } = this.props;
-
-    changeServiceName(serviceId, ev.target.value);
-  }
-
-  handleMobileNumberChange = (ev: any) => {
-    // tslint:disable-next-line:no-shadowed-variable
-    const { changeServiceSettings, serviceId } = this.props;
-    const { localize, locale } = this.context;
-
-    const value = ev.target.value;
-    const pattern = /^(\+7)(\d){0,10}$/g;
-
-    if (pattern.test(value)) {
-      changeServiceSettings(serviceId, { mobileNumber: value });
-    } else {
-      $(".toast-invalid_character").remove();
-      Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
-    }
-  }
 }
 
-interface IOwnProps {
-  serviceId: string;
-}
-
-export default connect((state, ownProps: IOwnProps) => ({
-  service: state.services.getIn(["entities", ownProps.serviceId]),
-}), { changeServiceName, changeServiceSettings })(MegafonSettings);
+export default MegafonSettings;
