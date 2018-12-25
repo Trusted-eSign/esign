@@ -108,8 +108,19 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
   }
 
   handleApply = () => {
+    const { localize, locale } = this.context;
     // tslint:disable-next-line:no-shadowed-variable
     const { changeServiceName, changeServiceSettings, service } = this.props;
+    const stateService = this.state.service;
+
+    if (service.type && service.type === MEGAFON) {
+      if (stateService.settings && stateService.settings.mobileNumber && stateService.settings.mobileNumber.length !== 12) {
+        $(".toast-write_mobile_number").remove();
+        Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+
+        return;
+      }
+    }
 
     changeServiceName(service.id, this.state.service.name);
     changeServiceSettings(service.id, this.state.service.settings);
