@@ -136,7 +136,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
         <div className="row">
           <div className="col s6 offset-s5">
             <div className="col s7">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleAdd}>{localize("Services.connect", locale)}</a>
+              <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleAdd}>{localize("Services.connect", locale)}</a>
             </div>
             <div className="col s5">
               <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
@@ -182,6 +182,13 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
       settings: serviceSettings,
       type: serviceType,
     };
+
+    if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length !== 12) {
+      $(".toast-write_mobile_number").remove();
+      Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+
+      return;
+    }
 
     addService(service);
 
