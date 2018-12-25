@@ -7,7 +7,7 @@ import { SIGN_TEXT } from "../../service/megafon/constants";
 import { MEGAFON } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { mapToArr } from "../../utils";
-import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
+import BlockNotElements from "../BlockNotElements";
 import ProgressBars from "../ProgressBars";
 import { IService } from "./types";
 
@@ -64,10 +64,29 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
   render() {
     const { localize, locale } = this.context;
+    const { service } = this.props;
+
+    const DISABLED = service ? "" : "disabled";
 
     return (
       <div className="content-wrapper z-depth-1">
-        <HeaderWorkspaceBlock text={localize("Services.service_certificates", locale)} />
+        <nav className="app-bar-content">
+          <ul className="app-bar-items">
+            <li className="app-bar-item">
+              <span>
+                {localize("Services.service_certificates", locale)}
+              </span>
+            </li>
+            <li className="right">
+              <a className={"nav-small-btn waves-effect waves-light " + DISABLED} data-activates="dropdown-btn-reload-certificates">
+                <i className="nav-small-icon material-icons cert-settings">more_vert</i>
+              </a>
+              <ul id="dropdown-btn-reload-certificates" className="dropdown-content">
+                <li><a onClick={() => this.handleReloadCertificates()}>{localize("Common.update", locale)}</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
         {this.getBody()}
       </div>
     );
@@ -121,14 +140,12 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
           })}
         </div>);
     } else {
-      return (
-        <div className={"cert-contents"}>
-          <a className={"waves-effect waves-light btn-large add-cert-btn " + disabled} onClick={this.handleGetCertificates}>
-            {localize("Services.get_sertificates", locale)}
-          </a>
-        </div>
-      );
+      return <BlockNotElements name="active" title={localize("Certificate.cert_not_found", locale)} />;
     }
+  }
+
+  handleReloadCertificates = () => {
+    this.handleGetCertificates();
   }
 
   handleGetCertificates = () => {
