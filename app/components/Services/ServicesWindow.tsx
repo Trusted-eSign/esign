@@ -148,9 +148,19 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
           width: "70%",
         }}>
 
-        <AddService onCancel={this.handleCloseModalAddService} />
+        <AddService onCancel={this.handleOnCancelAddService} />
       </Modal>
     );
+  }
+
+  handleOnCancelAddService = (service: IService) => {
+    if (service) {
+      this.setState({
+        activeService: service,
+      });
+    }
+
+    this.handleCloseModalAddService();
   }
 
   handleShowModalAddService = () => {
