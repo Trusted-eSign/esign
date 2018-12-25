@@ -28,6 +28,7 @@ const initialState = {
 interface IAddServiceProps {
   addService: (service: IService) => void;
   mapServices: Map<any, any>;
+  megafon: any;
   onCancel: (service?: IService) => void;
   signText: (msisdn: string, text: string, signType: "Attached" | "Detached") => any;
 }
@@ -186,6 +187,13 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     };
 
     if (service.type === MEGAFON) {
+      if (this.props.megafon.isStarted) {
+        $(".toast-already_started").remove();
+        Materialize.toast(localize("Services.already_started", locale), 2000, "toast-already_started");
+
+        return;
+      }
+
       if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length !== 12) {
         $(".toast-write_mobile_number").remove();
         Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
@@ -231,4 +239,6 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   }
 }
 
-export default connect((state) => ({ mapServices: state.services }), { addService, signText })(AddService);
+export default connect((state) => ({
+   mapServices: state.services,
+   megafon: state.megafon.toJS() }), { addService, signText })(AddService);

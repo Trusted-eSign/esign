@@ -519,6 +519,7 @@ export default {
     Services: "Сервисы подписи",
     add: "Добавить",
     add_new_service: "Добавление нового сервиса подписи",
+    already_started: "Подожите завершения предыдущего запроса к сервису",
     change: "Изменить",
     connect: "Подключить",
     cryptopro_dss: "КриптоПро DSS",

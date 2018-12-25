@@ -516,6 +516,7 @@ export default {
     Services: "Signature services",
     add: "Add",
     add_new_service: "Add new signature service",
+    already_started: "Please wait other transaction",
     change: "Change",
     connect: "Connect",
     cryptopro_dss: "CryptoPro DSS",
