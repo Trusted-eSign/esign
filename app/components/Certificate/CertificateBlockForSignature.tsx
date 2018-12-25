@@ -39,10 +39,14 @@ class CertificateBlockForSignature extends React.Component<any, any> {
     const { signer, verifyCertificate } = this.props;
 
     let curStatusStyle;
-    let curKeyStyle = signer.key.length > 0 ? "key " : "";
+    let curKeyStyle;
 
-    if (curKeyStyle) {
-      curKeyStyle += signer.service === "MEGAFON" ? "megafonkey" : "localkey";
+    if (signer) {
+      curKeyStyle = signer.key.length > 0 ? "key " : "";
+
+      if (curKeyStyle) {
+        curKeyStyle += signer.service === "MEGAFON" ? "megafonkey" : "localkey";
+      }
     }
 
     if (signer && !signer.verified) {
