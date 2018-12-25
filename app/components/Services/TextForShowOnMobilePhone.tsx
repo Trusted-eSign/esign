@@ -46,7 +46,7 @@ class TextForShowOnMobilePhone extends React.Component<ITextForShowOnMobilePhone
     }
 
     return (
-      <div style={{height: "200px"}}>
+      <div style={{ height: "200px" }}>
         <div className="row halftop">
           <div className="col s12">
             <div className="content-wrapper tbody border_group" style={{
@@ -54,7 +54,11 @@ class TextForShowOnMobilePhone extends React.Component<ITextForShowOnMobilePhone
               height: "150px",
               overflow: "auto",
             }}>
-              <div className="row" />
+              <div className="col s12">
+                <span className="card-infos sub">
+                  {localize("Services.write_text", locale)}:
+                </span>
+              </div>
               <div className="input-field input-field-csr col s12">
                 <input
                   id="text"
@@ -62,12 +66,8 @@ class TextForShowOnMobilePhone extends React.Component<ITextForShowOnMobilePhone
                   className={"validate"}
                   name="text"
                   value={text}
-                  placeholder={localize("Services.write_text", locale)}
                   onChange={this.handleTextChange}
                 />
-                <label htmlFor="text">
-                  {localize("Services.text", locale)}
-                </label>
               </div>
             </div>
 

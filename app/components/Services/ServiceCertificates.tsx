@@ -64,9 +64,9 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
   render() {
     const { localize, locale } = this.context;
-    const { service } = this.props;
+    const { megafon, service } = this.props;
 
-    const DISABLED = service ? "" : "disabled";
+    const DISABLED = service && !megafon.isStarted ? "" : "disabled";
 
     return (
       <div className="content-wrapper z-depth-1">

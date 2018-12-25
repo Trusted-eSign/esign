@@ -546,7 +546,7 @@ export default {
     write_mobile_number: "Введите номер телефона, в формате +7XXXXXXXXXX",
     write_service_description: "Введите описание сервиса",
     write_service_name: "Введите имя сервиса",
-    write_text: "Введите текст, который будет отображен на Мобильном Устройстве Абонента",
+    write_text: "Введите текст, который будет отображен на мобильном устройстве абонента",
   },
   Settings: {
     BASE: "BASE-64",
