@@ -1,9 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { signText } from "../../AC/megafonActions";
 import { addService } from "../../AC/servicesActions";
-import { MEGAFON } from "../../service/megafon/constants";
-import { IMegafonSettings } from "./types";
+import { MEGAFON, SIGN_TEXT } from "../../service/megafon/constants";
+import { statusCodes } from "../../service/megafon/statusCodes";
+import { uuid } from "../../utils";
+import { IMegafonSettings, IService } from "./types";
 
 const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
 
@@ -22,8 +25,9 @@ const initialState = {
 };
 
 interface IAddServiceProps {
-  addService: (name: string, type: string, settings: IMegafonSettings) => void;
-  onCancel?: () => void;
+  addService: (service: IService) => void;
+  onCancel: (service?: IService) => void;
+  signText: (msisdn: string, text: string, signType: "Attached" | "Detached") => any;
 }
 
 class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
@@ -167,12 +171,39 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
   handleAdd = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { addService } = this.props;
+    const { addService, onCancel, signText } = this.props;
     const { serviceName, serviceSettings, serviceType } = this.state;
+    const { localize, locale } = this.context;
 
-    addService(serviceName, serviceType, serviceSettings);
+    const id = uuid();
+    const service: IService = {
+      id,
+      name: serviceName,
+      settings: serviceSettings,
+      type: serviceType,
+    };
 
-    this.handelCancel();
+    addService(service);
+
+    onCancel(service);
+
+    if (service && service.type) {
+      if (service.type === MEGAFON) {
+        if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length === 12) {
+          signText(service.settings.mobileNumber, Buffer.from("Подключение сервиса в КриптоАРМ ГОСТ", "utf8").toString("base64"), "Attached")
+            .then(
+              (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
+              (error) => {
+                $(".toast-mep_status").remove();
+                Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
+              },
+            );
+        } else {
+          $(".toast-write_mobile_number").remove();
+          Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+        }
+      }
+    }
   }
 
   handelCancel = () => {
@@ -184,4 +215,4 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   }
 }
 
-export default connect(() => ({}), { addService })(AddService);
+export default connect(() => ({}), { addService, signText })(AddService);

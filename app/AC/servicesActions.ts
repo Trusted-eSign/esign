@@ -1,19 +1,12 @@
-import { IMegafonSettings } from "../components/Services/types";
+import { IMegafonSettings, IService } from "../components/Services/types";
 import { ADD_SERVICE, ADD_SERVICE_CERTIFICATE, CHANGE_SERVICE_NAME,
   CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
 import { uuid } from "../utils";
 
-export function addService(name: string, type: string, settings: IMegafonSettings) {
-  const id = uuid();
-
+export function addService(service: IService) {
   return {
     payload: {
-      service: {
-        id,
-        name,
-        settings,
-        type,
-      },
+      service,
     },
     type: ADD_SERVICE,
   };

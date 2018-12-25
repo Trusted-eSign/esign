@@ -100,8 +100,6 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
       return <ProgressBars />;
     }
 
-    const disabled = service ? "" : "disabled";
-
     if (certificates && certificates.length) {
       return (
         <div className={"add-cert-collection collection "}>
