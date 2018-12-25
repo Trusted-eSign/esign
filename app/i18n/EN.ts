@@ -529,6 +529,7 @@ export default {
     invalid_character: "Invalid character",
     megafon: "Megafon",
     mobile_number: "Mobile number (Megafon)",
+    mobile_number_already_exists: "Mobile number already exists",
     name: "Name",
     realy_delete_service: "You really want delete service?",
     service_certificates: "Certificates",

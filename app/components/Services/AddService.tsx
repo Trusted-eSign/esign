@@ -1,3 +1,4 @@
+import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
@@ -26,6 +27,7 @@ const initialState = {
 
 interface IAddServiceProps {
   addService: (service: IService) => void;
+  mapServices: Map<any, any>;
   onCancel: (service?: IService) => void;
   signText: (msisdn: string, text: string, signType: "Attached" | "Detached") => any;
 }
@@ -183,11 +185,23 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
       type: serviceType,
     };
 
-    if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length !== 12) {
-      $(".toast-write_mobile_number").remove();
-      Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+    if (service.type === MEGAFON) {
+      if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length !== 12) {
+        $(".toast-write_mobile_number").remove();
+        Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
 
-      return;
+        return;
+      }
+
+      if (this.props.mapServices
+        .get("entities")
+        .find((item: IService) => item.settings.mobileNumber === service.settings.mobileNumber)
+      ) {
+        $(".toast-mobile_number_already_exists").remove();
+        Materialize.toast(localize("Services.mobile_number_already_exists", locale), 2000, "toast-mobile_number_already_exists");
+
+        return;
+      }
     }
 
     addService(service);
@@ -196,19 +210,14 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
     if (service && service.type) {
       if (service.type === MEGAFON) {
-        if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length === 12) {
-          signText(service.settings.mobileNumber, Buffer.from("Подключение сервиса в КриптоАРМ ГОСТ", "utf8").toString("base64"), "Attached")
-            .then(
-              (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
-              (error) => {
-                $(".toast-mep_status").remove();
-                Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
-              },
-            );
-        } else {
-          $(".toast-write_mobile_number").remove();
-          Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
-        }
+        signText(service.settings.mobileNumber, Buffer.from("Подключение сервиса в КриптоАРМ ГОСТ", "utf8").toString("base64"), "Attached")
+          .then(
+            (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
+            (error) => {
+              $(".toast-mep_status").remove();
+              Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
+            },
+          );
       }
     }
   }
@@ -222,4 +231,4 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
   }
 }
 
-export default connect(() => ({}), { addService, signText })(AddService);
+export default connect((state) => ({ mapServices: state.services }), { addService, signText })(AddService);

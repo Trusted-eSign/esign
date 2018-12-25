@@ -1,3 +1,4 @@
+import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
@@ -20,6 +21,7 @@ interface IModifyServiceProps {
   changeServiceSettings: (id: string, settings: {
     mobileNumber: string;
   }) => void;
+  mapServices: Map<any, any>;
   service: IService;
   onCancel?: () => void;
 }
@@ -120,6 +122,16 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
 
         return;
       }
+
+      if (this.props.mapServices
+        .get("entities")
+        .find((item: IService) => item.settings.mobileNumber === stateService.settings.mobileNumber)
+      ) {
+        $(".toast-mobile_number_already_exists").remove();
+        Materialize.toast(localize("Services.mobile_number_already_exists", locale), 2000, "toast-mobile_number_already_exists");
+
+        return;
+      }
     }
 
     changeServiceName(service.id, this.state.service.name);
@@ -160,4 +172,4 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
   }
 }
 
-export default connect(() => ({}), { changeServiceName, changeServiceSettings })(ModifyService);
+export default connect((state) => ({ mapServices: state.services }), { changeServiceName, changeServiceSettings })(ModifyService);

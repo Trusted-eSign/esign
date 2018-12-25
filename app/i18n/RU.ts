@@ -532,6 +532,7 @@ export default {
     invalid_character: "Недопустимый символ",
     megafon: "Мегафон",
     mobile_number: "Номер телефона (Абонента МЭП Мегафон)",
+    mobile_number_already_exists: "Указанный номер уже подключен. Введите новый",
     name: "Наименование",
     realy_delete_service: "Вы действительно хотите удалить сервис?",
     service_certificates: "Сертификаты",
