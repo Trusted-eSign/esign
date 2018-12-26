@@ -78,12 +78,9 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
               </span>
             </li>
             <li className="right">
-              <a className={"nav-small-btn waves-effect waves-light " + DISABLED} data-activates="dropdown-btn-reload-certificates">
-                <i className="nav-small-icon material-icons cert-settings">more_vert</i>
+              <a className={"nav-small-btn waves-effect waves-light " + DISABLED} >
+                <i className="nav-small-icon material-icons cert-settings" onClick={() => this.handleReloadCertificates()}>sync</i>
               </a>
-              <ul id="dropdown-btn-reload-certificates" className="dropdown-content">
-                <li><a onClick={() => this.handleReloadCertificates()}>{localize("Common.update", locale)}</a></li>
-              </ul>
             </li>
           </ul>
         </nav>
