@@ -21,7 +21,7 @@ import CertificateBlockForSignature from "../Certificate/CertificateBlockForSign
 import FileSelector from "../Files/FileSelector";
 import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
-import TextForShowOnMobilePhone from "../Services/TextForShowOnMobilephone";
+import TextForShowOnMobilePhone from "../Services/TextForShowOnMobilePhone";
 import { IService } from "../Services/types";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
