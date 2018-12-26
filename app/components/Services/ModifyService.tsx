@@ -27,7 +27,7 @@ interface IModifyServiceProps {
 }
 
 interface IModifyServiceState {
-  service: IService;
+  stateService: IService | undefined;
 }
 
 class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceState> {
@@ -38,12 +38,16 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
 
   constructor(props: IModifyServiceProps) {
     super(props);
+
+    this.state = ({
+      stateService: undefined,
+    });
   }
 
   componentDidMount() {
     const { service } = this.props;
 
-    this.setState({ service });
+    this.setState({ stateService: service });
   }
 
   componentWillUnmount() {
@@ -53,6 +57,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
   render() {
     const { localize, locale } = this.context;
     const { service } = this.props;
+    const { stateService } = this.state;
 
     return (
       <div style={{
@@ -66,7 +71,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
               overflow: "auto",
             }}>
 
-              {this.getBody(service)}
+              {this.getBody(service, stateService)}
 
             </div>
           </div>
@@ -91,10 +96,8 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     );
   }
 
-  getBody = (service: IService | undefined) => {
+  getBody = (service: IService | undefined, stateService: IService) => {
     if (service) {
-      const stateService = this.state.service;
-
       switch (service.type) {
         case MEGAFON:
           return <MegafonSettings
@@ -113,7 +116,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     const { localize, locale } = this.context;
     // tslint:disable-next-line:no-shadowed-variable
     const { changeServiceName, changeServiceSettings, service } = this.props;
-    const stateService = this.state.service;
+    const { stateService } = this.state;
 
     if (service.type && service.type === MEGAFON) {
       if (stateService.settings && stateService.settings.mobileNumber && stateService.settings.mobileNumber.length !== 12) {
@@ -134,15 +137,15 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
       }
     }
 
-    changeServiceName(service.id, this.state.service.name);
-    changeServiceSettings(service.id, this.state.service.settings);
+    changeServiceName(service.id, this.state.stateService.name);
+    changeServiceSettings(service.id, this.state.stateService.settings);
 
     this.handelCancel();
   }
 
   handleReset = () => {
     const { service } = this.props;
-    this.setState({ service });
+    this.setState({ stateService: service });
   }
 
   handelCancel = () => {
@@ -154,7 +157,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
   }
 
   handleNameChange = (ev: any) => {
-    this.setState({ service: { ...this.state.service, name: ev.target.value } });
+    this.setState({ stateService: { ...this.state.stateService, name: ev.target.value } });
   }
 
   handleMobileNumberChange = (ev: any) => {
@@ -164,7 +167,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     const pattern = /^(\+7)(\d){0,10}$/g;
 
     if (pattern.test(value)) {
-      this.setState({ service: { ...this.state.service, settings: { mobileNumber: value } } });
+      this.setState({ stateService: { ...this.state.stateService, settings: { mobileNumber: value } } });
     } else {
       $(".toast-invalid_character").remove();
       Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
