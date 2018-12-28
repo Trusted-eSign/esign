@@ -57,7 +57,7 @@
     var crypto_module = require('crypto');
     if (process.platform == 'win32') {
       try {
-      crypto_module.loadConfig("./config/openssl.cfg");
+        crypto_module.loadConfig("./config/openssl.cfg");
       } catch (e) {
         // error
       }
@@ -67,8 +67,17 @@
     try {
       trusted = require('trusted-crypto');
       var result = trusted.utils.Jwt.createTrialLicense();
-    } catch(err) {
+    } catch (err) {
       window.tcerr = err;
+    }
+
+    if (!trusted) {
+      try {
+        trusted = require('trusted-crypto-nogost');
+	window.tcerr = "";
+      } catch (err) {
+        window.tcerr = err;
+      }
     }
 
     path = require('path');

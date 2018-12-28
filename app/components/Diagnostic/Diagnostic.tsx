@@ -83,7 +83,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
 
-      this.setState({ criticalError: true });
+      this.setState({ criticalError: false });
 
       return false;
     }
@@ -102,7 +102,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
             }],
           });
 
-          this.setState({ criticalError: true });
+          this.setState({ criticalError: false });
 
           return false;
         }
@@ -115,7 +115,7 @@ class Diagnostic extends React.Component<any, IDiagnosticState> {
         }],
       });
 
-      this.setState({ criticalError: true });
+      this.setState({ criticalError: false });
 
       return false;
     }
