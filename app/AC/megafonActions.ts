@@ -12,6 +12,12 @@ const HEADERS = { "content-type": "text/xml" };
 const METHOD = "POST";
 const REQUEST_INTERVAL = 10000;
 
+interface IDocument {
+  document: string;
+  name: string;
+  uri: string;
+}
+
 let timer: NodeJS.Timer | null = null;
 
 /**
@@ -136,7 +142,7 @@ export function signDocument(msisdn: string, text: string, document: string, sig
  * @param {("Attached" | "Detached")} [signType] Тип подписи. "Attached" | "Detached"
  * @returns
  */
-export function multiplySign(msisdn: string, text: string, documents: string[], signType?: "Attached" | "Detached") {
+export function multiplySign(msisdn: string, text: string, documents: IDocument[], signType?: "Attached" | "Detached") {
   return (dispatch: (action: {}) => void) => {
     return new Promise((resolve, reject) => {
       dispatch({
@@ -144,6 +150,7 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
       });
 
       const documentList: IDocumentData[] = [];
+      const fileNames: any[] = [];
 
       if (timer) {
         clearInterval(timer);
@@ -151,10 +158,16 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
       }
 
       for (const doc of documents) {
+        const digest = xorConvolutionMD5(md5(doc.document));
+
         documentList.push({
-          digest: xorConvolutionMD5(md5(doc)),
-          document: doc,
+          digest,
+          document: doc.document,
         });
+
+        if (doc.name) {
+          fileNames.push({ id: digest, name: doc.name, uri: doc.uri });
+        }
       }
 
       const params: IMultiplysign = {
@@ -205,6 +218,7 @@ export function multiplySign(msisdn: string, text: string, documents: string[], 
               if (transactionId) {
                 dispatch({
                   payload: {
+                    fileNames,
                     transactionId,
                   },
                   type: MULTIPLY_SIGN + SUCCESS,
@@ -413,11 +427,14 @@ export function getSignStatus(transaction_id: string) {
 
           if (status === "100") {
             const cms = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:cms"]);
+            const digest = mapGetSignResponse.getIn(["S:Envelope", "S:Body", "ns2:getSignStatusResponse", "ns2:digest"]);
 
             if (cms) {
               dispatch({
                 payload: {
                   cms,
+                  digest,
+                  status,
                 },
                 type: GET_SIGN_STATUS + SUCCESS,
               });
@@ -428,6 +445,7 @@ export function getSignStatus(transaction_id: string) {
                 dispatch({
                   payload: {
                     signStatusList,
+                    status,
                   },
                   type: GET_SIGN_STATUS + SUCCESS,
                 });

@@ -69,7 +69,7 @@ class CertificateBlockForSignature extends React.Component<any, any> {
               </div>
               <div className="col s1">
                 <div className={curStatusStyle} />
-                <div className={curKeyStyle} style={{ "margin-top": "10px" }} />
+                <div className={curKeyStyle} style={{ marginTop: "10px" }} />
               </div>
             </div>
           </div>

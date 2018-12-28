@@ -170,7 +170,7 @@ body {
 }
 #container, .main {
     /* height: 100%; */
-    height: 530px;
+    height: 600px;
 }
 .settings-content {
     overflow: auto;

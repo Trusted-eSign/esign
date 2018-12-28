@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 interface IEncodingTypeSelectorProps {
   EncodingValue: string;
+  disabled?: boolean;
   handleChange: (encoding: string) => void;
 }
 
@@ -33,9 +34,10 @@ class EncodingTypeSelector extends React.Component<IEncodingTypeSelectorProps, {
 
   render() {
     const { localize, locale } = this.context;
+    const classDisabled = this.props.disabled ? "disabled" : "";
 
     return (
-      <div className="row settings-item nobottom">
+      <div className={"row settings-item nobottom " + classDisabled}>
         <div className="col sign-set-encoding">{localize("Settings.encoding", locale)}</div>
         <div className="col input-field">
           <select id="encoding" defaultValue={this.props.EncodingValue}>

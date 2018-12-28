@@ -1,6 +1,6 @@
 import { IMegafonSettings, IService } from "../components/Services/types";
 import { ADD_SERVICE, ADD_SERVICE_CERTIFICATE, CHANGE_SERVICE_NAME,
-  CHANGE_SERVICE_SETTINGS, DELETE_SERVICE } from "../constants";
+  CHANGE_SERVICE_SETTINGS, DELETE_CERTIFICATE, DELETE_SERVICE } from "../constants";
 
 export function addService(service: IService) {
   return {
@@ -73,5 +73,14 @@ export function addServiceCertificate(certificate: trusted.pki.Certificate, serv
       certificate: certProps,
     },
     type: ADD_SERVICE_CERTIFICATE,
+  };
+}
+
+export function deleteServiceCertificate(id: string) {
+  return {
+    payload: {
+      id,
+    },
+    type: DELETE_CERTIFICATE,
   };
 }
