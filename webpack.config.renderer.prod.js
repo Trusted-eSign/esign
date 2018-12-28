@@ -26,7 +26,7 @@ export default merge.smart(baseConfig, {
 
   module: {
     rules: [
-      // Extract all .global.css to style.css as is
+      // Extract all .global.css to main.css as is
       {
         test: /\.global\.css$/,
         use: [
@@ -34,7 +34,7 @@ export default merge.smart(baseConfig, {
           "css-loader"
         ]
       },
-      // Pipe other styles through css modules and append to style.css
+      // Pipe other styles through css modules and append to main.css
       {
         test: /^((?!\.global).)*\.css$/,
         use: [
@@ -118,7 +118,7 @@ export default merge.smart(baseConfig, {
      */
     new BabiliPlugin(),
 
-    new MiniCssExtractPlugin('style.css'),
+    new MiniCssExtractPlugin('main.css'),
 
     new BundleAnalyzerPlugin({
       analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

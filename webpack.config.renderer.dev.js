@@ -82,7 +82,7 @@ export default merge.smart(baseConfig, {
           },
         ]
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
+      // Add SASS support  - compile all .global.scss files and pipe it to main.css
       {
         test: /\.global\.scss$/,
         use: [
@@ -100,7 +100,7 @@ export default merge.smart(baseConfig, {
           },
         ]
       },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
+      // Add SASS support  - compile all other .scss files and pipe it to main.css
       {
         test: /^((?!\.global).)*\.scss$/,
         use: [
