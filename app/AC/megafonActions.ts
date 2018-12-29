@@ -418,6 +418,7 @@ export function getSignStatus(transaction_id: string) {
               dispatch({
                 payload: {
                   cms,
+                  status,
                 },
                 type: GET_SIGN_STATUS + SUCCESS,
               });
