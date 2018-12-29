@@ -1,15 +1,23 @@
-import { Map } from "immutable";
+import { Map, OrderedMap, Record } from "immutable";
 import { FAIL, START, SUCCESS } from "../constants";
 import { GET_SIGN_STATUS, MULTIPLY_SIGN, SIGN_DOCUMENT, SIGN_TEXT, VERIFY } from "../service/megafon/constants";
+import { arrayToMap } from "../utils";
 
 const DefaultReducerState = Map({
   cms: null,
+  digest: null,
   error: null,
+  fileNames: OrderedMap({}),
   isDone: false,
   isStarted: false,
   signStatusList: Map({}),
   status: null,
   transactionId: null,
+});
+
+const FileNameModel = Record({
+  id: null,
+  name: null,
 });
 
 export default (megafonState = DefaultReducerState, action) => {
@@ -35,6 +43,7 @@ export default (megafonState = DefaultReducerState, action) => {
       return megafonState
         .set("isStarted", false)
         .set("isDone", true)
+        .set("fileNames", payload && payload.fileNames ? arrayToMap(payload.fileNames, FileNameModel) : OrderedMap({}))
         .set("transactionId", payload && payload.transactionId ? payload.transactionId : null);
 
     case GET_SIGN_STATUS + SUCCESS:
@@ -42,7 +51,9 @@ export default (megafonState = DefaultReducerState, action) => {
         .set("isStarted", false)
         .set("isDone", true)
         .set("cms", payload && payload.cms ? payload.cms : null)
-        .set("signStatusList", payload && payload.signStatusList ? Map(payload.signStatusList) : Map({}));
+        .set("digest", payload && payload.digest ? payload.digest : null)
+        .set("signStatusList", payload && payload.signStatusList ? Map(payload.signStatusList) : Map({}))
+        .set("status", payload.status);
 
     case SIGN_DOCUMENT + FAIL:
     case SIGN_TEXT + FAIL:

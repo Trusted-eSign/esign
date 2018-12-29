@@ -148,9 +148,19 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
       this.props.megafon.status === "100") {
 
       const cms = this.props.megafon.cms;
+      const digest = this.props.megafon.digest;
+      let outputFileName = "";
+
+      const fileDesc = this.props.mapMegafon.getIn(["fileNames", digest]);
+
+      if (fileDesc && fileDesc.name) {
+        outputFileName = fileDesc.name + ".sig";
+      } else {
+        outputFileName = uuid() + ".sig";
+      }
 
       if (cms) {
-        this.saveSignedFile(cms);
+        this.saveSignedFile(cms, outputFileName);
       }
     }
 
@@ -166,9 +176,20 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
         for (const status of signStatus) {
           const cms = status["ns2:cms"];
+          const digest = status["ns2:digest"];
+
+          let outputFileName = "";
+
+          const fileDesc = this.props.mapMegafon.getIn(["fileNames", digest]);
+
+          if (fileDesc && fileDesc.name) {
+            outputFileName = fileDesc.name  + ".sig";
+          } else {
+            outputFileName = uuid() + ".sig";
+          }
 
           if (cms) {
-            this.saveSignedFile(cms);
+            this.saveSignedFile(cms, outputFileName);
           }
         }
       }
@@ -375,7 +396,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
       for (const file of files) {
         const document = fs.readFileSync(file.fullpath, "base64");
-        documents.push(document);
+        documents.push({document, name: file.filename});
       }
 
       multiplySign(service.settings.mobileNumber, text, documents, signType)
@@ -620,7 +641,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     }
   }
 
-  saveSignedFile = (cms: string) => {
+  saveSignedFile = (cms: string, outputFileName: string) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { filePackageDelete, selectFile, settings } = this.props;
     const { files } = this.props;
@@ -643,7 +664,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         dirName = DEFAULT_DOCUMENTS_PATH;
       }
 
-      const outPath = path.join(dirName, uuid() + ".sig");
+      const outPath = path.join(dirName, outputFileName);
       tcms.save(outPath, trusted.DataFormat.PEM);
 
       selectFile(outPath);
@@ -679,7 +700,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
           width: "70%",
         }}>
 
-        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} text={text}/>
+        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} text={text} />
       </Modal>
     );
   }
@@ -740,6 +761,7 @@ export default connect((state) => {
     licenseLoaded: state.license.loaded,
     licenseStatus: state.license.status,
     licenseToken: state.license.data,
+    mapMegafon: state.megafon,
     megafon: state.megafon.toJS(),
     method: state.remoteFiles.method,
     packageSignResult: state.signatures.packageSignResult,
