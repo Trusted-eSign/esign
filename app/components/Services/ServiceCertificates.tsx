@@ -69,7 +69,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
     const DISABLED = service && !megafon.isStarted ? "" : "disabled";
 
     return (
-      <div className="content-wrapper z-depth-1">
+      <React.Fragment>
         <nav className="app-bar-content">
           <ul className="app-bar-items">
             <li className="app-bar-item">
@@ -84,8 +84,10 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
             </li>
           </ul>
         </nav>
-        {this.getBody()}
-      </div>
+        <div className="content-wrapper z-depth-1" style={{height: "82%"}}>
+          {this.getBody()}
+        </div>
+      </React.Fragment>
     );
   }
 
