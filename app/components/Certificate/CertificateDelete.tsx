@@ -177,6 +177,17 @@ class CertificateDelete extends React.Component<ICertificateDeleteProps, ICertif
         console.log("success save services");
       });
 
+      logger.log({
+        certificate: certificate.subjectName,
+        level: "info",
+        message: "",
+        operation: "Удаление сертификата",
+        operationObject: {
+          in: "CN=" + certificate.subjectFriendlyName,
+          out: "Null",
+        },
+        userName: USER_NAME,
+      });
     } else if (!window.PKISTORE.deleteCertificate(certificate)) {
       $(".toast-cert_delete_failed").remove();
       Materialize.toast(localize("Certificate.cert_delete_failed", locale), 2000, "toast-cert_delete_failed");

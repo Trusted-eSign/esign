@@ -3,10 +3,12 @@ import React from "react";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
 import { addServiceCertificate } from "../../AC/servicesActions";
+import { USER_NAME } from "../../constants";
 import { SIGN_TEXT } from "../../service/megafon/constants";
 import { MEGAFON } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { mapToArr } from "../../utils";
+import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
 import ProgressBars from "../ProgressBars";
 import { IService } from "./types";
@@ -45,6 +47,18 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
       if (certificate) {
         this.props.addServiceCertificate(certificate, MEGAFON, this.props.serviceId);
+
+        logger.log({
+          certificate: certificate.subjectName,
+          level: "info",
+          message: "",
+          operation: "Импорт сертификата",
+          operationObject: {
+            in: "CN=" + certificate.subjectFriendlyName,
+            out: "Null",
+          },
+          userName: USER_NAME,
+        });
       }
 
       Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
