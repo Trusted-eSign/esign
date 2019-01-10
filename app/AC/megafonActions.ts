@@ -15,6 +15,7 @@ const REQUEST_INTERVAL = 10000;
 interface IDocument {
   document: string;
   name: string;
+  uri: string;
 }
 
 let timer: NodeJS.Timer | null = null;
@@ -165,7 +166,7 @@ export function multiplySign(msisdn: string, text: string, documents: IDocument[
         });
 
         if (doc.name) {
-          fileNames.push({ id: digest, name: doc.name });
+          fileNames.push({ id: digest, name: doc.name, uri: doc.uri });
         }
       }
 

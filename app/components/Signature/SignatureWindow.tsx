@@ -15,7 +15,7 @@ import { statusCodes } from "../../service/megafon/statusCodes";
 import { checkLicense } from "../../trusted/jwt";
 import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
-import { dirExists, mapToArr, uuid } from "../../utils";
+import { dirExists, fileExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import FileSelector from "../Files/FileSelector";
@@ -53,6 +53,12 @@ interface IConnection {
   connected: boolean;
   id: string;
   socket: SocketIO.Socket;
+}
+
+interface IFileDescForSignService {
+  document: string;
+  name: string;
+  uri: string;
 }
 
 interface ISignatureWindowProps {
@@ -148,18 +154,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
       const cms = this.props.megafon.cms;
       const digest = this.props.megafon.digest;
-      let outputFileName = "";
 
-      const fileDesc = this.props.mapMegafon.getIn(["fileNames", digest]);
-
-      if (fileDesc && fileDesc.name) {
-        outputFileName = fileDesc.name + ".sig";
-      } else {
-        outputFileName = uuid() + ".sig";
-      }
+      const fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
 
       if (cms) {
-        this.saveSignedFile(cms, outputFileName);
+        this.saveSignedFile(cms, fileDesc);
       }
     }
 
@@ -177,18 +176,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
           const cms = status["ns2:cms"];
           const digest = status["ns2:digest"];
 
-          let outputFileName = "";
-
-          const fileDesc = this.props.mapMegafon.getIn(["fileNames", digest]);
-
-          if (fileDesc && fileDesc.name) {
-            outputFileName = fileDesc.name  + ".sig";
-          } else {
-            outputFileName = uuid() + ".sig";
-          }
+          const fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
 
           if (cms) {
-            this.saveSignedFile(cms, outputFileName);
+            this.saveSignedFile(cms, fileDesc);
           }
         }
       }
@@ -391,11 +382,11 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     const service = services.getIn(["entities", signer.serviceId]);
 
     if (files.length > 0 && service && service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
-      const documents: string[] = [];
+      const documents: any[] = [];
 
       for (const file of files) {
         const document = fs.readFileSync(file.fullpath, "base64");
-        documents.push({document, name: file.filename});
+        documents.push({ document, name: file.filename, uri: file.fullpath });
       }
 
       multiplySign(service.settings.mobileNumber, text, documents, signType)
@@ -640,33 +631,44 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     }
   }
 
-  saveSignedFile = (cms: string, outputFileName: string) => {
+  saveSignedFile = (cms: string, fileDesc: IFileDescForSignService) => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { filePackageDelete, selectFile, settings } = this.props;
-    const { files } = this.props;
+    const { selectFile, settings } = this.props;
+    const folderOut = settings.outfolder;
+    let outURI: string;
 
     if (!cms) {
       return;
     }
 
+    if (fileDesc && fileDesc.name && fileDesc.uri) {
+      if (folderOut.length > 0) {
+        outURI = path.join(folderOut, fileDesc.name + ".sig");
+      } else {
+        outURI = fileDesc.uri + ".sig";
+      }
+    } else {
+      outURI = path.join(DEFAULT_DOCUMENTS_PATH, uuid() + ".sig");
+    }
+
+    let indexFile: number = 1;
+    let newOutUri: string = outURI;
+    const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
+
+    while (fileExists(newOutUri)) {
+      const parsed = path.parse(fileUri);
+      newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
+      indexFile++;
+    }
+
+    outURI = newOutUri;
+
     try {
       const tcms: trusted.cms.SignedData = new trusted.cms.SignedData();
       tcms.import(Buffer.from("-----BEGIN CMS-----" + "\n" + cms + "\n" + "-----END CMS-----"), trusted.DataFormat.PEM);
+      tcms.save(outURI, trusted.DataFormat.PEM);
 
-      let dirName = settings.outfolder;
-
-      if (dirName.length > 0) {
-        if (!dirExists(dirName)) {
-          dirName = DEFAULT_DOCUMENTS_PATH;
-        }
-      } else {
-        dirName = DEFAULT_DOCUMENTS_PATH;
-      }
-
-      const outPath = path.join(dirName, outputFileName);
-      tcms.save(outPath, trusted.DataFormat.PEM);
-
-      selectFile(outPath);
+      selectFile(outURI);
     } catch (e) {
       //
     }

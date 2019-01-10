@@ -18,6 +18,7 @@ const DefaultReducerState = Map({
 const FileNameModel = Record({
   id: null,
   name: null,
+  uri: null,
 });
 
 export default (megafonState = DefaultReducerState, action) => {
