@@ -1,20 +1,12 @@
 import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
+import { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
 import { changeServiceName, changeServiceSettings } from "../../AC/servicesActions";
 import { MEGAFON } from "../../service/megafon/constants";
 import MegafonSettings from "./MegafonSettings";
 import { IService } from "./types";
-
-const initialState = {
-  id: "",
-  name: "",
-  settings: {
-    mobileNumber: "+7",
-  },
-  type: "MEGAFON",
-};
 
 interface IModifyServiceProps {
   changeServiceName: (id: string, name: string) => void;
@@ -85,7 +77,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
           </div>
           <div className="col s6 offset-s3">
             <div className="col s6">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleApply}>{localize("Common.apply", locale)}</a>
+              <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleApply}>{localize("Common.apply", locale)}</a>
             </div>
             <div className="col s6">
               <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
@@ -119,9 +111,9 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     const { stateService } = this.state;
 
     if (service.type && service.type === MEGAFON) {
-      if (stateService.settings && stateService.settings.mobileNumber && stateService.settings.mobileNumber.length !== 12) {
-        $(".toast-write_mobile_number").remove();
-        Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+      if (stateService.settings && !stateService.settings.mobileNumber || !isValidPhoneNumber(stateService.settings.mobileNumber)) {
+        $(".toast-invalid_phone_number").remove();
+        Materialize.toast(localize("Services.invalid_phone_number", locale), 2000, "toast-invalid_phone_number");
 
         return;
       }
@@ -160,18 +152,8 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     this.setState({ stateService: { ...this.state.stateService, name: ev.target.value } });
   }
 
-  handleMobileNumberChange = (ev: any) => {
-    const { localize, locale } = this.context;
-
-    const value = ev.target.value;
-    const pattern = /^(\+7)(\d){0,10}$/g;
-
-    if (pattern.test(value)) {
-      this.setState({ stateService: { ...this.state.stateService, settings: { mobileNumber: value } } });
-    } else {
-      $(".toast-invalid_character").remove();
-      Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
-    }
+  handleMobileNumberChange = (value: any) => {
+    this.setState({ stateService: { ...this.state.stateService, settings: { mobileNumber: value } } });
   }
 }
 

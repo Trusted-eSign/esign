@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import PhoneInput from "react-phone-number-input";
 import { IService } from "./types";
 
 interface IMegafonSettingsProps {
@@ -32,7 +33,7 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
 
     const { settings } = service;
 
-    const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "+7";
+    const mobileNumber = settings && settings.mobileNumber ? settings.mobileNumber : "";
     const name = service.name;
 
     return (
@@ -55,19 +56,13 @@ class MegafonSettings extends React.PureComponent<IMegafonSettingsProps, {}> {
           </div>
         </div>
         <div className="row">
-          <div className="input-field input-field-csr col s12">
-            <input
-              id="mobileNumber"
-              type="text"
-              className={"validate"}
-              name="mobileNumber"
+          <div className="col s12" style={{lineHeight: "normal"}}>
+            <PhoneInput
+              displayInitialValueAsLocalNumber
+              country="RU"
               value={mobileNumber}
-              placeholder={localize("Services.write_mobile_number", locale)}
-              onChange={mobileNumberChange}
-            />
-            <label htmlFor="mobileNumber">
-              {localize("Services.mobile_number", locale)}
-            </label>
+              onChange={(value) => mobileNumberChange(value)}
+              placeholder={localize("Services.write_mobile_number", locale)} />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 @import "./resources/css/nouislider.css";
 @import "./resources/css/react-virtualized.css";
 @import "./resources/fonts/material-design-icons/material-icons.css";
+@import "../node_modules/react-phone-number-input/style.css";
 
 /* Стили заголовка окна  */
 nav.app-bar {

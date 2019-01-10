@@ -528,6 +528,7 @@ export default {
     get_sertificates: "Get certificates",
     info: "Information about service",
     invalid_character: "Invalid character",
+    invalid_phone_number: "Invalid phone number",
     megafon: "Megafon",
     mobile_number: "Mobile number (Megafon)",
     mobile_number_already_exists: "Mobile number already exists",

@@ -1,6 +1,7 @@
 import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
 import { addService } from "../../AC/servicesActions";
@@ -20,7 +21,7 @@ interface IAddServiceState {
 const initialState = {
   serviceName: "МЭП Мегафон",
   serviceSettings: {
-    mobileNumber: "+7",
+    mobileNumber: "",
   },
   serviceType: MEGAFON,
 };
@@ -114,19 +115,13 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                 </div>
               </div>
               <div className="row">
-                <div className="input-field input-field-csr col s12">
-                  <input
-                    id="mobileNumber"
-                    type="text"
-                    className={"validate"}
-                    name="mobileNumber"
+                <div className="col s12" style={{lineHeight: "normal"}}>
+                  <PhoneInput
+                    displayInitialValueAsLocalNumber
+                    country="RU"
                     value={mobileNumber}
-                    placeholder={localize("Services.write_mobile_number", locale)}
-                    onChange={this.handleMobileNumberChange}
-                  />
-                  <label htmlFor="mobileNumber">
-                    {localize("Services.mobile_number", locale)}
-                  </label>
+                    onChange={(value) => this.handleMobileNumberChange(value)}
+                    placeholder={localize("Services.write_mobile_number", locale)} />
                 </div>
               </div>
             </div>
@@ -150,18 +145,8 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     );
   }
 
-  handleMobileNumberChange = (ev: any) => {
-    const { localize, locale } = this.context;
-
-    const value = ev.target.value;
-    const pattern = /^(\+7)(\d){0,10}$/g;
-
-    if (pattern.test(value)) {
-      this.setState({ serviceSettings: { mobileNumber: value } });
-    } else {
-      $(".toast-invalid_character").remove();
-      Materialize.toast(localize("Services.invalid_character", locale), 2000, "toast-invalid_character");
-    }
+  handleMobileNumberChange = (value: any) => {
+    this.setState({ serviceSettings: { mobileNumber: value } });
   }
 
   handleServiceNameChange = (ev: any) => {
@@ -194,9 +179,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
         return;
       }
 
-      if (service.settings && service.settings.mobileNumber && service.settings.mobileNumber.length !== 12) {
-        $(".toast-write_mobile_number").remove();
-        Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
+      if (service.settings && !service.settings.mobileNumber || !isValidPhoneNumber(service.settings.mobileNumber) ) {
+        $(".toast-invalid_phone_number").remove();
+        Materialize.toast(localize("Services.invalid_phone_number", locale), 2000, "toast-invalid_phone_number");
 
         return;
       }
@@ -240,5 +225,6 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 }
 
 export default connect((state) => ({
-   mapServices: state.services,
-   megafon: state.megafon.toJS() }), { addService, signText })(AddService);
+  mapServices: state.services,
+  megafon: state.megafon.toJS()
+}), { addService, signText })(AddService);
