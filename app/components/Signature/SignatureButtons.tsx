@@ -121,6 +121,10 @@ class SignatureButtons extends React.Component<ISignatureButtonsProps, {}> {
       disabledSign = "disabled";
     }
 
+    if (j > 0 && signer && signer.service) {
+      disabledSign = "disabled";
+    }
+
     if (!disabledUnsign || (haveFilesFromSocket && method === SIGN)) {
       return (
         <React.Fragment>
