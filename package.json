@@ -42,6 +42,16 @@
     "cms"
   ],
   "build": {
+    "extraResources": [
+      "app/dist",
+      {
+        "from": "app/resources/ssl",
+        "to": "../ssl",
+        "filter": [
+          "**/*.pem"
+        ]
+      }
+    ],
     "win": {
       "target": [
         {
