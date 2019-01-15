@@ -155,7 +155,15 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
       const cms = this.props.megafon.cms;
       const digest = this.props.megafon.digest;
 
-      const fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
+      let fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
+
+      if (!digest) {
+        const fileNames = mapToArr(this.props.mapMegafon.get("fileNames"));
+
+        if (fileNames && fileNames.length === 1) {
+          fileDesc = fileNames[0];
+        }
+      }
 
       if (cms) {
         this.saveSignedFile(cms, fileDesc);
