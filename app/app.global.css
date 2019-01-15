@@ -1742,6 +1742,10 @@ h6.contact-title {
   background: url(./resources/image/services/megafon.png) no-repeat;
 }
 
+.type_icon.CRYPTOPRO_DSS{
+  background: url(./resources/image/services/cryptopro.jpg) no-repeat;
+}
+
 #file-avatar {
   height: 40px;
   width: 32px;

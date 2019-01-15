@@ -49,7 +49,7 @@ if (fileExists(SERVICES_JSON)) {
 
       for (const service of data.services) {
         let mservice = new ServiceModel({ ...service });
-        mservice = mservice.setIn(["settings"], new SettingsModel({ mobileNumber: service.settings.mobileNumber }));
+        mservice = mservice.setIn(["settings"], new SettingsModel({ ...service.settings }));
         servicesMap = servicesMap.setIn(["entities", service.id], mservice);
       }
 

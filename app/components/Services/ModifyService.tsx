@@ -4,14 +4,18 @@ import React from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
 import { changeServiceName, changeServiceSettings } from "../../AC/servicesActions";
+import { CRYPTOPRO_DSS } from "../../constants";
 import { MEGAFON } from "../../service/megafon/constants";
+import CryptoProDssSettings from "./CryptoProDssSettings";
 import MegafonSettings from "./MegafonSettings";
 import { IService } from "./types";
 
 interface IModifyServiceProps {
   changeServiceName: (id: string, name: string) => void;
   changeServiceSettings: (id: string, settings: {
+    authURL: string;
     mobileNumber: string;
+    restURL: string;
   }) => void;
   mapServices: Map<any, any>;
   service: IService;
@@ -98,6 +102,14 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
             service={stateService}
           />;
 
+        case CRYPTOPRO_DSS:
+          return <CryptoProDssSettings
+            authURLChange={this.handleAuthChange}
+            nameChange={this.handleNameChange}
+            restURLChange={this.handleRestChange}
+            service={stateService}
+          />;
+
         default:
           return null;
       }
@@ -150,6 +162,14 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
 
   handleNameChange = (ev: any) => {
     this.setState({ stateService: { ...this.state.stateService, name: ev.target.value } });
+  }
+
+  handleAuthChange = (ev: any) => {
+    this.setState({ stateService: { ...this.state.stateService, settings: { ...this.state.stateService.settings, authURL: ev.target.value } } });
+  }
+
+  handleRestChange = (ev: any) => {
+    this.setState({ stateService: { ...this.state.stateService, settings: { ...this.state.stateService.settings, restURL: ev.target.value } } });
   }
 
   handleMobileNumberChange = (value: any) => {

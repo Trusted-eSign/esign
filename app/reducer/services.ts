@@ -9,7 +9,9 @@ export const ServiceModel = Record({
 });
 
 export const SettingsModel = Record({
+  authURL: null,
   mobileNumber: null,
+  restURL: null,
 });
 
 export const DefaultReducerState = Record({

@@ -1,27 +1,30 @@
 import { Map } from "immutable";
 import PropTypes from "prop-types";
 import React from "react";
-import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
 import { addService } from "../../AC/servicesActions";
-import { MEGAFON, SIGN_TEXT } from "../../service/megafon/constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
+import { MEGAFON, MEGAFON_NAME, SIGN_TEXT } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { uuid } from "../../utils";
-import { IMegafonSettings, IService } from "./types";
-
-const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
+import CryptoProDssSettings from "./CryptoProDssSettings";
+import MegafonSettings from "./MegafonSettings";
+import { ICryptoProSettings, IMegafonSettings, IService } from "./types";
 
 interface IAddServiceState {
   serviceName: string;
-  serviceType: string;
-  serviceSettings: IMegafonSettings;
+  serviceType: "MEGAFON" | "CRYPTOPRO_DSS";
+  serviceSettings: IMegafonSettings & ICryptoProSettings;
 }
 
 const initialState = {
-  serviceName: "МЭП Мегафон",
+  serviceName: MEGAFON_NAME,
   serviceSettings: {
+    authURL: "https://dss.cryptopro.ru/STS/oauth",
     mobileNumber: "",
+    restURL: "https://dss.cryptopro.ru/SignServer/rest",
   },
   serviceType: MEGAFON,
 };
@@ -60,8 +63,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
   render() {
     const { localize, locale } = this.context;
-    const { serviceName, serviceSettings } = this.state;
-    const { mobileNumber } = serviceSettings;
+    const { serviceType } = this.state;
 
     return (
       <div className="add_new_service_modal">
@@ -80,7 +82,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                   <form action="#">
                     <p>
                       <input name="serviceType" type="radio"
-                        checked={true}
+                        checked={serviceType === MEGAFON}
                         id={MEGAFON}
                         onClick={() => this.handleChangeServiceType(MEGAFON)}
                       />
@@ -89,7 +91,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                       </label>
                     </p>
                     <p>
-                      <input name="serviceType" type="radio" id={CRYPTOPRO_DSS} disabled={true}
+                      <input name="serviceType" type="radio"
+                        checked={serviceType === CRYPTOPRO_DSS}
+                        id={CRYPTOPRO_DSS}
                         onClick={() => this.handleChangeServiceType(CRYPTOPRO_DSS)} />
                       <label htmlFor={CRYPTOPRO_DSS}>
                         {localize("Services.cryptopro_dss", locale)}
@@ -99,30 +103,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                 </div>
               </div>
               <div className="row">
-                <div className="input-field input-field-csr col s12">
-                  <input
-                    id="serviceName"
-                    type="text"
-                    className={"validate"}
-                    name="serviceName"
-                    value={serviceName}
-                    placeholder={localize("Services.write_service_name", locale)}
-                    onChange={this.handleServiceNameChange}
-                  />
-                  <label htmlFor="serviceName">
-                    {localize("Services.name", locale)}
-                  </label>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col s12" style={{lineHeight: "normal"}}>
-                  <PhoneInput
-                    displayInitialValueAsLocalNumber
-                    country="RU"
-                    value={mobileNumber}
-                    onChange={(value) => this.handleMobileNumberChange(value)}
-                    placeholder={localize("Services.write_mobile_number", locale)} />
-                </div>
+                {this.getServiceSettings()}
               </div>
             </div>
 
@@ -145,16 +126,62 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     );
   }
 
+  getServiceSettings = () => {
+    const { serviceName, serviceType, serviceSettings } = this.state;
+
+    switch (serviceType) {
+      case MEGAFON:
+        return (
+          <MegafonSettings
+            nameChange={this.handleServiceNameChange}
+            mobileNumberChange={this.handleMobileNumberChange}
+            service={{ settings: serviceSettings, name: serviceName }}
+          />
+
+        );
+
+      case CRYPTOPRO_DSS:
+        return (
+          <CryptoProDssSettings
+            authURLChange={this.handleAuthChange}
+            nameChange={this.handleServiceNameChange}
+            restURLChange={this.handleRestChange}
+            service={{ settings: serviceSettings, name: serviceName }}
+          />
+        );
+
+      default:
+        return null;
+    }
+  }
+
   handleMobileNumberChange = (value: any) => {
-    this.setState({ serviceSettings: { mobileNumber: value } });
+    this.setState({ serviceSettings: { ...this.state.serviceSettings, mobileNumber: value } });
+  }
+
+  handleAuthChange = (ev: any) => {
+    this.setState({ serviceSettings: { ...this.state.serviceSettings, authURL: ev.target.value } });
+  }
+
+  handleRestChange = (ev: any) => {
+    this.setState({ serviceSettings: { ...this.state.serviceSettings, restURL: ev.target.value } });
   }
 
   handleServiceNameChange = (ev: any) => {
     this.setState({ serviceName: ev.target.value });
   }
 
-  handleChangeServiceType = (type: string) => {
+  handleChangeServiceType = (type: "MEGAFON" | "CRYPTOPRO_DSS") => {
     this.setState({ serviceType: type });
+
+    switch (type) {
+      case MEGAFON:
+        this.setState({ serviceName: MEGAFON_NAME });
+        return;
+      case CRYPTOPRO_DSS:
+        this.setState({ serviceName: CRYPTOPRO_DSS_NAME });
+        return;
+    }
   }
 
   handleAdd = () => {
@@ -179,7 +206,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
         return;
       }
 
-      if (service.settings && !service.settings.mobileNumber || !isValidPhoneNumber(service.settings.mobileNumber) ) {
+      if (service.settings && !service.settings.mobileNumber || !isValidPhoneNumber(service.settings.mobileNumber)) {
         $(".toast-invalid_phone_number").remove();
         Materialize.toast(localize("Services.invalid_phone_number", locale), 2000, "toast-invalid_phone_number");
 

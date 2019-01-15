@@ -16,3 +16,4 @@ export const SIGN_URI = "https://msign.megafon.ru/mes-ws/sign";
 export const STATUS_URI = "https://msign.megafon.ru/mes-ws/status";
 
 export const MEGAFON = "MEGAFON";
+export const MEGAFON_NAME = "МЭП Мегафон";

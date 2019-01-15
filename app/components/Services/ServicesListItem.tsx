@@ -1,5 +1,6 @@
 import React from "react";
-import { MEGAFON } from "../../service/megafon/constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
+import { MEGAFON, MEGAFON_NAME } from "../../service/megafon/constants";
 import ServiceIcon from "./ServiceIcon";
 import { IService } from "./types";
 
@@ -33,7 +34,10 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
   getTitle = (service: IService) => {
     switch (service.type) {
       case MEGAFON:
-        return service.name ? service.name : "МЭП Мегафон";
+        return service.name ? service.name : MEGAFON_NAME;
+
+      case CRYPTOPRO_DSS:
+        return service.name ? service.name : CRYPTOPRO_DSS_NAME;
 
       default:
         return service.type;
@@ -44,6 +48,9 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
     switch (service.type) {
       case MEGAFON:
         return service.settings ? service.settings.mobileNumber : "";
+
+      case CRYPTOPRO_DSS:
+        return service.settings ? service.settings.authURL : "";
 
       default:
         return service.type;

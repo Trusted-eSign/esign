@@ -67,7 +67,9 @@ class ServiceSettings extends React.PureComponent<IServiceSettingsProps, IServic
             </li>
           </ul>
         </nav>
-        {this.getBody(service)}
+        <div className="add-certs">
+          {this.getBody(service)}
+        </div>
         {this.showModalDeleteService()}
         {this.showModalChangeService()}
       </div>
