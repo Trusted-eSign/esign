@@ -3,23 +3,27 @@ import PropTypes from "prop-types";
 import React from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
+import { getCertificates } from "../../AC/cloudCspActions";
 import { signText } from "../../AC/megafonActions";
 import { addService } from "../../AC/servicesActions";
 import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
 import { MEGAFON, MEGAFON_NAME, SIGN_TEXT } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { uuid } from "../../utils";
+import AuthWebView from "../CloudCSP/AuthWebView";
 import CryptoProDssSettings from "./CryptoProDssSettings";
 import MegafonSettings from "./MegafonSettings";
 import { ICryptoProSettings, IMegafonSettings, IService } from "./types";
 
 interface IAddServiceState {
+  activeSettingsTab: boolean;
   serviceName: string;
   serviceType: "MEGAFON" | "CRYPTOPRO_DSS";
   serviceSettings: IMegafonSettings & ICryptoProSettings;
 }
 
 const initialState = {
+  activeSettingsTab: true,
   serviceName: MEGAFON_NAME,
   serviceSettings: {
     authURL: "https://dss.cryptopro.ru/STS/oauth",
@@ -63,62 +67,73 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
   render() {
     const { localize, locale } = this.context;
-    const { serviceType } = this.state;
+    const { activeSettingsTab, serviceType, serviceSettings } = this.state;
 
     return (
       <div className="add_new_service_modal">
         <div className="row halftop">
           <div className="col s12">
-            <div className="content-wrapper tbody border_group" style={{
+            <div className="content-wrapper tbody  border_group" style={{
               boxshadow: "0 0 0 1px rgb(227, 227, 228)",
-              height: "300px",
+              height: "400px",
               overflow: "auto",
             }}>
-              <div className="row">
-                <div className="col s12">
-                  <p className="label-csr">
-                    {localize("Services.service_type", locale)}
-                  </p>
-                  <form action="#">
-                    <p>
-                      <input name="serviceType" type="radio"
-                        checked={serviceType === MEGAFON}
-                        id={MEGAFON}
-                        onClick={() => this.handleChangeServiceType(MEGAFON)}
-                      />
-                      <label htmlFor={MEGAFON} >
-                        {localize("Services.megafon", locale)}
-                      </label>
-                    </p>
-                    <p>
-                      <input name="serviceType" type="radio"
-                        checked={serviceType === CRYPTOPRO_DSS}
-                        id={CRYPTOPRO_DSS}
-                        onClick={() => this.handleChangeServiceType(CRYPTOPRO_DSS)} />
-                      <label htmlFor={CRYPTOPRO_DSS}>
-                        {localize("Services.cryptopro_dss", locale)}
-                      </label>
-                    </p>
-                  </form>
-                </div>
-              </div>
-              <div className="row">
-                {this.getServiceSettings()}
-              </div>
+              {
+                activeSettingsTab ?
+                  <div className="row">
+                    <div className="row">
+                      <div className="col s12">
+                        <p className="label-csr">
+                          {localize("Services.service_type", locale)}
+                        </p>
+                        <form action="#">
+                          <p>
+                            <input name="serviceType" type="radio"
+                              checked={serviceType === MEGAFON}
+                              id={MEGAFON}
+                              onClick={() => this.handleChangeServiceType(MEGAFON)}
+                            />
+                            <label htmlFor={MEGAFON} >
+                              {localize("Services.megafon", locale)}
+                            </label>
+                          </p>
+                          <p>
+                            <input name="serviceType" type="radio"
+                              checked={serviceType === CRYPTOPRO_DSS}
+                              id={CRYPTOPRO_DSS}
+                              onClick={() => this.handleChangeServiceType(CRYPTOPRO_DSS)} />
+                            <label htmlFor={CRYPTOPRO_DSS}>
+                              {localize("Services.cryptopro_dss", locale)}
+                            </label>
+                          </p>
+                        </form>
+                      </div>
+                    </div>
+                    <div className="row">
+                      {this.getServiceSettings()}
+                    </div>
+                  </div>
+                  : <AuthWebView onCancel={this.handelCancel} onTokenGet={this.onTokenGet} auth={serviceSettings.authURL} />
+              }
             </div>
 
-          </div>
-        </div>
+            <div className="row halfbottom" />
 
-        <div className="row halfbottom" />
-
-        <div className="row">
-          <div className="col s6 offset-s5">
-            <div className="col s7">
-              <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleAdd}>{localize("Services.connect", locale)}</a>
-            </div>
-            <div className="col s5">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
+            <div className="row">
+              {
+                activeSettingsTab ?
+                  <div className="col s6 offset-s5">
+                    <div className="col s7">
+                      <a className={"waves-effect waves-light btn btn_modal"} onClick={this.handleAdd}>{localize("Services.connect", locale)}</a>
+                    </div>
+                    <div className="col s5">
+                      <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
+                    </div>
+                  </div> :
+                  <div className="col s3 offset-s9">
+                    <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handelCancel}>{localize("Common.close", locale)}</a>
+                  </div>
+              }
             </div>
           </div>
         </div>
@@ -222,6 +237,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
         return;
       }
+    } else if (service.type === CRYPTOPRO_DSS) {
+      this.setState({ activeSettingsTab: false });
+      return;
     }
 
     addService(service);
@@ -242,6 +260,28 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     }
   }
 
+  onTokenGet = (token: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { addService, getCertificates, onCancel } = this.props;
+    const { serviceName, serviceSettings, serviceType } = this.state;
+
+    if (!token || !token.length) {
+      return;
+    }
+
+    const id = uuid();
+    const service: IService = {
+      id,
+      name: serviceName,
+      settings: serviceSettings,
+      type: serviceType,
+    };
+
+    addService(service);
+    getCertificates(serviceSettings.authURL, serviceSettings.restURL, token);
+    onCancel(service);
+  }
+
   handelCancel = () => {
     const { onCancel } = this.props;
 
@@ -253,5 +293,5 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
 
 export default connect((state) => ({
   mapServices: state.services,
-  megafon: state.megafon.toJS()
-}), { addService, signText })(AddService);
+  megafon: state.megafon.toJS(),
+}), { addService, getCertificates, signText })(AddService);

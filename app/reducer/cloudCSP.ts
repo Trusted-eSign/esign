@@ -1,7 +1,7 @@
 import { FAIL, GET_CERTIFICATES_FROM_DSS, RESET_CLOUD_CSP, START, SUCCESS } from "../constants";
 
 const DefaultReducerState = {
-  allCertificatesInstalled: false,
+  certificates: [],
   error: null,
   loaded: false,
   loading: false,
@@ -18,7 +18,7 @@ export default (clouCSPState = DefaultReducerState, action) => {
     case GET_CERTIFICATES_FROM_DSS + SUCCESS:
       return clouCSPState = {
         ...clouCSPState,
-        allCertificatesInstalled: payload.allCertificatesInstalled,
+        certificates: payload.certificates,
         loaded: true,
         loading: false,
         statusCode: payload.statusCode,

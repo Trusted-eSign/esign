@@ -1,4 +1,5 @@
 import React from "react";
+import { CRYPTOPRO_DSS } from "../constants";
 import { MEGAFON } from "../service/megafon/constants";
 
 const rectangleValidStyle = {
@@ -57,7 +58,17 @@ class RecipientsList extends React.Component<any, any> {
 
             if (element.key.length > 0) {
               (dialogType === "modal") ? curKeyStyle = "key short " : curKeyStyle = "key long ";
-              curKeyStyle += element.service === MEGAFON ? "megafonkey" : "localkey";
+              if (curKeyStyle) {
+                if (element.service) {
+                  if (element.service === MEGAFON) {
+                    curKeyStyle += "megafonkey";
+                  } else if (element.service === CRYPTOPRO_DSS) {
+                    curKeyStyle += "dsskey";
+                  }
+                } else {
+                  curKeyStyle += "localkey";
+                }
+              }
             } else {
               curKeyStyle = "";
             }

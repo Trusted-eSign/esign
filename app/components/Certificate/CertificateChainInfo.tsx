@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { CRYPTOPRO_DSS } from "../../constants";
 import { MEGAFON } from "../../service/megafon/constants";
 
 class CertificateChainInfo extends React.Component<any, any> {
@@ -96,7 +97,17 @@ class CertificateChainInfo extends React.Component<any, any> {
 
         if (j === 0) {
           curKeyStyle = certificate.key.length > 0 ? "key " : "";
-          curKeyStyle += certificate.service === MEGAFON ? "megafonkey" : "localkey";
+          if (curKeyStyle) {
+            if (certificate.service) {
+              if (certificate.service === MEGAFON) {
+                curKeyStyle += "megafonkey";
+              } else if (certificate.service === CRYPTOPRO_DSS) {
+                curKeyStyle += "dsskey";
+              }
+            } else {
+              curKeyStyle += "localkey";
+            }
+          }
         }
 
         const active = this.isItemOpened(element.thumbprint) ? "active" : "";

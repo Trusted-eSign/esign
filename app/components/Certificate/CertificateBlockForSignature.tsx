@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { selectSignerCertificate, verifyCertificate } from "../../AC";
+import { CRYPTOPRO_DSS } from "../../constants";
 import { filteredCertificatesSelector } from "../../selectors";
 import BlockNotElements from "../BlockNotElements";
 import HeaderWorkspaceBlock from "../HeaderWorkspaceBlock";
@@ -45,7 +46,15 @@ class CertificateBlockForSignature extends React.Component<any, any> {
       curKeyStyle = signer.key.length > 0 ? "key " : "";
 
       if (curKeyStyle) {
-        curKeyStyle += signer.service === "MEGAFON" ? "megafonkey" : "localkey";
+        if (signer.service) {
+          if (signer.service === "MEGAFON") {
+            curKeyStyle += "megafonkey";
+          } else if (signer.service === CRYPTOPRO_DSS) {
+            curKeyStyle += "dsskey";
+          }
+        } else {
+          curKeyStyle += "localkey";
+        }
       }
     }
 

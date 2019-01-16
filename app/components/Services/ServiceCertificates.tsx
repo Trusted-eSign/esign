@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { signText } from "../../AC/megafonActions";
 import { addServiceCertificate } from "../../AC/servicesActions";
-import { USER_NAME } from "../../constants";
+import { CRYPTOPRO_DSS, USER_NAME } from "../../constants";
 import { SIGN_TEXT } from "../../service/megafon/constants";
 import { MEGAFON } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
@@ -22,9 +22,18 @@ interface IMegafonState {
   transactionId: string;
 }
 
+interface IDSSState {
+  certificates: [];
+  error: string;
+  loaded: boolean;
+  loading: boolean;
+  statusCode: string;
+}
+
 interface IServiceCertificatesProps {
   addServiceCertificate: (certificate: trusted.pki.Certificate, serviceType: "MEGAFON", serviceID: string) => void;
   certificates: object[];
+  dss: IDSSState;
   isStarted: boolean;
   megafon: IMegafonState;
   service: IService | undefined;
@@ -74,13 +83,38 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
         Materialize.toast(toast, 2000, "toast-mep_status");
       }
     }
+
+    if (this.props.dss.loaded !== prevProps.dss.loaded &&
+      this.props.dss.certificates !== prevProps.dss.certificates) {
+
+      if (this.props.dss.certificates) {
+        for (const certificate of this.props.dss.certificates) {
+          this.props.addServiceCertificate(certificate.x509, CRYPTOPRO_DSS, this.props.serviceId);
+
+          logger.log({
+            certificate: certificate.x509.subjectName,
+            level: "info",
+            message: "",
+            operation: "Импорт сертификата",
+            operationObject: {
+              in: "CN=" + certificate.x509.subjectFriendlyName,
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
+        }
+
+      }
+
+      Materialize.toast("Сервис подключен", 2000, "toast-mep_cms_true");
+    }
   }
 
   render() {
     const { localize, locale } = this.context;
-    const { megafon, service } = this.props;
+    const { dss, megafon, service } = this.props;
 
-    const DISABLED = service && !megafon.isStarted ? "" : "disabled";
+    const DISABLED = service && !megafon.isStarted && !dss.loading ? "" : "disabled";
 
     return (
       <React.Fragment>
@@ -98,7 +132,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
             </li>
           </ul>
         </nav>
-        <div className="content-wrapper z-depth-1" style={{height: "82%"}}>
+        <div className="content-wrapper z-depth-1" style={{ height: "82%" }}>
           {this.getBody()}
         </div>
       </React.Fragment>
@@ -107,48 +141,58 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
   getBody = () => {
     const { localize, locale } = this.context;
-    const { certificates, megafon, service } = this.props;
+    const { certificates, dss, megafon } = this.props;
 
-    if (megafon.isStarted) {
+    if (megafon.isStarted || dss.loading) {
       return <ProgressBars />;
     }
 
     if (certificates && certificates.length) {
       return (
-        <div className={"add-cert-collection collection "}>
-          {certificates.map((certificate) => {
-            let curStatusStyle;
-            let curKeyStyle;
-            let rectangleStyle;
-            if (certificate.status) {
-              curStatusStyle = "cert_status_ok long";
-              rectangleStyle = { background: "#4caf50" };
-            } else {
-              curStatusStyle = "cert_status_error long";
-              rectangleStyle = { background: "#bf3817" };
-            }
+        <div className="add-certs" style={{height: "100%"}}>
+          <div className={"add-cert-collection collection "}>
+            {certificates.map((certificate) => {
+              let curStatusStyle;
+              let curKeyStyle;
+              let rectangleStyle;
+              if (certificate.status) {
+                curStatusStyle = "cert_status_ok long";
+                rectangleStyle = { background: "#4caf50" };
+              } else {
+                curStatusStyle = "cert_status_error long";
+                rectangleStyle = { background: "#bf3817" };
+              }
 
-            if (certificate.key.length > 0) {
-              curKeyStyle = "key long ";
-            } else {
-              curKeyStyle = "";
-            }
+              if (certificate.key.length > 0) {
+                curKeyStyle = "key long ";
+              } else {
+                curKeyStyle = "";
+              }
 
-            if (curKeyStyle) {
-              curKeyStyle += certificate.service === MEGAFON ? "megafonkey" : "localkey";
-            }
+              if (curKeyStyle) {
+                if (certificate.service) {
+                  if (certificate.service === MEGAFON) {
+                    curKeyStyle += "megafonkey";
+                  } else if (certificate.service === CRYPTOPRO_DSS) {
+                    curKeyStyle += "dsskey";
+                  }
+                } else {
+                  curKeyStyle += "localkey";
+                }
+              }
 
-            return <div className="collection-item avatar certs-collection" key={certificate.id}>
-              <div className="r-iconbox-link">
-                <div className={"rectangle"} style={rectangleStyle}></div>
-                <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
-                <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
-                  <div className={curKeyStyle}></div>
-                  <div className={curStatusStyle}></div>
+              return <div className="collection-item avatar certs-collection" key={certificate.id}>
+                <div className="r-iconbox-link">
+                  <div className={"rectangle"} style={rectangleStyle}></div>
+                  <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
+                  <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
+                    <div className={curKeyStyle}></div>
+                    <div className={curStatusStyle}></div>
+                  </div>
                 </div>
-              </div>
-            </div>;
-          })}
+              </div>;
+            })}
+          </div>
         </div>);
     } else {
       return <BlockNotElements name="active" title={localize("Certificate.cert_not_found", locale)} />;
@@ -234,6 +278,7 @@ interface IOwnProps {
 
 export default connect((state, ownProps: IOwnProps) => ({
   certificates: mapToArr(state.certificates.entities.filter((certificate) => certificate.serviceId === ownProps.serviceId)),
+  dss: state.cloudCSP,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
 }), { addServiceCertificate, signText })(ServiceCertificates);
