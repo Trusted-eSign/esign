@@ -242,15 +242,16 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
       return;
     }
 
-    addService(service);
-
-    onCancel(service);
-
     if (service && service.type) {
       if (service.type === MEGAFON) {
         signText(service.settings.mobileNumber, Buffer.from("Подключение сервиса в КриптоАРМ ГОСТ", "utf8").toString("base64"), "Attached")
           .then(
-            (response) => Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true"),
+            (response) => {
+              addService(service);
+              onCancel(service);
+
+              Materialize.toast("Запрос успешно отправлен", 2000, "toast-mep_status_true");
+            },
             (error) => {
               $(".toast-mep_status").remove();
               Materialize.toast(statusCodes[SIGN_TEXT][error], 2000, "toast-mep_status");
