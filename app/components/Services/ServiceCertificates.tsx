@@ -31,7 +31,7 @@ interface IDSSState {
 }
 
 interface IServiceCertificatesProps {
-  addServiceCertificate: (certificate: trusted.pki.Certificate, serviceType: "MEGAFON", serviceID: string) => void;
+  addServiceCertificate: (certificate: trusted.pki.Certificate, serviceType: "MEGAFON", serviceID: string, certificateId?: string) => void;
   certificates: object[];
   dss: IDSSState;
   isStarted: boolean;
@@ -89,7 +89,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
       if (this.props.dss.certificates) {
         for (const certificate of this.props.dss.certificates) {
-          this.props.addServiceCertificate(certificate.x509, CRYPTOPRO_DSS, this.props.serviceId);
+          this.props.addServiceCertificate(certificate.x509, CRYPTOPRO_DSS, this.props.serviceId, certificate.id);
 
           logger.log({
             certificate: certificate.x509.subjectName,

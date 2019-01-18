@@ -40,13 +40,13 @@ export function changeServiceName(id: string, name: string) {
   };
 }
 
-export function addServiceCertificate(certificate: trusted.pki.Certificate, service: string, serviceId: string) {
+export function addServiceCertificate(certificate: trusted.pki.Certificate, service: string, serviceId: string, certificateId?: string) {
   const certProps = {
     active: false,
     category: "MY",
     format: "PEM",
     hash: certificate.thumbprint,
-    id: service + "_" + serviceId + "_" + certificate.thumbprint,
+    id: certificateId ? certificateId : service + "_" + serviceId + "_" + certificate.thumbprint,
     issuerFriendlyName: certificate.issuerFriendlyName,
     issuerName: certificate.issuerName,
     key: "1",
