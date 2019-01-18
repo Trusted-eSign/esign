@@ -123,26 +123,38 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
     const { stateService } = this.state;
 
     if (service.type && service.type === MEGAFON) {
-      if (stateService.settings && !stateService.settings.mobileNumber || !isValidPhoneNumber(stateService.settings.mobileNumber)) {
-        $(".toast-invalid_phone_number").remove();
-        Materialize.toast(localize("Services.invalid_phone_number", locale), 2000, "toast-invalid_phone_number");
+      if (stateService && stateService.settings) {
+        if (!stateService.settings.mobileNumber || !isValidPhoneNumber(stateService.settings.mobileNumber)) {
+          $(".toast-invalid_phone_number").remove();
+          Materialize.toast(localize("Services.invalid_phone_number", locale), 2000, "toast-invalid_phone_number");
 
-        return;
-      }
+          return;
+        }
 
-      if (this.props.mapServices
-        .get("entities")
-        .find((item: IService) => item.settings.mobileNumber === stateService.settings.mobileNumber)
-      ) {
-        $(".toast-mobile_number_already_exists").remove();
-        Materialize.toast(localize("Services.mobile_number_already_exists", locale), 2000, "toast-mobile_number_already_exists");
+        changeServiceName(service.id, stateService.name);
 
-        return;
+        if (stateService.settings.mobileNumber !== service.settings.mobileNumber) {
+          if (this.props.mapServices
+            .get("entities")
+            .find((item: IService) => item.settings.mobileNumber === stateService.settings.mobileNumber)
+          ) {
+            $(".toast-mobile_number_already_exists").remove();
+            Materialize.toast(localize("Services.mobile_number_already_exists", locale), 2000, "toast-mobile_number_already_exists");
+          } else {
+            changeServiceSettings(service.id, stateService.settings);
+          }
+        }
       }
     }
 
-    changeServiceName(service.id, this.state.stateService.name);
-    changeServiceSettings(service.id, this.state.stateService.settings);
+    if (service.type && service.type === CRYPTOPRO_DSS && stateService) {
+      if (stateService.name) {
+        changeServiceName(service.id, stateService.name);
+      }
+      if (stateService.settings) {
+        changeServiceSettings(service.id, stateService.settings);
+      }
+    }
 
     this.handelCancel();
   }

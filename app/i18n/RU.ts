@@ -534,7 +534,7 @@ export default {
     invalid_phone_number: "Некорректный номер телефона",
     megafon: "Мегафон",
     mobile_number: "Номер телефона (Абонента МЭП Мегафон)",
-    mobile_number_already_exists: "Указанный номер уже подключен. Введите новый",
+    mobile_number_already_exists: "Указанный номер уже подключен",
     name: "Наименование",
     realy_delete_service: "Вы действительно хотите удалить сервис?",
     service_certificates: "Сертификаты",
