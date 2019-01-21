@@ -255,8 +255,6 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
       return;
     }
 
-    console.log("this.props.service", this.props.service);
-
     return (
       <Modal
         isOpen={showModalDssAuth}
