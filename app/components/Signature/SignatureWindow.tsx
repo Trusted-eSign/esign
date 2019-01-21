@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
 import { deleteAllTemporyLicenses, verifyLicense } from "../../AC/licenseActions";
 import { multiplySign } from "../../AC/megafonActions";
-import { DEFAULT_DOCUMENTS_PATH, USER_NAME } from "../../constants";
+import { CRYPTOPRO_DSS, DEFAULT_DOCUMENTS_PATH, USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
 import { MEGAFON, SIGN_DOCUMENT } from "../../service/megafon/constants";
@@ -21,6 +21,7 @@ import CertificateBlockForSignature from "../Certificate/CertificateBlockForSign
 import FileSelector from "../Files/FileSelector";
 import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
+import PinCodeForDssContainer from "../Services/PinCodeForDssContainer";
 import TextForShowOnMobilePhone from "../Services/TextForShowOnMobilePhone";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
@@ -106,7 +107,7 @@ interface ISignatureWindowProps {
 interface ISignatureWindowState {
   fileSignatures: any;
   filename: any;
-  showModalTextForShowOnMobilePhone: boolean;
+  showModalServiceSignParams: boolean;
   showSignatureInfo: boolean;
   signerCertificate: any;
 }
@@ -122,7 +123,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     this.state = ({
       fileSignatures: null,
       filename: null,
-      showModalTextForShowOnMobilePhone: false,
+      showModalServiceSignParams: false,
       showSignatureInfo: false,
       signerCertificate: null,
     });
@@ -261,7 +262,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
               onUnsign={this.unSign}
               onCancelSign={this.onCancelSign} />
           </div>
-          {this.showModalTextForShowOnMobilePhone()}
+          {this.showModalServiceSignParams()}
         </div>
       </div>
     );
@@ -281,7 +282,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
   handleSign = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { files, signer, lic_error, verifyLicense } = this.props;
+    const { files, signer, lic_error, services } = this.props;
     const { localize, locale } = this.context;
 
     const licenseStatus = checkLicense();
@@ -306,7 +307,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
     if (files.length > 0) {
       if (signer.service) {
-        this.handleShowModalTextForShowOnMobilePhone();
+        this.handleShowModalServiceSignParams();
       } else {
         const key = window.PKISTORE.findKey(signer);
 
@@ -389,33 +390,37 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     const signType = settings.detached ? "Detached" : "Attached";
     const service = services.getIn(["entities", signer.serviceId]);
 
-    if (files.length > 0 && service && service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
-      const documents: any[] = [];
+    if (files.length > 0 && service) {
+      if (service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
+        const documents: any[] = [];
 
-      for (const file of files) {
-        const document = fs.readFileSync(file.fullpath, "base64");
-        documents.push({ document, name: file.filename, uri: file.fullpath });
+        for (const file of files) {
+          const document = fs.readFileSync(file.fullpath, "base64");
+          documents.push({ document, name: file.filename, uri: file.fullpath });
+        }
+
+        multiplySign(service.settings.mobileNumber, text, documents, signType)
+          .then(
+            (result) => {
+              Materialize.toast("Запрос на подпись успешно отправлен", 2000, "toast-mep_sign_true");
+
+              if (files) {
+                const signedFileIdPackage: number[] = [];
+
+                files.forEach((file) => {
+                  signedFileIdPackage.push(file.id);
+                });
+
+                filePackageDelete(signedFileIdPackage);
+              }
+
+              return;
+            },
+            (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
+          );
+      } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
+        //
       }
-
-      multiplySign(service.settings.mobileNumber, text, documents, signType)
-        .then(
-          (result) => {
-            Materialize.toast("Запрос на подпись успешно отправлен", 2000, "toast-mep_sign_true");
-
-            if (files) {
-              const signedFileIdPackage: number[] = [];
-
-              files.forEach((file) => {
-                signedFileIdPackage.push(file.id);
-              });
-
-              filePackageDelete(signedFileIdPackage);
-            }
-
-            return;
-          },
-          (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
-        );
     }
   }
 
@@ -682,44 +687,62 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     }
   }
 
-  showModalTextForShowOnMobilePhone = () => {
+  showModalServiceSignParams = () => {
     const { localize, locale } = this.context;
-    const { showModalTextForShowOnMobilePhone } = this.state;
-    const { files } = this.props;
+    const { showModalServiceSignParams } = this.state;
+    const { files, services, signer } = this.props;
 
-    if (!showModalTextForShowOnMobilePhone) {
+    if (!showModalServiceSignParams || !signer) {
       return;
     }
 
-    let text = "";
+    const service = services.getIn(["entities", signer.serviceId]);
 
-    if (files && files.length) {
-      text = files.length > 1 ? "Подтвердите подпись файлов: " : "Подтвердите подпись файла: ";
+    if (service) {
+      if (service.type === MEGAFON) {
+        let text = "";
 
-      for (const file of files) {
-        text += file.filename + ", ";
+        if (files && files.length) {
+          text = files.length > 1 ? "Подтвердите подпись файлов: " : "Подтвердите подпись файла: ";
+
+          for (const file of files) {
+            text += file.filename + ", ";
+          }
+        }
+
+        return (
+          <Modal
+            isOpen={showModalServiceSignParams}
+            header={localize("Services.displayed_text", locale)}
+            onClose={this.handleCloseModalServiceSignParams} style={{
+              width: "70%",
+            }}>
+
+            <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalServiceSignParams} text={text} />
+          </Modal>
+        );
+      } else if (service.type === CRYPTOPRO_DSS) {
+        return (
+          <Modal
+            isOpen={showModalServiceSignParams}
+            header={localize("Services.pin_code_for_container", locale)}
+            onClose={this.handleCloseModalServiceSignParams} style={{
+              width: "70%",
+            }}>
+
+            <PinCodeForDssContainer done={this.signInService} onCancel={this.handleCloseModalServiceSignParams} text={""} />
+          </Modal>
+        );
       }
     }
-
-    return (
-      <Modal
-        isOpen={showModalTextForShowOnMobilePhone}
-        header={localize("Services.displayed_text", locale)}
-        onClose={this.handleCloseModalTextForShowOnMobilePhone} style={{
-          width: "70%",
-        }}>
-
-        <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalTextForShowOnMobilePhone} text={text} />
-      </Modal>
-    );
   }
 
-  handleShowModalTextForShowOnMobilePhone = () => {
-    this.setState({ showModalTextForShowOnMobilePhone: true });
+  handleShowModalServiceSignParams = () => {
+    this.setState({ showModalServiceSignParams: true });
   }
 
-  handleCloseModalTextForShowOnMobilePhone = () => {
-    this.setState({ showModalTextForShowOnMobilePhone: false });
+  handleCloseModalServiceSignParams = () => {
+    this.setState({ showModalServiceSignParams: false });
   }
 
   getSignatureInfo() {
