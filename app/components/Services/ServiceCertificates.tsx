@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
+import { getCertificates } from "../../AC/cloudCspActions";
 import { signText } from "../../AC/megafonActions";
 import { addServiceCertificate } from "../../AC/servicesActions";
 import { CRYPTOPRO_DSS, USER_NAME } from "../../constants";
@@ -10,6 +11,8 @@ import { statusCodes } from "../../service/megafon/statusCodes";
 import { mapToArr } from "../../utils";
 import logger from "../../winstonLogger";
 import BlockNotElements from "../BlockNotElements";
+import AuthWebView from "../CloudCSP/AuthWebView";
+import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
 import { IService } from "./types";
 
@@ -41,11 +44,23 @@ interface IServiceCertificatesProps {
   signText: (msisdn: string, text: string, signType: "Attached" | "Detached") => any;
 }
 
-class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps, {}> {
+interface IServiceCertificatesState {
+  showModalDssAuth: boolean;
+}
+
+class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps, IServiceCertificatesState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
+
+  constructor(props: IServiceCertificatesProps) {
+    super(props);
+
+    this.state = {
+      showModalDssAuth: false,
+    };
+  }
 
   componentDidUpdate(prevProps: IServiceCertificatesProps) {
     // Typical usage (don't forget to compare props):
@@ -135,6 +150,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
         <div className="content-wrapper z-depth-1" style={{ height: "82%" }}>
           {this.getBody()}
         </div>
+        {this.showModalAddService()}
       </React.Fragment>
     );
   }
@@ -149,7 +165,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
     if (certificates && certificates.length) {
       return (
-        <div className="add-certs" style={{height: "100%"}}>
+        <div className="add-certs" style={{ height: "100%" }}>
           <div className={"add-cert-collection collection "}>
             {certificates.map((certificate) => {
               let curStatusStyle;
@@ -224,7 +240,68 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
           Materialize.toast(localize("Services.write_mobile_number", locale), 2000, "toast-write_mobile_number");
         }
       }
+
+      if (service.type === CRYPTOPRO_DSS) {
+        this.handleShowModalDssAuth();
+      }
     }
+  }
+
+  showModalAddService = () => {
+    const { localize, locale } = this.context;
+    const { showModalDssAuth } = this.state;
+
+    if (!showModalDssAuth) {
+      return;
+    }
+
+    console.log("this.props.service", this.props.service);
+
+    return (
+      <Modal
+        isOpen={showModalDssAuth}
+        header={localize("Services.add_new_service", locale)}
+        onClose={this.handleCloseModalDssAuth} style={{
+          width: "70%",
+        }}>
+
+        <div className="cloudCSP_modal">
+          <div className="row halftop">
+            <div className="col s12">
+              <div className="content-wrapper tbody border_group_cloud">
+                <AuthWebView onCancel={this.handleCloseModalDssAuth} onTokenGet={this.onTokenGet} auth={this.props.service.settings.authURL} />
+              </div>
+            </div>
+          </div>
+          <div className="row halfbottom" />
+          <div className="row">
+            <div className="col s3 offset-s9">
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleCloseModalDssAuth}>{localize("Common.close", locale)}</a>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
+  handleShowModalDssAuth = () => {
+    this.setState({ showModalDssAuth: true });
+  }
+
+  handleCloseModalDssAuth = () => {
+    this.setState({ showModalDssAuth: false });
+  }
+
+  onTokenGet = (token: string) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { getCertificates, service } = this.props;
+
+    if (!token || !token.length || !service) {
+      return;
+    }
+
+    getCertificates(service.settings.authURL, service.settings.restURL, token);
+    this.handleCloseModalDssAuth();
   }
 
   /**
@@ -281,4 +358,4 @@ export default connect((state, ownProps: IOwnProps) => ({
   dss: state.cloudCSP,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
-}), { addServiceCertificate, signText })(ServiceCertificates);
+}), { addServiceCertificate, getCertificates, signText })(ServiceCertificates);

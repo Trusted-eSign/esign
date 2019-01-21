@@ -27,7 +27,7 @@ export default (clouCSPState = DefaultReducerState, action) => {
     case GET_CERTIFICATES_FROM_DSS + FAIL:
       return clouCSPState = {
         ...clouCSPState,
-        error: payload.error,
+        error: payload ? payload.error : "",
         loaded: true,
         loading: false,
         statusCode: payload.statusCode,
