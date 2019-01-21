@@ -18,6 +18,7 @@ import * as signs from "../../trusted/sign";
 import { dirExists, fileExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
+import AuthWebView from "../CloudCSP/AuthWebView";
 import FileSelector from "../Files/FileSelector";
 import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
@@ -107,6 +108,7 @@ interface ISignatureWindowProps {
 interface ISignatureWindowState {
   fileSignatures: any;
   filename: any;
+  showModalDssAuth: boolean;
   showModalServiceSignParams: boolean;
   showSignatureInfo: boolean;
   signerCertificate: any;
@@ -123,6 +125,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     this.state = ({
       fileSignatures: null,
       filename: null,
+      showModalDssAuth: false,
       showModalServiceSignParams: false,
       showSignatureInfo: false,
       signerCertificate: null,
@@ -263,6 +266,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
               onCancelSign={this.onCancelSign} />
           </div>
           {this.showModalServiceSignParams()}
+          {this.showModalDssAuth()}
         </div>
       </div>
     );
@@ -419,7 +423,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
             (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
           );
       } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
-        //
+        this.handleShowModalDssAuth();
       }
     }
   }
@@ -743,6 +747,60 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
   handleCloseModalServiceSignParams = () => {
     this.setState({ showModalServiceSignParams: false });
+  }
+
+  showModalDssAuth = () => {
+    const { localize, locale } = this.context;
+    const { showModalDssAuth } = this.state;
+    const { services, signer } = this.props;
+
+    if (!showModalDssAuth || !signer) {
+      return;
+    }
+
+    const service = services.getIn(["entities", signer.serviceId]);
+
+    return (
+      <Modal
+        isOpen={showModalDssAuth}
+        header={localize("Services.cryptopro_dss", locale)}
+        onClose={this.handleCloseModalDssAuth} style={{
+          width: "70%",
+        }}>
+
+        <div className="cloudCSP_modal">
+          <div className="row halftop">
+            <div className="col s12">
+              <div className="content-wrapper tbody border_group_cloud">
+                <AuthWebView onCancel={this.handleCloseModalDssAuth} onTokenGet={this.onTokenGet} auth={service.settings.authURL} />
+              </div>
+            </div>
+          </div>
+          <div className="row halfbottom" />
+          <div className="row">
+            <div className="col s3 offset-s9">
+              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleCloseModalDssAuth}>{localize("Common.close", locale)}</a>
+            </div>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
+  handleShowModalDssAuth = () => {
+    this.setState({ showModalDssAuth: true });
+  }
+
+  handleCloseModalDssAuth = () => {
+    this.setState({ showModalDssAuth: false });
+  }
+
+  onTokenGet = (token: string) => {
+    if (!token || !token.length) {
+      return;
+    }
+
+    this.handleCloseModalDssAuth();
   }
 
   getSignatureInfo() {
