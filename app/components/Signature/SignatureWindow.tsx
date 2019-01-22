@@ -480,7 +480,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
                 filePackageDelete(signedFileIdPackage);
 
-                if (Results && Errors && (Results.length === Errors.length)) {
+                if (Results && Errors && (Results.length === Errors.length && Results.length === files.length)) {
                   for (let i = 0; i < Results.length; i++) {
                     if (!Errors[i]) {
                       this.saveSignedFile(Results[i].replace(/['"]+/g, ""), { name: files[i].filename, uri: files[i].fullpath });
