@@ -58,7 +58,7 @@ interface IConnection {
 }
 
 interface IFileDescForSignService {
-  document: string;
+  document?: string;
   name: string;
   uri: string;
 }
@@ -106,6 +106,8 @@ interface ISignatureWindowProps {
 }
 
 interface ISignatureWindowState {
+  dssSigning: boolean;
+  dssToken: string;
   fileSignatures: any;
   filename: any;
   showModalDssPin: boolean;
@@ -123,6 +125,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
   constructor(props: ISignatureWindowProps) {
     super(props);
     this.state = ({
+      dssSigning: false,
+      dssToken: "",
       fileSignatures: null,
       filename: null,
       showModalDssPin: false,
@@ -248,8 +252,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
   render() {
     const { certificatesLoading, megafon, signingPackage, verifyingPackage } = this.props;
+    const { dssSigning } = this.state;
 
-    if (certificatesLoading || signingPackage || verifyingPackage || megafon.isStarted) {
+    if (certificatesLoading || dssSigning || signingPackage || verifyingPackage || megafon.isStarted) {
       return <ProgressBars />;
     }
 
@@ -388,8 +393,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
   }
 
   signInService = (text: string) => {
+    const { localize, locale } = this.context;
     // tslint:disable-next-line:no-shadowed-variable
     const { multiplySign, filePackageDelete, files, services, settings, signer } = this.props;
+    const { dssToken } = this.state;
 
     const signType = settings.detached ? "Detached" : "Attached";
     const service = services.getIn(["entities", signer.serviceId]);
@@ -423,7 +430,83 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
             (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
           );
       } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
-        //
+        const documents: any[] = [];
+        let res = true;
+
+        for (const file of files) {
+          const document = fs.readFileSync(file.fullpath, "base64");
+          documents.push({ Content: document, Name: file.filename });
+        }
+
+        this.setState({dssSigning: true});
+
+        window.request.post(`${service.settings.restURL}/api/documents/packagesignature`, {
+          auth: {
+            bearer: dssToken,
+          },
+          body: JSON.stringify({
+            Documents: documents,
+            Signature: {
+              CertificateId: signer.id,
+              Parameters: {
+                IsDetached: settings.detached ? "True" : "False",
+              },
+              PinCode: text,
+              Type: "CMS",
+            },
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        }, (error: any, response: any, body: any) => {
+          if (error) {
+            this.setState({dssSigning: false});
+
+            throw new Error("CloudCSP.request_error");
+          }
+          const statusCode = response.statusCode;
+
+          if (statusCode !== 200) {
+            this.setState({dssSigning: false});
+
+            Materialize.toast(JSON.parse(response.body).Message, 2000, "toast-dss_status");
+          } else {
+            if (body && body.length) {
+              const dssResponse = JSON.parse(body);
+
+              if (response) {
+                const { Results, Errors } = dssResponse;
+                const signedFileIdPackage: number[] = [];
+
+                filePackageDelete(signedFileIdPackage);
+
+                if (Results && Errors && (Results.length === Errors.length)) {
+                  for (let i = 0; i < Results.length; i++) {
+                    if (!Errors[i]) {
+                      this.saveSignedFile(Results[i].replace(/['"]+/g, ""), { name: files[i].filename, uri: files[i].fullpath });
+                      signedFileIdPackage.push(files[i].id);
+                    } else {
+                      console.log("--- dss error:", Errors[i]);
+                      res = false;
+                    }
+                  }
+
+                  filePackageDelete(signedFileIdPackage);
+
+                  if (res) {
+                    $(".toast-files_signed").remove();
+                    Materialize.toast(localize("Sign.files_signed", locale), 2000, "toast-files_signed");
+                  } else {
+                    $(".toast-files_signed_failed").remove();
+                    Materialize.toast(localize("Sign.files_signed_failed", locale), 2000, "toast-files_signed_failed");
+                  }
+                }
+              }
+            }
+
+            this.setState({dssSigning: false});
+          }
+        });
       }
     }
   }
@@ -648,7 +731,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     }
   }
 
-  saveSignedFile = (cms: string, fileDesc: IFileDescForSignService) => {
+  saveSignedFile = (cms: string, fileDesc?: IFileDescForSignService) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { selectFile, settings } = this.props;
     const folderOut = settings.outfolder;
@@ -687,7 +770,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
       selectFile(outURI);
     } catch (e) {
-      //
+      console.log("e", e);
     }
   }
 
@@ -796,6 +879,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     if (!token || !token.length) {
       return;
     }
+
+    this.setState({ dssToken: token });
 
     this.handleCloseModalServiceSignParams();
 
