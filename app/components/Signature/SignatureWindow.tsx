@@ -108,7 +108,7 @@ interface ISignatureWindowProps {
 interface ISignatureWindowState {
   fileSignatures: any;
   filename: any;
-  showModalDssAuth: boolean;
+  showModalDssPin: boolean;
   showModalServiceSignParams: boolean;
   showSignatureInfo: boolean;
   signerCertificate: any;
@@ -125,7 +125,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     this.state = ({
       fileSignatures: null,
       filename: null,
-      showModalDssAuth: false,
+      showModalDssPin: false,
       showModalServiceSignParams: false,
       showSignatureInfo: false,
       signerCertificate: null,
@@ -266,7 +266,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
               onCancelSign={this.onCancelSign} />
           </div>
           {this.showModalServiceSignParams()}
-          {this.showModalDssAuth()}
+          {this.showModalDssPin()}
         </div>
       </div>
     );
@@ -423,7 +423,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
             (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
           );
       } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
-        this.handleShowModalDssAuth();
+        //
       }
     }
   }
@@ -729,12 +729,26 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         return (
           <Modal
             isOpen={showModalServiceSignParams}
-            header={localize("Services.pin_code_for_container", locale)}
+            header={localize("Services.cryptopro_dss", locale)}
             onClose={this.handleCloseModalServiceSignParams} style={{
               width: "70%",
             }}>
 
-            <PinCodeForDssContainer done={this.signInService} onCancel={this.handleCloseModalServiceSignParams} text={""} />
+            <div className="cloudCSP_modal">
+              <div className="row halftop">
+                <div className="col s12">
+                  <div className="content-wrapper tbody border_group_cloud">
+                    <AuthWebView onCancel={this.handleCloseModalServiceSignParams} onTokenGet={this.onTokenGet} auth={service.settings.authURL} />
+                  </div>
+                </div>
+              </div>
+              <div className="row halfbottom" />
+              <div className="row">
+                <div className="col s3 offset-s9">
+                  <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleCloseModalServiceSignParams}>{localize("Common.close", locale)}</a>
+                </div>
+              </div>
+            </div>
           </Modal>
         );
       }
@@ -749,50 +763,33 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
     this.setState({ showModalServiceSignParams: false });
   }
 
-  showModalDssAuth = () => {
+  showModalDssPin = () => {
     const { localize, locale } = this.context;
-    const { showModalDssAuth } = this.state;
-    const { services, signer } = this.props;
+    const { showModalDssPin } = this.state;
 
-    if (!showModalDssAuth || !signer) {
+    if (!showModalDssPin) {
       return;
     }
 
-    const service = services.getIn(["entities", signer.serviceId]);
-
     return (
       <Modal
-        isOpen={showModalDssAuth}
-        header={localize("Services.cryptopro_dss", locale)}
-        onClose={this.handleCloseModalDssAuth} style={{
+        isOpen={showModalDssPin}
+        header={localize("Services.pin_code_for_container", locale)}
+        onClose={this.handleCloseModalDssPin} style={{
           width: "70%",
         }}>
 
-        <div className="cloudCSP_modal">
-          <div className="row halftop">
-            <div className="col s12">
-              <div className="content-wrapper tbody border_group_cloud">
-                <AuthWebView onCancel={this.handleCloseModalDssAuth} onTokenGet={this.onTokenGet} auth={service.settings.authURL} />
-              </div>
-            </div>
-          </div>
-          <div className="row halfbottom" />
-          <div className="row">
-            <div className="col s3 offset-s9">
-              <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleCloseModalDssAuth}>{localize("Common.close", locale)}</a>
-            </div>
-          </div>
-        </div>
+        <PinCodeForDssContainer done={this.signInService} onCancel={this.handleCloseModalDssPin} text={""} />
       </Modal>
     );
   }
 
-  handleShowModalDssAuth = () => {
-    this.setState({ showModalDssAuth: true });
+  handleShowModalDssPin = () => {
+    this.setState({ showModalDssPin: true });
   }
 
-  handleCloseModalDssAuth = () => {
-    this.setState({ showModalDssAuth: false });
+  handleCloseModalDssPin = () => {
+    this.setState({ showModalDssPin: false });
   }
 
   onTokenGet = (token: string) => {
@@ -800,7 +797,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
       return;
     }
 
-    this.handleCloseModalDssAuth();
+    this.handleCloseModalServiceSignParams();
+
+    this.handleShowModalDssPin();
   }
 
   getSignatureInfo() {
