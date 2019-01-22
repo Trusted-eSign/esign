@@ -478,8 +478,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
                 const { Results, Errors } = dssResponse;
                 const signedFileIdPackage: number[] = [];
 
-                filePackageDelete(signedFileIdPackage);
-
                 if (Results && Errors && (Results.length === Errors.length && Results.length === files.length)) {
                   for (let i = 0; i < Results.length; i++) {
                     if (!Errors[i]) {
