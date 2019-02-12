@@ -6,7 +6,7 @@ import { ConnectedRouter as Router, push } from "react-router-redux";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS,
   LOCATION_DOCUMENTS, LOCATION_ENCRYPT, LOCATION_EVENTS,
-  LOCATION_HELP, LOCATION_SIGN,
+  LOCATION_HELP, LOCATION_LICENSE, LOCATION_SERVICES, LOCATION_SIGN,
 } from "../constants";
 import history from "../history";
 import localize from "../i18n/localize";
@@ -21,6 +21,7 @@ import * as fileManager from "./Files/fileManager";
 import HelpWindow from "./Help/HelpWindow";
 import MainWindow from "./MainWindow/MainWindow";
 import MenuBar from "./MenuBar";
+import ServicesWindow from "./Services/ServicesWindow";
 import SignatureWindow from "./Signature/SignatureWindow";
 
 interface IAppProps {
@@ -61,6 +62,7 @@ class App extends React.Component<IAppProps, {}> {
           <Route path={LOCATION_HELP} component={HelpWindow} />
           <Route path={LOCATION_DOCUMENTS} component={DocumentsWindow} />
           <Route path={LOCATION_EVENTS} component={EventsWindow} />
+          <Route path={LOCATION_SERVICES} component={ServicesWindow} />
         </React.Fragment>
       </Router>
     );

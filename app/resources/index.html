@@ -11,7 +11,7 @@
       if (!process.env.HOT) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '../dist/style.css';
+        link.href = '../dist/main.css';
         // HACK: Writing the script path should be done with webpack
         document.getElementsByTagName('head')[0].appendChild(link);
       }
@@ -57,7 +57,7 @@
     var crypto_module = require('crypto');
     if (process.platform == 'win32') {
       try {
-      crypto_module.loadConfig("./config/openssl.cfg");
+        crypto_module.loadConfig("./config/openssl.cfg");
       } catch (e) {
         // error
       }
@@ -69,6 +69,15 @@
       //var result = trusted.utils.Jwt.createTrialLicense();
     } catch(err) {
       window.tcerr = err;
+    }
+
+    if (!trusted) {
+      try {
+        trusted = require('trusted-crypto-nogost');
+	window.tcerr = "";
+      } catch (err) {
+        window.tcerr = err;
+      }
     }
 
     path = require('path');
@@ -95,6 +104,7 @@
     LICENSE_DIR = (PLATFORM == 'win32') ? process.env['LOCALAPPDATA'] : "/etc/opt";
     // window.LICENSE_PATH = path.join(LICENSE_DIR, "/Trusted/Trusted eSign/license.lic");
     window.SETTINGS_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "settings.json");
+    window.SERVICES_JSON = path.join(HOME_DIR, ".Trusted", "Trusted eSign", "services.json");
     window.TRUSTED_CRYPTO_LOG = path.join(HOME_DIR, ".Trusted", "trusted_esign.log");
     window.APP_LOG_FILE = path.join(HOME_DIR, ".Trusted", "trusted_esign_operations.log");
     window.APP_ERRORS_LOG_FILE = path.join(HOME_DIR, ".Trusted", "trusted_esign_errors.log");

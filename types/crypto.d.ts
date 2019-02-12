@@ -176,6 +176,8 @@ declare namespace native {
             getThumbprint(): Buffer;
             getSignatureAlgorithm(): string;
             getSignatureDigestAlgorithm(): string;
+            getAuthorityKeyid(): string;
+            getCrlNumber(): string;
             getRevoked(): RevokedCollection;
             load(filename: string, dataFormat: trusted.DataFormat): void;
             import(raw: Buffer, dataFormat: trusted.DataFormat): void;
@@ -353,6 +355,8 @@ declare namespace native {
             encrypted?: boolean;
         }
         interface IPkiCrl {
+            authorityKeyid?: string;
+            crlNumber?: string;
             issuerName?: string;
             issuerFriendlyName?: string;
             lastUpdate?: string;
@@ -444,6 +448,7 @@ declare namespace native {
             addKey(provider: Provider, key: PKI.Key, password: string): string;
             addCsr(provider: Provider, category: string, csr: PKI.CertificationRequest): string;
             deleteCert(provider: Provider, category: string, cert: PKI.Certificate): void;
+            deleteCrl(provider: Provider, category: string, crl: PKI.CRL): void;
         }
         class CashJson {
             filenName: string;
@@ -483,6 +488,8 @@ declare namespace native {
             setNotAfter(after: string): void;
             setLastUpdate(lastUpdate: string): void;
             setNextUpdate(nextUpdate: string): void;
+            setAuthorityKeyid(authorityKeyid: string): void;
+            setCrlNumber(crlNumber: string): void;
             setKey(key: string): void;
             setKeyEncrypted(enc: boolean): void;
             setOrganizationName(organizationName: string): void;
@@ -500,6 +507,8 @@ declare namespace native {
             fqcnW: string;
         }
         class Jwt {
+            addLicense(data: string): boolean;
+            deleteLicense(data: string): boolean;
             checkLicense(data?: string): number;
             checkTrialLicense(): number;
             getExpirationTime(data?: string): number;
@@ -667,6 +676,25 @@ declare namespace trusted.utils {
      * @extends {BaseObject<native.JWT.Jwt>}
      */
     class Jwt extends BaseObject<native.UTILS.Jwt> {
+        /**
+         * Add jwt license to store
+         * License must be correct
+         *
+         * @static
+         * @param {string} license license token in JWT format
+         * @returns {boolean}
+         * @memberof Jwt
+         */
+        static addLicense(license: string): boolean;
+        /**
+         * Delete jwt license from store
+         *
+         * @static
+         * @param {string} license license token
+         * @returns {boolean}
+         * @memberof Jwt
+         */
+        static deleteLicense(license: string): boolean;
         /**
          * Verify jwt license file
          * Return 0 if license correct
@@ -2300,6 +2328,22 @@ declare namespace trusted.pki {
          */
         readonly signatureDigestAlgorithm: string;
         /**
+         * Return authority keyid
+         *
+         * @readonly
+         * @type {string}
+         * @memberOf Crl
+         */
+        readonly authorityKeyid: string;
+        /**
+         * Return CRL number
+         *
+         * @readonly
+         * @type {string}
+         * @memberOf Crl
+         */
+        readonly crlNumber: string;
+        /**
          * Return revoced collection
          *
          * @readonly
@@ -3478,6 +3522,8 @@ declare namespace trusted.pkistore {
         notAfter: string;
         lastUpdate: string;
         nextUpdate: string;
+        authorityKeyid: string;
+        crlNumber: string;
         key: string;
         keyEnc: boolean;
         organizationName: string;
@@ -3567,6 +3613,16 @@ declare namespace trusted.pkistore {
          * @memberOf PkiStore
          */
         deleteCert(provider: native.PKISTORE.Provider, category: string, cert: pki.Certificate): void;
+        /**
+         * Delete CRL from store
+         *
+         * @param {native.PKISTORE.Provider} provider
+         * @param {string} category
+         * @param {pki.Crl} crl
+         * @returns {void}
+         * @memberof PkiStore
+         */
+        deleteCrl(provider: native.PKISTORE.Provider, category: string, crl: pki.Crl): void;
         /**
          * Find items in local store
          *

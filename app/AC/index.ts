@@ -7,21 +7,21 @@ import {
   CHANGE_DELETE_FILES_AFTER_ENCRYPT, CHANGE_ECRYPT_ENCODING,
   CHANGE_ENCRYPT_OUTFOLDER, CHANGE_LOCALE,
   CHANGE_SIGNATURE_DETACHED, CHANGE_SIGNATURE_ENCODING, CHANGE_SIGNATURE_OUTFOLDER,
-  CHANGE_SIGNATURE_TIMESTAMP, DELETE_FILE,
-  DELETE_RECIPIENT_CERTIFICATE, FAIL,
+  CHANGE_SIGNATURE_TIMESTAMP, DEFAULT_DOCUMENTS_PATH,
+  DELETE_FILE, DELETE_RECIPIENT_CERTIFICATE, FAIL,
   GET_CERTIFICATE_FROM_CONTAINER, LOAD_ALL_CERTIFICATES, LOAD_ALL_CONTAINERS,
   PACKAGE_DELETE_FILE, PACKAGE_SELECT_FILE, PACKAGE_SIGN,
   REMOVE_ALL_CERTIFICATES, REMOVE_ALL_CONTAINERS, REMOVE_ALL_FILES,
   REMOVE_ALL_REMOTE_FILES, SELECT_FILE,
   SELECT_SIGNER_CERTIFICATE, SELECT_TEMP_CONTENT_OF_SIGNED_FILES, START,
-  SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS,
-  VERIFY_CERTIFICATE, VERIFY_SIGNATURE,
+  SUCCESS, TOGGLE_SAVE_TO_DOCUMENTS, VERIFY_CERTIFICATE,
+  VERIFY_SIGNATURE,
 } from "../constants";
 import { connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, fileExists, toBase64 } from "../utils";
+import { extFile, fileExists } from "../utils";
 
 export function changeLocation(location: string) {
   return (dispatch) => {
@@ -101,7 +101,11 @@ export function packageSign(
               connectedSocket.broadcast.emit(SIGNED, { id: file.remoteId });
             }
 
-            fs.unlinkSync(file.fullpath);
+            try {
+              fs.unlinkSync(file.fullpath);
+            } catch (e) {
+              //
+            }
 
             if (remoteFiles.uploader) {
               let cms = signs.loadSign(newPath);
@@ -165,6 +169,12 @@ export function packageSign(
                     payload: { id: file.id },
                     type: DELETE_FILE,
                   });
+                }
+
+                try {
+                  fs.unlinkSync(newPath);
+                } catch (e) {
+                  //
                 }
               },
               );
@@ -545,9 +555,19 @@ export function changeSignatureTimestamp(timestamp: boolean) {
 }
 
 export function toggleSaveToDocuments(saveToDocuments: boolean) {
-  return {
-    payload: { saveToDocuments },
-    type: TOGGLE_SAVE_TO_DOCUMENTS,
+  return (dispatch: (action: {}) => void) => {
+    if (saveToDocuments) {
+      dispatch(changeSignatureOutfolder(DEFAULT_DOCUMENTS_PATH));
+      dispatch(changeEncryptOutfolder(DEFAULT_DOCUMENTS_PATH));
+    } else {
+      dispatch(changeSignatureOutfolder(""));
+      dispatch(changeEncryptOutfolder(""));
+    }
+
+    dispatch({
+      payload: { saveToDocuments },
+      type: TOGGLE_SAVE_TO_DOCUMENTS,
+    });
   };
 }
 

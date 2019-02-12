@@ -72,7 +72,11 @@ export function selectDocument(uid: number) {
 export function removeDocuments(documents: any) {
   // tslint:disable-next-line:forin
   for (const key in documents) {
-    fs.unlinkSync(documents[key].fullpath);
+    try {
+      fs.unlinkSync(documents[key].fullpath);
+    } catch (e) {
+      //
+    }
   }
 
   return {

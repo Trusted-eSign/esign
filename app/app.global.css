@@ -3,6 +3,7 @@
 @import "./resources/css/nouislider.css";
 @import "./resources/css/react-virtualized.css";
 @import "./resources/fonts/material-design-icons/material-icons.css";
+@import "../node_modules/react-phone-number-input/style.css";
 
 /* Стили заголовка окна  */
 nav.app-bar {
@@ -170,7 +171,7 @@ body {
 }
 #container, .main {
     /* height: 100%; */
-    height: 530px;
+    height: 600px;
 }
 .settings-content {
     overflow: auto;
@@ -1594,6 +1595,11 @@ form.col.s12 {
   float: left;
 }
 
+.selectable-text {
+  -webkit-user-select: text;
+  cursor: text;
+}
+
 h6.contact-text {
   -webkit-user-select: text;
   font-size: 1.0rem;
@@ -1730,6 +1736,14 @@ h6.contact-title {
 
 .type_icon.file{
   background: url(./resources/image/files/file_file.png) no-repeat;
+}
+
+.type_icon.MEGAFON{
+  background: url(./resources/image/services/megafon.png) no-repeat;
+}
+
+.type_icon.CRYPTOPRO_DSS{
+  background: url(./resources/image/services/cryptopro.jpg) no-repeat;
 }
 
 #file-avatar {
@@ -2152,7 +2166,7 @@ a.cert-back-btn.waves-effect.waves-light {
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.2);
-    position: absolute;
+    position: relative;
     z-index: 1000;
 }
 .preloader-text {
@@ -2483,8 +2497,19 @@ a.cert-back-btn.waves-effect.waves-light {
     left: 50px;
 }
 
+.localkey {
+  background: url(./resources/image/key.svg);
+}
+
+.megafonkey {
+  background: url(./resources/image/services/megafon.png);
+}
+
+.dsskey {
+  background: url(./resources/image/services/cryptopro.jpg);
+}
+
 .key {
-    background: url(./resources/image/key.svg);
     background-size: 100%;
     height: 16px;
     width: 16px;
@@ -2495,7 +2520,7 @@ a.cert-back-btn.waves-effect.waves-light {
     left: -2px;
 }
 
-.key.short {
+.short {
     margin-left: 288px;
 }
 
@@ -3536,6 +3561,11 @@ svg:hover {
 
 .filter_setting_modal{
     height: 410px;
+}
+
+
+.add_new_service_modal {
+  height: 450px;
 }
 
 .modal_license_csp{

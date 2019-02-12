@@ -1,4 +1,5 @@
 import React from "react";
+import {hot} from "react-hot-loader/root";
 import { Provider } from "react-redux";
 import App from "./App";
 
@@ -12,4 +13,4 @@ class Root extends React.Component<any, any> {
   }
 }
 
-export default Root;
+export default hot(Root);

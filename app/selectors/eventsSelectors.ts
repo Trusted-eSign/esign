@@ -1,6 +1,7 @@
 import { createSelector } from "reselect";
 import {
-  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CSR_GENERATION, DECRYPT, DELETE_CERTIFICATE,
+  CERTIFICATE_GENERATION, CERTIFICATE_IMPORT, CRL_IMPORT,
+  CSR_GENERATION, DECRYPT, DELETE_CERTIFICATE,
   DELETE_CONTAINER, ENCRYPT, PKCS12_IMPORT, SIGN, UNSIGN,
 } from "../constants";
 import  localize  from "../i18n/localize";
@@ -31,7 +32,8 @@ export const filteredEventsSelector = createSelector(eventsGetter, filtersGetter
         (
           !operations[SIGN] && !operations[UNSIGN] && !operations[ENCRYPT] &&
           !operations[DECRYPT] && !operations[DELETE_CERTIFICATE] && !operations[DELETE_CONTAINER] &&
-          !operations[CERTIFICATE_GENERATION] && !operations[CSR_GENERATION] && !operations[CERTIFICATE_IMPORT] && !operations[PKCS12_IMPORT]
+          !operations[CERTIFICATE_GENERATION] && !operations[CSR_GENERATION] &&
+          !operations[CERTIFICATE_IMPORT] && !operations[CRL_IMPORT] && !operations[PKCS12_IMPORT]
         )
       );
   });

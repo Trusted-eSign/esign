@@ -47,19 +47,19 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
       <div className="add-cert-collection collection cert-info-list">
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.subject", locale)}</div>
-          <div className={"collection-title "}>{certificate.subjectFriendlyName}</div>
+          <div className={"collection-title selectable-text"}>{certificate.subjectFriendlyName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.issuer_name", locale)}</div>
-          <div className={"collection-title "}>{certificate.issuerFriendlyName}</div>
+          <div className={"collection-title selectable-text"}>{certificate.issuerFriendlyName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.organization", locale)}</div>
-          <div className={"collection-title "}>{certificate.organizationName}</div>
+          <div className={"collection-title selectable-text"}>{certificate.organizationName}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.cert_valid", locale)}</div>
-          <div className={"collection-title "}>{(new Date(certificate.notAfter)).toLocaleDateString(locale, {
+          <div className={"collection-title selectable-text"}>{(new Date(certificate.notAfter)).toLocaleDateString(locale, {
             day: "numeric",
             hour: "numeric",
             minute: "numeric",
@@ -69,27 +69,27 @@ export default class CertificateInfo extends React.Component<ICertificateInfoPro
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
-          <div className={"collection-title "}>{certificate.serial ? certificate.serial : certificate.serialNumber}</div>
+          <div className={"collection-title selectable-text"}>{certificate.serial ? certificate.serial : certificate.serialNumber}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Sign.alg", locale)}</div>
-          <div className={"collection-title "}>{localizeAlgorithm(certificate.signatureAlgorithm, locale)}</div>
+          <div className={"collection-title selectable-text"}>{localizeAlgorithm(certificate.signatureAlgorithm, locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.signature_digest_algorithm", locale)}</div>
-          <div className={"collection-title "}>{localizeAlgorithm(certificate.signatureDigestAlgorithm, locale)}</div>
+          <div className={"collection-title selectable-text"}>{localizeAlgorithm(certificate.signatureDigestAlgorithm, locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.public_key_algorithm", locale)}</div>
-          <div className={"collection-title "}>{localizeAlgorithm(certificate.publicKeyAlgorithm, locale)}</div>
+          <div className={"collection-title selectable-text"}>{localizeAlgorithm(certificate.publicKeyAlgorithm, locale)}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.thumbprint", locale)}</div>
-          <div className={"collection-title "}>{certificate.hash}</div>
+          <div className={"collection-title selectable-text"}>{certificate.hash}</div>
         </div>
         <div className="collection-item certs-collection certificate-info">
           <div className={"collection-info cert-info-blue"}>{localize("Certificate.priv_key", locale)}</div>
-          <div className={"collection-title "}>{PRIV_KEY}</div>
+          <div className={"collection-title selectable-text"}>{PRIV_KEY}</div>
         </div>
       </div>
     );

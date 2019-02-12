@@ -91,13 +91,7 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
 
   handleSaveToDocumentsClick = () => {
     // tslint:disable-next-line:no-shadowed-variable
-    const { changeSignatureOutfolder, toggleSaveToDocuments, saveToDocuments } = this.props;
-
-    if (!saveToDocuments) {
-      changeSignatureOutfolder(DEFAULT_DOCUMENTS_PATH);
-    } else {
-      changeSignatureOutfolder("");
-    }
+    const { toggleSaveToDocuments, saveToDocuments } = this.props;
 
     toggleSaveToDocuments(!saveToDocuments);
   }
@@ -116,16 +110,24 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
   }
 
   render() {
-    const { saveToDocuments, settings } = this.props;
+    const { saveToDocuments, settings, signer } = this.props;
     const { localize, locale } = this.context;
-
     const disabled = this.getDisabled();
+
+    let encoding = settings.encoding;
+
+    if (signer && signer.service && encoding !== "BASE-64") {
+      encoding = "BASE-64";
+    }
 
     return (
       <div id="sign-settings-content" className="content-wrapper z-depth-1">
         <HeaderWorkspaceBlock text={localize("Sign.sign_setting", locale)} />
         <div className="settings-content">
-          <EncodingTypeSelector EncodingValue={settings.encoding} handleChange={this.handleEncodingChange} />
+          <EncodingTypeSelector
+            EncodingValue={encoding}
+            handleChange={this.handleEncodingChange}
+            disabled={signer && signer.service} />
           <CheckBoxWithLabel
             disabled={disabled}
             onClickCheckBox={this.handleDetachedClick}
@@ -133,8 +135,8 @@ class SignatureSettings extends React.Component<ISignatureSettingsProps, any> {
             elementId="detached-sign"
             title={localize("Sign.sign_detached", locale)} />
           <CheckBoxWithLabel onClickCheckBox={this.handleTimestampClick}
-            disabled={disabled}
-            isChecked={settings.timestamp}
+            disabled={disabled || (signer && signer.service)}
+            isChecked={settings.timestamp || (signer && signer.service)}
             elementId="sign-time"
             title={localize("Sign.sign_time", locale)} />
           <CheckBoxWithLabel onClickCheckBox={this.handleSaveToDocumentsClick}
@@ -176,4 +178,5 @@ export default connect((state) => ({
   loadingFiles: loadingRemoteFilesSelector(state, { loading: true }),
   saveToDocuments: state.settings.saveToDocuments,
   settings: state.settings.sign,
+  signer: state.certificates.getIn(["entities", state.signers.signer]),
 }), { changeSignatureDetached, changeSignatureEncoding, changeSignatureOutfolder, changeSignatureTimestamp, toggleSaveToDocuments }, null, { pure: false })(SignatureSettings);

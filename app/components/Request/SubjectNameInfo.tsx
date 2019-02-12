@@ -415,8 +415,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
                     <input
                       id="ogrnip"
                       type="text"
-                      className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
-                        "validate" : ogrnip && ogrnip.length > 0 && validateOgrnip(ogrnip) ? "valid" : "invalid"}
+                      className={!ogrnip || !ogrnip.length ? "validate" : validateOgrnip(ogrnip) ? "valid" : "invalid"}
                       name="ogrnip"
                       value={ogrnip}
                       onChange={handleInputChange}
@@ -434,8 +433,7 @@ class CertificateRequest extends React.Component<ISubjectNameInfoProps, {}> {
               <input
                 id="snils"
                 type="text"
-                className={!this.props.formVerified || template === REQUEST_TEMPLATE_ADDITIONAL ?
-                  "validate" : snils && snils.length > 0 && validateSnils(snils) ? "valid" : "invalid"}
+                className={!snils || !snils.length ? "validate" : validateSnils(snils) ? "valid" : "invalid"}
                 name="snils"
                 value={snils}
                 onChange={handleInputChange}

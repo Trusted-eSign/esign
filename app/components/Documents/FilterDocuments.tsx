@@ -43,8 +43,8 @@ const initialState = {
   dateFrom: undefined,
   dateTo: undefined,
   filename: "",
-  sizeFrom: undefined,
-  sizeTo: undefined,
+  sizeFrom: "",
+  sizeTo: "",
   types: {
     ENCRYPTED: false,
     SIGNED: false,

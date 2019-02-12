@@ -31,8 +31,7 @@ export function getCertificates(authURL: string, restURL: string, token: string)
     });
 
     setTimeout(() => {
-      let countOfCertificates = 0;
-      let testCount = 0;
+      const hcertificates: any[] = [];
 
       try {
         window.request.get(`${restURL}/api/certificates`, {
@@ -55,53 +54,18 @@ export function getCertificates(authURL: string, restURL: string, token: string)
           } else {
             if (body && body.length) {
               const certificates: any[] = JSON.parse(body);
-              countOfCertificates = certificates.length;
 
               for (const certificate of certificates) {
-                const hcert = createX509FromString(certificate.CertificateBase64);
+                const x509 = createX509FromString(certificate.CertificateBase64);
 
-                if (hcert) {
-                  try {
-                    trusted.utils.Csp.installCertificateFromCloud(hcert, authURL, restURL, certificate.ID);
-
-                    testCount++;
-
-                    logger.log({
-                      certificate: hcert.subjectName,
-                      level: "info",
-                      message: "",
-                      operation: "Импорт сертификата",
-                      operationObject: {
-                        in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
-                        out: "Null",
-                      },
-                      userName: USER_NAME,
-                    });
-                  } catch (err) {
-                    logger.log({
-                      certificate: hcert.subjectName,
-                      level: "error",
-                      message: err.message ? err.message : err,
-                      operation: "Импорт сертификата",
-                      operationObject: {
-                        in: "CN=" + hcert.subjectFriendlyName + " (DSS)",
-                        out: "Null",
-                      },
-                      userName: USER_NAME,
-                    });
-                  }
+                if (x509) {
+                  hcertificates.push({id: certificate.ID, x509});
                 }
-              }
-
-              let allCertificatesInstalled = false;
-
-              if (countOfCertificates && countOfCertificates === testCount) {
-                allCertificatesInstalled = true;
               }
 
               dispatch({
                 payload: {
-                  allCertificatesInstalled,
+                  certificates: hcertificates,
                   statusCode: 200,
                 },
                 type: GET_CERTIFICATES_FROM_DSS + SUCCESS,

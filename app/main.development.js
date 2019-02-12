@@ -63,11 +63,7 @@ const installExtensions = async () => {
 
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  app.quit();
 });
 
 
@@ -198,5 +194,16 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
+
+app.on('web-contents-created', (event, win) => {
+  win.on('new-window', (event, newURL, frameName, disposition,
+    options, additionalFeatures) => {
+    if (!options.webPreferences) options.webPreferences = {};
+    options.webPreferences.nodeIntegration = false;
+    options.webPreferences.nodeIntegrationInWorker = false;
+    options.webPreferences.webviewTag = false;
+    delete options.webPreferences.preload;
+  })
+})
 
 

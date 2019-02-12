@@ -50,8 +50,8 @@ export const filteredCertificatesSelector = createSelector(certificatesGetter, f
       certificate.issuerFriendlyName.toLowerCase().match(search) ||
       certificate.subjectFriendlyName.toLowerCase().match(search) ||
       certificate.serial.toLowerCase().match(search) ||
-      certificate.notAfter.toLowerCase().match(search) ||
-      certificate.notBefore.toLowerCase().match(search) ||
+      certificate.notAfter.toString().toLowerCase().match(search) ||
+      certificate.notBefore.toString().toLowerCase().match(search) ||
       certificate.organizationName.toLowerCase().match(search) ||
       certificate.signatureAlgorithm.toLowerCase().match(search)
     );

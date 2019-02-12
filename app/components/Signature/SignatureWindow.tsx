@@ -1,22 +1,41 @@
 import * as fs from "fs";
+import { Map } from "immutable";
+import * as path from "path";
 import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature } from "../../AC";
-import { USER_NAME } from "../../constants";
+import { deleteAllTemporyLicenses, verifyLicense } from "../../AC/licenseActions";
+import { multiplySign } from "../../AC/megafonActions";
+import { CRYPTOPRO_DSS, DEFAULT_DOCUMENTS_PATH, USER_NAME } from "../../constants";
 import { activeFilesSelector, connectedSelector } from "../../selectors";
 import { CANCELLED, ERROR, SIGN, SIGNED, UPLOADED } from "../../server/constants";
+import { MEGAFON, SIGN_DOCUMENT } from "../../service/megafon/constants";
+import { statusCodes } from "../../service/megafon/statusCodes";
 import * as signs from "../../trusted/sign";
-import { dirExists, mapToArr } from "../../utils";
+import { dirExists, fileExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
+import AuthWebView from "../CloudCSP/AuthWebView";
 import FileSelector from "../Files/FileSelector";
+import Modal from "../Modal";
 import ProgressBars from "../ProgressBars";
+import PinCodeForDssContainer from "../Services/PinCodeForDssContainer";
+import TextForShowOnMobilePhone from "../Services/TextForShowOnMobilePhone";
 import SignatureButtons from "./SignatureButtons";
 import SignatureInfoBlock from "./SignatureInfoBlock";
 import SignatureSettings from "./SignatureSettings";
 
 const remote = window.electron.remote;
+
+interface IMegafonState {
+  cms: string;
+  error: string;
+  isDone: boolean;
+  isStarted: boolean;
+  status: string;
+  transactionId: string;
+}
 
 interface IFile {
   id: string;
@@ -36,15 +55,24 @@ interface IConnection {
   socket: SocketIO.Socket;
 }
 
+interface IFileDescForSignService {
+  document?: string;
+  name: string;
+  uri: string;
+}
+
 interface ISignatureWindowProps {
   certificatesLoaded: boolean;
   certificatesLoading: boolean;
   connections: any;
   connectedList: IConnection[];
+  deleteAllTemporyLicenses: () => void;
   deleteFile: (file: string) => void;
   selectFile: (file: string, name?: string, lastModifiedDate?: Date, size?: number, remoteId?: string, socket?: string) => void;
   loadAllCertificates: () => void;
+  megafon: IMegafonState;
   method: string;
+  multiplySign: (msisdn: string, text: string, documents: string[], signType?: "Attached" | "Detached" | undefined) => any;
   files: Array<{
     id: string,
     filename: string,
@@ -58,18 +86,31 @@ interface ISignatureWindowProps {
   }>;
   verifySignature: (file: string) => void;
   removeAllRemoteFiles: () => void;
+  services: Map<any, any>;
   signatures: any;
   signer: any;
   settings: any;
   signedPackage: boolean;
   signingPackage: boolean;
+  verifyLicense: (license?: string) => void;
   verifyingPackage: boolean;
   packageSignResult: boolean;
   packageSign: (files: IFile[], cert: trusted.pki.Certificate, key: trusted.pki.Key, policies: string[], format: trusted.DataFormat, folderOut: string) => void;
   uploader: string;
 }
 
-class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
+interface ISignatureWindowState {
+  dssSigning: boolean;
+  dssToken: string;
+  fileSignatures: any;
+  filename: any;
+  showModalDssPin: boolean;
+  showModalServiceSignParams: boolean;
+  showSignatureInfo: boolean;
+  signerCertificate: any;
+}
+
+class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureWindowState> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
@@ -78,8 +119,12 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   constructor(props: ISignatureWindowProps) {
     super(props);
     this.state = ({
+      dssSigning: false,
+      dssToken: "",
       fileSignatures: null,
       filename: null,
+      showModalDssPin: false,
+      showModalServiceSignParams: false,
       showSignatureInfo: false,
       signerCertificate: null,
     });
@@ -88,7 +133,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   componentDidMount() {
     const { certificatesLoaded, certificatesLoading } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { loadAllCertificates } = this.props;
+    const { loadAllCertificates, verifyLicense } = this.props;
+
+    verifyLicense();
 
     if (!certificatesLoading && !certificatesLoaded) {
       loadAllCertificates();
@@ -99,6 +146,64 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     if (this.props.method === SIGN && prevProps.files && prevProps.files.length && (!this.props.files || !this.props.files.length)) {
       this.props.removeAllRemoteFiles();
       remote.getCurrentWindow().close();
+
+      this.props.deleteAllTemporyLicenses();
+    }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.cms !== prevProps.megafon.cms &&
+      this.props.megafon.status === "100") {
+
+      const cms = this.props.megafon.cms;
+      const digest = this.props.megafon.digest;
+
+      let fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
+
+      if (!digest) {
+        const fileNames = mapToArr(this.props.mapMegafon.get("fileNames"));
+
+        if (fileNames && fileNames.length === 1) {
+          fileDesc = fileNames[0];
+        }
+      }
+
+      if (cms) {
+        this.saveSignedFile(cms, fileDesc);
+      }
+    }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.signStatusList &&
+      this.props.megafon.signStatusList["ns2:signStatus"] &&
+      this.props.megafon.status === "100") {
+
+      const signStatusList = this.props.megafon.signStatusList;
+
+      if (signStatusList) {
+        const signStatus = signStatusList["ns2:signStatus"];
+
+        for (const status of signStatus) {
+          const cms = status["ns2:cms"];
+          const digest = status["ns2:digest"];
+
+          const fileDesc: IFileDescForSignService = this.props.mapMegafon.getIn(["fileNames", digest]);
+
+          if (cms) {
+            this.saveSignedFile(cms, fileDesc);
+          }
+        }
+      }
+    }
+
+    if (this.props.megafon.isDone !== prevProps.megafon.isDone &&
+      this.props.megafon.status !== prevProps.megafon.status) {
+      const status = this.props.megafon.status;
+      if (status && status !== "100") {
+        const toast = statusCodes[SIGN_DOCUMENT][status] ? statusCodes[SIGN_DOCUMENT][status] : `Ошибка МЭП ${status}`;
+
+        $(".toast-mep_status").remove();
+        Materialize.toast(toast, 2000, "toast-mep_status");
+      }
     }
   }
 
@@ -140,10 +245,10 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   render() {
-    const { localize, locale } = this.context;
-    const { certificatesLoading, signingPackage, verifyingPackage } = this.props;
+    const { certificatesLoading, megafon, signingPackage, verifyingPackage } = this.props;
+    const { dssSigning } = this.state;
 
-    if (certificatesLoading || signingPackage || verifyingPackage) {
+    if (certificatesLoading || dssSigning || signingPackage || verifyingPackage || megafon.isStarted) {
       return <ProgressBars />;
     }
 
@@ -159,6 +264,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
               onUnsign={this.unSign}
               onCancelSign={this.onCancelSign} />
           </div>
+          {this.showModalServiceSignParams()}
+          {this.showModalDssPin()}
         </div>
       </div>
     );
@@ -177,49 +284,56 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   }
 
   handleSign = () => {
-    const { files, signer } = this.props;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { files, signer, services } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
-      const key = window.PKISTORE.findKey(signer);
+      if (signer.service) {
+        this.handleShowModalServiceSignParams();
+      } else {
+        const key = window.PKISTORE.findKey(signer);
 
-      if (!key) {
-        $(".toast-key_not_found").remove();
-        Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
-        logger.log({
-          level: "error",
-          message: "Key not found",
-          operation: localize("Events.sign", locale),
-          operationObject: {
-            in: "Key",
-            out: "Null",
-          },
-          userName: USER_NAME,
-        });
+        if (!key) {
+          $(".toast-key_not_found").remove();
+          Materialize.toast(localize("Sign.key_not_found", locale), 2000, "toast-key_not_found");
 
-        return;
-      }
+          logger.log({
+            level: "error",
+            message: "Key not found",
+            operation: "Подпись",
+            operationObject: {
+              in: "Key",
+              out: "Null",
+            },
+            userName: USER_NAME,
+          });
 
-      const cert = window.PKISTORE.getPkiObject(signer);
+          return;
+        }
 
-      const filesForSign = [];
-      const filesForResign = [];
+        const cert = window.PKISTORE.getPkiObject(signer);
 
-      for (const file of files) {
-        if (file.fullpath.split(".").pop() === "sig") {
-          filesForResign.push(file);
-        } else {
-          filesForSign.push(file);
+        const filesForSign = [];
+        const filesForResign = [];
+
+        for (const file of files) {
+          if (file.fullpath.split(".").pop() === "sig") {
+            filesForResign.push(file);
+          } else {
+            filesForSign.push(file);
+          }
+        }
+
+        if (filesForSign && filesForSign.length) {
+          this.sign(filesForSign, cert, key);
+        }
+
+        if (filesForResign && filesForResign.length) {
+          this.resign(filesForResign, cert, key);
         }
       }
 
-      if (filesForSign && filesForSign.length) {
-        this.sign(filesForSign, cert, key);
-      }
-
-      if (filesForResign && filesForResign.length) {
-        this.resign(filesForResign, cert, key);
-      }
     }
   }
 
@@ -250,6 +364,123 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
 
     filePackageDelete(filePackage);
+  }
+
+  signInService = (text: string) => {
+    const { localize, locale } = this.context;
+    // tslint:disable-next-line:no-shadowed-variable
+    const { multiplySign, filePackageDelete, files, services, settings, signer } = this.props;
+    const { dssToken } = this.state;
+
+    const signType = settings.detached ? "Detached" : "Attached";
+    const service = services.getIn(["entities", signer.serviceId]);
+
+    if (files.length > 0 && service) {
+      if (service.type === MEGAFON && service.settings && service.settings.mobileNumber) {
+        const documents: any[] = [];
+
+        for (const file of files) {
+          const document = fs.readFileSync(file.fullpath, "base64");
+          documents.push({ document, name: file.filename, uri: file.fullpath });
+        }
+
+        multiplySign(service.settings.mobileNumber, text, documents, signType)
+          .then(
+            (result) => {
+              Materialize.toast("Запрос на подпись успешно отправлен", 2000, "toast-mep_sign_true");
+
+              if (files) {
+                const signedFileIdPackage: number[] = [];
+
+                files.forEach((file) => {
+                  signedFileIdPackage.push(file.id);
+                });
+
+                filePackageDelete(signedFileIdPackage);
+              }
+
+              return;
+            },
+            (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
+          );
+      } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
+        const documents: any[] = [];
+        let res = true;
+
+        for (const file of files) {
+          const document = fs.readFileSync(file.fullpath, "base64");
+          documents.push({ Content: document, Name: file.filename });
+        }
+
+        this.setState({dssSigning: true});
+
+        window.request.post(`${service.settings.restURL}/api/documents/packagesignature`, {
+          auth: {
+            bearer: dssToken,
+          },
+          body: JSON.stringify({
+            Documents: documents,
+            Signature: {
+              CertificateId: signer.id,
+              Parameters: {
+                IsDetached: settings.detached ? "True" : "False",
+              },
+              PinCode: text,
+              Type: "CMS",
+            },
+          }),
+          headers: {
+            "content-type": "application/json",
+          },
+        }, (error: any, response: any, body: any) => {
+          if (error) {
+            this.setState({dssSigning: false});
+
+            throw new Error("CloudCSP.request_error");
+          }
+          const statusCode = response.statusCode;
+
+          if (statusCode !== 200) {
+            this.setState({dssSigning: false});
+
+            Materialize.toast(JSON.parse(response.body).Message, 2000, "toast-dss_status");
+          } else {
+            if (body && body.length) {
+              const dssResponse = JSON.parse(body);
+
+              if (response) {
+                const { Results, Errors } = dssResponse;
+                const signedFileIdPackage: number[] = [];
+
+                if (Results && Errors && (Results.length === Errors.length && Results.length === files.length)) {
+                  for (let i = 0; i < Results.length; i++) {
+                    if (!Errors[i]) {
+                      this.saveSignedFile(Results[i].replace(/['"]+/g, ""), { name: files[i].filename, uri: files[i].fullpath });
+                      signedFileIdPackage.push(files[i].id);
+                    } else {
+                      console.log("--- dss error:", Errors[i]);
+                      res = false;
+                    }
+                  }
+
+                  filePackageDelete(signedFileIdPackage);
+
+                  if (res) {
+                    $(".toast-files_signed").remove();
+                    Materialize.toast(localize("Sign.files_signed", locale), 2000, "toast-files_signed");
+                  } else {
+                    $(".toast-files_signed_failed").remove();
+                    Materialize.toast(localize("Sign.files_signed_failed", locale), 2000, "toast-files_signed_failed");
+                  }
+                }
+              }
+            }
+
+            this.setState({dssSigning: false});
+          }
+        });
+      }
+    }
   }
 
   sign = (files: IFile[], cert: any, key: any) => {
@@ -291,7 +522,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
   resign = (files: IFile[], cert: any, key: any) => {
     const { connections, connectedList, settings, uploader } = this.props;
     // tslint:disable-next-line:no-shadowed-variable
-    const { deleteFile, verifySignature } = this.props;
+    const { deleteFile, selectFile } = this.props;
     const { localize, locale } = this.context;
 
     if (files.length > 0) {
@@ -320,8 +551,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
         const newPath = signs.resignFile(file.fullpath, cert, key, policies, format, folderOut);
 
         if (newPath) {
-          verifySignature(file.id);
-
           if (file.socket) {
             const connection = connections.getIn(["entities", file.socket]);
 
@@ -395,6 +624,9 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
               },
               );
             }
+          } else {
+            deleteFile(file.id);
+            selectFile(newPath);
           }
         } else {
           res = false;
@@ -471,6 +703,162 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, any> {
     }
   }
 
+  saveSignedFile = (cms: string, fileDesc?: IFileDescForSignService) => {
+    // tslint:disable-next-line:no-shadowed-variable
+    const { selectFile, settings } = this.props;
+    const folderOut = settings.outfolder;
+    let outURI: string;
+
+    if (!cms) {
+      return;
+    }
+
+    if (fileDesc && fileDesc.name && fileDesc.uri) {
+      if (folderOut.length > 0) {
+        outURI = path.join(folderOut, fileDesc.name + ".sig");
+      } else {
+        outURI = fileDesc.uri + ".sig";
+      }
+    } else {
+      outURI = path.join(DEFAULT_DOCUMENTS_PATH, uuid() + ".sig");
+    }
+
+    let indexFile: number = 1;
+    let newOutUri: string = outURI;
+    const fileUri = outURI.substring(0, outURI.lastIndexOf("."));
+
+    while (fileExists(newOutUri)) {
+      const parsed = path.parse(fileUri);
+      newOutUri = path.join(parsed.dir, parsed.name + "_(" + indexFile + ")" + parsed.ext + ".sig");
+      indexFile++;
+    }
+
+    outURI = newOutUri;
+
+    try {
+      const tcms: trusted.cms.SignedData = new trusted.cms.SignedData();
+      tcms.import(Buffer.from("-----BEGIN CMS-----" + "\n" + cms + "\n" + "-----END CMS-----"), trusted.DataFormat.PEM);
+      tcms.save(outURI, trusted.DataFormat.PEM);
+
+      selectFile(outURI);
+    } catch (e) {
+      console.log("e", e);
+    }
+  }
+
+  showModalServiceSignParams = () => {
+    const { localize, locale } = this.context;
+    const { showModalServiceSignParams } = this.state;
+    const { files, services, signer } = this.props;
+
+    if (!showModalServiceSignParams || !signer) {
+      return;
+    }
+
+    const service = services.getIn(["entities", signer.serviceId]);
+
+    if (service) {
+      if (service.type === MEGAFON) {
+        let text = "";
+
+        if (files && files.length) {
+          text = files.length > 1 ? "Подтвердите подпись файлов: " : "Подтвердите подпись файла: ";
+
+          for (const file of files) {
+            text += file.filename + ", ";
+          }
+        }
+
+        return (
+          <Modal
+            isOpen={showModalServiceSignParams}
+            header={localize("Services.displayed_text", locale)}
+            onClose={this.handleCloseModalServiceSignParams} style={{
+              width: "70%",
+            }}>
+
+            <TextForShowOnMobilePhone done={this.signInService} onCancel={this.handleCloseModalServiceSignParams} text={text} />
+          </Modal>
+        );
+      } else if (service.type === CRYPTOPRO_DSS) {
+        return (
+          <Modal
+            isOpen={showModalServiceSignParams}
+            header={localize("Services.cryptopro_dss", locale)}
+            onClose={this.handleCloseModalServiceSignParams} style={{
+              width: "70%",
+            }}>
+
+            <div className="cloudCSP_modal">
+              <div className="row halftop">
+                <div className="col s12">
+                  <div className="content-wrapper tbody border_group_cloud">
+                    <AuthWebView onCancel={this.handleCloseModalServiceSignParams} onTokenGet={this.onTokenGet} auth={service.settings.authURL} />
+                  </div>
+                </div>
+              </div>
+              <div className="row halfbottom" />
+              <div className="row">
+                <div className="col s3 offset-s9">
+                  <a className={"waves-effect waves-light btn modal-close btn_modal"} onClick={this.handleCloseModalServiceSignParams}>{localize("Common.close", locale)}</a>
+                </div>
+              </div>
+            </div>
+          </Modal>
+        );
+      }
+    }
+  }
+
+  handleShowModalServiceSignParams = () => {
+    this.setState({ showModalServiceSignParams: true });
+  }
+
+  handleCloseModalServiceSignParams = () => {
+    this.setState({ showModalServiceSignParams: false });
+  }
+
+  showModalDssPin = () => {
+    const { localize, locale } = this.context;
+    const { showModalDssPin } = this.state;
+
+    if (!showModalDssPin) {
+      return;
+    }
+
+    return (
+      <Modal
+        isOpen={showModalDssPin}
+        header={localize("Services.pin_code_for_container", locale)}
+        onClose={this.handleCloseModalDssPin} style={{
+          width: "70%",
+        }}>
+
+        <PinCodeForDssContainer done={this.signInService} onCancel={this.handleCloseModalDssPin} text={""} />
+      </Modal>
+    );
+  }
+
+  handleShowModalDssPin = () => {
+    this.setState({ showModalDssPin: true });
+  }
+
+  handleCloseModalDssPin = () => {
+    this.setState({ showModalDssPin: false });
+  }
+
+  onTokenGet = (token: string) => {
+    if (!token || !token.length) {
+      return;
+    }
+
+    this.setState({ dssToken: token });
+
+    this.handleCloseModalServiceSignParams();
+
+    this.handleShowModalDssPin();
+  }
+
   getSignatureInfo() {
     const { fileSignatures, filename, showSignatureInfo, signerCertificate } = this.state;
 
@@ -515,8 +903,11 @@ export default connect((state) => {
     connectedList: connectedSelector(state, { connected: true }),
     connections: state.connections,
     files: activeFilesSelector(state, { active: true }),
+    mapMegafon: state.megafon,
+    megafon: state.megafon.toJS(),
     method: state.remoteFiles.method,
     packageSignResult: state.signatures.packageSignResult,
+    services: state.services,
     settings: state.settings.sign,
     signatures,
     signedPackage: state.signatures.signedPackage,
@@ -525,4 +916,4 @@ export default connect((state) => {
     uploader: state.remoteFiles.uploader,
     verifyingPackage: state.signatures.verifyingPackage,
   };
-}, { deleteFile, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifySignature })(SignatureWindow);
+}, { deleteAllTemporyLicenses, deleteFile, multiplySign, filePackageDelete, loadAllCertificates, packageSign, removeAllRemoteFiles, selectFile, verifyLicense, verifySignature })(SignatureWindow);

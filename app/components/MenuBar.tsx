@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { filePackageDelete } from "../AC";
 import {
   LOCATION_ABOUT, LOCATION_CERTIFICATES, LOCATION_CONTAINERS, LOCATION_DOCUMENTS,
-  LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SIGN,
-  SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
+  LOCATION_ENCRYPT, LOCATION_EVENTS, LOCATION_HELP, LOCATION_LICENSE, LOCATION_SERVICES,
+  LOCATION_SIGN, SETTINGS_JSON, TRUSTED_CRYPTO_LOG,
 } from "../constants";
 import { connectedSelector, loadingRemoteFilesSelector } from "../selectors";
 import { CANCELLED } from "../server/constants";
@@ -100,6 +100,9 @@ class MenuBar extends React.Component<any, {}> {
 
       case LOCATION_SIGN:
         return localize("Sign.sign_and_verify", locale);
+
+      case LOCATION_SERVICES:
+        return localize("Services.Services", locale);
 
       case LOCATION_DOCUMENTS:
         return localize("Documents.documents", locale);

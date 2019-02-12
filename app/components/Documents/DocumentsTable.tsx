@@ -134,7 +134,7 @@ class DocumentTable extends React.Component<IDocumentsTableProps & IDocumentsTab
           <Column
             cellRenderer={({ cellData, rowData }) => {
               return (
-                <FileIcon file={{extension: extFile(rowData.filename), id: rowData.id}} />
+                <FileIcon file={{extension: extFile(rowData.filename), id: rowData.id}} key={rowData.id} />
               );
             }}
             dataKey="extname"

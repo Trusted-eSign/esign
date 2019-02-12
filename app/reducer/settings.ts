@@ -57,6 +57,7 @@ export default (settings = defaultSettings, action) => {
 
     case CHANGE_ENCRYPT_OUTFOLDER:
       return { ...settings, encrypt: { ...settings.encrypt, outfolder: payload.outfolder } };
+
     case CHANGE_LOCALE:
       return { ...settings, locale: payload.locale };
 

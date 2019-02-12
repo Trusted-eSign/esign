@@ -67,6 +67,8 @@ interface ICertificateRequestProps {
   certificateTemplate: any;
   onCancel?: () => void;
   certificateLoading: boolean;
+  lic_error: number;
+  licenseStatus: boolean;
   loadAllCertificates: () => void;
   removeAllCertificates: () => void;
 }
@@ -305,8 +307,18 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
         }
       }
 
-      if (template !== REQUEST_TEMPLATE_DEFAULT && inn && inn.length && !validateInn(inn)) {
-        return false;
+      if (template !== REQUEST_TEMPLATE_DEFAULT) {
+        if (inn && inn.length && !validateInn(inn)) {
+          return false;
+        }
+      }
+
+      if (template === REQUEST_TEMPLATE_ADDITIONAL) {
+        if (snils && snils.length && !validateSnils(snils) ||
+          ogrnip && ogrnip.length && !validateOgrnip(ogrnip)
+        ) {
+          return false;
+        }
       }
 
       if (email && email.length && !REQULAR_EXPRESSION.test(email)) {
@@ -326,7 +338,7 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   handelReady = () => {
     const { localize, locale } = this.context;
     const { algorithm, cn, country, containerName, email, exportableKey, extKeyUsage, inn, keyLength,
-      keyUsage, locality, ogrnip, organization, organizationUnitName, outputDirectory, province, selfSigned, snils, title } = this.state;
+      keyUsage, locality, ogrnip, organization, organizationUnitName, province, selfSigned, snils, title } = this.state;
 
     const key = new trusted.pki.Key();
     const exts = new trusted.pki.ExtensionCollection();
@@ -454,13 +466,23 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
       { type: "O", value: organization },
       { type: "OU", value: organizationUnitName },
       { type: "title", value: title },
-      { type: "1.2.643.100.3", value: snils },
-      { type: "1.2.643.3.131.1.1", value: inn },
-      { type: "1.2.643.100.5", value: ogrnip },
     ];
 
+    if (template !== REQUEST_TEMPLATE_DEFAULT ) {
+      atrs.push(
+        { type: "1.2.643.3.131.1.1", value: inn },
+        { type: "1.2.643.100.3", value: snils },
+      );
+    }
+
+    if (template === REQUEST_TEMPLATE_KEP_IP || template === REQUEST_TEMPLATE_ADDITIONAL) {
+      atrs.push(
+        { type: "1.2.643.100.5", value: ogrnip },
+      );
+    }
+
     certReq.subject = atrs;
-    certReq.version = 2;
+    certReq.version = 0;
     certReq.publicKey = keyPair;
     certReq.extensions = exts;
     certReq.sign(keyPair);
@@ -672,10 +694,25 @@ class CertificateRequest extends React.Component<ICertificateRequestProps, ICert
   }
 
   handleInputChange = (ev: any) => {
+    const { localize, locale } = this.context;
+    const pattern = /^[0-9a-z-.\\\s]+$/i;
+
     const target = ev.target;
     const name = target.name;
+    const value = ev.target.value;
 
-    this.setState({ [name]: ev.target.value });
+    if (name === "containerName") {
+      if (pattern.test(value || !value)) {
+        this.setState({[name]: value});
+      } else {
+        $(".toast-invalid_character").remove();
+        Materialize.toast(localize("Containers.invalid_character", locale), 2000, "toast-invalid_character");
+      }
+
+      return;
+    }
+
+    this.setState({[name]: value});
   }
 
   handleCountryChange = (ev: any) => {

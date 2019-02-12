@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { verifyCertificate } from "../../AC";
+import { CRYPTOPRO_DSS } from "../../constants";
+import { MEGAFON } from "../../service/megafon/constants";
 
 const rectangleValidStyle = {
   background: "#4caf50",
@@ -18,15 +20,18 @@ interface ICertificateListItemProps {
   isOpen: boolean;
   toggleOpen: () => void;
   cert: any;
+  verifyCertificate: (id: any) => void;
 }
 
-class CertificateListItem extends React.Component<ICertificateListItemProps, ICertificateListItemProps> {
+class CertificateListItem extends React.Component<ICertificateListItemProps, {}> {
   static contextTypes = {
     locale: PropTypes.string,
     localize: PropTypes.func,
   };
 
-  shouldComponentUpdate(nextProps: ICertificateListItemProps, nextState: ICertificateListItemProps) {
+  timerHandle: NodeJS.Timer | null;
+
+  shouldComponentUpdate(nextProps: ICertificateListItemProps) {
     return nextProps.isOpen !== this.props.isOpen ||
       nextProps.cert.verified !== this.props.cert.verified;
   }
@@ -49,8 +54,20 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
   handleClick = () => {
     const { chooseCert, toggleOpen } = this.props;
 
-    chooseCert();
-    toggleOpen();
+    this.timerHandle = setTimeout(() => {
+      if (!cert.verified) {
+        verifyCertificate(cert.id);
+      }
+
+      this.timerHandle = null;
+    }, 2000);
+  }
+
+  componentWillUnmount() {
+    if (this.timerHandle) {
+      clearTimeout(this.timerHandle);
+      this.timerHandle = null;
+    }
   }
 
   render() {
@@ -74,10 +91,22 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
     }
 
     if (operation === "encrypt" || operation === "sign") {
-      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key short" : curKeyStyle = "";
+      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key short " : curKeyStyle = "";
       curStatusStyle += " short";
     } else {
-      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key" : curKeyStyle = "";
+      curKeyStyle = cert.key.length > 0 ? curKeyStyle = "key " : curKeyStyle = "";
+    }
+
+    if (curKeyStyle) {
+      if (cert.service) {
+        if (cert.service === MEGAFON) {
+          curKeyStyle += "megafonkey";
+        } else if (cert.service === CRYPTOPRO_DSS) {
+          curKeyStyle += "dsskey";
+        }
+      } else {
+        curKeyStyle += "localkey";
+      }
     }
 
     if (isOpen) {
@@ -115,6 +144,13 @@ class CertificateListItem extends React.Component<ICertificateListItemProps, ICe
         {certKeyMenu}
       </div>
     );
+  }
+
+  handleClick = () => {
+    const { chooseCert, toggleOpen } = this.props;
+
+    chooseCert();
+    toggleOpen();
   }
 }
 

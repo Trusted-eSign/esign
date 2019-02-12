@@ -13,7 +13,7 @@ import webpack from 'webpack';
 import chalk from 'chalk';
 import merge from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import baseConfig from './webpack.config.base';
 
 const port = process.env.PORT || 1212;
@@ -46,6 +46,8 @@ export default merge.smart(baseConfig, {
   output: {
     publicPath: `http://localhost:${port}/dist/`
   },
+
+  mode: 'development',
 
   module: {
     rules: [
@@ -80,7 +82,7 @@ export default merge.smart(baseConfig, {
           },
         ]
       },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
+      // Add SASS support  - compile all .global.scss files and pipe it to main.css
       {
         test: /\.global\.scss$/,
         use: [
@@ -98,7 +100,7 @@ export default merge.smart(baseConfig, {
           },
         ]
       },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
+      // Add SASS support  - compile all other .scss files and pipe it to main.css
       {
         test: /^((?!\.global).)*\.scss$/,
         use: [
@@ -193,8 +195,7 @@ export default merge.smart(baseConfig, {
      * https://webpack.js.org/concepts/hot-module-replacement/
      */
     new webpack.HotModuleReplacementPlugin({
-      // @TODO: Waiting on https://github.com/jantimon/html-webpack-plugin/issues/533
-      // multiStep: true
+      multiStep: true
     }),
 
     // @TODO: If there are any typescript errors, the dev build will fail
@@ -222,7 +223,7 @@ export default merge.smart(baseConfig, {
       debug: true
     }),
 
-    new ExtractTextPlugin({
+    new MiniCssExtractPlugin({
       filename: '[name].css'
     }),
   ],
@@ -246,7 +247,7 @@ export default merge.smart(baseConfig, {
       verbose: true,
       disableDotRule: false,
     },
-    setup() {
+    before() {
       if (process.env.START_HOT) {
         spawn(
           'npm',
