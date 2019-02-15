@@ -2517,6 +2517,7 @@ a.cert-back-btn.waves-effect.waves-light {
 
 .dsskey {
   background: url(./resources/image/services/dss.png);
+  background-repeat: no-repeat;
 }
 
 .key {
