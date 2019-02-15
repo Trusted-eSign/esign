@@ -24,13 +24,13 @@ interface IAddServiceState {
 
 const initialState = {
   activeSettingsTab: true,
-  serviceName: MEGAFON_NAME,
+  serviceName: CRYPTOPRO_DSS_NAME,
   serviceSettings: {
     authURL: "https://dss.cryptopro.ru/STS/oauth",
     mobileNumber: "",
     restURL: "https://dss.cryptopro.ru/SignServer/rest",
   },
-  serviceType: MEGAFON,
+  serviceType: CRYPTOPRO_DSS,
 };
 
 interface IAddServiceProps {
@@ -87,7 +87,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                           {localize("Services.service_type", locale)}
                         </p>
                         <form action="#">
-                          <p>
+                          {/* <p>
                             <input name="serviceType" type="radio"
                               checked={serviceType === MEGAFON}
                               id={MEGAFON}
@@ -96,7 +96,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                             <label htmlFor={MEGAFON} >
                               {localize("Services.megafon", locale)}
                             </label>
-                          </p>
+                          </p> */}
                           <p>
                             <input name="serviceType" type="radio"
                               checked={serviceType === CRYPTOPRO_DSS}
