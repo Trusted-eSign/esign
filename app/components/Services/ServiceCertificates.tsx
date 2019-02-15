@@ -197,16 +197,22 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
                 }
               }
 
-              return <div className="collection-item avatar certs-collection" key={certificate.id}>
-                <div className="r-iconbox-link">
-                  <div className={"rectangle"} style={rectangleStyle}></div>
-                  <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
-                  <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
-                    <div className={curKeyStyle}></div>
-                    <div className={curStatusStyle}></div>
+              return (
+                <div className="row certificate-list-item" id={certificate.id}>
+                  <div className="collection-item avatar certs-collection" >
+                    <div className="r-iconbox-link">
+                      <div className={"rectangle"} style={rectangleStyle}></div>
+                      <div className="col s11">
+                        <div className="collection-title ">{certificate.subjectFriendlyName}</div>
+                        <div className="collection-info cert-info ">{certificate.issuerFriendlyName}</div>
+                      </div>
+                      <div className="col s1">
+                        <div className={curKeyStyle}></div>
+                        <div className={curStatusStyle}></div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>;
+                </div>);
             })}
           </div>
         </div>);
