@@ -16,7 +16,7 @@ export default {
     address: "Petrova St, 1, Yoshkar-Ola, Mari El Republic, Russia, 424033",
     build_number: "Build number",
     company_name: "Company Cifrovie Technologii",
-    copyright: "Copyright 2016-2018",
+    copyright: "© 2016-2019",
     developer: "Company-developer",
     email: "Email",
     error_message_send: "Message failed to send",

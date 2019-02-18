@@ -16,7 +16,7 @@ export default {
     address: "424033, РМЭ, г.Йошкар-Ола, ул.Петрова, д.1, а/я 67",
     build_number: "Номер сборки",
     company_name: "ООО Цифровые технологии",
-    copyright: "Copyright 2016-2018",
+    copyright: "© 2016-2019",
     developer: "Компания-разработчик",
     email: "Email",
     error_message_send: "Ошибка при отправке сообщения",
