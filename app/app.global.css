@@ -1185,64 +1185,42 @@ nav .cert-seacrh label i {
   padding: 6px 6px;
 }
 
-i.material-icons.left.my {
+i.material-icons.left {
   display: block;
   text-indent: -9999px;
   width: 24px;
   height: 24px;
-  background: url(./resources/image/cert_category_my.svg);
   background-size: 24px 24px;
   margin-top: 10px;
+}
+
+i.material-icons.left.my {
+  background: url(./resources/image/cert_category_my.svg);
 }
 
 i.material-icons.left.other {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_other.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.intermediate {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_intermediate.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.root {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_root.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.token {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_token.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.request {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_request.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
+}
+
+i.material-icons.left.connect {
+  background: url(./resources/image/connect.png);
+  background-size: cover;
 }
 
 /*-----------------Главная страница--------------------*/
