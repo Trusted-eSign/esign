@@ -44,6 +44,12 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
       showModalChangeService: false,
       showModalDeleteService: false,
     };
+
+    this.child = React.createRef();
+  }
+
+  handleReloadCertificates = () => {
+    this.child.current.getWrappedInstance().handleReloadCertificates();
   }
 
   componentWillUnmount() {
@@ -129,11 +135,12 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                   <ul id="dropdown-btn-for-service" className="dropdown-content">
                     <li><a onClick={() => this.handleShowModalChangeService()}>{localize("Services.change", locale)}</a></li>
                     <li><a onClick={() => this.handleShowModalDeleteService()}>{localize("Services.delete", locale)}</a></li>
+                    <li><a onClick={this.handleReloadCertificates}>{localize("Services.service_certificates", locale)}</a></li>
                   </ul>
                 </li>
               </ul>
             </nav>
-            <div className="add-certs">
+            <div className="add-certs-cervices">
               <ul className="collapsible" data-collapsible="accordion">
                 <li>
                   <div className="collapsible-header color active">
@@ -157,7 +164,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                     {localize("Services.service_certificates", locale)}
                   </div>
                   <div className="collapsible-body">
-                    <ServiceCertificates serviceId={activeService ? activeService.id : undefined} />
+                    <ServiceCertificates serviceId={activeService ? activeService.id : undefined} ref={this.child} />
                   </div>
                 </li>
               </ul>

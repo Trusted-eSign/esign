@@ -362,4 +362,4 @@ export default connect((state, ownProps: IOwnProps) => ({
   dss: state.cloudCSP,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
-}), { addServiceCertificate, getCertificates, signText })(ServiceCertificates);
+}), { addServiceCertificate, getCertificates, signText }, null, { withRef: true })(ServiceCertificates);

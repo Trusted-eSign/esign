@@ -906,6 +906,14 @@ nav .cert-seacrh label i {
     z-index: 2;
 }
 
+.add-certs-cervices {
+  width: 100%;
+  height: calc(100% - 48px);
+  position: relative;
+  overflow: auto;
+  border-top: 2px solid #ffffff;
+}
+
 
 .add-certs-item {
     position: relative;
