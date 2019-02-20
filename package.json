@@ -90,7 +90,7 @@
     "@types/orchestrator": "0.0.30",
     "@types/prop-types": "^15.5.4",
     "@types/q": "1.0.0",
-    "@types/react": "^16.0.34",
+    "@types/react": "^16.8.3",
     "@types/react-dom": "^16.0.3",
     "@types/react-hot-loader": "^3.0.1",
     "@types/react-redux": "^5.0.12",
