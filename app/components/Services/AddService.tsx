@@ -6,27 +6,30 @@ import { connect } from "react-redux";
 import { getCertificates } from "../../AC/cloudCspActions";
 import { signText } from "../../AC/megafonActions";
 import { addService } from "../../AC/servicesActions";
-import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME, CRYPTOPRO_SVS, CRYPTOPRO_SVS_NAME } from "../../constants";
 import { MEGAFON, MEGAFON_NAME, SIGN_TEXT } from "../../service/megafon/constants";
 import { statusCodes } from "../../service/megafon/statusCodes";
 import { uuid } from "../../utils";
 import AuthWebView from "../CloudCSP/AuthWebView";
 import CryptoProDssSettings from "./CryptoProDssSettings";
+import CryptoProSVSSettings from "./CryptoProSVSSettings";
 import MegafonSettings from "./MegafonSettings";
-import { ICryptoProSettings, IMegafonSettings, IService } from "./types";
+import { ICryptoProSettings, ICryptoProSVSSettings, IMegafonSettings, IService } from "./types";
 
 interface IAddServiceState {
   activeSettingsTab: boolean;
   serviceName: string;
-  serviceType: "MEGAFON" | "CRYPTOPRO_DSS";
-  serviceSettings: IMegafonSettings & ICryptoProSettings;
+  serviceType: "MEGAFON" | "CRYPTOPRO_DSS" | "CRYPTOPRO_SVS";
+  serviceSettings: IMegafonSettings & ICryptoProSettings & ICryptoProSVSSettings;
 }
 
 const initialState = {
   activeSettingsTab: true,
   serviceName: CRYPTOPRO_DSS_NAME,
   serviceSettings: {
+    applicationName: "verify",
     authURL: "https://dss.cryptopro.ru/STS/oauth",
+    hostName: "http://dss.cryptopro.ru/",
     mobileNumber: "",
     restURL: "https://dss.cryptopro.ru/SignServer/rest",
   },
@@ -106,6 +109,15 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                               {localize("Services.cryptopro_dss", locale)}
                             </label>
                           </p>
+                          <p>
+                            <input name="serviceType" type="radio"
+                              checked={serviceType === CRYPTOPRO_SVS}
+                              id={CRYPTOPRO_SVS}
+                              onClick={() => this.handleChangeServiceType(CRYPTOPRO_SVS)} />
+                            <label htmlFor={CRYPTOPRO_SVS}>
+                              {localize("Services.cryptopro_svs", locale)}
+                            </label>
+                          </p>
                         </form>
                       </div>
                     </div>
@@ -165,6 +177,15 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
           />
         );
 
+      case CRYPTOPRO_SVS:
+        return (
+          <CryptoProSVSSettings
+            hostNameChange={this.handleSVSHostNameChange}
+            applicationNameChange={this.handleSVSApplicationNameChange}
+            service={{ settings: serviceSettings, name: serviceName }}
+          />
+        );
+
       default:
         return null;
     }
@@ -186,7 +207,15 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
     this.setState({ serviceName: ev.target.value });
   }
 
-  handleChangeServiceType = (type: "MEGAFON" | "CRYPTOPRO_DSS") => {
+  handleSVSHostNameChange = (ev: any) => {
+    this.setState({ serviceSettings: { ...this.state.serviceSettings, hostName: ev.target.value } });
+  }
+
+  handleSVSApplicationNameChange = (ev: any) => {
+    this.setState({ serviceSettings: { ...this.state.serviceSettings, applicationName: ev.target.value } });
+  }
+
+  handleChangeServiceType = (type: "MEGAFON" | "CRYPTOPRO_DSS" | "CRYPTOPRO_SVS") => {
     this.setState({ serviceType: type });
 
     switch (type) {
@@ -195,6 +224,9 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
         return;
       case CRYPTOPRO_DSS:
         this.setState({ serviceName: CRYPTOPRO_DSS_NAME });
+        return;
+      case CRYPTOPRO_SVS:
+        this.setState({ serviceName: CRYPTOPRO_SVS_NAME });
         return;
     }
   }
@@ -239,6 +271,11 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
       }
     } else if (service.type === CRYPTOPRO_DSS) {
       this.setState({ activeSettingsTab: false });
+      return;
+    } else if (service.type === CRYPTOPRO_SVS) {
+      addService(service);
+      this.handelCancel();
+
       return;
     }
 

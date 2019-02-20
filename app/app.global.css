@@ -1742,6 +1742,10 @@ h6.contact-title {
   background: url(./resources/image/services/dss.png) no-repeat;
 }
 
+.type_icon.CRYPTOPRO_SVS{
+  background: url(./resources/image/services/dss.png) no-repeat;
+}
+
 #file-avatar {
   height: 40px;
   width: 32px;

@@ -511,6 +511,10 @@ export default {
     resolve_6_2: "To solve this problem, open the application control panel and forward error messages displayed on the Console tab to the technical support.",
     resolve_6_3: "Detailed instructions on how to open the control panel under the required platform can be found in the product documentation that is available on the link ",
   },
+  SVS: {
+    application_name: "Application Name",
+    hostname: "Hostname",
+  },
   Services: {
     SERVICES: "SERVICES",
     Services: "Services",
@@ -520,6 +524,7 @@ export default {
     change: "Change",
     connect: "Connect",
     cryptopro_dss: "CryptoPro DSS",
+    cryptopro_svs: "CryptoPro SVS 2.0",
     delete: "Delete",
     delete_service: "Delete service",
     description: "Description",

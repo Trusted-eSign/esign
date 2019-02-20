@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME, CRYPTOPRO_SVS, CRYPTOPRO_SVS_NAME } from "../../constants";
 import { MEGAFON, MEGAFON_NAME } from "../../service/megafon/constants";
 import { IService } from "./types";
 
@@ -41,6 +41,9 @@ export default class ServiceInfo extends React.Component<IServiceInfoProps, {}> 
       case CRYPTOPRO_DSS:
         return CRYPTOPRO_DSS_NAME;
 
+      case CRYPTOPRO_SVS:
+        return CRYPTOPRO_SVS_NAME;
+
       default:
         return type;
     }
@@ -68,6 +71,20 @@ export default class ServiceInfo extends React.Component<IServiceInfoProps, {}> 
             <div className="collection-item certs-collection certificate-info">
               <div className={"collection-info cert-info-blue"}>{localize("CloudCSP.rest", locale)}</div>
               <div className={"collection-title selectable-text"}>{service.settings.restURL}</div>
+            </div>
+          </React.Fragment>
+        );
+
+      case CRYPTOPRO_SVS:
+        return (
+          <React.Fragment>
+            <div className="collection-item certs-collection certificate-info">
+              <div className={"collection-info cert-info-blue"}>{localize("SVS.hostname", locale)}</div>
+              <div className={"collection-title selectable-text"}>{service.settings.hostName}</div>
+            </div>
+            <div className="collection-item certs-collection certificate-info">
+              <div className={"collection-info cert-info-blue"}>{localize("SVS.application_name", locale)}</div>
+              <div className={"collection-title selectable-text"}>{service.settings.applicationName}</div>
             </div>
           </React.Fragment>
         );
