@@ -49,6 +49,14 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
   }
 
   handleReloadCertificates = () => {
+    const certSection = $("#certSection");
+
+    if (certSection) {
+      if (!certSection.hasClass("active")) {
+        certSection.click();
+      }
+    }
+
     this.child.current.getWrappedInstance().handleReloadCertificates();
   }
 
@@ -159,7 +167,7 @@ class ServicesWindow extends React.PureComponent<IServicesWindowProps, IServices
                   </div>
                 </li>
                 <li>
-                  <div className="collapsible-header color">
+                  <div className="collapsible-header color" id="certSection">
                     <i className="material-icons left my" />
                     {localize("Services.service_certificates", locale)}
                   </div>
