@@ -114,6 +114,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
         case CRYPTOPRO_SVS:
           return <CryptoProSVSSettings
             hostNameChange={this.handleSVSHostNameChange}
+            nameChange={this.handleNameChange}
             applicationNameChange={this.handleSVSApplicationNameChange}
             service={stateService}
           />;
