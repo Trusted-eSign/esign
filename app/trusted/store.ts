@@ -7,6 +7,7 @@ import {
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, TMP_DIR, USER_NAME } from "../constants";
 import logger from "../winstonLogger";
+import { throws } from "assert";
 
 const OS_TYPE = os.type();
 
@@ -408,6 +409,19 @@ export class Store {
    * @return {PkiObject} Certificate | Key | CRL | CSR
    */
   getPkiObject(item: any): any {
+    let tcert: trusted.pki.Certificate | undefined;
+
+    if (item.x509 && item.service) {
+      try {
+        tcert = new trusted.pki.Certificate();
+        tcert.import(Buffer.from(item.x509), trusted.DataFormat.PEM);
+
+        return tcert;
+      } catch (e) {
+        //
+      }
+    }
+
     return this._store.getItem(item);
   }
 }
