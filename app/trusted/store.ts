@@ -7,7 +7,6 @@ import {
 } from "../constants";
 import { DEFAULT_CERTSTORE_PATH, TMP_DIR, USER_NAME } from "../constants";
 import logger from "../winstonLogger";
-import { throws } from "assert";
 
 const OS_TYPE = os.type();
 
