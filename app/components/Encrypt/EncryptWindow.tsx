@@ -30,6 +30,7 @@ class EncryptWindow extends React.Component<any, any> {
     super(props);
     this.state = ({
       decryptedFile: null,
+      decryptedInDSS: null,
       dssSigning: false,
       dssToken: "",
       recipientId: "",
@@ -205,7 +206,10 @@ class EncryptWindow extends React.Component<any, any> {
         }
       }
 
-      files.forEach((file) => {
+      const forDecryptInDSS = [];
+      const filesForDecryptInLocalCSP = [];
+
+      for (const file of files) {
         let certWithKey: trusted.pki.Certificate;
 
         try {
@@ -215,30 +219,43 @@ class EncryptWindow extends React.Component<any, any> {
           const ris = cipher.getRecipientInfos(uri, format);
 
           let ri: trusted.cms.CmsRecipientInfo;
+          let haveLocalRecipient = false;
+          let haveDSSRecipient = false;
+          let dssRecipient;
 
           for (let i = 0; i < ris.length; i++) {
             ri = ris.items(i);
 
             certWithKey = this.props.mapCertificates
               .get("entities")
-              .find((item) => item.service === CRYPTOPRO_DSS && item.serial === ri.serialNumber);
+              .find((item) => item.issuerName === ri.issuerName && item.serial === ri.serialNumber && item.key);
 
             if (certWithKey) {
-              break;
+              if (!certWithKey.service) {
+                haveLocalRecipient = true;
+                break;
+              } else {
+                haveDSSRecipient = true;
+                dssRecipient = certWithKey;
+              }
+            } else {
+              res = false;
             }
+          }
+
+          if (haveLocalRecipient) {
+            filesForDecryptInLocalCSP.push(file);
+          } else if (haveDSSRecipient) {
+            forDecryptInDSS.push({ file, dssRecipient });
           }
         } catch (e) {
           //
         }
+      }
 
-        if (certWithKey) {
-          this.setState({ serviceId: certWithKey.serviceId, decryptedFile: file, recipientId: certWithKey.id });
-          this.handleShowModalServiceSignParams();
-
-          return;
-        }
-
+      filesForDecryptInLocalCSP.forEach((file) => {
         const newPath = encrypts.decryptFile(file.fullpath, folderOut);
+
         if (newPath) {
           deleteFile(file.id);
           selectFile(newPath);
@@ -256,6 +273,13 @@ class EncryptWindow extends React.Component<any, any> {
           }
         } else {
           res = false;
+        }
+      });
+
+      forDecryptInDSS.forEach((item) => {
+        if (item && item.dssRecipient) {
+          this.setState({ decryptedInDSS: item });
+          this.handleShowModalServiceSignParams();
         }
       });
 
@@ -304,12 +328,14 @@ class EncryptWindow extends React.Component<any, any> {
 
   showModalServiceSignParams = () => {
     const { localize, locale } = this.context;
-    const { serviceId, showModalServiceSignParams } = this.state;
+    const { decryptedInDSS, showModalServiceSignParams } = this.state;
     const { services } = this.props;
 
-    if (!showModalServiceSignParams || !serviceId) {
+    if (!showModalServiceSignParams || !decryptedInDSS) {
       return;
     }
+
+    const serviceId = decryptedInDSS.dssRecipient.serviceId;
 
     const service = services.getIn(["entities", serviceId]);
 
@@ -364,11 +390,15 @@ class EncryptWindow extends React.Component<any, any> {
 
   showModalDssPin = () => {
     const { localize, locale } = this.context;
-    const { showModalDssPin } = this.state;
+    const { decryptedInDSS, showModalDssPin } = this.state;
+    const { services } = this.props;
 
     if (!showModalDssPin) {
       return;
     }
+
+    const serviceId = decryptedInDSS.dssRecipient.serviceId;
+    const service = services.getIn(["entities", serviceId]);
 
     return (
       <Modal
@@ -378,7 +408,35 @@ class EncryptWindow extends React.Component<any, any> {
           width: "70%",
         }}>
 
-        <PinCodeForDssContainer done={this.decryptInService} onCancel={this.handleCloseModalDssPin} text={""} />
+        <React.Fragment>
+          <div style={{ height: "160px" }}>
+            <div className="row halftop">
+              <div className="col s12">
+                <div className="content-wrapper tbody border_group" style={{
+                  boxshadow: "0 0 0 1px rgb(227, 227, 228)",
+                  height: "150px",
+                  overflow: "auto",
+                }}>
+                  <div className="add-cert-collection collection cert-info-list">
+                    <div className="collection-item certs-collection certificate-info">
+                      <div className={"collection-info cert-info-blue"}>{localize("Certificate.subject", locale)}</div>
+                      <div className={"collection-title selectable-text"}>{decryptedInDSS.dssRecipient.subjectFriendlyName}</div>
+                    </div>
+                    <div className="collection-item certs-collection certificate-info">
+                      <div className={"collection-info cert-info-blue"}>{localize("Certificate.serialNumber", locale)}</div>
+                      <div className={"collection-title selectable-text"}>{decryptedInDSS.dssRecipient.serial ? decryptedInDSS.dssRecipient.serial : decryptedInDSS.dssRecipient.serialNumber}</div>
+                    </div>
+                    <div className="collection-item certs-collection certificate-info">
+                      <div className={"collection-info cert-info-blue"}>{localize("CloudCSP.rest", locale)}</div>
+                      <div className={"collection-title selectable-text"}>{service.settings.restURL}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <PinCodeForDssContainer done={this.decryptInService} onCancel={this.handleCloseModalDssPin} text={""} />
+        </React.Fragment>
       </Modal>
     );
   }
@@ -394,7 +452,11 @@ class EncryptWindow extends React.Component<any, any> {
   decryptInService = (text: string) => {
     // tslint:disable-next-line:no-shadowed-variable
     const { deleteFile, selectFile, services, settings } = this.props;
-    const { decryptedFile, dssToken, recipientId, serviceId } = this.state;
+    const { decryptedInDSS, dssToken } = this.state;
+
+    const decryptedFile = decryptedInDSS.file;
+    const recipientId = decryptedInDSS.dssRecipient.id;
+    const serviceId = decryptedInDSS.dssRecipient.serviceId;
 
     const service = services.getIn(["entities", serviceId]);
     const folderOut = settings.outfolder;
