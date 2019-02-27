@@ -109,7 +109,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                               {localize("Services.cryptopro_dss", locale)}
                             </label>
                           </p>
-                          <p>
+                          {/* <p>
                             <input name="serviceType" type="radio"
                               checked={serviceType === CRYPTOPRO_SVS}
                               id={CRYPTOPRO_SVS}
@@ -117,7 +117,7 @@ class AddService extends React.Component<IAddServiceProps, IAddServiceState> {
                             <label htmlFor={CRYPTOPRO_SVS}>
                               {localize("Services.cryptopro_svs", locale)}
                             </label>
-                          </p>
+                          </p> */}
                         </form>
                       </div>
                     </div>
