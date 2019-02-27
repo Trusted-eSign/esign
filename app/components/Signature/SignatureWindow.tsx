@@ -430,7 +430,6 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
             (error) => Materialize.toast(statusCodes[SIGN_DOCUMENT][error], 2000, "toast-mep_status"),
           );
       } else if (service.type === CRYPTOPRO_DSS && service.settings && service.settings.restURL) {
-        const documents: any[] = [];
         const filesForSign = [];
         const filesForResign = [];
         let res = true;
@@ -444,6 +443,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         }
 
         if (filesForSign && filesForSign.length) {
+          const documents: any[] = [];
+
           for (const file of filesForSign) {
             const document = fs.readFileSync(file.fullpath, "base64");
             documents.push({ Content: document, Name: file.filename });
@@ -519,6 +520,8 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
         }
 
         if (filesForResign && filesForResign.length) {
+          const documents: any[] = [];
+
           for (const file of filesForResign) {
             let cmsContext = null;
             if (fileCoding(file.fullpath) === trusted.DataFormat.PEM) {
@@ -545,7 +548,7 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
                 CertificateId: signer.id,
                 Parameters: {
                   CmsSignatureType: "CoSign",
-                  IsDetached: settings.detached ? "True" : "False",
+                  IsDetached: "False",
                 },
                 PinCode: text,
                 Type: "CMS",
