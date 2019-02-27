@@ -255,41 +255,43 @@ class EncryptWindow extends React.Component<any, any> {
         }
       }
 
-      filesForDecryptInLocalCSP.forEach((file) => {
-        const newPath = encrypts.decryptFile(file.fullpath, folderOut);
+      if (filesForDecryptInLocalCSP && filesForDecryptInLocalCSP.length) {
+        filesForDecryptInLocalCSP.forEach((file) => {
+          const newPath = encrypts.decryptFile(file.fullpath, folderOut);
 
-        if (newPath) {
-          deleteFile(file.id);
-          selectFile(newPath);
+          if (newPath) {
+            deleteFile(file.id);
+            selectFile(newPath);
 
-          if (file.socket) {
-            const connection = connections.getIn(["entities", file.socket]);
-            if (connection && connection.connected && connection.socket) {
-              connection.socket.emit(DECRYPTED, { id: file.remoteId });
-            } else if (connectedList.length) {
-              const connectedSocket = connectedList[0].socket;
+            if (file.socket) {
+              const connection = connections.getIn(["entities", file.socket]);
+              if (connection && connection.connected && connection.socket) {
+                connection.socket.emit(DECRYPTED, { id: file.remoteId });
+              } else if (connectedList.length) {
+                const connectedSocket = connectedList[0].socket;
 
-              connectedSocket.emit(DECRYPTED, { id: file.remoteId });
-              connectedSocket.broadcast.emit(DECRYPTED, { id: file.remoteId });
+                connectedSocket.emit(DECRYPTED, { id: file.remoteId });
+                connectedSocket.broadcast.emit(DECRYPTED, { id: file.remoteId });
+              }
             }
+          } else {
+            res = false;
           }
+        });
+
+        if (res) {
+          $(".toast-files_decrypt").remove();
+          Materialize.toast(localize("Encrypt.files_decrypt", locale), 2000, "toast-files_decrypt");
         } else {
-          res = false;
+          $(".toast-files_decrypt_failed").remove();
+          Materialize.toast(localize("Encrypt.files_decrypt_failed", locale), 2000, "toast-files_decrypt_failed");
         }
-      });
+      }
 
       if (forDecryptInDSS && forDecryptInDSS.length) {
         this.setState({ forDecryptInDSS });
         this.setState({ decryptedInDSS: forDecryptInDSS[0] });
         this.handleShowModalServiceSignParams();
-      }
-
-      if (res) {
-        $(".toast-files_decrypt").remove();
-        Materialize.toast(localize("Encrypt.files_decrypt", locale), 2000, "toast-files_decrypt");
-      } else {
-        $(".toast-files_decrypt_failed").remove();
-        Materialize.toast(localize("Encrypt.files_decrypt_failed", locale), 2000, "toast-files_decrypt_failed");
       }
     }
   }
