@@ -41,7 +41,7 @@ class SideMenu extends React.Component<{}, {}> {
 
           <Link to={LOCATION_SERVICES}>
             {localize("Services.SERVICES", locale)}
-            <i className="material-icons left sign">mode_edit</i>
+            <i className="material-icons left dss">dss</i>
           </Link>
 
           <Link to={LOCATION_SIGN}>

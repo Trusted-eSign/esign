@@ -454,6 +454,19 @@ export class Store {
    * @return {PkiObject} Certificate | Key | CRL | CSR
    */
   getPkiObject(item: any): any {
+    let tcert: trusted.pki.Certificate | undefined;
+
+    if (item.x509 && item.service) {
+      try {
+        tcert = new trusted.pki.Certificate();
+        tcert.import(Buffer.from(item.x509), trusted.DataFormat.PEM);
+
+        return tcert;
+      } catch (e) {
+        //
+      }
+    }
+
     return this._store.getItem(item);
   }
 }

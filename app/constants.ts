@@ -183,3 +183,5 @@ export const CHANGE_SERVICE_NAME = "CHANGE_SERVICE_NAME";
 
 export const CRYPTOPRO_DSS = "CRYPTOPRO_DSS";
 export const CRYPTOPRO_DSS_NAME = "КриптоПро DSS";
+export const CRYPTOPRO_SVS = "CRYPTOPRO_SVS";
+export const CRYPTOPRO_SVS_NAME = "КриптоПро SVS 2.0";

@@ -9,7 +9,9 @@ export const ServiceModel = Record({
 });
 
 export const SettingsModel = Record({
+  applicationName: null,
   authURL: null,
+  hostName: null,
   mobileNumber: null,
   restURL: null,
 });

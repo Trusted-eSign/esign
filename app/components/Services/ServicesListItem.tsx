@@ -1,5 +1,5 @@
 import React from "react";
-import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME } from "../../constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_DSS_NAME, CRYPTOPRO_SVS, CRYPTOPRO_SVS_NAME } from "../../constants";
 import { MEGAFON, MEGAFON_NAME } from "../../service/megafon/constants";
 import ServiceIcon from "./ServiceIcon";
 import { IService } from "./types";
@@ -39,6 +39,9 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
       case CRYPTOPRO_DSS:
         return service.name ? service.name : CRYPTOPRO_DSS_NAME;
 
+      case CRYPTOPRO_SVS:
+        return service.name ? service.name : CRYPTOPRO_SVS_NAME;
+
       default:
         return service.type;
     }
@@ -51,6 +54,9 @@ class ServicesListItem extends React.PureComponent<IServicesListItemProps, {}> {
 
       case CRYPTOPRO_DSS:
         return service.settings ? service.settings.authURL : "";
+
+      case CRYPTOPRO_SVS:
+        return service.settings ? service.settings.hostName : "";
 
       default:
         return service.type;

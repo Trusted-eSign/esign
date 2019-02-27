@@ -7,9 +7,14 @@ export interface ICryptoProSettings {
   restURL: string;
 }
 
+export interface ICryptoProSVSSettings {
+  hostName: string;
+  applicationName: string;
+}
+
 export interface IService {
   id: string;
-  type: "MEGAFON" | "CRYPTOPRO_DSS";
-  settings: IMegafonSettings & ICryptoProSettings;
+  type: "MEGAFON" | "CRYPTOPRO_DSS" | "CRYPTOPRO_SVS";
+  settings: IMegafonSettings & ICryptoProSettings & ICryptoProSVSSettings;
   name: string;
 }

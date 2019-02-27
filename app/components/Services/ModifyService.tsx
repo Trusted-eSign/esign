@@ -4,9 +4,10 @@ import React from "react";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { connect } from "react-redux";
 import { changeServiceName, changeServiceSettings } from "../../AC/servicesActions";
-import { CRYPTOPRO_DSS } from "../../constants";
+import { CRYPTOPRO_DSS, CRYPTOPRO_SVS } from "../../constants";
 import { MEGAFON } from "../../service/megafon/constants";
 import CryptoProDssSettings from "./CryptoProDssSettings";
+import CryptoProSVSSettings from "./CryptoProSVSSettings";
 import MegafonSettings from "./MegafonSettings";
 import { IService } from "./types";
 
@@ -110,6 +111,14 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
             service={stateService}
           />;
 
+        case CRYPTOPRO_SVS:
+          return <CryptoProSVSSettings
+            hostNameChange={this.handleSVSHostNameChange}
+            nameChange={this.handleNameChange}
+            applicationNameChange={this.handleSVSApplicationNameChange}
+            service={stateService}
+          />;
+
         default:
           return null;
       }
@@ -147,7 +156,7 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
       }
     }
 
-    if (service.type && service.type === CRYPTOPRO_DSS && stateService) {
+    if (service.type && (service.type === CRYPTOPRO_DSS || service.type === CRYPTOPRO_SVS) && stateService) {
       if (stateService.name) {
         changeServiceName(service.id, stateService.name);
       }
@@ -186,6 +195,14 @@ class ModifyService extends React.Component<IModifyServiceProps, IModifyServiceS
 
   handleMobileNumberChange = (value: any) => {
     this.setState({ stateService: { ...this.state.stateService, settings: { mobileNumber: value } } });
+  }
+
+  handleSVSHostNameChange = (ev: any) => {
+    this.setState({ stateService: { ...this.state.stateService, settings: { ...this.state.stateService.settings, hostName: ev.target.value } } });
+  }
+
+  handleSVSApplicationNameChange = (ev: any) => {
+    this.setState({ stateService: { ...this.state.stateService, settings: { ...this.state.stateService.settings, applicationName: ev.target.value } } });
   }
 }
 

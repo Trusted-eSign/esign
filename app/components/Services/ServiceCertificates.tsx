@@ -133,7 +133,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
     return (
       <React.Fragment>
-        <nav className="app-bar-content">
+        {/* <nav className="app-bar-content">
           <ul className="app-bar-items">
             <li className="app-bar-item">
               <span>
@@ -146,8 +146,8 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
               </a>
             </li>
           </ul>
-        </nav>
-        <div className="content-wrapper z-depth-1" style={{ height: "82%" }}>
+        </nav> */}
+        <div className="content-wrapper z-depth-1">
           {this.getBody()}
         </div>
         {this.showModalAddService()}
@@ -165,7 +165,7 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
 
     if (certificates && certificates.length) {
       return (
-        <div className="add-certs" style={{ height: "100%" }}>
+        <div className="add-certs">
           <div className={"add-cert-collection collection "}>
             {certificates.map((certificate) => {
               let curStatusStyle;
@@ -197,16 +197,22 @@ class ServiceCertificates extends React.PureComponent<IServiceCertificatesProps,
                 }
               }
 
-              return <div className="collection-item avatar certs-collection" key={certificate.id}>
-                <div className="r-iconbox-link">
-                  <div className={"rectangle"} style={rectangleStyle}></div>
-                  <div className="collection-title pad-cert">{certificate.subjectFriendlyName}</div>
-                  <div className="collection-info cert-info pad-cert">{certificate.issuerFriendlyName}
-                    <div className={curKeyStyle}></div>
-                    <div className={curStatusStyle}></div>
+              return (
+                <div className="row certificate-list-item" id={certificate.id}>
+                  <div className="collection-item avatar certs-collection" >
+                    <div className="r-iconbox-link">
+                      <div className={"rectangle"} style={rectangleStyle}></div>
+                      <div className="col s11">
+                        <div className="collection-title ">{certificate.subjectFriendlyName}</div>
+                        <div className="collection-info cert-info ">{certificate.issuerFriendlyName}</div>
+                      </div>
+                      <div className="col s1">
+                        <div className={curKeyStyle}></div>
+                        <div className={curStatusStyle}></div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>;
+                </div>);
             })}
           </div>
         </div>);
@@ -356,4 +362,4 @@ export default connect((state, ownProps: IOwnProps) => ({
   dss: state.cloudCSP,
   megafon: state.megafon.toJS(),
   service: state.services.getIn(["entities", ownProps.serviceId]),
-}), { addServiceCertificate, getCertificates, signText })(ServiceCertificates);
+}), { addServiceCertificate, getCertificates, signText }, null, { withRef: true })(ServiceCertificates);

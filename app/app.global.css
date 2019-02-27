@@ -725,6 +725,16 @@ i.material-icons.left.license{
     margin-top: 7px;
   }
 
+  i.material-icons.left.dss {
+    display: block;
+    text-indent: -9999px;
+    width: 24px;
+    height: 24px;
+    background: url(./resources/image/dss_menu_icon.svg);
+    background-size: 24px 24px;
+    margin-top: 7px;
+  }
+
 /*-------------------------------Стили списка файлов------------------*/
 .add-file-item {
     color: lightgray;
@@ -894,6 +904,14 @@ nav .cert-seacrh label i {
     overflow: auto;
     border-top: 2px solid #ffffff;
     z-index: 2;
+}
+
+.add-certs-cervices {
+  width: 100%;
+  height: calc(100% - 48px);
+  position: relative;
+  overflow: auto;
+  border-top: 2px solid #ffffff;
 }
 
 
@@ -1175,65 +1193,51 @@ nav .cert-seacrh label i {
   padding: 6px 6px;
 }
 
-i.material-icons.left.my {
+i.material-icons.left {
   display: block;
   text-indent: -9999px;
   width: 24px;
   height: 24px;
-  background: url(./resources/image/cert_category_my.svg);
   background-size: 24px 24px;
   margin-top: 10px;
+}
+
+i.material-icons.left.my {
+  background: url(./resources/image/cert_category_my.svg);
 }
 
 i.material-icons.left.other {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_other.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.intermediate {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_intermediate.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.root {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_root.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.token {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_token.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
 
 i.material-icons.left.request {
-  display: block;
-  text-indent: -9999px;
-  width: 24px;
-  height: 24px;
   background: url(./resources/image/cert_category_request.svg);
-  background-size: 24px 24px;
-  margin-top: 10px;
 }
+
+i.material-icons.left.connect {
+  background: url(./resources/image/connect.png);
+  background-size: cover;
+}
+
+i.material-icons.left.connect {
+    background: url(./resources/image/service_category_connect.svg);
+  }
+
+i.material-icons.left.cert {
+    background: url(./resources/image/service_category_cert.svg);
+  }
 
 /*-----------------Главная страница--------------------*/
 .header{
@@ -1743,7 +1747,13 @@ h6.contact-title {
 }
 
 .type_icon.CRYPTOPRO_DSS{
-  background: url(./resources/image/services/cryptopro.jpg) no-repeat;
+  background: url(./resources/image/services/dss.png) no-repeat;
+  margin-left: 5px;
+}
+
+.type_icon.CRYPTOPRO_SVS{
+  background: url(./resources/image/services/svs.png) no-repeat;
+  margin-left: 5px;
 }
 
 #file-avatar {
@@ -2506,7 +2516,8 @@ a.cert-back-btn.waves-effect.waves-light {
 }
 
 .dsskey {
-  background: url(./resources/image/services/cryptopro.jpg);
+  background: url(./resources/image/services/dss_key.svg);
+  background-repeat: no-repeat;
 }
 
 .key {
