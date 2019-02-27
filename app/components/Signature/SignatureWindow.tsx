@@ -15,7 +15,7 @@ import { statusCodes } from "../../service/megafon/statusCodes";
 import { checkLicense } from "../../trusted/jwt";
 import * as jwt from "../../trusted/jwt";
 import * as signs from "../../trusted/sign";
-import { dirExists, fileExists, mapToArr, uuid } from "../../utils";
+import { dirExists, fileCoding, fileExists, mapToArr, uuid } from "../../utils";
 import logger from "../../winstonLogger";
 import CertificateBlockForSignature from "../Certificate/CertificateBlockForSignature";
 import AuthWebView from "../CloudCSP/AuthWebView";
@@ -520,8 +520,17 @@ class SignatureWindow extends React.Component<ISignatureWindowProps, ISignatureW
 
         if (filesForResign && filesForResign.length) {
           for (const file of filesForResign) {
-            const document = fs.readFileSync(file.fullpath, "base64");
-            documents.push({ Content: document, Name: file.filename });
+            let cmsContext = null;
+            if (fileCoding(file.fullpath) === trusted.DataFormat.PEM) {
+              cmsContext = fs.readFileSync(file.fullpath, "utf8");
+              cmsContext = cmsContext.replace("-----BEGIN CMS-----\n", "");
+              cmsContext = cmsContext.replace("\n-----END CMS-----", "");
+              cmsContext = cmsContext.replace(/\n/g, "");
+            } else {
+              cmsContext = fs.readFileSync(file.fullpath, "base64");
+            }
+
+            documents.push({ Content: cmsContext, Name: file.filename });
           }
 
           this.setState({ dssSigning: true });
