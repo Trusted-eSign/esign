@@ -31,8 +31,10 @@ class EncryptWindow extends React.Component<any, any> {
     this.state = ({
       decryptedFile: null,
       decryptedInDSS: null,
+      decryptedInDSSIndex: 0,
       dssSigning: false,
       dssToken: "",
+      forDecryptInDSS: null,
       recipientId: "",
       serviceId: "",
       showModalDssPin: false,
@@ -276,12 +278,11 @@ class EncryptWindow extends React.Component<any, any> {
         }
       });
 
-      forDecryptInDSS.forEach((item) => {
-        if (item && item.dssRecipient) {
-          this.setState({ decryptedInDSS: item });
-          this.handleShowModalServiceSignParams();
-        }
-      });
+      if (forDecryptInDSS && forDecryptInDSS.length) {
+        this.setState({ forDecryptInDSS });
+        this.setState({ decryptedInDSS: forDecryptInDSS[0] });
+        this.handleShowModalServiceSignParams();
+      }
 
       if (res) {
         $(".toast-files_decrypt").remove();
@@ -293,8 +294,21 @@ class EncryptWindow extends React.Component<any, any> {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { forDecryptInDSS } = this.state;
+
+    if (forDecryptInDSS && forDecryptInDSS.length && this.state.decryptedInDSSIndex !== prevState.decryptedInDSSIndex && this.state.decryptedInDSSIndex) {
+      if (this.state.decryptedInDSSIndex < forDecryptInDSS.length) {
+        this.setState({ decryptedInDSS: forDecryptInDSS[this.state.decryptedInDSSIndex] });
+      }
+    }
+
+    if (prevState.decryptedInDSS && this.state.decryptedInDSS && prevState.decryptedInDSS.file.fullpath !== this.state.decryptedInDSS.file.fullpath) {
+      this.handleShowModalServiceSignParams();
+    }
+  }
+
   render() {
-    const { localize, locale } = this.context;
     const { certificatesLoading } = this.props;
     const { dssSigning } = this.state;
 
@@ -336,14 +350,13 @@ class EncryptWindow extends React.Component<any, any> {
     }
 
     const serviceId = decryptedInDSS.dssRecipient.serviceId;
-
     const service = services.getIn(["entities", serviceId]);
 
     if (service && service.type === CRYPTOPRO_DSS) {
       return (
         <Modal
           isOpen={showModalServiceSignParams}
-          header={localize("Services.cryptopro_dss", locale)}
+          header={`${localize("Services.cryptopro_dss", locale)} (${service.settings.authURL})`}
           onClose={this.handleCloseModalServiceSignParams} style={{
             width: "70%",
           }}>
@@ -497,6 +510,7 @@ class EncryptWindow extends React.Component<any, any> {
         }, (error: any, response: any, body: any) => {
           if (error) {
             this.setState({ dssSigning: false });
+            this.setState({ decryptedInDSSIndex: this.state.decryptedInDSSIndex + 1 });
 
             throw new Error("CloudCSP.request_error");
           }
@@ -504,6 +518,7 @@ class EncryptWindow extends React.Component<any, any> {
 
           if (statusCode !== 200) {
             this.setState({ dssSigning: false });
+            this.setState({ decryptedInDSSIndex: this.state.decryptedInDSSIndex + 1 });
 
             Materialize.toast(JSON.parse(response.body).Message, 2000, "toast-dss_status");
           } else {
@@ -539,6 +554,7 @@ class EncryptWindow extends React.Component<any, any> {
             }
 
             this.setState({ dssSigning: false });
+            this.setState({ decryptedInDSSIndex: this.state.decryptedInDSSIndex + 1 });
           }
         });
       }
