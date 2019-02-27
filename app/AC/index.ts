@@ -21,7 +21,7 @@ import { connectedSelector } from "../selectors";
 import { ERROR, SIGNED, UPLOADED, VERIFIED } from "../server/constants";
 import * as signs from "../trusted/sign";
 import { Store } from "../trusted/store";
-import { extFile, fileExists } from "../utils";
+import { extFile, fileCoding, fileExists } from "../utils";
 
 export function changeLocation(location: string) {
   return (dispatch: (action: {}) => void) => {
@@ -468,7 +468,7 @@ export function deleteFile(fileId: number) {
   };
 }
 
-export function verifySignature(fileId: string) {
+export function verifySignature(fileId: string, svsURL?: string) {
   return (dispatch: (action: {}) => void, getState: () => any) => {
     const state = getState();
     const { connections, documents, files } = state;
@@ -523,7 +523,57 @@ export function verifySignature(fileId: string) {
       });
     }
 
-    if (signatureInfo) {
+    if (svsURL) {
+      const uri = file.fullpath;
+      let cmsContext = null;
+
+      if (fileCoding(uri) === trusted.DataFormat.PEM) {
+        cmsContext = fs.readFileSync(uri, "utf8");
+        cmsContext = cmsContext.replace("-----BEGIN CMS-----\n", "");
+        cmsContext = cmsContext.replace("\n-----END CMS-----", "");
+        cmsContext = cmsContext.replace(/\n/g, "");
+      } else {
+        cmsContext = fs.readFileSync(uri, "base64");
+      }
+
+      const body = JSON.stringify({
+        Content: cmsContext,
+        SignatureType: "CAdES",
+        VerifyParams: {
+          VerifyAll: true,
+        },
+      });
+
+      window.request.post(svsURL, {
+        body,
+        headers: {
+          "content-type": "application/json",
+        },
+      }, (error: any, response: any, body: any) => {
+        if (error) {
+          dispatch({
+            payload: { error, fileId },
+            type: VERIFY_SIGNATURE + FAIL,
+          });
+        }
+
+        const statusCode = response.statusCode;
+
+        if (statusCode !== 200) {
+          dispatch({
+            payload: { error: JSON.parse(response.body).Message, fileId },
+            type: VERIFY_SIGNATURE + FAIL,
+          });
+          Materialize.toast(JSON.parse(response.body).Message, 2000, "toast-dss_status");
+        } else {
+          if (body && body.length) {
+            const dssResponse = JSON.parse(body);
+
+            console.log("dssResponse", dssResponse);
+          }
+        }
+      });
+    } else if (signatureInfo) {
       dispatch({
         generateId: true,
         payload: { fileId, signaruteStatus, signatureInfo },
